@@ -10,7 +10,7 @@
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 <!-- Promo bar (as on Hostinger header) -->
-<div class="bg-gray-900 text-white text-sm">
+<div class="bg-[#212121] text-white text-sm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex items-center justify-between">
         <div class="truncate">
             Enjoy €10 off your booking with the code <strong>PROMOHIVER</strong> –

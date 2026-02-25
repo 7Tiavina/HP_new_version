@@ -5,15 +5,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Lightened palette — less harsh, more approachable while keeping premium feel */
-  --luxe-bg: #16161a;
-  --luxe-surface: #1e1e24;
-  --luxe-card: #252530;
-  --luxe-gold: #c9a962;
-  --luxe-gold-light: #e5d4a1;
-  --luxe-cream: #f8f5ef;
-  --luxe-cream-muted: #a8a399;
-  --luxe-border: rgba(201, 169, 98, 0.28);
+  /* Lightened palette — white background with gold accents */
+  --luxe-bg: #ffffff;
+  --luxe-surface: #f5f5f5;
+  --luxe-card: #ffffff;
+  --luxe-gold: #f9c52d;
+  --luxe-gold-light: #fdd835;
+  --luxe-cream: #212121;
+  --luxe-cream-muted: #757575;
+  --luxe-border: rgba(249, 197, 45, 0.28);
   --luxe-radius: 6px;
   --luxe-font-serif: 'Cormorant Garamond', Georgia, serif;
   --luxe-font-sans: 'Inter', -apple-system, sans-serif;
@@ -60,86 +60,86 @@ body {
 
 /* Auth modals & loader — Luxe theme */
 #loader {
-  background-color: rgba(22, 22, 26, 0.95);
+  background-color: rgba(33, 33, 33, 0.95);
 }
-#loader .hp-progress { background: linear-gradient(90deg, var(--luxe-gold), var(--luxe-gold-light), var(--luxe-gold)) !important; background-size: 200% 200% !important; }
-#loader .text-\[\#f9c52d\] { color: var(--luxe-gold) !important; }
-#loader .bg-gray-700 { background: var(--luxe-surface) !important; }
+#loader .hp-progress { background: linear-gradient(90deg, #f9c52d, #fdd835, #f9c52d) !important; background-size: 200% 200% !important; }
+#loader .text-\[\#f9c52d\] { color: #f9c52d !important; }
+#loader .bg-gray-700 { background: #f5f5f5 !important; }
 
 #loginModal > div,
 #registerModal > div,
 #forgotPasswordModal > div {
-  background: var(--luxe-card) !important;
-  border: 1px solid var(--luxe-border) !important;
+  background: #1e1e1e !important;
+  border: 1px solid #333333 !important;
   border-radius: var(--luxe-radius);
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
 }
 #loginModal button[aria-label]:not([type=submit]):not([type=button]):not(#closeModal):not(#closeRegisterModal):not(#closeForgotPasswordModal),
 #registerModal button[aria-label],
-#forgotPasswordModal button[aria-label] { color: var(--luxe-cream-muted); }
+#forgotPasswordModal button[aria-label] { color: #a8a399; }
 #loginModal .text-gray-400,
 #loginModal .text-gray-300,
 #registerModal .text-gray-400,
 #registerModal .text-gray-300,
 #forgotPasswordModal .text-gray-400,
-#forgotPasswordModal .text-gray-300 { color: var(--luxe-cream-muted) !important; }
-#loginModal h2, #registerModal h2, #forgotPasswordModal h2 { color: var(--luxe-cream) !important; }
+#forgotPasswordModal .text-gray-300 { color: #a8a399 !important; }
+#loginModal h2, #registerModal h2, #forgotPasswordModal h2 { color: #f8f5ef !important; }
 #loginModal input,
 #registerModal input,
 #forgotPasswordModal input {
-  background: var(--luxe-surface) !important;
-  border-color: var(--luxe-border) !important;
-  color: var(--luxe-cream) !important;
+  background: #2a2a2a !important;
+  border-color: #444444 !important;
+  color: #f8f5ef !important;
 }
 #loginModal input::placeholder,
 #registerModal input::placeholder,
-#forgotPasswordModal input::placeholder { color: var(--luxe-cream-muted); }
+#forgotPasswordModal input::placeholder { color: #a8a399; }
 #loginModal input:focus,
 #registerModal input:focus,
 #forgotPasswordModal input:focus {
-  border-color: var(--luxe-gold) !important;
-  box-shadow: 0 0 0 2px rgba(201, 169, 98, 0.25) !important;
+  border-color: #f9c52d !important;
+  box-shadow: 0 0 0 2px rgba(249, 197, 45, 0.25) !important;
 }
 #loginModal button[type=submit],
 #registerModal button[type=submit],
 #forgotPasswordModal button[type=submit] {
-  background: var(--luxe-gold) !important;
+  background: #f9c52d !important;
   color: #0f0f0f !important;
 }
 #loginModal button[type=submit]:hover,
 #registerModal button[type=submit]:hover,
-#forgotPasswordModal button[type=submit]:hover { background: var(--luxe-gold-light) !important; }
+#forgotPasswordModal button[type=submit]:hover { background: #fdd835 !important; }
 #loginModal .bg-gray-700,
-#registerModal .bg-gray-700 { background: var(--luxe-surface) !important; border-color: var(--luxe-border) !important; color: var(--luxe-cream) !important; }
+#registerModal .bg-gray-700 { background: #2a2a2a !important; border-color: #444444 !important; color: #f8f5ef !important; }
 #loginModal .bg-gray-700:hover,
-#registerModal .bg-gray-700:hover { background: rgba(201, 169, 98, 0.15) !important; border-color: var(--luxe-gold) !important; }
-#loginModal label, #registerModal label, #forgotPasswordModal label { color: var(--luxe-cream) !important; }
-#loginModal .bg-blue-950\/30 { background: rgba(201, 169, 98, 0.12) !important; border-color: var(--luxe-border) !important; }
-#loginModal .bg-blue-950\/30 p { color: var(--luxe-cream-muted) !important; }
-#loginModal .bg-blue-600 { background: var(--luxe-gold) !important; color: #0f0f0f !important; }
-#loginModal .bg-blue-600:hover { background: var(--luxe-gold-light) !important; }
-#loginModal .bg-gray-600 { background: var(--luxe-surface) !important; border-color: var(--luxe-border) !important; color: var(--luxe-cream) !important; }
-#loginModal .bg-gray-600:hover { background: rgba(201, 169, 98, 0.2) !important; }
-#loginModal input[type=checkbox] { accent-color: var(--luxe-gold); }
+#registerModal .bg-gray-700:hover { background: rgba(249, 197, 45, 0.15) !important; border-color: #f9c52d !important; }
+#loginModal label, #registerModal label, #forgotPasswordModal label { color: #f8f5ef !important; }
+#loginModal .bg-blue-950\/30 { background: rgba(249, 197, 45, 0.12) !important; border-color: #444444 !important; }
+#loginModal .bg-blue-950\/30 p { color: #a8a399 !important; }
+#loginModal .bg-blue-600 { background: #f9c52d !important; color: #0f0f0f !important; }
+#loginModal .bg-blue-600:hover { background: #fdd835 !important; }
+#loginModal .bg-gray-600 { background: #2a2a2a !important; border-color: #444444 !important; color: #f8f5ef !important; }
+#loginModal .bg-gray-600:hover { background: rgba(249, 197, 45, 0.2) !important; }
+#loginModal input[type=checkbox] { accent-color: #f9c52d; }
 
-/* Login error modal — dark luxe */
+/* Login error modal */
 #loginErrorModal > div {
-  background: var(--luxe-card) !important;
-  border: 1px solid var(--luxe-border);
-  color: var(--luxe-cream);
+  background: #1e1e1e !important;
+  border: 1px solid #333333;
+  color: #f8f5ef;
 }
-#loginErrorModal h3 { color: var(--luxe-cream) !important; }
+#loginErrorModal h3 { color: #f8f5ef !important; }
 #loginErrorModal .text-red-500 { color: #e5a0a0 !important; }
 #loginErrorModal .text-red-600 { color: #e5a0a0 !important; }
-#loginErrorModal .text-gray-600 { color: var(--luxe-cream-muted) !important; }
-#loginErrorModal .bg-yellow-50 { background: rgba(201, 169, 98, 0.12) !important; border-radius: var(--luxe-radius); }
-#loginErrorModal .bg-yellow-50 .text-gray-600 { color: var(--luxe-cream-muted) !important; }
-#loginErrorModal .bg-yellow-50 strong { color: var(--luxe-gold); }
-#loginErrorModal button.bg-\[\#f9c52d\] { background: var(--luxe-gold) !important; color: #0f0f0f !important; }
-#loginErrorModal button.bg-\[\#f9c52d\]:hover { background: var(--luxe-gold-light) !important; }
+#loginErrorModal .text-gray-600 { color: #a8a399 !important; }
+#loginErrorModal .bg-yellow-50 { background: rgba(249, 197, 45, 0.12) !important; border-radius: var(--luxe-radius); }
+#loginErrorModal .bg-yellow-50 .text-gray-600 { color: #a8a399 !important; }
+#loginErrorModal .bg-yellow-50 strong { color: #f9c52d; }
+#loginErrorModal button.bg-\[\#f9c52d\] { background: #f9c52d !important; color: #0f0f0f !important; }
+#loginErrorModal button.bg-\[\#f9c52d\]:hover { background: #fdd835 !important; }
 #forgotPasswordModal .text-red-600 { color: #e5a0a0; }
-#forgotPasswordModal .bg-green-50 { background: rgba(201, 169, 98, 0.12) !important; border-color: var(--luxe-gold) !important; }
-#forgotPasswordModal .bg-green-50 p { color: var(--luxe-cream) !important; }
+#forgotPasswordModal .bg-green-50 { background: rgba(249, 197, 45, 0.12) !important; border-color: #f9c52d !important; }
+#forgotPasswordModal .bg-green-50 p { color: #f8f5ef !important; }
 
 /* Promo bar */
 .luxe-promo {
@@ -162,14 +162,14 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(22, 22, 26, 0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--luxe-border);
+  background: #212121;
+  border-bottom: 2px solid #f9c52d;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 .luxe-header-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1rem 1.5rem;
+  padding: 0.5rem 1.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -181,27 +181,31 @@ body {
   font-size: 1.6rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: var(--luxe-cream);
+  color: #ffffff;
   text-decoration: none;
 }
-.luxe-logo:hover { color: var(--luxe-gold-light); }
+.luxe-logo:hover { color: #f9c52d; }
+.luxe-logo-img {
+  height: 45px;
+  width: auto;
+}
 .luxe-nav {
   display: flex;
   align-items: center;
-  gap: 1.75rem;
+  gap: 1.5rem;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 .luxe-nav a {
-  color: var(--luxe-cream-muted);
+  color: #ffffff;
   text-decoration: none;
   font-size: 0.9rem;
   font-weight: 500;
   letter-spacing: 0.03em;
   transition: color 0.2s;
 }
-.luxe-nav a:hover { color: var(--luxe-gold); }
+.luxe-nav a:hover { color: #f9c52d; }
 
 /* Book now — même style partout (header, hero, process, etc.) */
 .btn-cta {
@@ -210,7 +214,7 @@ body {
   background: var(--luxe-gold);
   color: #0f0f0f;
   padding: 0.5rem 1.25rem;
-  border-radius: var(--luxe-radius);
+  border-radius: 25px;
   font-weight: 600;
   font-size: 1rem;
   transition: background 0.2s, color 0.2s;
@@ -225,7 +229,7 @@ body {
 }
 .luxe-auth-inject a,
 .luxe-auth-inject button {
-  color: var(--luxe-cream-muted);
+  color: #ffffff;
   font-size: 0.9rem;
   font-weight: 500;
   text-decoration: none;
@@ -236,7 +240,7 @@ body {
   font-family: inherit;
 }
 .luxe-auth-inject a:hover,
-.luxe-auth-inject button:hover { color: var(--luxe-gold); }
+.luxe-auth-inject button:hover { color: #f9c52d; }
 
 /* Hero */
 .luxe-hero {
@@ -322,13 +326,13 @@ body {
   font-family: var(--luxe-font-serif);
   font-size: clamp(1.75rem, 3vw, 2.5rem);
   font-weight: 600;
-  color: var(--luxe-cream);
+  color: #212121;
   margin: 0 0 0.5rem;
   text-align: center;
 }
 .luxe-section-sub {
   text-align: center;
-  color: var(--luxe-cream-muted);
+  color: #757575;
   font-size: 1rem;
   margin: 0 0 3rem;
   max-width: 560px;
@@ -700,17 +704,18 @@ body {
 
 /* Footer */
 .luxe-footer {
-  background: var(--luxe-surface);
-  border-top: 1px solid var(--luxe-border);
+  background: #212121;
+  border-top: 2px solid #f9c52d;
   padding: 3rem 1.5rem 2rem;
+  color: #ffffff;
 }
 .luxe-footer-inner {
   max-width: 1200px;
   margin: 0 auto;
   text-align: center;
 }
-.luxe-footer-inner p { color: var(--luxe-cream-muted); font-size: 0.9rem; margin: 0.5rem 0; }
-.luxe-footer-inner a { color: var(--luxe-gold); text-decoration: none; }
+.luxe-footer-inner p { color: #b0b0b0; font-size: 0.9rem; margin: 0.5rem 0; }
+.luxe-footer-inner a { color: #f9c52d; text-decoration: none; }
 .luxe-footer-inner a:hover { text-decoration: underline; }
 .luxe-footer-links { margin: 1rem 0; }
 .luxe-footer-links a { margin: 0 0.75rem; }
@@ -841,10 +846,10 @@ body {
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--luxe-cream);
+  color: #ffffff;
   border-radius: var(--luxe-radius);
 }
-.luxe-nav-toggle:hover { color: var(--luxe-gold); }
+.luxe-nav-toggle:hover { color: #f9c52d; }
 .luxe-nav-toggle-bar {
   display: block;
   width: 22px;
@@ -874,13 +879,13 @@ body {
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--luxe-cream-muted);
+  color: #ffffff;
   font-size: 1.75rem;
   line-height: 1;
   align-self: flex-end;
   flex-shrink: 0;
 }
-.luxe-nav-close:hover { color: var(--luxe-gold); }
+.luxe-nav-close:hover { color: #f9c52d; }
 
 @media (max-width: 768px) {
   html { overflow-x: hidden; }
@@ -898,8 +903,8 @@ body {
     right: 0;
     width: min(320px, 100vw);
     height: 100vh;
-    background: var(--luxe-surface);
-    border-left: 1px solid var(--luxe-border);
+    background: #212121;
+    border-left: 2px solid #f9c52d;
     flex-direction: column;
     align-items: stretch;
     padding: 5rem 1.5rem 2rem;
@@ -908,13 +913,15 @@ body {
     transform: translateX(100%);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
     z-index: 99;
-    box-shadow: none;
+    box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5);
   }
   .luxe-nav a {
     padding: 0.75rem 0;
-    border-bottom: 1px solid var(--luxe-border);
+    border-bottom: 1px solid #424242;
     font-size: 1rem;
+    color: #ffffff;
   }
+  .luxe-nav a:hover { color: #f9c52d; }
   .luxe-nav .btn-cta {
     margin-top: 0.5rem;
     text-align: center;

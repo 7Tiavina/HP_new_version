@@ -19,9 +19,9 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: var(--luxe-gold, #c9a962);
-  border: 2px solid rgba(201, 169, 98, 0.4);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  background: var(--luxe-gold, #f9c52d);
+  border: 2px solid rgba(249, 197, 45, 0.4);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -34,8 +34,8 @@
 
 .chatbot-toggle:hover {
   transform: scale(1.1);
-  background: var(--luxe-gold-light, #e5d4a1);
-  box-shadow: 0 8px 28px rgba(201, 169, 98, 0.45);
+  background: var(--luxe-gold-light, #fdd835);
+  box-shadow: 0 8px 28px rgba(249, 197, 45, 0.35);
   animation: none;
 }
 
@@ -48,7 +48,7 @@
   position: absolute;
   top: -4px;
   right: -4px;
-  background: #c9a962;
+  background: #f9c52d;
   color: #0f0f0f;
   border-radius: 50%;
   width: 22px;

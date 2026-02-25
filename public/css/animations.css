@@ -17,8 +17,8 @@
 
 /* —— Animated gradient border (subtle pulse on cards) —— */
 @keyframes luxe-glow-pulse {
-  0%, 100% { border-color: rgba(201, 169, 98, 0.35); box-shadow: 0 4px 24px rgba(0,0,0,0.2); }
-  50% { border-color: rgba(201, 169, 98, 0.5); box-shadow: 0 8px 32px rgba(201, 169, 98, 0.08); }
+  0%, 100% { border-color: rgba(249, 197, 45, 0.35); box-shadow: 0 4px 24px rgba(0,0,0,0.1); }
+  50% { border-color: rgba(249, 197, 45, 0.5); box-shadow: 0 8px 32px rgba(249, 197, 45, 0.08); }
 }
 .luxe-card.luxe-animate-glow:hover,
 .luxe-service-card.luxe-animate-glow:hover,
