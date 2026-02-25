@@ -49,13 +49,27 @@
                         </div>
 
                         <div>
-                            <label for="modal-telephone" class="block text-xs font-bold text-gray-700 uppercase" data-i18n="label_telephone">Téléphone mobile</label>
-                            <div class="mt-1">
-                                <input type="tel" name="telephone" id="modal-telephone"
-                                    autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
-                                    class="block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-3 text-gray-800 font-medium text-lg">
-                            </div>
-                        </div>
+    <label for="modal-telephone"
+        class="block text-xs font-bold text-gray-700 uppercase">
+        Téléphone mobile
+    </label>
+
+    <!-- Indication utilisateur -->
+    <p class="text-xs text-gray-500 mt-1">
+        Entrez votre numéro avec le code pays (ex : +33 6 12 34 56 78)
+    </p>
+
+    <div class="mt-2">
+        <input type="tel"
+            name="telephone"
+            id="modal-telephone"
+            placeholder="+33 6 12 34 56 78"
+            autocomplete="off"
+            class="block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 
+                   focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] 
+                   transition-all py-3 text-gray-800 font-medium text-lg">
+    </div>
+</div>
                         
                         <div>
                             <label class="block text-xs font-bold text-gray-700 uppercase" data-i18n="label_adresse">Adresse</label>
