@@ -22,6 +22,260 @@ const productMapJs = {
 let isPriorityAvailable = false;
 let isPremiumAvailable = false;
 
+/**
+ * ============================================
+ * FORM VALIDATION STATE MANAGEMENT
+ * ============================================
+ */
+
+/**
+ * Set input field to default state (gray)
+ * @param {HTMLElement} input - The input element
+ */
+function setInputDefault(input) {
+    if (!input) return;
+    input.classList.remove('input-filled', 'input-error');
+    input.classList.add('input-default');
+    clearFieldError(input);
+}
+
+/**
+ * Set input field to filled state (yellow)
+ * @param {HTMLElement} input - The input element
+ */
+function setInputFilled(input) {
+    if (!input) return;
+    input.classList.remove('input-default', 'input-error');
+    input.classList.add('input-filled');
+    clearFieldError(input);
+}
+
+/**
+ * Set input field to error state (red)
+ * @param {HTMLElement} input - The input element
+ * @param {string} errorMessage - Optional error message to display
+ */
+function setInputError(input, errorMessage = '') {
+    if (!input) return;
+    input.classList.remove('input-default', 'input-filled');
+    input.classList.add('input-error');
+    if (errorMessage) {
+        showFieldError(input, errorMessage);
+    }
+}
+
+/**
+ * Show error message for a field
+ * @param {HTMLElement} input - The input element
+ * @param {string} message - Error message to display
+ */
+function showFieldError(input, message) {
+    if (!input) return;
+    
+    // Remove existing error message if present
+    clearFieldError(input);
+    
+    // Create error message element
+    const errorEl = document.createElement('p');
+    errorEl.className = 'error-message';
+    errorEl.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        ${message}
+    `;
+    
+    // Insert error after the input - handle different structures
+    const parent = input.parentElement;
+    if (parent) {
+        // For inputs inside .relative div (time/date inputs)
+        if (parent.classList.contains('relative')) {
+            const grandParent = parent.parentElement;
+            if (grandParent) {
+                grandParent.appendChild(errorEl);
+            }
+        } else {
+            // For select (airport) - insert directly after
+            parent.appendChild(errorEl);
+        }
+    }
+    
+    // Mark label as error if exists
+    const label = document.querySelector(`label[for="${input.id}"]`);
+    if (label) {
+        label.classList.add('label-error');
+    }
+}
+
+/**
+ * Clear error message for a field
+ * @param {HTMLElement} input - The input element
+ */
+function clearFieldError(input) {
+    if (!input) return;
+    
+    // Remove error message - handle different structures
+    const parent = input.parentElement;
+    if (parent) {
+        // For inputs inside .relative div
+        if (parent.classList.contains('relative')) {
+            const grandParent = parent.parentElement;
+            if (grandParent) {
+                const errorEl = grandParent.querySelector('.error-message');
+                if (errorEl) errorEl.remove();
+            }
+        } else {
+            const errorEl = parent.querySelector('.error-message');
+            if (errorEl) errorEl.remove();
+        }
+    }
+    
+    // Remove label error state
+    const label = document.querySelector(`label[for="${input.id}"]`);
+    if (label) {
+        label.classList.remove('label-error', 'label-filled');
+    }
+}
+
+/**
+ * Validate a single field and update its state
+ * @param {HTMLElement} input - The input element
+ * @returns {boolean} - True if valid, false otherwise
+ */
+function validateField(input) {
+    if (!input) return false;
+    
+    const value = input.value.trim();
+    const id = input.id;
+    
+    // Check if field is required
+    const isRequired = input.hasAttribute('required') || 
+                       input.closest('.form-required') !== null ||
+                       id.includes('airport') || 
+                       id.includes('date') || 
+                       id.includes('heure');
+    
+    if (isRequired && !value) {
+        const fieldName = getFieldName(input);
+        setInputError(input, t('field_required_error', `${fieldName} est requis`));
+        return false;
+    }
+    
+    // Field-specific validation
+    if (value) {
+        switch(id) {
+            case 'airport-select':
+                if (value === '' || value === '0') {
+                    setInputError(input, t('alert_select_airport', 'Veuillez sélectionner un aéroport'));
+                    return false;
+                }
+                break;
+                
+            case 'date-depot':
+            case 'date-recuperation':
+                if (!isValidDate(value)) {
+                    setInputError(input, t('invalid_date', 'Date invalide'));
+                    return false;
+                }
+                break;
+                
+            case 'heure-depot':
+            case 'heure-recuperation':
+                if (!isValidTime(value)) {
+                    setInputError(input, t('invalid_time', 'Heure invalide'));
+                    return false;
+                }
+                break;
+        }
+        
+        // Field is valid and has value - set to FILLED (yellow)
+        setInputFilled(input);
+        return true;
+    }
+    
+    // Empty but not required - set to DEFAULT (gray)
+    setInputDefault(input);
+    return true;
+}
+
+/**
+ * Get human-readable field name for error messages
+ * @param {HTMLElement} input - The input element
+ * @returns {string} - Field name
+ */
+function getFieldName(input) {
+    const label = document.querySelector(`label[for="${input.id}"]`);
+    if (label) {
+        return label.textContent.replace('*', '').trim();
+    }
+    
+    const nameMap = {
+        'airport-select': t('form_airport_label', 'Aéroport'),
+        'date-depot': t('form_deposit_date', 'Date de dépôt'),
+        'date-recuperation': t('form_pickup_date', 'Date de récupération'),
+        'heure-depot': t('form_deposit_time', 'Heure de dépôt'),
+        'heure-recuperation': t('form_pickup_time', 'Heure de récupération')
+    };
+    
+    return nameMap[input.id] || t('field', 'Champ');
+}
+
+/**
+ * Validate date format (YYYY-MM-DD)
+ * @param {string} dateStr - Date string to validate
+ * @returns {boolean} - True if valid
+ */
+function isValidDate(dateStr) {
+    if (!dateStr) return false;
+    const date = new Date(dateStr);
+    return date instanceof Date && !isNaN(date);
+}
+
+/**
+ * Validate time format (HH:mm)
+ * @param {string} timeStr - Time string to validate
+ * @returns {boolean} - True if valid
+ */
+function isValidTime(timeStr) {
+    if (!timeStr) return false;
+    const timeRegex = /^([01]\d|2[0-3]):([0-5]\d)$/;
+    return timeRegex.test(timeStr);
+}
+
+/**
+ * Validate all Step 1 fields (airport + dates)
+ * @returns {boolean} - True if all fields are valid
+ */
+function validateStep1() {
+    const fields = [
+        document.getElementById('airport-select'),
+        document.getElementById('date-depot'),
+        document.getElementById('date-recuperation'),
+        document.getElementById('heure-depot'),
+        document.getElementById('heure-recuperation')
+    ];
+    
+    let isValid = true;
+    
+    fields.forEach(field => {
+        if (!validateField(field)) {
+            isValid = false;
+        }
+    });
+    
+    return isValid;
+}
+
+/**
+ * Reset all validation states to default
+ */
+function resetValidationStates() {
+    const fields = document.querySelectorAll('#step-1 input, #step-1 select');
+    fields.forEach(field => {
+        setInputDefault(field);
+    });
+}
+
 
 /**
  * Affiche les dates sélectionnées dans la section de résumé.
@@ -85,16 +339,28 @@ async function checkAvailability() {
     console.log('checkAvailability() called');
     const spinner = document.getElementById('loading-spinner-availability');
     const btn = document.getElementById('check-availability-btn');
-    
+
     console.log('Spinner element:', spinner);
     console.log('Button element:', btn);
-    
+
     // Exit early if button doesn't exist (not on booking page)
     if (!btn) {
         console.log('Button not found, exiting');
         return false;
     }
+
+    // First, validate all fields with visual feedback
+    const isStep1Valid = validateStep1();
     
+    if (!isStep1Valid) {
+        // Scroll to first error
+        const firstError = document.querySelector('.input-error');
+        if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return false;
+    }
+
     // Show spinner if it exists
     if (spinner) {
         spinner.style.display = 'inline-block';
@@ -108,22 +374,6 @@ async function checkAvailability() {
 
     console.log('Airport ID:', airportId);
     console.log('Dates/Times:', { dateDepot, heureDepot, dateRetrait, heureRetrait });
-
-    if (!airportId || !dateDepot || !heureDepot || !dateRetrait || !heureRetrait) {
-        let missingFields = [];
-        if (!airportId) missingFields.push(t('form_airport_label'));
-        if (!dateDepot) missingFields.push(t('form_deposit_date'));
-        if (!heureDepot) missingFields.push(t('form_deposit_time'));
-        if (!dateRetrait) missingFields.push(t('form_pickup_date'));
-        if (!heureRetrait) missingFields.push(t('form_pickup_time'));
-        
-        const fieldList = missingFields.join(', ');
-        const errorMsg = t('alert_incomplete_fields_message') + ':\n' + fieldList;
-        await showCustomAlert(t('alert_incomplete_fields_title'), errorMsg);
-        spinner.style.display = 'none';
-        btn.disabled = false;
-        return false;
-    }
 
     try {
         // Check both dates in parallel
@@ -145,7 +395,7 @@ async function checkAvailability() {
                 errorMessage += t('agency_hours_pickup_out');
             }
             errorMessage += `<br><br>${t('agency_hours_contact')}`;
-            
+
             await showCustomAlert(t('alert_agency_closed_title'), errorMessage);
             return false;
         }
@@ -709,8 +959,42 @@ document.addEventListener('DOMContentLoaded', function () {
     const dateInputs = ['date-depot', 'date-recuperation', 'heure-depot', 'heure-recuperation'];
     dateInputs.forEach(id => {
         const input = document.getElementById(id);
-        input.addEventListener('change', applyDateInputConstraints); // 'change' est mieux que 'input' pour les contraintes
-        input.addEventListener('input', saveStateToSession);
+        input.addEventListener('change', function() {
+            applyDateInputConstraints();
+            validateField(input); // Real-time validation on change
+        });
+        input.addEventListener('input', function() {
+            saveStateToSession();
+            // Validate on input for immediate feedback (with debounce could be added)
+            if (input.value.trim()) {
+                validateField(input);
+            } else {
+                setInputDefault(input);
+            }
+        });
+        // Also validate on blur
+        input.addEventListener('blur', function() {
+            validateField(input);
+        });
+    });
+
+    // Airport select validation
+    const airportSelect = document.getElementById('airport-select');
+    airportSelect.addEventListener('change', function() {
+        airportId = this.value;
+        saveStateToSession();
+        validateField(this);
+    });
+
+    // Initialize validation states on page load for pre-filled fields
+    const allFormFields = ['airport-select', ...dateInputs];
+    allFormFields.forEach(id => {
+        const field = document.getElementById(id);
+        if (field && field.value.trim()) {
+            validateField(field);
+        } else if (field) {
+            setInputDefault(field);
+        }
     });
 
     // Listener pour le tooltip
@@ -749,3 +1033,25 @@ window.addEventListener('pageshow', function(event) {
         console.log('Page restaurée depuis le cache. Loader masqué.');
     }
 });
+
+// ============================================
+// DEBUG / TEST FUNCTIONS - Remove in production
+// ============================================
+window.testValidation = function() {
+    console.log('Testing validation functions...');
+    console.log('setInputDefault:', typeof setInputDefault);
+    console.log('setInputFilled:', typeof setInputFilled);
+    console.log('setInputError:', typeof setInputError);
+    console.log('validateField:', typeof validateField);
+    console.log('validateStep1:', typeof validateStep1);
+    
+    // Test on first field
+    const airport = document.getElementById('airport-select');
+    if (airport) {
+        console.log('Airport select found:', airport);
+        console.log('Current classes:', airport.classList);
+        setInputFilled(airport);
+        console.log('After setInputFilled - classes:', airport.classList);
+    }
+};
+console.log('Validation functions loaded. Run testValidation() to test.');

@@ -601,8 +601,8 @@
 #hp-booking-root .baggage-option.selected { background: rgba(201, 169, 98, 0.15) !important; border-color: var(--luxe-gold) !important; }
 #hp-booking-root .baggage-option.selected .w-20.h-20 { background: rgba(201, 169, 98, 0.2) !important; }
 #hp-booking-root .input-style,
-#hp-booking-root input,
-#hp-booking-root select { background: var(--luxe-surface) !important; border-color: var(--luxe-border) !important; color: var(--luxe-cream) !important; }
+#hp-booking-root input { background: var(--luxe-surface) !important; border-color: var(--luxe-border) !important; color: var(--luxe-cream) !important; }
+#hp-booking-root select:not(#airport-select) { background: var(--luxe-surface) !important; border-color: var(--luxe-border) !important; color: var(--luxe-cream) !important; }
 #hp-booking-root .input-style:focus,
 #hp-booking-root input:focus { border-color: var(--luxe-gold) !important; box-shadow: 0 0 0 2px rgba(201, 169, 98, 0.25) !important; }
 #hp-booking-root .input-completed { background: rgba(201, 169, 98, 0.1) !important; }
@@ -720,5 +720,31 @@
 #hp-booking-root.hp-modal-mode .baggage-option { padding: 0.75rem; }
 #hp-booking-root.hp-modal-mode .baggage-option .w-20 { width: 48px; height: 48px; }
 #hp-booking-root.hp-modal-mode .baggage-option .h-20 { height: 48px; }
+
+/* Override luxe theme for validation states - MUST come after luxe styles */
+#hp-booking-root .input-default { border-color: #d1d5dc !important; background: #f9fafb !important; }
+#hp-booking-root .input-filled { border-color: #FFC107 !important; background: #fef9e7 !important; }
+#hp-booking-root .input-error { border-color: #dc2626 !important; background: #fef2f2 !important; }
+
+/* Fix airport select - remove any luxe background that might cause dropdown duplication */
+#hp-booking-root #airport-select {
+  background-color: #f9fafb !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+  background-position: right 0.75rem center !important;
+  background-repeat: no-repeat !important;
+  background-size: 1.5em 1.5em !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+}
+#hp-booking-root #airport-select.input-default {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+}
+#hp-booking-root #airport-select.input-filled {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2392400e' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+}
+#hp-booking-root #airport-select.input-error {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23b91c1c' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+}
 </style>
 @endpush

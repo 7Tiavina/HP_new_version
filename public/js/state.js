@@ -44,12 +44,27 @@ function loadStateFromSession() {
     const state = JSON.parse(sessionStorage.getItem('formState'));
     if (!state) return;
 
-    document.getElementById('airport-select').value = state.airportId;
+    const airportSelect = document.getElementById('airport-select');
+    const dateDepotInput = document.getElementById('date-depot');
+    const heureDepotInput = document.getElementById('heure-depot');
+    const dateRecupInput = document.getElementById('date-recuperation');
+    const heureRecupInput = document.getElementById('heure-recuperation');
+
+    airportSelect.value = state.airportId;
     airportId = state.airportId;
-    document.getElementById('date-depot').value = state.dateDepot;
-    document.getElementById('heure-depot').value = state.heureDepot;
-    document.getElementById('date-recuperation').value = state.dateRecuperation;
-    document.getElementById('heure-recuperation').value = state.heureRecuperation;
+    dateDepotInput.value = state.dateDepot;
+    heureDepotInput.value = state.heureDepot;
+    dateRecupInput.value = state.dateRecuperation;
+    heureRecupInput.value = state.heureRecuperation;
+
+    // Apply validation states based on loaded values
+    if (typeof validateField !== 'undefined') {
+        validateField(airportSelect);
+        validateField(dateDepotInput);
+        validateField(heureDepotInput);
+        validateField(dateRecupInput);
+        validateField(heureRecupInput);
+    }
 
     globalProductsData = state.globalProductsData || [];
     globalLieuxData = state.globalLieuxData || [];
