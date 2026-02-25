@@ -54,7 +54,6 @@
                     <li><a href="#" class="hover:text-yellow-500 transition-colors" data-i18n="footer_transport">Transport of luggage</a></li>
                     <li><a href="#" class="hover:text-yellow-500 transition-colors" data-i18n="footer_left_luggage">Left luggage</a></li>
                     <li><a href="#" class="hover:text-yellow-500 transition-colors" data-i18n="footer_lost_object">Recover my lost object</a></li>
-                    <li><a href="#" class="hover:text-yellow-500 transition-colors">FAQ</a></li>
                 </ul>
             </div>
         </div>

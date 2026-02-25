@@ -1,7 +1,5 @@
 @php
     $formUrl = route('form-consigne');
-    $aboutUrl = route('about-us');
-    $faqUrl = route('faq');
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -71,13 +69,8 @@
 </head>
 <body class="luxe-home">
 
-    {{-- Widgets flottants en premier : Book now + Chatbot --}}
-    @include('components.booking-widget')
+    {{-- Widget flottant Chatbot --}}
     @include('components.chatbot')
-
-    <div class="luxe-promo">
-        <span data-i18n="promo_intro">Enjoy €10 off your booking with the code</span> <strong>PROMOHIVER</strong> – <a href="{{ $formUrl }}" data-i18n="nav_book">Book now</a>
-    </div>
 
     <header class="luxe-header">
         <div class="luxe-header-inner">
@@ -96,8 +89,6 @@
             <nav class="luxe-nav" id="luxe-nav-menu" role="navigation">
                 <button type="button" class="luxe-nav-close" aria-label="Fermer le menu" title="Fermer">&times;</button>
                 @include('components.translation-widget')
-                <a href="{{ $aboutUrl }}" data-i18n="nav_about">About Us</a>
-                <a href="{{ $faqUrl }}" data-i18n="nav_faq">FAQ</a>
                 <a href="{{ $formUrl }}" class="btn-cta" data-i18n="nav_book">Book now</a>
                 <a href="#login" class="login-link" data-i18n="login_btn">Login</a>
                 <a href="#signup" class="register-link" data-i18n="create_account_short">Register</a>
@@ -118,8 +109,6 @@
             <p>📞 +33 (0)1 34 38 58 98 · ✉️ <a href="mailto:contact@hellopassenger.com">contact@hellopassenger.com</a></p>
             <div class="luxe-footer-links">
                 <a href="{{ $formUrl }}" data-i18n="nav_book">Book</a>
-                <a href="{{ $aboutUrl }}" data-i18n="nav_about">About Us</a>
-                <a href="{{ $faqUrl }}" data-i18n="nav_faq">FAQ</a>
                 <a href="{{ route('form-consigne') }}" data-i18n="nav_home">Home</a>
             </div>
             <p data-i18n="footer_description">Hello Passenger is a platform to book luggage transport to or from the airport and to store your luggage at our counters at Paris CDG and Paris Orly.</p>

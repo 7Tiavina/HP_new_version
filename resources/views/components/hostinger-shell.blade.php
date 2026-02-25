@@ -78,29 +78,6 @@
         ) ?: $bodyInner;
     }
 
-    // Point About Us and FAQ to our Laravel routes.
-    $aboutUrl = route('about-us');
-    $faqUrl = route('faq');
-    if ($bodyInner) {
-        $bodyInner = str_replace(
-            [
-                'https://darkgreen-pheasant-897942.hostingersite.com/en/about-us/',
-                'https://darkgreen-pheasant-897942.hostingersite.com/about-us/',
-            ],
-            $aboutUrl,
-            $bodyInner
-        );
-        $bodyInner = str_replace(
-            [
-                'https://darkgreen-pheasant-897942.hostingersite.com/en/useful-information-before-flying/',
-                'https://darkgreen-pheasant-897942.hostingersite.com/useful-information-before-flying/',
-                'https://darkgreen-pheasant-897942.hostingersite.com/faq/',
-            ],
-            $faqUrl,
-            $bodyInner
-        );
-    }
-
     // Split body into prefix/suffix around "page-content" so we can inject Laravel content there.
     $bodyPrefix = '';
     $bodySuffix = '';

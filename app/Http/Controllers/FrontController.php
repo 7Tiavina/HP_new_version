@@ -24,16 +24,6 @@ class FrontController extends Controller
         $this->bdmApiService = $bdmApiService;
     }
 
-    public function aboutUs()
-    {
-        return view('Front.about-us');
-    }
-
-    public function faq()
-    {
-        return view('Front.faq');
-    }
-
     public function redirectForm(Request $request)
     {
         try {

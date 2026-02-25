@@ -45,9 +45,6 @@ Route::get('hostinger/{path}', function (string $path) {
     return Response::file($fullPath, ['Content-Type' => $mime]);
 })->where('path', '.*')->name('hostinger.asset');
 
-Route::get('/about-us', [FrontController::class, 'aboutUs'])->name('about-us');
-Route::get('/faq', [FrontController::class, 'faq'])->name('faq');
-
 Route::get('/', fn() => redirect()->route('form-consigne'));
 
 // Routes d'authentification unifiées
