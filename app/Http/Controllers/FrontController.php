@@ -24,11 +24,6 @@ class FrontController extends Controller
         $this->bdmApiService = $bdmApiService;
     }
 
-    public function acceuil()
-    {
-        return view('Front.acceuil');
-    }
-
     public function aboutUs()
     {
         return view('Front.about-us');
@@ -205,7 +200,7 @@ class FrontController extends Controller
         Auth::guard('client')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->route('front.acceuil');
+        return redirect()->route('form-consigne');
     }
 
 

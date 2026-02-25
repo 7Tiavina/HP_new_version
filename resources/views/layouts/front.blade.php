@@ -81,7 +81,7 @@
 
     <header class="luxe-header">
         <div class="luxe-header-inner">
-            <a href="{{ route('front.acceuil') }}" class="luxe-logo" aria-label="Hello Passenger Home" data-i18n-label="home">
+            <a href="{{ route('form-consigne') }}" class="luxe-logo" aria-label="Hello Passenger Home" data-i18n-label="home">
                 @if(file_exists(public_path('HP-Logo.png')))
                     <img src="{{ asset('HP-Logo.png') }}" alt="Hello Passenger" class="luxe-logo-img">
                 @else
@@ -120,7 +120,7 @@
                 <a href="{{ $formUrl }}" data-i18n="nav_book">Book</a>
                 <a href="{{ $aboutUrl }}" data-i18n="nav_about">About Us</a>
                 <a href="{{ $faqUrl }}" data-i18n="nav_faq">FAQ</a>
-                <a href="{{ route('front.acceuil') }}" data-i18n="nav_home">Home</a>
+                <a href="{{ route('form-consigne') }}" data-i18n="nav_home">Home</a>
             </div>
             <p data-i18n="footer_description">Hello Passenger is a platform to book luggage transport to or from the airport and to store your luggage at our counters at Paris CDG and Paris Orly.</p>
             <p>© {{ date('Y') }} <span data-i18n="footer_rights">All Rights Reserved</span>.</p>

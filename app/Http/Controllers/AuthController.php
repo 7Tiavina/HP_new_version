@@ -198,7 +198,7 @@ class AuthController extends Controller
         $request->session()->regenerateToken();
 
         // Always send user back to public home after logout.
-        return redirect()->route('front.acceuil');
+        return redirect()->route('form-consigne');
     }
 
     /**

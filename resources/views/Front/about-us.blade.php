@@ -63,7 +63,7 @@
     </section>
 
     <p style="text-align: center; margin-top: 2rem;" class="luxe-reveal">
-        <a href="{{ route('front.acceuil') }}" data-i18n="back_home">← Back to home</a>
+        <a href="{{ route('form-consigne') }}" data-i18n="back_home">← Back to home</a>
     </p>
 </div>
 @endsection

@@ -45,11 +45,10 @@ Route::get('hostinger/{path}', function (string $path) {
     return Response::file($fullPath, ['Content-Type' => $mime]);
 })->where('path', '.*')->name('hostinger.asset');
 
-Route::get('/acceuil', [FrontController::class, 'acceuil'])->name('front.acceuil');
 Route::get('/about-us', [FrontController::class, 'aboutUs'])->name('about-us');
 Route::get('/faq', [FrontController::class, 'faq'])->name('faq');
 
-Route::get('/', fn() => redirect()->route('front.acceuil'));
+Route::get('/', fn() => redirect()->route('form-consigne'));
 
 // Routes d'authentification unifiées
 use App\Http\Controllers\AuthController;

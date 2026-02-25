@@ -162,7 +162,7 @@ class UserController extends Controller
     {
         session()->flush();
         // After admin logout, go back to public home.
-        return redirect()->route('front.acceuil');
+        return redirect()->route('form-consigne');
     }
 
     // Affiche chaque section

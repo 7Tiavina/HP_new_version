@@ -66,7 +66,7 @@
         </div>
 
         <div class="text-center text-sm space-y-3">
-            <a href="{{ route('front.acceuil') }}" class="text-white hover:text-yellow-500 transition-colors font-semibold">
+            <a href="{{ route('form-consigne') }}" class="text-white hover:text-yellow-500 transition-colors font-semibold">
                 Home
             </a>
             <p class="text-white">

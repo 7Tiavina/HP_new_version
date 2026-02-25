@@ -28,13 +28,13 @@
 <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         <!-- Logo -->
-        <a href="{{ route('front.acceuil') }}" class="flex items-center gap-3">
+        <a href="{{ route('form-consigne') }}" class="flex items-center gap-3">
             <img src="{{ asset('images/HP-logo-290x91.png') }}" alt="Hello Passenger" class="h-20 sm:h-24 w-auto">
         </a>
 
         <!-- Desktop nav -->
         <nav class="hidden lg:flex items-center gap-6 text-gray-900 font-medium" x-data>
-            <a href="{{ route('front.acceuil') }}" class="hover:text-gray-700">Home</a>
+            <a href="{{ route('form-consigne') }}" class="hover:text-gray-700">Home</a>
 
             <div class="relative" x-data="{ open: false }">
                 <button @click="open = !open" @keydown.escape="open = false" class="hover:text-gray-700">
@@ -159,7 +159,7 @@
         </div>
 
         <nav class="space-y-2 font-semibold text-gray-900">
-            <a href="{{ route('front.acceuil') }}" class="block py-2">Home</a>
+            <a href="{{ route('form-consigne') }}" class="block py-2">Home</a>
 
             <details class="py-2">
                 <summary class="cursor-pointer">About Us</summary>
