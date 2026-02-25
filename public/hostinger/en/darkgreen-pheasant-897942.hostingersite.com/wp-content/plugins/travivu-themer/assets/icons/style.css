@@ -1,0 +1,679 @@
+@font-face {
+  font-family: 'ticomoon';
+  src:  url('icomoon.eot%3F922q2t');
+  src:  url('icomoon.eot%3F922q2t') format('embedded-opentype'),
+    url('icomoon.ttf%3F922q2t') format('truetype'),
+    url('icomoon.woff%3F922q2t') format('woff'),
+    url('icomoon.svg%3F922q2t') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+[class^="ticon-"], [class*=" ticon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'ticomoon' !important;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+.ticon-airplane-ticket:before {
+  content: "\e900";
+}
+.ticon-award:before {
+  content: "\e901";
+}
+.ticon-calendar:before {
+  content: "\e902";
+}
+.ticon-campfire:before {
+  content: "\e903";
+}
+.ticon-checked:before {
+  content: "\e904";
+}
+.ticon-credit-card:before {
+  content: "\e905";
+}
+.ticon-discount:before {
+  content: "\e906";
+}
+.ticon-filter:before {
+  content: "\e907";
+}
+.ticon-fishing-net:before {
+  content: "\e908";
+}
+.ticon-flights:before {
+  content: "\e909";
+}
+.ticon-glyph:before {
+  content: "\e90a";
+}
+.ticon-gym:before {
+  content: "\e90b";
+}
+.ticon-location:before {
+  content: "\e90c";
+}
+.ticon-low-price:before {
+  content: "\e90d";
+}
+.ticon-minus:before {
+  content: "\e90e";
+}
+.ticon-mountain-biking:before {
+  content: "\e90f";
+}
+.ticon-online-booking:before {
+  content: "\e910";
+}
+.ticon-paragliding:before {
+  content: "\e911";
+}
+.ticon-paragliding-2:before {
+  content: "\e912";
+}
+.ticon-parking:before {
+  content: "\e913";
+}
+.ticon-phone:before {
+  content: "\e914";
+}
+.ticon-photo-camera:before {
+  content: "\e915";
+}
+.ticon-plus:before {
+  content: "\e916";
+}
+.ticon-quote:before {
+  content: "\e917";
+}
+.ticon-rating:before {
+  content: "\e918";
+}
+.ticon-reception-bell:before {
+  content: "\e919";
+}
+.ticon-restaurant:before {
+  content: "\e91a";
+}
+.ticon-safety-first:before {
+  content: "\e91b";
+}
+.ticon-search:before {
+  content: "\e91c";
+}
+.ticon-seat:before {
+  content: "\e91d";
+}
+.ticon-support:before {
+  content: "\e91e";
+}
+.ticon-tent-campaign:before {
+  content: "\e91f";
+}
+.ticon-travel:before {
+  content: "\e920";
+}
+.ticon-travel-2:before {
+  content: "\e921";
+}
+.ticon-travel-agency:before {
+  content: "\e922";
+}
+.ticon-traveler:before {
+  content: "\e923";
+}
+.ticon-traveling:before {
+  content: "\e924";
+}
+.ticon-traveling-2:before {
+  content: "\e925";
+}
+.ticon-trip:before {
+  content: "\e926";
+}
+.ticon-trip-2:before {
+  content: "\e927";
+}
+.ticon-video-camera:before {
+  content: "\e928";
+}
+.ticon-wi-fi:before {
+  content: "\e929";
+}
+.ticon-wildlife:before {
+  content: "\e92a";
+}
+.ticon-windsurfing:before {
+  content: "\e92b";
+}
+.ticon-world:before {
+  content: "\e92c";
+}
+.ticon-world-2:before {
+  content: "\e92d";
+}
+.ticon-helmet:before {
+  content: "\f101";
+}
+.ticon-best-price:before {
+  content: "\f102";
+}
+.ticon-travel-5:before {
+  content: "\f103";
+}
+.ticon-right-quote:before {
+  content: "\f104";
+}
+.ticon-flight:before {
+  content: "\f105";
+}
+.ticon-camp:before {
+  content: "\f106";
+}
+.ticon-blanket:before {
+  content: "\f107";
+}
+.ticon-tent:before {
+  content: "\f109";
+}
+.ticon-fire:before {
+  content: "\f10a";
+}
+.ticon-wifi-router:before {
+  content: "\f10c";
+}
+.ticon-solar-energy:before {
+  content: "\f10d";
+}
+.ticon-cycling:before {
+  content: "\f10e";
+}
+.ticon-fishing:before {
+  content: "\f10f";
+}
+.ticon-gym-2:before {
+  content: "\f110";
+}
+.ticon-hiking:before {
+  content: "\f111";
+}
+.ticon-tent-1:before {
+  content: "\f112";
+}
+.ticon-reviews:before {
+  content: "\f113";
+}
+.ticon-award-2:before {
+  content: "\f114";
+}
+.ticon-quote-2:before {
+  content: "\f115";
+}
+.ticon-camping:before {
+  content: "\f116";
+}
+.ticon-cable-car:before {
+  content: "\f117";
+}
+.ticon-trailer:before {
+  content: "\f118";
+}
+.ticon-firewood:before {
+  content: "\f119";
+}
+.ticon-biking-mountain:before {
+  content: "\f11a";
+}
+.ticon-fishing-1:before {
+  content: "\f11b";
+}
+.ticon-fishing-2:before {
+  content: "\f11c";
+}
+.ticon-caravan:before {
+  content: "\f11d";
+}
+.ticon-world-3:before {
+  content: "\f11e";
+}
+.ticon-journey:before {
+  content: "\f11f";
+}
+.ticon-selection:before {
+  content: "\e92e";
+}
+.ticon-delete:before {
+  content: "\e92f";
+}
+.ticon-magnifying-glass:before {
+  content: "\e930";
+}
+.ticon-heart:before {
+  content: "\e931";
+}
+.ticon-clipboard:before {
+  content: "\e932";
+}
+.ticon-quote-1:before {
+  content: "\e933";
+}
+.ticon-focus:before {
+  content: "\e934";
+}
+.ticon-left-arrow:before {
+  content: "\e935";
+}
+.ticon-right-arrow:before {
+  content: "\e936";
+}
+.ticon-left-arrow-1:before {
+  content: "\e937";
+}
+.ticon-right-arrow-1:before {
+  content: "\e938";
+}
+.ticon-checked-1:before {
+  content: "\e939";
+}
+.ticon-check:before {
+  content: "\e93a";
+}
+.ticon-comment:before {
+  content: "\e93b";
+}
+.ticon-message:before {
+  content: "\e93c";
+}
+.ticon-star:before {
+  content: "\e93d";
+}
+.ticon-phone-1:before {
+  content: "\e93e";
+}
+.ticon-email:before {
+  content: "\e93f";
+}
+.ticon-plus-1:before {
+  content: "\e940";
+}
+.ticon-phone-call:before {
+  content: "\e941";
+}
+.ticon-support1:before {
+  content: "\e942";
+}
+.ticon-generous:before {
+  content: "\e943";
+}
+.ticon-fundraiser:before {
+  content: "\e944";
+}
+.ticon-message-1:before {
+  content: "\e945";
+}
+.ticon-shopping-cart:before {
+  content: "\e946";
+}
+.ticon-chat:before {
+  content: "\e947";
+}
+.ticon-address:before {
+  content: "\e948";
+}
+.ticon-charity:before {
+  content: "\e949";
+}
+.ticon-water:before {
+  content: "\e94a";
+}
+.ticon-health-check:before {
+  content: "\e94b";
+}
+.ticon-heart-1:before {
+  content: "\e94c";
+}
+.ticon-fast-food:before {
+  content: "\e94d";
+}
+.ticon-maternity:before {
+  content: "\e94e";
+}
+.ticon-handshake:before {
+  content: "\e94f";
+}
+.ticon-adoption:before {
+  content: "\e950";
+}
+.ticon-place:before {
+  content: "\e951";
+}
+.ticon-phone-call-1:before {
+  content: "\e952";
+}
+.ticon-at:before {
+  content: "\e953";
+}
+.ticon-clock:before {
+  content: "\e954";
+}
+.ticon-user:before {
+  content: "\e955";
+}
+.ticon-plane:before {
+  content: "\e956";
+}
+.ticon-cashback:before {
+  content: "\e957";
+}
+.ticon-online-booking1:before {
+  content: "\e958";
+}
+.ticon-travel-7:before {
+  content: "\e959";
+}
+.ticon-landscape:before {
+  content: "\e95a";
+}
+.ticon-airplane:before {
+  content: "\e95b";
+}
+.ticon-recovery:before {
+  content: "\e95c";
+}
+.ticon-leadership:before {
+  content: "\e95d";
+}
+.ticon-coronavirus:before {
+  content: "\e95e";
+}
+.ticon-travel-1:before {
+  content: "\e95f";
+}
+.ticon-car:before {
+  content: "\e960";
+}
+.ticon-travel-6:before {
+  content: "\e961";
+}
+.ticon-passport:before {
+  content: "\e962";
+}
+.ticon-travel-3:before {
+  content: "\e963";
+}
+.ticon-location-1:before {
+  content: "\e964";
+}
+.ticon-worlwide:before {
+  content: "\e965";
+}
+.ticon-travel-4:before {
+  content: "\e966";
+}
+.ticon-deer:before {
+  content: "\e967";
+}
+.ticon-paragliding-1:before {
+  content: "\e968";
+}
+.ticon-mountains:before {
+  content: "\e969";
+}
+.ticon-mountain:before {
+  content: "\e96a";
+}
+.ticon-flag:before {
+  content: "\e96b";
+}
+.ticon-hang-gliding:before {
+  content: "\e96c";
+}
+.ticon-summer-holidays:before {
+  content: "\e96d";
+}
+.ticon-summer:before {
+  content: "\e96e";
+}
+.ticon-reisekarte:before {
+  content: "\e96f";
+}
+.ticon-wegweiser:before {
+  content: "\e970";
+}
+.ticon-lager:before {
+  content: "\e971";
+}
+.ticon-family:before {
+  content: "\e972";
+}
+.ticon-family-room:before {
+  content: "\e973";
+}
+.ticon-calendar-1:before {
+  content: "\e974";
+}
+.ticon-clock-1:before {
+  content: "\e975";
+}
+.ticon-time:before {
+  content: "\e976";
+}
+.ticon-wifi:before {
+  content: "\e977";
+}
+.ticon-paw:before {
+  content: "\e978";
+}
+.ticon-parking-sign:before {
+  content: "\e979";
+}
+.ticon-elevator:before {
+  content: "\e97a";
+}
+.ticon-global:before {
+  content: "\e97b";
+}
+.ticon-global-1:before {
+  content: "\e97c";
+}
+.ticon-coupon:before {
+  content: "\e97d";
+}
+.ticon-suitcase:before {
+  content: "\e97e";
+}
+.ticon-shopping-bags:before {
+  content: "\e97f";
+}
+.ticon-food:before {
+  content: "\e980";
+}
+.ticon-plane-1:before {
+  content: "\e981";
+}
+.ticon-purse-with-bill:before {
+  content: "\e982";
+}
+.ticon-credit-card-1:before {
+  content: "\e983";
+}
+.ticon-multiple-users:before {
+  content: "\e984";
+}
+.ticon-player:before {
+  content: "\e985";
+}
+.ticon-table:before {
+  content: "\e986";
+}
+.ticon-reception:before {
+  content: "\e987";
+}
+.ticon-cctv:before {
+  content: "\e988";
+}
+.ticon-wheelchair:before {
+  content: "\e989";
+}
+.ticon-towel:before {
+  content: "\e98a";
+}
+.ticon-shampoo:before {
+  content: "\e98b";
+}
+.ticon-hotel-sign:before {
+  content: "\e98c";
+}
+.ticon-room-service:before {
+  content: "\e98d";
+}
+.ticon-jacuzzi:before {
+  content: "\e98e";
+}
+.ticon-single-bed:before {
+  content: "\e98f";
+}
+.ticon-review:before {
+  content: "\e990";
+}
+.ticon-bathroom:before {
+  content: "\e991";
+}
+.ticon-room-key:before {
+  content: "\e992";
+}
+.ticon-swimmer:before {
+  content: "\e993";
+}
+.ticon-terrace:before {
+  content: "\e994";
+}
+.ticon-receptionist:before {
+  content: "\e995";
+}
+.ticon-laundry:before {
+  content: "\e996";
+}
+.ticon-translate:before {
+  content: "\e997";
+}
+.ticon-newspaper:before {
+  content: "\e998";
+}
+.ticon-user-1:before {
+  content: "\e999";
+}
+.ticon-cutlery:before {
+  content: "\e99a";
+}
+.ticon-cocktail:before {
+  content: "\e99b";
+}
+.ticon-health:before {
+  content: "\e99c";
+}
+.ticon-shop:before {
+  content: "\e99d";
+}
+.ticon-car-1:before {
+  content: "\e99e";
+}
+.ticon-skincare:before {
+  content: "\e99f";
+}
+.ticon-tick:before {
+  content: "\e9a0";
+}
+.ticon-add-group:before {
+  content: "\e9a1";
+}
+.ticon-blog:before {
+  content: "\e9a2";
+}
+.ticon-publish:before {
+  content: "\e9a3";
+}
+.ticon-growth:before {
+  content: "\e9a4";
+}
+.ticon-right-arrow-2:before {
+  content: "\e9a5";
+}
+.ticon-trophy:before {
+  content: "\e9a6";
+}
+.ticon-success:before {
+  content: "\e9a7";
+}
+.ticon-employee:before {
+  content: "\e9a8";
+}
+.ticon-rating-stars:before {
+  content: "\e9a9";
+}
+.ticon-user-2:before {
+  content: "\e9aa";
+}
+.ticon-price-tag:before {
+  content: "\e9ab";
+}
+.ticon-list:before {
+  content: "\e9ac";
+}
+.ticon-list-1:before {
+  content: "\e9ad";
+}
+.ticon-thumbs-up:before {
+  content: "\e9ae";
+}
+.ticon-network:before {
+  content: "\e9af";
+}
+.ticon-booking:before {
+  content: "\e9b0";
+}
+.ticon-locations:before {
+  content: "\e9b1";
+}
+.ticon-cheer-up:before {
+  content: "\e9b2";
+}
+.ticon-planner:before {
+  content: "\e9b3";
+}
+.ticon-discount-1:before {
+  content: "\e9b4";
+}
+.ticon-purse:before {
+  content: "\e9b5";
+}
+.ticon-group:before {
+  content: "\e9b6";
+}
+.ticon-mother:before {
+  content: "\e9b7";
+}
+.ticon-telephone:before {
+  content: "\e9b8";
+}
+.ticon-email-1:before {
+  content: "\e9b9";
+}
+.ticon-pin:before {
+  content: "\e9ba";
+}
+.ticon-shopping-cart-1:before {
+  content: "\e9bb";
+}

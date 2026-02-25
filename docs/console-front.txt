@@ -1,0 +1,63 @@
+{
+    "idPlateforme": "64f00ace-31b6-45b0-bcb2-b562b1ac08d9",
+    "airportName": "Orly",
+    "commandeLignes": [
+        {
+            "idProduit": "2418a6cf-4426-4402-8374-f0b2bd12ee0a",
+            "idService": "dfb8ac1b-8bb1-4957-afb4-1faedaf641b7",
+            "dateDebut": "2025-12-25T09:49:00.000Z",
+            "dateFin": "2025-12-27T10:49:00.000Z",
+            "prixTTC": 20,
+            "quantite": 1,
+            "libelleProduit": "Vestiaire"
+        },
+        {
+            "idProduit": "f1037c43-639e-4251-bec5-db43d6822d96",
+            "idService": "dfb8ac1b-8bb1-4957-afb4-1faedaf641b7",
+            "dateDebut": "2025-12-25T09:49:00.000Z",
+            "dateFin": "2025-12-27T10:49:00.000Z",
+            "prixTTC": 45,
+            "quantite": 1,
+            "libelleProduit": "PREMIUM",
+            "is_option": true
+        }
+    ],
+    "commandeInfos": {
+        "modeTransport": "",
+        "lieu": "",
+        "commentaires": ""
+    },
+    "client": {
+        "email": "er@gmail.com",
+        "telephone": "1231245353",
+        "nom": "Tiavina",
+        "prenom": "Francis",
+        "civilite": "M.",
+        "nomSociete": "CamilleSA",
+        "adresse": "Paris, France",
+        "complementAdresse": "I123445",
+        "ville": "paris",
+        "codePostal": "23512",
+        "pays": "Mauritius",
+        "is_guest": true
+    },
+    "total_prix_ttc": 65,
+    "DEBUG_request_options": [
+        {
+            "itemCategory": "option",
+            "id": "f1037c43-639e-4251-bec5-db43d6822d96",
+            "key": "premium",
+            "libelle": "PREMIUM",
+            "prix": 45,
+            "details": {
+                "direction": "terminal_to_agence",
+                "flight_number_arrival": "12134ERF",
+                "date_arrival": "2025-12-25",
+                "time_arrival": "09:49",
+                "pickup_location_arrival": "10132771-1a56-47bd-0913-08de01815f2e",
+                "pickup_time_arrival": "10:34",
+                "instructions_arrival": "eg<e"
+            }
+        }
+    ]
+}

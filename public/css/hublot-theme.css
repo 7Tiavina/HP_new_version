@@ -1,0 +1,172 @@
+/**
+ * HelloPassenger — Hublot (porthole) theme
+ * Design system: viewports, glass, rim, animations for business/travel brand.
+ */
+:root {
+  --hp-hublot-bg: #0a0a0b;
+  --hp-hublot-surface: #12121a;
+  --hp-hublot-surface-elevated: #1a1a24;
+  --hp-hublot-accent: #F9C52D;
+  --hp-hublot-accent-dim: rgba(249, 197, 45, 0.12);
+  --hp-hublot-rim: #2d2d36;
+  --hp-hublot-rim-light: #3d3d48;
+  --hp-hublot-glass: rgba(255, 255, 255, 0.05);
+  --hp-hublot-text: #e8e8ec;
+  --hp-hublot-text-muted: #9ca3af;
+  --hp-hublot-radius: 24px;
+  --hp-hublot-radius-lg: 32px;
+  --hp-hublot-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  --hp-hublot-shadow-glow: 0 0 40px rgba(249, 197, 45, 0.15);
+}
+
+/* —— Scroll-triggered animations (JS adds .hp-hublot-visible) —— */
+.hp-hublot-animate-in {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.hp-hublot-animate-in.hp-hublot-fade-only {
+  transform: none;
+}
+.hp-hublot-animate-in.hp-hublot-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.hp-hublot-animate-in.hp-hublot-fade-only.hp-hublot-visible {
+  transform: none;
+}
+
+/* Stagger children */
+.hp-hublot-stagger > *:nth-child(1) { transition-delay: 0.05s; }
+.hp-hublot-stagger > *:nth-child(2) { transition-delay: 0.12s; }
+.hp-hublot-stagger > *:nth-child(3) { transition-delay: 0.19s; }
+.hp-hublot-stagger > *:nth-child(4) { transition-delay: 0.26s; }
+.hp-hublot-stagger > *:nth-child(5) { transition-delay: 0.33s; }
+.hp-hublot-stagger > *:nth-child(6) { transition-delay: 0.4s; }
+
+/* —— Hublot viewport (circular porthole frame) —— */
+.hp-hublot-viewport {
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid var(--hp-hublot-rim);
+  box-shadow:
+    inset 0 0 80px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    var(--hp-hublot-shadow);
+  position: relative;
+}
+.hp-hublot-viewport::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  padding: 4px;
+  background: linear-gradient(145deg, rgba(255,255,255,0.08) 0%, transparent 50%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Rectangular “window” variant */
+.hp-hublot-window {
+  border-radius: var(--hp-hublot-radius-lg);
+  overflow: hidden;
+  border: 3px solid var(--hp-hublot-rim);
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    var(--hp-hublot-shadow);
+}
+
+/* —— Cards with hover lift & subtle glow —— */
+.hp-hublot-card {
+  background: var(--hp-hublot-surface);
+  border: 1px solid var(--hp-hublot-rim);
+  border-radius: var(--hp-hublot-radius);
+  padding: 1.5rem 1.75rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.hp-hublot-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--hp-hublot-shadow), var(--hp-hublot-shadow-glow);
+  border-color: var(--hp-hublot-rim-light);
+}
+
+/* —— Glass panel —— */
+.hp-hublot-glass-panel {
+  background: var(--hp-hublot-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--hp-hublot-radius);
+}
+
+/* —— Home page: enhance existing sections (when body has .hp-hublot) —— */
+body.hp-hublot #travel-light {
+  position: relative;
+  border-radius: var(--hp-hublot-radius-lg);
+  overflow: hidden;
+  box-shadow: var(--hp-hublot-shadow);
+}
+body.hp-hublot #travel-light::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 3px solid var(--hp-hublot-rim);
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.15);
+}
+
+body.hp-hublot .about-eight__single {
+  border-radius: var(--hp-hublot-radius-lg);
+  overflow: hidden;
+  border: 3px solid var(--hp-hublot-rim);
+  box-shadow: var(--hp-hublot-shadow), 0 0 0 1px rgba(255,255,255,0.05);
+}
+
+body.hp-hublot .feature-three__single {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  border-radius: var(--hp-hublot-radius);
+  border: 1px solid transparent;
+}
+body.hp-hublot .feature-three__single:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--hp-hublot-shadow), 0 0 30px rgba(249, 197, 45, 0.12);
+  border-color: var(--hp-hublot-rim-light);
+}
+
+/* Elementor sections: subtle fade-in when in view */
+body.hp-hublot .elementor-section.elementor-inner-section,
+body.hp-hublot .elementor-element.elementor-widget-gva-features-block {
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* —— Buttons: accent with hover glow —— */
+body.hp-hublot a[href].pt_plus_button .animted-content-inner,
+body.hp-hublot .pt-plus-button-wrapper a.button-link-wrap {
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+body.hp-hublot .pt-plus-button-wrapper a.button-link-wrap:hover {
+  box-shadow: 0 0 24px rgba(249, 197, 45, 0.35);
+}
+
+/* —— Page content wrapper: subtle inner glow —— */
+body.hp-hublot #page-content {
+  position: relative;
+}
+
+/* —— Home: hero reduced height (no zoom) —— */
+body.hp-hublot .elementor-element.elementor-element-f57e335 {
+  --min-height: 50vh !important;
+  min-height: 50vh !important;
+}
+
+/* —— About Us & FAQ: dark canvas so viewports read correctly —— */
+body.hp-hublot[data-page="about-us"] #hp-page-root,
+body.hp-hublot[data-page="faq"] #hp-page-root {
+  background: var(--hp-hublot-bg);
+  min-height: 60vh;
+}

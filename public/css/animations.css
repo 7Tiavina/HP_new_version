@@ -1,0 +1,165 @@
+/**
+ * Hello Passenger — Modern animations
+ * Parallax, counters, tilt, gradient pulse, smooth reveals.
+ */
+
+/* —— Hero background subtle scale on load —— */
+.luxe-hero .luxe-hero-bg img {
+  animation: luxe-hero-scale 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes luxe-hero-scale {
+  from { transform: scale(1.05); opacity: 0.9; }
+  to { transform: scale(1); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .luxe-hero .luxe-hero-bg img { animation: none; }
+}
+
+/* —— Animated gradient border (subtle pulse on cards) —— */
+@keyframes luxe-glow-pulse {
+  0%, 100% { border-color: rgba(201, 169, 98, 0.35); box-shadow: 0 4px 24px rgba(0,0,0,0.2); }
+  50% { border-color: rgba(201, 169, 98, 0.5); box-shadow: 0 8px 32px rgba(201, 169, 98, 0.08); }
+}
+.luxe-card.luxe-animate-glow:hover,
+.luxe-service-card.luxe-animate-glow:hover,
+.luxe-stat.luxe-animate-glow:hover {
+  animation: luxe-glow-pulse 2s ease-in-out infinite;
+}
+
+/* —— 3D tilt on hover (cards) —— */
+.luxe-tilt {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+.luxe-tilt-inner {
+  transform: translateZ(20px);
+  transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* —— Shine sweep on hover —— */
+@keyframes luxe-shine {
+  0% { transform: translateX(-100%) skewX(-15deg); opacity: 0; }
+  50% { opacity: 0.3; }
+  100% { transform: translateX(200%) skewX(-15deg); opacity: 0; }
+}
+.luxe-shine-wrap {
+  position: relative;
+  overflow: hidden;
+}
+.luxe-shine-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: translateX(-100%) skewX(-15deg);
+  pointer-events: none;
+}
+.luxe-shine-wrap:hover::after {
+  animation: luxe-shine 0.8s ease-out;
+}
+
+/* —— Counter number animation (JS-driven) —— */
+.luxe-stat-value.luxe-counter {
+  display: inline-block;
+  min-width: 2ch;
+}
+
+/* —— Staggered fade-up (improved) —— */
+.luxe-reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.luxe-reveal.luxe-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* —— Button ripple / scale on click —— */
+.btn-cta {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-cta:active {
+  transform: scale(0.98);
+}
+
+/* —— Floating subtle motion (hero tag) —— */
+@keyframes luxe-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.luxe-hero-tag.luxe-float {
+  animation: luxe-float 3s ease-in-out infinite;
+}
+
+/* —— Process number glow —— */
+.luxe-process-num {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+.luxe-process-item:hover .luxe-process-num {
+  box-shadow: 0 0 24px rgba(201, 169, 98, 0.4);
+  transform: scale(1.08);
+}
+
+/* —— FAQ details expand animation —— */
+.luxe-faq details {
+  transition: background 0.25s ease, border-color 0.25s ease;
+}
+.luxe-faq details[open] {
+  border-color: rgba(201, 169, 98, 0.4);
+}
+.luxe-faq details > div {
+  animation: luxe-faq-open 0.3s ease;
+}
+@keyframes luxe-faq-open {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* —— Link underline slide —— */
+.luxe-page a:not(.btn-cta):not(.luxe-nav a) {
+  position: relative;
+}
+.luxe-page a:not(.btn-cta):not(.luxe-nav a)::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--luxe-gold);
+  transition: width 0.3s ease;
+}
+.luxe-page a:not(.btn-cta):not(.luxe-nav a):hover::after {
+  width: 100%;
+}
+
+/* —— Promo bar subtle pulse —— */
+@keyframes luxe-promo-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.92; }
+}
+.luxe-promo {
+  animation: luxe-promo-pulse 4s ease-in-out infinite;
+}
+
+/* —— Footer links stagger on hover —— */
+.luxe-footer-links a {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.luxe-footer-links a:hover {
+  transform: translateY(-2px);
+}
+
+/* —— Image zoom on scroll into view —— */
+.luxe-img-reveal {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.luxe-img-reveal.luxe-visible {
+  opacity: 1;
+  transform: scale(1);
+}
