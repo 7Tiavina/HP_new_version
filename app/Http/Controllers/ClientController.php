@@ -312,9 +312,31 @@ class ClientController extends Controller
      */
     public function updateProfile(Request $request)
     {
+        Log::info('=== [ClientController@updateProfile] START ===', [
+            'is_ajax' => $request->ajax(),
+            'expects_json' => $request->expectsJson(),
+            'method' => $request->method(),
+            'all_input' => $request->all(),
+            'guard_check' => auth()->guard('client')->check(),
+            'guard_id' => auth()->guard('client')->id(),
+        ]);
+
         $client = auth()->guard('client')->user();
 
-        $request->validate([
+        if (!$client) {
+            Log::error('[ClientController@updateProfile] No authenticated client found');
+            return response()->json([
+                'success' => false,
+                'message' => 'Utilisateur non authentifié. Veuillez vous connecter.',
+            ], 401);
+        }
+
+        Log::info('[ClientController@updateProfile] Authenticated client found', [
+            'client_id' => $client->id,
+            'client_email' => $client->email,
+        ]);
+
+        $validated = $request->validate([
             'nom' => 'required|string|max:100',
             'prenom' => 'required|string|max:100',
             'telephone' => 'nullable|string|max:30',
@@ -325,24 +347,50 @@ class ClientController extends Controller
             'pays' => 'nullable|string|max:100',
         ]);
 
-        $client->update([
-            'nom' => $request->nom,
-            'prenom' => $request->prenom,
-            'telephone' => $request->telephone,
-            'adresse' => $request->adresse,
-            'complementAdresse' => $request->complementAdresse,
-            'ville' => $request->ville,
-            'codePostal' => $request->codePostal,
-            'pays' => $request->pays,
-        ]);
+        Log::info('[ClientController@updateProfile] Validation passed', ['validated' => $validated]);
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Profil mis à jour avec succès !'
+        try {
+            $client->update([
+                'nom' => $request->nom,
+                'prenom' => $request->prenom,
+                'telephone' => $request->telephone,
+                'adresse' => $request->adresse,
+                'complementAdresse' => $request->complementAdresse,
+                'ville' => $request->ville,
+                'codePostal' => $request->codePostal,
+                'pays' => $request->pays,
             ]);
-        }
 
-        return back()->with('success', 'Profil mis à jour avec succès !');
+            Log::info('[ClientController@updateProfile] Client profile updated successfully', [
+                'client_id' => $client->id,
+                'new_data' => $validated,
+            ]);
+
+            if ($request->expectsJson()) {
+                Log::info('=== [ClientController@updateProfile] SUCCESS (JSON) ===');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Profil mis à jour avec succès !'
+                ]);
+            }
+
+            Log::info('=== [ClientController@updateProfile] SUCCESS (redirect) ===');
+            return back()->with('success', 'Profil mis à jour avec succès !');
+
+        } catch (\Exception $e) {
+            Log::error('=== [ClientController@updateProfile] EXCEPTION ===', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la mise à jour: ' . $e->getMessage(),
+                ], 500);
+            }
+
+            return back()->withErrors(['error' => 'Erreur lors de la mise à jour: ' . $e->getMessage()]);
+        }
     }
 }

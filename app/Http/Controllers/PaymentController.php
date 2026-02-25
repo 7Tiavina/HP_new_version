@@ -278,62 +278,128 @@ class PaymentController extends Controller
     }
 
     public function updateGuestInfoInSession(Request $request)
-{
-    $validated = $request->validate([
-        // REQUIRED
-        'telephone' => 'required|string|max:255',
-        'nom'       => 'required|string|max:255',
-        'prenom'    => 'required|string|max:255',
-        'adresse'   => 'required|string|max:255',
-
-        // OPTIONAL (Swagger-safe)
-        'civilite'          => 'sometimes|nullable|string|max:10',
-        'nomSociete'        => 'sometimes|nullable|string|max:255',
-        'complementAdresse' => 'sometimes|nullable|string|max:255',
-        'ville'             => 'sometimes|nullable|string|max:255',
-        'codePostal'        => 'sometimes|nullable|string|max:20',
-        'pays'              => 'sometimes|nullable|string|max:255',
-    ]);
-
-    // Force phone to E.164 with country code (e.g. +33...), no auto-detection.
-    $rawPhone = (string)($validated['telephone'] ?? '');
-    $rawPhone = trim($rawPhone);
-    $rawPhone = preg_replace('/[^\d\+]/', '', $rawPhone); // keep digits and +
-    if (str_starts_with($rawPhone, '00')) {
-        $rawPhone = '+' . substr($rawPhone, 2);
-    }
-
-    $hasPlus = str_starts_with($rawPhone, '+');
-    $digits = preg_replace('/\D/', '', $rawPhone);
-    $len = strlen($digits);
-
-    if (!$hasPlus || $len < 6 || $len > 15) {
-        throw \Illuminate\Validation\ValidationException::withMessages([
-            'telephone' => 'Veuillez renseigner votre numéro avec le code pays (ex: +33...).',
+    {
+        Log::info('=== [updateGuestInfoInSession] START ===', [
+            'is_ajax' => $request->ajax(),
+            'expects_json' => $request->expectsJson(),
+            'method' => $request->method(),
+            'all_input' => $request->all(),
+            'session_id' => $request->session()->getId(),
+            'has_commande_en_cours' => $request->session()->has('commande_en_cours'),
         ]);
+
+        try {
+            $validated = $request->validate([
+                // REQUIRED
+                'telephone' => 'required|string|max:255',
+                'nom'       => 'required|string|max:255',
+                'prenom'    => 'required|string|max:255',
+                'adresse'   => 'required|string|max:255',
+
+                // OPTIONAL (Swagger-safe)
+                'civilite'          => 'sometimes|nullable|string|max:10',
+                'nomSociete'        => 'sometimes|nullable|string|max:255',
+                'complementAdresse' => 'sometimes|nullable|string|max:255',
+                'ville'             => 'sometimes|nullable|string|max:255',
+                'codePostal'        => 'sometimes|nullable|string|max:20',
+                'pays'              => 'sometimes|nullable|string|max:255',
+            ]);
+
+            Log::info('[updateGuestInfoInSession] Validation passed', ['validated' => $validated]);
+
+            // Force phone to E.164 with country code (e.g. +33...), no auto-detection.
+            $rawPhone = (string)($validated['telephone'] ?? '');
+            Log::info('[updateGuestInfoInSession] Raw phone before normalization', ['rawPhone' => $rawPhone]);
+            
+            $rawPhone = trim($rawPhone);
+            $rawPhone = preg_replace('/[^\d\+]/', '', $rawPhone); // keep digits and +
+            if (str_starts_with($rawPhone, '00')) {
+                $rawPhone = '+' . substr($rawPhone, 2);
+            }
+
+            $hasPlus = str_starts_with($rawPhone, '+');
+            $digits = preg_replace('/\D/', '', $rawPhone);
+            $len = strlen($digits);
+
+            Log::info('[updateGuestInfoInSession] Phone normalization result', [
+                'hasPlus' => $hasPlus,
+                'digits' => $digits,
+                'len' => $len,
+            ]);
+
+            if (!$hasPlus || $len < 6 || $len > 15) {
+                Log::error('[updateGuestInfoInSession] Phone validation failed', [
+                    'hasPlus' => $hasPlus,
+                    'len' => $len,
+                ]);
+                throw \Illuminate\Validation\ValidationException::withMessages([
+                    'telephone' => 'Veuillez renseigner votre numéro avec le code pays (ex: +33...).',
+                ]);
+            }
+
+            $validated['telephone'] = '+' . $digits;
+            Log::info('[updateGuestInfoInSession] Phone validated', ['telephone' => $validated['telephone']]);
+
+            // SERVER-SIDE DEFAULTS
+            $data = array_merge([
+                'nomSociete'        => null,
+                'complementAdresse' => null,
+            ], $validated);
+
+            Log::info('[updateGuestInfoInSession] Data to store', ['data' => $data]);
+
+            Session::put('guest_customer_details', $data);
+            Log::info('[updateGuestInfoInSession] guest_customer_details stored in session');
+
+            $commandeData = Session::get('commande_en_cours');
+            Log::info('[updateGuestInfoInSession] commande_en_cours before update', [
+                'exists' => $commandeData !== null,
+                'is_guest' => $commandeData['client']['is_guest'] ?? null,
+            ]);
+
+            if ($commandeData && isset($commandeData['client']['is_guest'])) {
+                // Preserve is_guest flag and other client data fields
+                $originalIsGuest = $commandeData['client']['is_guest'];
+                $originalEmail = $commandeData['client']['email'] ?? null;
+                
+                // Merge new data while preserving critical flags
+                $commandeData['client'] = array_merge($commandeData['client'], $data);
+                
+                // Ensure is_guest and email are preserved
+                $commandeData['client']['is_guest'] = $originalIsGuest;
+                $commandeData['client']['email'] = $originalEmail;
+                
+                Session::put('commande_en_cours', $commandeData);
+                Log::info('[updateGuestInfoInSession] commande_en_cours updated with guest info', [
+                    'client_email' => $commandeData['client']['email'] ?? null,
+                    'is_guest' => $commandeData['client']['is_guest'] ?? null,
+                ]);
+            }
+
+            Log::info('=== [updateGuestInfoInSession] SUCCESS ===');
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Guest information updated in session.',
+            ]);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('=== [updateGuestInfoInSession] VALIDATION ERROR ===', [
+                'errors' => $e->errors(),
+                'message' => $e->getMessage(),
+            ]);
+            throw $e;
+        } catch (\Exception $e) {
+            Log::error('=== [updateGuestInfoInSession] EXCEPTION ===', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur serveur: ' . $e->getMessage(),
+            ], 500);
+        }
     }
-
-    $validated['telephone'] = '+' . $digits;
-
-    // SERVER-SIDE DEFAULTS
-    $data = array_merge([
-        'nomSociete'        => null,
-        'complementAdresse' => null,
-    ], $validated);
-
-    Session::put('guest_customer_details', $data);
-
-    $commandeData = Session::get('commande_en_cours');
-    if ($commandeData && isset($commandeData['client']['is_guest']) && $commandeData['client']['is_guest']) {
-        $commandeData['client'] = array_merge($commandeData['client'], $data);
-        Session::put('commande_en_cours', $commandeData);
-    }
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Guest information updated in session.',
-    ]);
-}
 
 
     private function getBdmToken(): string
@@ -462,7 +528,9 @@ class PaymentController extends Controller
     {
         Log::info('----------------------------------------------------');
         Log::info('[showPaymentPage] START - Handling /payment route.');
-
+        Log::info('[showPaymentPage] Session ID: ' . session()->getId());
+        Log::info('[showPaymentPage] Session data keys: ' . json_encode(array_keys(session()->all())));
+        
         // Check if user has already completed a payment recently (to prevent duplicate orders)
         $lastCommandeId = Session::get('last_commande_id');
         $apiPaymentResult = Session::get('api_payment_result');
@@ -474,6 +542,17 @@ class PaymentController extends Controller
         }
 
         $commandeData = Session::get('commande_en_cours');
+        Log::info('[showPaymentPage] commande_en_cours exists: ' . ($commandeData ? 'YES' : 'NO'));
+        if ($commandeData) {
+            Log::info('[showPaymentPage] commande_en_cours client data: ', [
+                'is_guest' => $commandeData['client']['is_guest'] ?? 'NOT_SET',
+                'email' => $commandeData['client']['email'] ?? 'NOT_SET',
+                'telephone' => $commandeData['client']['telephone'] ?? 'NOT_SET',
+                'nom' => $commandeData['client']['nom'] ?? 'NOT_SET',
+                'prenom' => $commandeData['client']['prenom'] ?? 'NOT_SET',
+            ]);
+        }
+        
         if (!$commandeData || !isset($commandeData['client'])) {
             Log::error('[showPaymentPage] CRITICAL: Commande data or client info NOT FOUND in session. Aborting.');
             return redirect()->route('payment')->with('error', 'Votre session a expiré ou vos informations sont invalides. Veuillez recommencer votre commande depuis le début.');
@@ -481,18 +560,44 @@ class PaymentController extends Controller
 
         $clientDataFromSession = $commandeData['client'];
         $isGuest = $clientDataFromSession['is_guest'] ?? false;
+        
+        // FIX: If is_guest is false but no authenticated user, force is_guest to true
+        // This happens when session data is corrupted or incorrectly set
+        if (!$isGuest && !Auth::guard('client')->check()) {
+            Log::warning('[showPaymentPage] is_guest is false but no authenticated user. Forcing is_guest to true.');
+            $isGuest = true;
+            // Also fix the session data
+            $commandeData['client']['is_guest'] = true;
+            Session::put('commande_en_cours', $commandeData);
+        }
+        
+        Log::info('[showPaymentPage] isGuest determined from session: ' . ($isGuest ? 'TRUE' : 'FALSE'));
+
         $user = null;
 
         if ($isGuest) {
             $user = (object) $clientDataFromSession;
+            Log::info('[showPaymentPage] Using guest user object', [
+                'telephone' => $user->telephone ?? 'NULL',
+                'email' => $user->email ?? 'NULL',
+            ]);
         } else {
             $user = Auth::guard('client')->user();
+            Log::info('[showPaymentPage] Auth guard check', [
+                'guard_check' => Auth::guard('client')->check(),
+                'guard_id' => Auth::guard('client')->id(),
+                'user_id' => $user?->id,
+            ]);
             if (!$user) {
-                return redirect()->route('payment')->with('error', 'Un problème de connexion est survenu. Veuillez vous reconnecter.');
+                // This should not happen anymore due to the fix above
+                Log::error('[showPaymentPage] CRITICAL: is_guest is false but no authenticated user. Redirecting to form.');
+                return redirect()->route('form-consigne')->with('error', 'Session invalide. Veuillez recommencer votre commande.');
             }
         }
 
         $isProfileComplete = !empty($user->telephone);
+        Log::info('[showPaymentPage] isProfileComplete: ' . ($isProfileComplete ? 'TRUE' : 'FALSE') . ' (telephone: ' . ($user->telephone ?? 'NULL') . ')');
+        
         $formToken = null;
 
         if ($isProfileComplete) {
@@ -526,6 +631,13 @@ class PaymentController extends Controller
         // Get any error message from the session
         $errorMessage = session('error');
         $hasError = !empty($errorMessage);
+
+        Log::info('[showPaymentPage] END - Returning view', [
+            'isProfileComplete' => $isProfileComplete,
+            'isGuest' => $isGuest,
+            'hasFormToken' => $formToken !== null,
+        ]);
+        Log::info('----------------------------------------------------');
 
         return view('payment', compact('user', 'formToken', 'isProfileComplete', 'isGuest', 'errorMessage', 'hasError'));
     }
