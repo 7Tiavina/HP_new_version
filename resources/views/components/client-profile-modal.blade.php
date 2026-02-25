@@ -49,9 +49,12 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-gray-700 uppercase" data-i18n="label_telephone">Téléphone mobile</label>
-                                <input type="tel" name="telephone" id="modal-telephone" placeholder="+33 6 12 34 56 78 (avec code pays)" data-i18n-placeholder="placeholder_telephone" autocomplete="off" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-3 text-gray-800 font-medium text-lg">
-                                <p class="text-xs text-gray-500 mt-1" data-i18n="phone_country_code_hint">⚠️ Veuillez renseigner votre numéro avec le code pays (ex: +33 pour la France, +230 pour Maurice)</p>
+                            <label for="modal-telephone" class="block text-xs font-bold text-gray-700 uppercase" data-i18n="label_telephone">Téléphone mobile</label>
+                            <div class="mt-1">
+                                <input type="tel" name="telephone" id="modal-telephone"
+                                    autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+                                    class="block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-3 text-gray-800 font-medium text-lg">
+                            </div>
                         </div>
                         
                         <div>

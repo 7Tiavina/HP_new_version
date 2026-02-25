@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="https://api.gateway.monetico-retail.com/static/js/krypton-client/V4.0/ext/neon-reset.min.css">
     <script src="https://api.gateway.monetico-retail.com/static/js/krypton-client/V4.0/ext/neon.js"></script>
     <script src="{{ asset('js/translations-simple.js') }}"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
 @endpush
 
 @push('styles')
@@ -65,6 +67,11 @@
             100% { transform: rotate(360deg); }
         }
         .cache-bust { display: none; }
+        /* intl-tel-input inside modal */
+#clientProfileModal .iti { width: 100%; }
+#clientProfileModal .iti__country-list { z-index: 9999; }
+#clientProfileModal .iti__selected-flag { background: transparent; border-radius: 1rem 0 0 1rem; }
+#clientProfileModal .iti__flag-container { padding-left: 0.5rem; }
     </style>
 @endpush
 
@@ -941,7 +948,7 @@
             let itiInstance = null;
             
             // Legacy intl-tel-input / country detection code disabled (user must type country code manually)
-            if (phoneInput && false) {
+            if (phoneInput) {
                 itiInstance = window.intlTelInput(phoneInput, {
                     initialCountry: "fr",
                     preferredCountries: ["fr", "be", "ch", "ca", "mu", "gb", "us", "de", "es", "it", "nl"],
@@ -1746,19 +1753,20 @@
                     }
                 });
 
-                // Validation téléphone (E.164 + code pays obligatoire)
-                const phoneInput = document.getElementById('modal-telephone');
-                if (phoneInput && phoneInput.value.trim()) {
-                    const normalized = normalizeE164Phone(phoneInput.value);
-                    if (!normalized) {
-                        isValid = false;
-                        setPhoneError(
-                            phoneInput,
-                            t('phone_country_code_hint', 'Veuillez renseigner votre numéro avec le code pays (ex: +33 pour la France).')
-                        );
-                    } else {
-                        phoneInput.value = normalized;
-                        clearPhoneError(phoneInput);
+                // Validation téléphone via ITI
+                const phoneEl = document.getElementById('modal-telephone');
+                if (phoneEl && itiInstance) {
+                    const raw = phoneEl.value.trim();
+                    if (raw) {
+                        const countryData = itiInstance.getSelectedCountryData();
+                        const normalized = normalizePhoneNumber(raw, countryData);
+                        if (!normalized) {
+                            isValid = false;
+                            setPhoneError(phoneEl, t('phone_country_code_hint', 'Numéro de téléphone invalide.'));
+                        } else {
+                            phoneEl.value = normalized;
+                            clearPhoneError(phoneEl);
+                        }
                     }
                 }
 
