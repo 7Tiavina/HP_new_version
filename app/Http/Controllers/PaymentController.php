@@ -789,6 +789,30 @@ class PaymentController extends Controller
             ];
 
             Log::info('[paymentSuccess] Sending final creation request to BDM API.', ['payload' => $payload]);
+            
+            // Log détaillé des prix envoyés pour débogage
+            Log::info('[paymentSuccess] Prix envoyés à BDM:', [
+                'lignes_produits' => array_map(function($ligne) {
+                    return [
+                        'id' => $ligne['idProduit'],
+                        'libelle' => $ligne['libelleProduit'] ?? 'N/A',
+                        'prixTTC' => $ligne['prixTTC'],
+                        'prixTTCAvantRemise' => $ligne['prixTTCAvantRemise'],
+                        'tauxRemise' => $ligne['tauxRemise'],
+                        'quantite' => $ligne['quantite'],
+                    ];
+                }, $lignesProduits),
+                'lignes_options' => array_map(function($ligne) {
+                    return [
+                        'id' => $ligne['idProduit'],
+                        'libelle' => $ligne['libelleProduit'] ?? 'N/A',
+                        'prixTTC' => $ligne['prixTTC'],
+                        'prixTTCAvantRemise' => $ligne['prixTTCAvantRemise'],
+                        'tauxRemise' => $ligne['tauxRemise'],
+                    ];
+                }, $lignesOptions),
+                'total_attendu' => $commandeData['total_prix_ttc'],
+            ]);
 
             $bdmResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $token, 'Accept' => 'application/json',

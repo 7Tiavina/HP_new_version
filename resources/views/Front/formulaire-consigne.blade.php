@@ -458,7 +458,7 @@
                             <div class="datetime-field">
                                 <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_deposit_time">HEURE DE DÉPÔT *</label>
                                 <div class="time-field-wrapper">
-                                    <input type="text" id="heure-depot" class="time-field" value="09:00" readonly>
+                                    <input type="text" id="heure-depot" class="time-field" readonly>
                                     <svg class="time-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
@@ -492,7 +492,7 @@
                             <div class="datetime-field">
                                 <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_pickup_time">HEURE DE RÉCUPÉRATION *</label>
                                 <div class="time-field-wrapper">
-                                    <input type="text" id="heure-recuperation" class="time-field" value="18:00" readonly>
+                                    <input type="text" id="heure-recuperation" class="time-field" readonly>
                                     <svg class="time-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
@@ -699,13 +699,52 @@
 
 <!-- Scripts for timepicker discret -->
 <script>
+    // Fonction pour formater l'heure avec zéro devant
+    function formatTime(value) {
+        return value.toString().padStart(2, '0');
+    }
+
+    // Initialiser les timepickers avec l'heure actuelle
+    function initializeTimepickers() {
+        const now = new Date();
+        const currentHour = formatTime(now.getHours());
+        const currentMinute = formatTime(Math.floor(now.getMinutes() / 5) * 5); // Arrondi à 5 minutes
+        
+        // Initialiser heure-depot
+        const depotInput = document.getElementById('heure-depot');
+        const depotHDisplay = document.getElementById('h-val-depot');
+        const depotMDisplay = document.getElementById('m-val-depot');
+        
+        if (depotInput && depotHDisplay && depotMDisplay) {
+            depotHDisplay.innerText = currentHour;
+            depotMDisplay.innerText = currentMinute;
+            depotInput.value = `${currentHour}:${currentMinute}`;
+        }
+
+        // Initialiser heure-recuperation (1 heure après l'heure de dépôt par défaut)
+        const recupInput = document.getElementById('heure-recuperation');
+        const recupHDisplay = document.getElementById('h-val-recuperation');
+        const recupMDisplay = document.getElementById('m-val-recuperation');
+        
+        if (recupInput && recupHDisplay && recupMDisplay) {
+            let defaultHour = parseInt(currentHour) + 1;
+            if (defaultHour > 23) defaultHour = 0;
+            defaultHour = formatTime(defaultHour);
+            
+            recupHDisplay.innerText = defaultHour;
+            recupMDisplay.innerText = currentMinute;
+            recupInput.value = `${defaultHour}:${currentMinute}`;
+        }
+    }
+
     // Gestion des timepickers discrets
     document.addEventListener('DOMContentLoaded', function () {
+        // Initialiser avec l'heure actuelle
+        initializeTimepickers();
+        
         // Initialisation pour heure-depot
         const depotInput = document.getElementById('heure-depot');
         const depotPopover = document.getElementById('popover-depot');
-        const depotHDisplay = document.getElementById('h-val-depot');
-        const depotMDisplay = document.getElementById('m-val-depot');
         
         if (depotInput && depotPopover) {
             depotInput.addEventListener('click', (e) => {
@@ -719,8 +758,6 @@
         // Initialisation pour heure-recuperation
         const recupInput = document.getElementById('heure-recuperation');
         const recupPopover = document.getElementById('popover-recuperation');
-        const recupHDisplay = document.getElementById('h-val-recuperation');
-        const recupMDisplay = document.getElementById('m-val-recuperation');
         
         if (recupInput && recupPopover) {
             recupInput.addEventListener('click', (e) => {
