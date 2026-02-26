@@ -484,14 +484,20 @@ class PaymentController extends Controller
             ],
         ];
 
-        Log::info('Calling Monetico CreatePayment API with correct Basic Auth.');
-        
+        Log::info('Calling Monetico CreatePayment API with correct Basic Auth.', [
+            'shopId' => config('monetico.login'),
+            'amount' => $payload['amount'],
+            'currency' => $payload['currency'],
+            'orderId' => $payload['orderId'],
+            'customer_email' => $payload['customer']['email'],
+        ]);
+
         try {
             $response = Http::timeout(30)
                 ->retry(2, 1000) // Retry 2 times with 1 second delay
                 ->withHeaders([
-                    'Authorization' => 'Basic ' . base64_encode(config('monetico.login') . ':' . config('monetico.secret_key')), 
-                    'Content-Type' => 'application/json', 
+                    'Authorization' => 'Basic ' . base64_encode(config('monetico.login') . ':' . config('monetico.secret_key')),
+                    'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ])
                 ->post(config('monetico.base_url') . '/Charge/CreatePayment', $payload);
@@ -501,24 +507,35 @@ class PaymentController extends Controller
             if ($response->successful()) {
                 $paymentData = $response->json();
                 if (isset($paymentData['answer']['formToken'])) {
+                    Log::info('Monetico CreatePayment SUCCESS - formToken obtained', [
+                        'order_id' => $orderId,
+                        'formToken_length' => strlen($paymentData['answer']['formToken']),
+                    ]);
                     return $paymentData['answer']['formToken'];
+                } else {
+                    Log::error('Monetico API response missing formToken', [
+                        'response' => $paymentData,
+                    ]);
                 }
             } else {
                 Log::error('Monetico API error (Basic Auth flow): ' . $response->body(), [
                     'status' => $response->status(),
-                    'headers' => $response->headers()
+                    'headers' => $response->headers(),
+                    'request_payload' => $payload,
                 ]);
                 return null;
             }
         } catch (\Illuminate\Http\Client\ConnectionException $e) {
             Log::error('Monetico API connection error: ' . $e->getMessage(), [
                 'url' => config('monetico.base_url') . '/Charge/CreatePayment',
-                'exception' => $e
+                'exception' => $e,
+                'request_payload' => $payload,
             ]);
             return null;
         } catch (\Exception $e) {
             Log::error('Monetico API exception: ' . $e->getMessage(), [
-                'exception' => $e
+                'exception' => $e,
+                'request_payload' => $payload,
             ]);
             return null;
         }
@@ -789,11 +806,15 @@ class PaymentController extends Controller
             if ($bdmResponse->successful() && isset($apiResult['statut']) && $apiResult['statut'] === 1) {
 
                 // BDM Success -> Capture Payment
-                Log::info('[paymentSuccess] BDM order creation successful. Proceeding to capture payment.', ['bdm_order_id' => $apiResult['message']]);
-                
+                Log::info('[paymentSuccess] BDM order creation successful. Proceeding to capture payment.', [
+                    'bdm_order_id' => $apiResult['message'],
+                    'monetico_transaction_id' => $moneticoTransactionId,
+                ]);
+
                 Log::info('[paymentSuccess] Attempting to capture payment with Monetico.', [
                     'monetico_transaction_id' => $moneticoTransactionId,
-                    'monetico_order_id' => $krAnswer['orderDetails']['orderId'] ?? Session::get('monetico_order_id')
+                    'monetico_order_id' => $krAnswer['orderDetails']['orderId'] ?? Session::get('monetico_order_id'),
+                    'capture_amount' => $commandeData['total_prix_ttc'] ?? 'N/A',
                 ]);
 
                 $captureResponse = $this->_moneticoCapturePayment($moneticoTransactionId);
@@ -806,11 +827,26 @@ class PaymentController extends Controller
                 ]);
 
                 if (!$captureResponse->successful()) {
+                    $captureBody = $captureResponse->body();
+                    $captureJson = $captureResponse->json();
+                    
+                    Log::error('[paymentSuccess] CRITICAL: Monetico capture failed!', [
+                        'monetico_transaction_id' => $moneticoTransactionId,
+                        'monetico_order_id' => $krAnswer['orderDetails']['orderId'] ?? Session::get('monetico_order_id'),
+                        'status_code' => $captureResponse->status(),
+                        'response_body' => $captureBody,
+                        'response_json' => $captureJson,
+                        'bdm_order_id' => $apiResult['message'],
+                    ]);
+                    
                     // CRITICAL: BDM order is created, but payment capture failed. Requires manual intervention.
-                    throw new \Exception('CRITICAL: BDM order created but Monetico capture failed. Response: ' . $captureResponse->body());
+                    throw new \Exception('CRITICAL: BDM order created but Monetico capture failed. Response: ' . $captureBody);
                 }
 
-                Log::info('[paymentSuccess] Monetico payment capture successful.');
+                Log::info('[paymentSuccess] Monetico payment capture successful.', [
+                    'monetico_transaction_id' => $moneticoTransactionId,
+                    'captured_amount' => $commandeData['total_prix_ttc'] ?? 'N/A',
+                ]);
 
                 // Proceed to save everything in local DB
                 $clientData = $commandeData['client'];
@@ -911,11 +947,28 @@ class PaymentController extends Controller
                 
                 // Créer ou mettre à jour le client (pour les invités ou si pas encore créé)
                 if (!$authenticatedUser) {
+                    // For guest clients, ensure password_hash is null
+                    $clientCreateData = $clientUpdateData;
+                    if ($isGuest) {
+                        $clientCreateData['password_hash'] = null;
+                    }
+                    
+                    Log::info('[paymentSuccess] Creating/updating client', [
+                        'email' => $clientData['email'],
+                        'is_guest' => $isGuest,
+                        'has_password_hash' => isset($clientCreateData['password_hash']),
+                    ]);
+                    
                     $client = \App\Models\Client::updateOrCreate(
-                        ['email' => $clientData['email']], 
-                        $clientUpdateData
+                        ['email' => $clientData['email']],
+                        $clientCreateData
                     );
                     $clientId = $client->id;
+                    
+                    Log::info('[paymentSuccess] Client created/updated successfully', [
+                        'client_id' => $clientId,
+                        'email' => $clientData['email'],
+                    ]);
                 }
 
                 $commande = Commande::create([
@@ -965,7 +1018,19 @@ class PaymentController extends Controller
                     'response_body' => $bdmResponse->body()
                 ]);
 
-                $this->_moneticoVoidPayment($moneticoTransactionId);
+                Log::info('[paymentSuccess] Calling Monetico Void due to BDM failure.', [
+                    'monetico_transaction_id' => $moneticoTransactionId,
+                    'reason' => 'BDM order creation failed',
+                    'bdm_error' => $errorMessage,
+                ]);
+
+                $voidResponse = $this->_moneticoVoidPayment($moneticoTransactionId);
+                
+                Log::info('[paymentSuccess] Void response after BDM failure.', [
+                    'status_code' => $voidResponse->status(),
+                    'response_body' => $voidResponse->body(),
+                    'monetico_transaction_id' => $moneticoTransactionId,
+                ]);
 
                 // Personnaliser le message d'erreur en fonction du type d'erreur
                 $friendlyMessage = $this->getFriendlyErrorMessage($errorMessage, $apiResult);
@@ -980,12 +1045,18 @@ class PaymentController extends Controller
                 'monetico_order_id' => $krAnswer['orderDetails']['orderId'] ?? Session::get('monetico_order_id'),
                 'exception' => $e,
                 'commande_data_exists' => isset($commandeData),
-                'full_request' => $request->all()
+                'full_request' => $request->all(),
+                'stack_trace' => $e->getTraceAsString(),
             ]);
 
             // Attempt to void the payment as a safety net, if it hasn't been captured.
             // (If capture fails, the exception is thrown, so we land here)
             if (isset($moneticoTransactionId)) {
+                Log::info('[paymentSuccess] Attempting to void payment after critical exception.', [
+                    'monetico_transaction_id' => $moneticoTransactionId,
+                    'exception' => $e->getMessage(),
+                ]);
+                
                 $voidResponse = $this->_moneticoVoidPayment($moneticoTransactionId);
                 Log::info('[paymentSuccess] Void response after exception.', [
                     'status_code' => $voidResponse->status(),
@@ -993,6 +1064,15 @@ class PaymentController extends Controller
                     'monetico_transaction_id' => $moneticoTransactionId,
                     'monetico_order_id' => $krAnswer['orderDetails']['orderId'] ?? Session::get('monetico_order_id')
                 ]);
+                
+                if (!$voidResponse->successful()) {
+                    Log::error('[paymentSuccess] CRITICAL: Void operation failed!', [
+                        'monetico_transaction_id' => $moneticoTransactionId,
+                        'status_code' => $voidResponse->status(),
+                        'response_body' => $voidResponse->body(),
+                        'original_exception' => $e->getMessage(),
+                    ]);
+                }
             }
 
             return redirect()->route('payment')->with('error', 'Un problème technique est survenu. Aucun débit n\'a été effectué. Veuillez réessayer ou contacter le support si le problème persiste.');
@@ -1164,14 +1244,41 @@ class PaymentController extends Controller
      */
     private function _moneticoVoidPayment(string $transactionId)
     {
+        // According to Monetico API V4 documentation, the correct endpoint for Void is:
+        // POST /Charge/{transactionId}/Void for TEST mode
+        // Note: Some Monetico instances use /PaymentMethod/{uuid}/Void
+        // We'll try both endpoints
         $url = config('monetico.base_url') . "/Charge/{$transactionId}/Void";
         Log::info('Calling Monetico Void API.', ['url' => $url]);
 
-        return Http::withHeaders([
+        $response = Http::withHeaders([
             'Authorization' => 'Basic ' . base64_encode(config('monetico.login') . ':' . config('monetico.secret_key')),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ])->post($url);
+
+        // If the first endpoint fails with INT_901, try the alternative endpoint
+        if (!$response->successful()) {
+            $responseData = $response->json();
+            if (($responseData['answer']['errorCode'] ?? '') === 'INT_901') {
+                Log::info('First Void endpoint failed, trying alternative endpoint...', [
+                    'transaction_id' => $transactionId,
+                ]);
+                
+                $alternativeUrl = config('monetico.base_url') . "/PaymentMethod/{$transactionId}/Void";
+                Log::info('Calling Monetico Void API (alternative endpoint).', ['url' => $alternativeUrl]);
+                
+                $alternativeResponse = Http::withHeaders([
+                    'Authorization' => 'Basic ' . base64_encode(config('monetico.login') . ':' . config('monetico.secret_key')),
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ])->post($alternativeUrl);
+                
+                return $alternativeResponse;
+            }
+        }
+
+        return $response;
     }
 
     /**

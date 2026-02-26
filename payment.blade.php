@@ -366,6 +366,20 @@
                             @else
                                 <!-- Pas de carte sauvegardée, afficher le formulaire normal -->
                                 <div class="kr-smart-form mx-auto" kr-form-token="{{ $formToken }}"></div>
+                                
+                                <!-- Debug: Log form token -->
+                                <script>
+                                    console.log('[Monetico Debug] Form Token:', '{{ $formToken }}');
+                                    console.log('[Monetico Debug] hasSavedCard:', '{{ $hasSavedCard ?? false }}');
+                                    console.log('[Monetico Debug] isProfileComplete:', '{{ $isProfileComplete ?? false }}');
+                                    
+                                    // Wait for Monetico script to load
+                                    window.addEventListener('load', function() {
+                                        console.log('[Monetico Debug] Window loaded');
+                                        console.log('[Monetico Debug] KR object:', typeof window.KR);
+                                        console.log('[Monetico Debug] KRPaymentForm:', typeof window.KRPaymentForm);
+                                    });
+                                </script>
                             @endif
                         @else
                             <div class="p-4 bg-gray-100 rounded-md text-center text-gray-600" data-i18n="payment_complete_info">

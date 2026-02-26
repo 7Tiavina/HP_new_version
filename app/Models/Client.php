@@ -31,6 +31,21 @@ class Client extends Authenticatable
         'monetico_card_token',
     ];
 
+    /**
+     * Boot the model - set password_hash to null for guests if not provided
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($client) {
+            // Allow guest clients without password_hash
+            if (empty($client->password_hash)) {
+                $client->password_hash = null;
+            }
+        });
+    }
+
     protected $hidden = [
         'password_hash',
     ];

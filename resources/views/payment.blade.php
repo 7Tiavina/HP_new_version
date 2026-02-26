@@ -337,6 +337,26 @@
                             <div id="monetico-form-wrapper" class="mx-auto" style="min-height: 300px;">
                                 @if($formToken)
                                     <div class="kr-smart-form" kr-form-token="{{ $formToken }}"></div>
+                                    
+                                    <!-- Debug Logs -->
+                                    <script>
+                                        console.log('[Monetico Debug] Form Token:', '{{ $formToken }}');
+                                        console.log('[Monetico Debug] isProfileComplete:', '{{ $isProfileComplete ?? false }}');
+                                        console.log('[Monetico Debug] hasSavedCard:', '{{ $hasSavedCard ?? false }}');
+                                        
+                                        window.addEventListener('load', function() {
+                                            console.log('[Monetico Debug] Window loaded');
+                                            console.log('[Monetico Debug] KR object exists:', typeof window.KR !== 'undefined');
+                                            console.log('[Monetico Debug] KRPaymentForm exists:', typeof window.KRPaymentForm !== 'undefined');
+                                            
+                                            // Check if form is rendered
+                                            const formElement = document.querySelector('.kr-smart-form');
+                                            console.log('[Monetico Debug] Form element found:', formElement !== null);
+                                            if (formElement) {
+                                                console.log('[Monetico Debug] Form element attributes:', formElement.attributes);
+                                            }
+                                        });
+                                    </script>
                                 @else
                                     <div class="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700">
                                         <p class="font-semibold">Erreur d'initialisation du paiement</p>
