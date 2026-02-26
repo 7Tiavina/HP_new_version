@@ -27,6 +27,189 @@
         };
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Timepicker Discret 24h - Jaune */
+        :root {
+            --primary: #f9c52d;
+            --primary-dark: #e5b324;
+            --text: #333;
+            --shadow: 0 8px 20px rgba(0,0,0,0.12);
+            --border: #e0e0e0;
+        }
+
+        .time-field-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 160px;
+        }
+
+        .time-field {
+            padding: 10px 36px 10px 14px;
+            font-size: 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            box-sizing: border-box;
+            background: white;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text);
+        }
+        .time-field:hover { 
+            border-color: var(--primary); 
+            box-shadow: 0 2px 8px rgba(249, 197, 45, 0.15);
+        }
+        .time-field:focus { 
+            border-color: var(--primary); 
+            outline: none; 
+            box-shadow: 0 0 0 3px rgba(249, 197, 45, 0.2); 
+        }
+
+        /* Clock Icon */
+        .time-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: #999;
+            pointer-events: none;
+            transition: color 0.3s ease;
+        }
+        .time-field-wrapper:hover .time-icon {
+            color: var(--primary);
+        }
+
+        /* Le Popover - Compact */
+        .picker-popover {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(0,0,0,0.08);
+            padding: 10px;
+            z-index: 1000;
+            display: none;
+            width: 130px;
+            animation: fadeInScale 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes fadeInScale {
+            from { 
+                opacity: 0; 
+                transform: translateY(-4px) scale(0.97); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1); 
+            }
+        }
+
+        .picker-popover.active { display: block; }
+        .picker-popover.active::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 5px solid white;
+        }
+
+        .selectors { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .column { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center;
+            gap: 2px;
+        }
+        
+        .val-display { 
+            font-size: 20px; 
+            font-weight: 700; 
+            color: var(--text); 
+            padding: 2px 4px;
+            min-width: 40px;
+            text-align: center;
+            background: #fafafa;
+            border-radius: 6px;
+        }
+
+        .arrow {
+            background: white; 
+            border: 1px solid var(--border); 
+            border-radius: 6px;
+            width: 28px; 
+            height: 28px; 
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 10px; 
+            color: #666;
+            font-weight: 600;
+        }
+        .arrow:hover { 
+            background: var(--primary); 
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(249, 197, 45, 0.3);
+        }
+        .arrow:active {
+            transform: translateY(0);
+        }
+
+        .separator { 
+            font-size: 18px; 
+            font-weight: bold; 
+            color: #ccc;
+            padding-bottom: 2px;
+        }
+
+        /* Uniformisation des largeurs pour les champs date/heure */
+        .datetime-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .datetime-field {
+            width: 100%;
+        }
+        
+        .datetime-field label {
+            display: block;
+            margin-bottom: 6px;
+        }
+        
+        .datetime-field input {
+            width: 100%;
+        }
+        
+        .time-field-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 160px;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -267,25 +450,71 @@
                 <div class="grid md:grid-cols-2 gap-6 mt-6">
                     <div class="bg-white border border-gray-200 rounded-lg p-6">
                         <h3 class="text-sm font-medium text-gray-700 mb-4" data-i18n="form_deposit_date">DATE DE DÉPÔT DES BAGAGES *</h3>
-                        <input type="date" id="date-depot" class="input-style w-full mb-4">
-                        <p class="text-xs text-gray-500 mb-2" data-i18n="form_premium_hint_72h">Pour afficher l'option Service Premium, choisissez une date de dépôt au moins 3 jours à l'avance.</p>
-                        <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_deposit_time">HEURE DE DÉPÔT *</label>
-                        <div class="relative">
-                            <input type="time" id="heure-depot" class="input-style w-full pr-10 pl-4">
-                            <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
+                        <div class="datetime-container">
+                            <div class="datetime-field">
+                                <input type="date" id="date-depot" class="input-style w-full">
+                            </div>
+                            <p class="text-xs text-gray-500" data-i18n="form_premium_hint_72h">Pour afficher l'option Service Premium, choisissez une date de dépôt au moins 3 jours à l'avance.</p>
+                            <div class="datetime-field">
+                                <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_deposit_time">HEURE DE DÉPÔT *</label>
+                                <div class="time-field-wrapper">
+                                    <input type="text" id="heure-depot" class="time-field" value="09:00" readonly>
+                                    <svg class="time-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    
+                                    <!-- Popover Timepicker -->
+                                    <div class="picker-popover" id="popover-depot">
+                                        <div class="selectors">
+                                            <div class="column">
+                                                <button class="arrow" onclick="changeVal('H', 1, 'depot')">▲</button>
+                                                <div id="h-val-depot" class="val-display">09</div>
+                                                <button class="arrow" onclick="changeVal('H', -1, 'depot')">▼</button>
+                                            </div>
+                                            <div class="separator">:</div>
+                                            <div class="column">
+                                                <button class="arrow" onclick="changeVal('M', 5, 'depot')">▲</button>
+                                                <div id="m-val-depot" class="val-display">00</div>
+                                                <button class="arrow" onclick="changeVal('M', -5, 'depot')">▼</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="bg-white border border-gray-200 rounded-lg p-6">
                         <h3 class="text-sm font-medium text-gray-700 mb-4" data-i18n="form_pickup_date">DATE DE RÉCUPÉRATION DES BAGAGES *</h3>
-                        <input type="date" id="date-recuperation" class="input-style w-full mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_pickup_time">HEURE DE RÉCUPÉRATION *</label>
-                        <div class="relative">
-                            <input type="time" id="heure-recuperation" class="input-style w-full pr-10 pl-4">
-                            <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
+                        <div class="datetime-container">
+                            <div class="datetime-field">
+                                <input type="date" id="date-recuperation" class="input-style w-full">
+                            </div>
+                            <div class="datetime-field">
+                                <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_pickup_time">HEURE DE RÉCUPÉRATION *</label>
+                                <div class="time-field-wrapper">
+                                    <input type="text" id="heure-recuperation" class="time-field" value="18:00" readonly>
+                                    <svg class="time-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    
+                                    <!-- Popover Timepicker -->
+                                    <div class="picker-popover" id="popover-recuperation">
+                                        <div class="selectors">
+                                            <div class="column">
+                                                <button class="arrow" onclick="changeVal('H', 1, 'recuperation')">▲</button>
+                                                <div id="h-val-recuperation" class="val-display">18</div>
+                                                <button class="arrow" onclick="changeVal('H', -1, 'recuperation')">▼</button>
+                                            </div>
+                                            <div class="separator">:</div>
+                                            <div class="column">
+                                                <button class="arrow" onclick="changeVal('M', 5, 'recuperation')">▲</button>
+                                                <div id="m-val-recuperation" class="val-display">00</div>
+                                                <button class="arrow" onclick="changeVal('M', -5, 'recuperation')">▼</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -468,125 +697,128 @@
 <script src="{{ asset('js/cart.js') }}?v={{ $jsVersion('js/cart.js') }}"></script>
 <script src="{{ asset('js/booking.js') }}?v={{ $jsVersion('js/booking.js') }}"></script>
 
-<!-- Scripts for flatpickr timepicker -->
-<script src="{{ asset('js/flatpickr/flatpickr.min.js') }}"></script>
-<script src="{{ asset('js/flatpickr/fr.js') }}"></script>
-
+<!-- Scripts for timepicker discret -->
 <script>
-    // Ce script reste en ligne car il contient une route Blade resolue par PHP
+    // Gestion des timepickers discrets
     document.addEventListener('DOMContentLoaded', function () {
-        // Initialiser les timepickers avec flatpickr (plus moderne et responsive)
-        const heureDepotFP = flatpickr("#heure-depot", {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i",
-            time_24hr: true,
-            minuteIncrement: 15,
-            locale: "fr",
-            defaultHour: 9,
-            defaultMinute: 0,
-            allowInput: true,
-            onReady: function(selectedDates, dateStr, instance) {
-                // Add clock icon to Flatpickr input (right side)
-                const input = instance.input;
-                const parent = input.parentElement;
-                if (!parent.querySelector('.clock-icon')) {
-                    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                    icon.setAttribute('class', 'absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none z-10 clock-icon');
-                    icon.setAttribute('fill', 'none');
-                    icon.setAttribute('stroke', 'currentColor');
-                    icon.setAttribute('viewBox', '0 0 24 24');
-                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>';
-                    parent.appendChild(icon);
-                    // Add padding-right to input
-                    input.style.paddingRight = '2.5rem';
-                }
-            }
-        });
-
-        const heureRecupFP = flatpickr("#heure-recuperation", {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i",
-            time_24hr: true,
-            minuteIncrement: 15,
-            locale: "fr",
-            defaultHour: 18,
-            defaultMinute: 0,
-            allowInput: true,
-            onReady: function(selectedDates, dateStr, instance) {
-                // Add clock icon to Flatpickr input (right side)
-                const input = instance.input;
-                const parent = input.parentElement;
-                if (!parent.querySelector('.clock-icon')) {
-                    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-                    icon.setAttribute('class', 'absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none z-10 clock-icon');
-                    icon.setAttribute('fill', 'none');
-                    icon.setAttribute('stroke', 'currentColor');
-                    icon.setAttribute('viewBox', '0 0 24 24');
-                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>';
-                    parent.appendChild(icon);
-                    // Add padding-right to input
-                    input.style.paddingRight = '2.5rem';
-                }
-            }
-        });
-
-        flatpickr("#qdm-custom-time-input", {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i",
-            time_24hr: true,
-            minuteIncrement: 15,
-            locale: "fr",
-            defaultHour: 9,
-            defaultMinute: 0,
-            allowInput: true
-        });
-
-        // Initialisation des listeners qui dépendent d'éléments du DOM chargés
-        if(typeof setupQdmListeners !== 'undefined') setupQdmListeners();
-
-        // Appeler loadStateFromSession au chargement de la page pour restaurer l'état
-        if(typeof loadStateFromSession !== 'undefined') {
-            loadStateFromSession();
+        // Initialisation pour heure-depot
+        const depotInput = document.getElementById('heure-depot');
+        const depotPopover = document.getElementById('popover-depot');
+        const depotHDisplay = document.getElementById('h-val-depot');
+        const depotMDisplay = document.getElementById('m-val-depot');
+        
+        if (depotInput && depotPopover) {
+            depotInput.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const parent = e.target.parentElement;
+                parent.appendChild(depotPopover);
+                depotPopover.classList.add('active');
+            });
         }
 
-        // Le setup des listeners de la modale custom est déjà dans modal.js
-        // Le setup des listeners du booking est dans booking.js
+        // Initialisation pour heure-recuperation
+        const recupInput = document.getElementById('heure-recuperation');
+        const recupPopover = document.getElementById('popover-recuperation');
+        const recupHDisplay = document.getElementById('h-val-recuperation');
+        const recupMDisplay = document.getElementById('m-val-recuperation');
         
-        // Listener pour le bouton de réinitialisation
-        document.getElementById('reset-form-btn').addEventListener('click', async function () {
-            const confirmed = await showCustomConfirm(
-                'Réinitialiser la commande',
-                'Voulez-vous vraiment continuer ? Toutes les données saisies pour votre commande actuelle seront définitivement perdues.'
-            );
-            if (confirmed) {
-                const loader = document.getElementById('loader');
-                if (loader) {
-                    loader.classList.remove('hidden');
+        if (recupInput && recupPopover) {
+            recupInput.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const parent = e.target.parentElement;
+                parent.appendChild(recupPopover);
+                recupPopover.classList.add('active');
+            });
+        }
+
+        // Fermer le popover si on clique en dehors
+        document.addEventListener('mousedown', (e) => {
+            const popovers = document.querySelectorAll('.picker-popover');
+            popovers.forEach(popover => {
+                if (!popover.contains(e.target) && !e.target.classList.contains('time-field')) {
+                    popover.classList.remove('active');
                 }
-
-                sessionStorage.removeItem('formState');
-
-                try {
-                    // La route 'session.reset' est necessaire ici.
-                    await fetch('{{ route("session.reset") }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    });
-                } catch (error) {
-                    console.error('Failed to reset server session:', error);
-                }
-
-                setTimeout(() => {
-                    location.reload();
-                }, 500);
-            }
+            });
         });
+    });
+
+    // Fonctions globales pour les timepickers
+    function changeVal(type, step, suffix) {
+        const hDisplay = document.getElementById(`h-val-${suffix}`);
+        const mDisplay = document.getElementById(`m-val-${suffix}`);
+        
+        if (type === 'H') {
+            let h = parseInt(hDisplay.innerText) + step;
+            if (h > 23) h = 0;
+            if (h < 0) h = 23;
+            hDisplay.innerText = h.toString().padStart(2, '0');
+        } else {
+            let m = parseInt(mDisplay.innerText) + step;
+            if (m > 59) m = 0;
+            if (m < 0) m = 55;
+            mDisplay.innerText = m.toString().padStart(2, '0');
+        }
+        updateInput(suffix);
+    }
+
+    function updateInput(suffix) {
+        const hDisplay = document.getElementById(`h-val-${suffix}`);
+        const mDisplay = document.getElementById(`m-val-${suffix}`);
+        const input = document.getElementById(`heure-${suffix}`);
+        if (input && hDisplay && mDisplay) {
+            input.value = `${hDisplay.innerText}:${mDisplay.innerText}`;
+        }
+    }
+
+    function closePicker(suffix) {
+        const popover = document.getElementById(`popover-${suffix}`);
+        if (popover) {
+            popover.classList.remove('active');
+        }
+    }
+
+    // Initialisation des listeners qui dépendent d'éléments du DOM chargés
+    if(typeof setupQdmListeners !== 'undefined') setupQdmListeners();
+
+    // Appeler loadStateFromSession au chargement de la page pour restaurer l'état
+    if(typeof loadStateFromSession !== 'undefined') {
+        loadStateFromSession();
+    }
+
+    // Le setup des listeners de la modale custom est déjà dans modal.js
+    // Le setup des listeners du booking est dans booking.js
+
+    // Listener pour le bouton de réinitialisation
+    document.getElementById('reset-form-btn').addEventListener('click', async function () {
+        const confirmed = await showCustomConfirm(
+            'Réinitialiser la commande',
+            'Voulez-vous vraiment continuer ? Toutes les données saisies pour votre commande actuelle seront définitivement perdues.'
+        );
+        if (confirmed) {
+            const loader = document.getElementById('loader');
+            if (loader) {
+                loader.classList.remove('hidden');
+            }
+
+            sessionStorage.removeItem('formState');
+
+            try {
+                // La route 'session.reset' est necessaire ici.
+                await fetch('{{ route("session.reset") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                });
+            } catch (error) {
+                console.error('Failed to reset server session:', error);
+            }
+
+            setTimeout(() => {
+                location.reload();
+            }, 500);
+        }
     });
 </script>
 @endpush
