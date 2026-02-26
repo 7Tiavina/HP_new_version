@@ -124,22 +124,92 @@ class PaymentController extends Controller
                 ];
             }
 
-            // 2. Process Options
+            // 2. Process Options - Fetch fresh prices from BDM API
             if (!empty($validatedData['options'])) {
+                // IMPORTANT: Fetch fresh option prices from BDM API to avoid price mismatch
+                Log::info('[preparePayment] Fetching fresh option prices from BDM API...');
+                
+                $bdmToken = $this->getBdmToken();
+                $idPlateforme = $validatedData['airportId'];
+                
+                // Build commandeLignes for API call (without options prices)
+                $apiCommandeLignes = [];
+                foreach ($commandeLignes as $ligne) {
+                    $apiCommandeLignes[] = [
+                        'idProduit' => $ligne['idProduit'],
+                        'idService' => $ligne['idService'],
+                        'dateDebut' => $ligne['dateDebut'],
+                        'dateFin' => $ligne['dateFin'],
+                        'quantite' => $ligne['quantite'],
+                    ];
+                }
+                
+                // Call BDM API to get fresh option prices using BdmApiService
+                $bdmApiService = new \App\Services\BdmApiService();
+                
+                Log::info('[preparePayment] Calling BdmApiService::getCommandeOptionsQuote...');
+                
+                $freshOptionsResult = $bdmApiService->getCommandeOptionsQuote(
+                    $idPlateforme,
+                    [], // No baggages, we only want options prices
+                    $validatedData['guest_email'] ?? ($user->email ?? null),
+                    null // No premium details needed for price fetching
+                );
+                
+                Log::info('[preparePayment] BdmApiService response', [
+                    'result' => $freshOptionsResult,
+                ]);
+                
+                $freshOptionsData = [];
+                if ($freshOptionsResult && isset($freshOptionsResult['content']) && is_array($freshOptionsResult['content'])) {
+                    foreach ($freshOptionsResult['content'] as $option) {
+                        if (isset($option['id'])) {
+                            $freshOptionsData[$option['id']] = $option;
+                        }
+                    }
+                    Log::info('[preparePayment] Fresh options retrieved', ['count' => count($freshOptionsData)]);
+                }
+                
                 foreach ($validatedData['options'] as $selectedOption) {
                     // If this is the premium option, store its details separately
                     if (stripos($selectedOption['libelle'], 'Premium') !== false) {
                         $premiumDetails = $selectedOption['details'] ?? null;
                     }
 
-                    // Add the option line WITHOUT the details object to commandeLignes
-                    $optPrix = (float)($selectedOption['prix'] ?? $selectedOption['prixUnitaire'] ?? 0);
+                    // Try to get fresh price from BDM API response
+                    $optionId = $selectedOption['id'];
+                    $freshOption = $freshOptionsData[$optionId] ?? null;
+                    
+                    if ($freshOption) {
+                        // Use fresh price from BDM API
+                        $optPrix = (float)($freshOption['prixUnitaire'] ?? 0);
+                        $optTauxRemise = (float)($freshOption['tauxRemise'] ?? 0);
+                        $optPrixAvantRemise = (float)($freshOption['prixUnitaireAvantRemise'] ?? $freshOption['prixUnitaire'] ?? 0);
+                        
+                        Log::info('[preparePayment] Using FRESH price from BDM', [
+                            'option_id' => $optionId,
+                            'libelle' => $selectedOption['libelle'],
+                            'fresh_price' => $optPrix,
+                            'frontend_price' => $selectedOption['prix'] ?? $selectedOption['prixUnitaire'] ?? 0,
+                        ]);
+                    } else {
+                        // Fallback to frontend price (should not happen)
+                        $optPrix = (float)($selectedOption['prix'] ?? $selectedOption['prixUnitaire'] ?? 0);
+                        $optTauxRemise = (float)($selectedOption['tauxRemise'] ?? $selectedOption['taux_remise'] ?? 0);
+                        $optPrixAvantRemiseRaw = $selectedOption['prixTTCAvantRemise'] ?? $selectedOption['prix_ttc_avant_remise'] ?? null;
+                        $optPrixAvantRemise = $optPrixAvantRemiseRaw !== null
+                            ? (float)$optPrixAvantRemiseRaw
+                            : ($optTauxRemise > 0 ? $optPrix / (1 - $optTauxRemise / 100) : $optPrix);
+                        
+                        Log::warning('[preparePayment] Using FALLBACK frontend price (BDM API failed)', [
+                            'option_id' => $optionId,
+                            'libelle' => $selectedOption['libelle'],
+                            'price' => $optPrix,
+                        ]);
+                    }
+                    
                     $optionsTotal += $optPrix;
-                    $optTauxRemise = (float)($selectedOption['tauxRemise'] ?? $selectedOption['taux_remise'] ?? 0);
-                    $optPrixAvantRemiseRaw = $selectedOption['prixTTCAvantRemise'] ?? $selectedOption['prix_ttc_avant_remise'] ?? null;
-                    $optPrixAvantRemise = $optPrixAvantRemiseRaw !== null
-                        ? (float)$optPrixAvantRemiseRaw
-                        : ($optTauxRemise > 0 ? $optPrix / (1 - $optTauxRemise / 100) : $optPrix);
+                    
                     $commandeLignes[] = [
                         "idProduit" => $selectedOption['id'], "idService" => $serviceId,
                         "dateDebut" => $validatedData['dateDepot'] . 'T' . $validatedData['heureDepot'] . ':00.000Z',
