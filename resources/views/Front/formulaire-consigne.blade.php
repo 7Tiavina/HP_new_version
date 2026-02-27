@@ -892,6 +892,8 @@
 #hp-booking-root .baggage-option .text-gray-600 { color: var(--luxe-cream-muted) !important; border-color: var(--luxe-border) !important; }
 #hp-booking-root .quantity-change-btn:hover,
 #hp-booking-root .baggage-option:hover .text-gray-600 { color: var(--luxe-cream) !important; background: rgba(201, 169, 98, 0.1) !important; }
+#hp-booking-root .info-icon .text-gray-400 { color: var(--luxe-cream-muted) !important; }
+#hp-booking-root .info-icon:hover .text-gray-400 { color: var(--luxe-gold) !important; }
 /* Custom modal + options modal + quick-date modal — texte visible */
 #hp-booking-root #custom-modal,
 #hp-booking-root #options-advert-modal .bg-white,
@@ -923,7 +925,8 @@
 #hp-booking-root #options-advert-modal .border-gray-400,
 #hp-booking-root #options-advert-modal .hover\:bg-gray-100:hover,
 #hp-booking-root #quick-date-modal button.bg-white { background: var(--luxe-surface) !important; border-color: var(--luxe-border) !important; color: var(--luxe-cream) !important; }
-#hp-booking-root #baggage-tooltip { background: var(--luxe-surface) !important; border: 1px solid var(--luxe-border); }
+#hp-booking-root #baggage-tooltip { background: #000000 !important; border: 1px solid var(--luxe-border); color: #ffffff !important; }
+#hp-booking-root #baggage-tooltip .text-white { color: #ffffff !important; }
 #hp-booking-root .bg-yellow-100.text-yellow-800,
 #hp-booking-root .bg-purple-100.text-purple-800 { background: rgba(201, 169, 98, 0.2) !important; color: var(--luxe-gold) !important; }
 #hp-booking-root select option { background: var(--luxe-surface); color: var(--luxe-cream); }
