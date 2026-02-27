@@ -120,7 +120,7 @@ function generateHourButtons(date) {
 
     const selectedHour = date.getHours();
 
-    for (let i = 7; i <= 21; i++) {
+    for (let i = 8; i <= 20; i++) {
         const hour = i.toString().padStart(2, '0') + ':00';
         const button = document.createElement('button');
         button.textContent = hour;
