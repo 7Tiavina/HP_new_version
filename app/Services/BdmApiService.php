@@ -27,8 +27,7 @@ class BdmApiService
             Log::info('Cache BDM token expiré. Demande d\'un nouveau token.');
 
             $response = Http::post($this->baseUrl . '/User/Login', [
-                'userName' => config('services.bdm.username'),
-                'email' => config('services.bdm.email'),
+                'username' => config('services.bdm.username'),
                 'password' => config('services.bdm.password'),
             ]);
 
@@ -47,7 +46,7 @@ class BdmApiService
                 Log::error('Impossible de récupérer l\'accessToken depuis la réponse de l\'API BDM.', ['response' => $response->json()]);
                 throw new \Exception('Authentification API BDM échouée: token manquant dans la réponse.');
             }
-            
+
             Log::info('✅ AUTHENTIFICATION API BDM RÉUSSIE. Token obtenu.');
             Log::info('Nouveau token BDM obtenu et mis en cache.');
             return $token;
