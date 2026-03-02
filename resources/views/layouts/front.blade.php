@@ -74,6 +74,12 @@
 
     <header class="luxe-header">
         <div class="luxe-header-inner">
+            <button type="button" class="luxe-nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="luxe-nav-menu">
+                <span class="luxe-nav-toggle-bar"></span>
+                <span class="luxe-nav-toggle-bar"></span>
+                <span class="luxe-nav-toggle-bar"></span>
+                <span class="luxe-nav-toggle-bar"></span>
+            </button>
             <a href="{{ route('form-consigne') }}" class="luxe-logo" aria-label="Hello Passenger Home" data-i18n-label="home">
                 @if(file_exists(public_path('HP-Logo.png')))
                     <img src="{{ asset('HP-Logo.png') }}" alt="Hello Passenger" class="luxe-logo-img">
@@ -81,11 +87,6 @@
                     Hello Passenger
                 @endif
             </a>
-            <button type="button" class="luxe-nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="luxe-nav-menu">
-                <span class="luxe-nav-toggle-bar"></span>
-                <span class="luxe-nav-toggle-bar"></span>
-                <span class="luxe-nav-toggle-bar"></span>
-            </button>
             <nav class="luxe-nav" id="luxe-nav-menu" role="navigation">
                 <button type="button" class="luxe-nav-close" aria-label="Fermer le menu" title="Fermer">&times;</button>
                 @include('components.translation-widget')
