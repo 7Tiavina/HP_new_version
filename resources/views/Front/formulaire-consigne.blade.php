@@ -39,8 +39,8 @@
 
         .time-field-wrapper {
             position: relative;
-            display: inline-block;
-            width: 160px;
+            display: block;
+            width: 100%;
         }
 
         .time-field {
@@ -202,12 +202,6 @@
         
         .datetime-field input {
             width: 100%;
-        }
-        
-        .time-field-wrapper {
-            position: relative;
-            display: inline-block;
-            width: 160px;
         }
     </style>
 @endpush
@@ -454,7 +448,6 @@
                             <div class="datetime-field">
                                 <input type="date" id="date-depot" class="input-style w-full">
                             </div>
-                            <p class="text-xs text-gray-500" data-i18n="form_premium_hint_72h">Pour afficher l'option Service Premium, choisissez une date de dépôt au moins 3 jours à l'avance.</p>
                             <div class="datetime-field">
                                 <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_deposit_time">HEURE DE DÉPÔT *</label>
                                 <div class="time-field-wrapper">
