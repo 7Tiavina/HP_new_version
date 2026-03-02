@@ -87,9 +87,9 @@
                     Hello Passenger
                 @endif
             </a>
+            @include('components.translation-widget')
             <nav class="luxe-nav" id="luxe-nav-menu" role="navigation">
                 <button type="button" class="luxe-nav-close" aria-label="Fermer le menu" title="Fermer">&times;</button>
-                @include('components.translation-widget')
                 <a href="{{ $formUrl }}" class="btn-cta" data-i18n="nav_book">Book now</a>
                 <a href="#login" class="login-link" data-i18n="login_btn">Login</a>
                 <a href="#signup" class="register-link" data-i18n="create_account_short">Register</a>
@@ -106,34 +106,34 @@
         <footer class="custom-footer">
             <div class="footer-grid">
 
-                <!-- Colonne 1: Logo & Since -->
+                <!-- Colonne 1: Logo & Since 2001 -->
                 <div class="brand-col">
                     @if(file_exists(public_path('HP-Logo.png')))
                         <img src="{{ asset('HP-Logo.png') }}" alt="Hello Passenger" class="footer-logo">
                     @endif
-                    <div class="since-text">depuis 2015</div>
-                    <p class="credits">© <span>Hello Passenger</span> {{ date('Y') }}. Tous droits réservés.</p>
+                    <div class="since-text" data-i18n="footer_since">depuis 2001</div>
+                    <p class="credits" data-i18n="footer_credits">© <span>Hello Passenger</span> {{ date('Y') }}. Tous droits réservés.</p>
                 </div>
 
                 <!-- Colonne 2: Plan d'accès -->
                 <div class="footer-col">
-                    <h3>Plan d'accès</h3>
-                    <a href="#" class="yellow-text">Aéroport de Paris CDG</a>
-                    <p>Terminal 2 - Gare TGV - Niveau 4<br>Opposition Hôtel Sheraton</p>
+                    <h3 data-i18n="footer_access">Plan d'accès</h3>
+                    <a href="#" class="yellow-text" data-i18n="footer_cdg">Aéroport de Paris CDG</a>
+                    <p data-i18n="footer_cdg_address">Terminal 2 - Gare TGV - Niveau 4<br>Opposition Hôtel Sheraton</p>
                     <br>
-                    <a href="#" class="yellow-text">Aéroport de Paris ORLY</a>
-                    <p>Terminal 3 - Niveau d'arrivée</p>
+                    <a href="#" class="yellow-text" data-i18n="footer_orly">Aéroport de Paris ORLY</a>
+                    <p data-i18n="footer_orly_address">Terminal 3 - Niveau d'arrivée</p>
                 </div>
 
                 <!-- Colonne 3: Contactez-nous -->
                 <div class="footer-col">
-                    <h3>Contactez-nous</h3>
+                    <h3 data-i18n="footer_contact">Contactez-nous</h3>
                     <a href="tel:+33134385898" class="yellow-text">+33 (0)1 34 38 58 98</a>
                     <br>
-                    <h3>Email</h3>
+                    <h3 data-i18n="footer_email">Email</h3>
                     <a href="mailto:contact@hellopassenger.com" class="yellow-text">contact@hellopassenger.com</a>
                     <br>
-                    <h3>Suivez-nous</h3>
+                    <h3 data-i18n="footer_follow">Suivez-nous</h3>
                     <div class="socials">
                         <a href="#" aria-label="Facebook">
                             <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
@@ -146,12 +146,12 @@
 
                 <!-- Colonne 4: Liens Rapides -->
                 <div class="footer-col">
-                    <h3>Liens Rapides</h3>
-                    <a href="{{ $formUrl }}">Services</a>
-                    <a href="#faq">FAQ</a>
-                    <a href="#contact">Contact</a>
+                    <h3 data-i18n="footer_links">Liens Rapides</h3>
+                    <a href="{{ $formUrl }}" data-i18n="footer_services">Services</a>
+                    <a href="#faq" data-i18n="footer_faq">FAQ</a>
+                    <a href="#contact" data-i18n="footer_contact_link">Contact</a>
                     <br>
-                    <a href="{{ $formUrl }}" class="reserve-btn">Réservez maintenant ↗</a>
+                    <a href="{{ $formUrl }}" class="reserve-btn" data-i18n="footer_book">Réservez maintenant ↗</a>
                 </div>
             </div>
 
