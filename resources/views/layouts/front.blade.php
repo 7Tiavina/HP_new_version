@@ -64,6 +64,13 @@
     </script>
     <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}?v={{ file_exists(public_path('css/chatbot.css')) ? filemtime(public_path('css/chatbot.css')) : '1' }}">
     <script src="{{ asset('js/translations-simple.js') }}?v={{ file_exists(public_path('js/translations-simple.js')) ? filemtime(public_path('js/translations-simple.js')) : '1' }}"></script>
+    <style>
+        /* Override body padding for new nav */
+        body.luxe-home {
+            padding: 0 !important;
+            background-color: #000000;
+        }
+    </style>
     @stack('styles')
     @stack('head_scripts')
 </head>
@@ -72,31 +79,8 @@
     {{-- Widget flottant Chatbot --}}
     @include('components.chatbot')
 
-    <header class="luxe-header">
-        <div class="luxe-header-inner">
-            <button type="button" class="luxe-nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="luxe-nav-menu">
-                <span class="luxe-nav-toggle-bar"></span>
-                <span class="luxe-nav-toggle-bar"></span>
-                <span class="luxe-nav-toggle-bar"></span>
-                <span class="luxe-nav-toggle-bar"></span>
-            </button>
-            <a href="{{ route('form-consigne') }}" class="luxe-logo" aria-label="Hello Passenger Home" data-i18n-label="home">
-                @if(file_exists(public_path('HP-Logo.png')))
-                    <img src="{{ asset('HP-Logo.png') }}" alt="Hello Passenger" class="luxe-logo-img">
-                @else
-                    Hello Passenger
-                @endif
-            </a>
-            @include('components.translation-widget')
-            <nav class="luxe-nav" id="luxe-nav-menu" role="navigation">
-                <button type="button" class="luxe-nav-close" aria-label="Fermer le menu" title="Fermer">&times;</button>
-                <a href="{{ $formUrl }}" class="btn-cta" data-i18n="nav_book">Book now</a>
-                <a href="#login" class="login-link" data-i18n="login_btn">Login</a>
-                <a href="#signup" class="register-link" data-i18n="create_account_short">Register</a>
-                <span class="luxe-auth-inject"></span>
-            </nav>
-        </div>
-    </header>
+    {{-- Nouvelle Navigation Style Hello Passenger --}}
+    @include('Front.nav-front')
 
     <main class="luxe-main">
         @yield('content')
@@ -233,32 +217,6 @@
             }
             document.addEventListener('DOMContentLoaded', update);
             window.addEventListener('load', update);
-        })();
-    </script>
-    <script>
-        (function () {
-            var toggle = document.querySelector('.luxe-nav-toggle');
-            var nav = document.querySelector('.luxe-nav');
-            if (!toggle || !nav) return;
-            toggle.addEventListener('click', function () {
-                var open = nav.classList.toggle('luxe-nav-open');
-                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-                toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-                document.body.style.overflow = open ? 'hidden' : '';
-            });
-            function closeNav() {
-                nav.classList.remove('luxe-nav-open');
-                if (toggle) {
-                    toggle.setAttribute('aria-expanded', 'false');
-                    toggle.setAttribute('aria-label', 'Open menu');
-                }
-                document.body.style.overflow = '';
-            }
-            nav.querySelectorAll('a').forEach(function (a) {
-                a.addEventListener('click', closeNav);
-            });
-            var closeBtn = nav.querySelector('.luxe-nav-close');
-            if (closeBtn) closeBtn.addEventListener('click', closeNav);
         })();
     </script>
     {{-- Scroll reveal & counter animations (all pages) --}}
