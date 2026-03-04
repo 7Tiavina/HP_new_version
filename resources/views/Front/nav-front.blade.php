@@ -200,6 +200,30 @@
         color: #ffc439;
         font-weight: 700;
     }
+
+    /* Auth injection in nav */
+    .nav-center .luxe-auth-inject {
+        display: inline-flex;
+        align-items: center;
+        gap: 1.2rem;
+    }
+    .nav-center .luxe-auth-inject a,
+    .nav-center .luxe-auth-inject button {
+        color: #1a1a1a;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        font-family: inherit;
+        transition: color 0.3s;
+    }
+    .nav-center .luxe-auth-inject a:hover,
+    .nav-center .luxe-auth-inject button:hover {
+        color: #ffc439;
+    }
 </style>
 
 <div class="hp-nav-container">
@@ -217,6 +241,7 @@
         <ul class="nav-center">
             <li><a href="#login" class="login-link" data-i18n="login_btn">Se connecter</a></li>
             <li><a href="#signup" class="register-link" data-i18n="create_account_short">S'inscrire</a></li>
+            <li class="luxe-auth-inject"></li>
             <li>
                 @include('components.translation-widget')
             </li>

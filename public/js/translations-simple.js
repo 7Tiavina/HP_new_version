@@ -102,6 +102,8 @@ if (typeof window.translations === 'undefined') {
         login_error_title: "Erreur de connexion",
         login_error_message: "Identifiants invalides — veuillez réessayer.",
         close_btn: "Fermer",
+        my_account: "Mon compte",
+        logout_btn: "Déconnexion",
         
         // Common
         required: "Obligatoire",
@@ -600,6 +602,8 @@ if (typeof window.translations === 'undefined') {
         login_error_title: "Login Error",
         login_error_message: "Invalid credentials — please try again.",
         close_btn: "Close",
+        my_account: "My account",
+        logout_btn: "Logout",
         
         // Common
         required: "Required",

@@ -164,6 +164,18 @@
                 if (!el) return;
                 el.querySelectorAll('[data-hp-auth-item="1"]').forEach(function (n) { n.remove(); });
             }
+            function getTranslation(key, defaultVal) {
+                if (window.translate && typeof window.translate === 'function') {
+                    return window.translate(key, defaultVal);
+                }
+                if (window.translations && window.currentLang) {
+                    var lang = window.currentLang || 'fr';
+                    if (window.translations[lang] && window.translations[lang][key]) {
+                        return window.translations[lang][key];
+                    }
+                }
+                return defaultVal;
+            }
             function setLoggedOut() {
                 document.querySelectorAll('a.login-link, a.register-link').forEach(function (a) { a.style.display = ''; });
                 clearInject();
@@ -174,12 +186,15 @@
                 if (!inject) return;
                 clearInject();
 
+                var myAccountText = getTranslation('my_account', 'Mon compte');
+                var logoutText = getTranslation('logout_btn', 'Déconnexion');
+
                 var spanAccount = document.createElement('span');
                 spanAccount.setAttribute('data-hp-auth-item', '1');
                 spanAccount.style.marginRight = '1rem';
                 var aAccount = document.createElement('a');
                 aAccount.href = DASHBOARD_URL;
-                aAccount.textContent = 'My account';
+                aAccount.textContent = myAccountText;
                 aAccount.style.color = 'var(--luxe-gold)';
                 spanAccount.appendChild(aAccount);
                 inject.appendChild(spanAccount);
@@ -204,7 +219,7 @@
                 btn.style.color = 'var(--luxe-cream-muted)';
                 btn.style.fontSize = '0.9rem';
                 btn.style.fontWeight = '500';
-                btn.textContent = 'Logout';
+                btn.textContent = logoutText;
                 form.appendChild(btn);
                 spanLogout.appendChild(form);
                 inject.appendChild(spanLogout);
@@ -217,6 +232,11 @@
             }
             document.addEventListener('DOMContentLoaded', update);
             window.addEventListener('load', update);
+            
+            // Re-apply translations when language changes
+            document.addEventListener('hp-language-changed', function() {
+                update();
+            });
         })();
     </script>
     {{-- Scroll reveal & counter animations (all pages) --}}
