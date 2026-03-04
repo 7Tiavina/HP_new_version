@@ -496,10 +496,7 @@ class PaymentController extends Controller
                     
                     if (isset($premiumDetails['direction'])) {
                         $commentairesArray = [];
-                        $directionText = ($premiumDetails['direction'] ?? '') === 'both' 
-                            ? 'Service Premium complet (Arrivée + Départ)' 
-                            : 'Service Premium';
-                        $commentairesArray[] = "Type de service: " . $directionText;
+                        $commentairesArray[] = "Type de service: Service Premium complet (Arrivée + Départ)";
                         
                         // === ARRIVAL FLOW ===
                         if (!empty($premiumDetails['transport_type_arrival'])) {
@@ -511,9 +508,7 @@ class PaymentController extends Controller
                                 'other' => 'Autre',
                             ][$modeTransport] ?? ucfirst(str_replace('_', ' ', $modeTransport));
                             
-                            if (empty($commandeInfos['modeTransport'])) {
-                                $commandeInfos['modeTransport'] = $displayModeTransport;
-                            }
+                            $commandeInfos['modeTransport'] = $displayModeTransport;
                             
                             if ($modeTransport === 'airport' && !empty($premiumDetails['flight_number_arrival'])) {
                                 $commentairesArray[] = "Vol arrivée: " . $premiumDetails['flight_number_arrival'];
@@ -533,6 +528,7 @@ class PaymentController extends Controller
                                 'other' => 'Autre',
                             ][$modeTransport] ?? ucfirst(str_replace('_', ' ', $modeTransport));
                             
+                            // Only set if not already set from arrival
                             if (empty($commandeInfos['modeTransport'])) {
                                 $commandeInfos['modeTransport'] = $displayModeTransport;
                             }
@@ -574,10 +570,7 @@ class PaymentController extends Controller
                         
                         // === INSTRUCTIONS ===
                         if (!empty($premiumDetails['instructions_arrival'])) {
-                            $commentairesArray[] = "Infos arrivée: " . $premiumDetails['instructions_arrival'];
-                        }
-                        if (!empty($premiumDetails['instructions_departure'])) {
-                            $commentairesArray[] = "Infos départ: " . $premiumDetails['instructions_departure'];
+                            $commentairesArray[] = "Infos complémentaires: " . $premiumDetails['instructions_arrival'];
                         }
                         
                         $commandeInfos['commentaires'] = implode('; ', $commentairesArray);

@@ -1879,8 +1879,76 @@
             // Remplir les lieux quand le modal s'ouvre
             if (openClientProfileModalBtn) {
                 openClientProfileModalBtn.addEventListener('click', () => {
-                    setTimeout(fillPremiumLocations, 200);
+                    setTimeout(() => {
+                        fillPremiumLocations();
+                        fillPremiumDatetimeFields();
+                    }, 500);
                 });
+            }
+            
+            // Remplir les champs datetime avec les valeurs du formulaire
+            function fillPremiumDatetimeFields() {
+                // Essayer de récupérer depuis sessionStorage (state.js)
+                let dateDepot = null, heureDepot = null, dateRecuperation = null, heureRecuperation = null;
+                
+                try {
+                    const state = JSON.parse(sessionStorage.getItem('formState'));
+                    if (state) {
+                        dateDepot = state.dateDepot;
+                        heureDepot = state.heureDepot;
+                        dateRecuperation = state.dateRecuperation;
+                        heureRecuperation = state.heureRecuperation;
+                        console.log('[fillPremiumDatetimeFields] Loaded from sessionStorage:', { dateDepot, heureDepot, dateRecuperation, heureRecuperation });
+                    }
+                } catch (e) {
+                    console.log('[fillPremiumDatetimeFields] Could not load from sessionStorage');
+                }
+                
+                // Fallback: essayer de récupérer depuis les éléments du DOM (si présents)
+                if (!dateDepot) {
+                    const dateDepotInput = document.getElementById('date-depot');
+                    if (dateDepotInput) dateDepot = dateDepotInput.value;
+                }
+                if (!heureDepot) {
+                    const heureDepotInput = document.getElementById('heure-depot');
+                    if (heureDepotInput) heureDepot = heureDepotInput.value;
+                }
+                if (!dateRecuperation) {
+                    const dateRecupInput = document.getElementById('date-recuperation');
+                    if (dateRecupInput) dateRecuperation = dateRecupInput.value;
+                }
+                if (!heureRecuperation) {
+                    const heureRecupInput = document.getElementById('heure-recuperation');
+                    if (heureRecupInput) heureRecuperation = heureRecupInput.value;
+                }
+                
+                const pickupDatetimeInput = document.getElementById('pickup-datetime-arrival');
+                const restitutionDatetimeInput = document.getElementById('restitution-datetime-departure');
+                
+                console.log('[fillPremiumDatetimeFields] Final values:', { dateDepot, heureDepot, dateRecuperation, heureRecuperation });
+                
+                // Format datetime-local: YYYY-MM-DDTHH:MM
+                if (dateDepot && heureDepot && pickupDatetimeInput) {
+                    // Pour les champs text (heure-depot), extraire juste l'heure HH:MM
+                    let heureValue = heureDepot.trim();
+                    // Si le format est "HH:MM:00" ou similaire, prendre juste HH:MM
+                    if (heureValue.includes(':')) {
+                        const timeParts = heureValue.split(':');
+                        heureValue = timeParts[0] + ':' + (timeParts[1] || '00');
+                    }
+                    pickupDatetimeInput.value = `${dateDepot}T${heureValue}`;
+                    console.log('[fillPremiumDatetimeFields] Pickup datetime set to:', pickupDatetimeInput.value);
+                }
+                
+                if (dateRecuperation && heureRecuperation && restitutionDatetimeInput) {
+                    let heureValue = heureRecuperation.trim();
+                    if (heureValue.includes(':')) {
+                        const timeParts = heureValue.split(':');
+                        heureValue = timeParts[0] + ':' + (timeParts[1] || '00');
+                    }
+                    restitutionDatetimeInput.value = `${dateRecuperation}T${heureValue}`;
+                    console.log('[fillPremiumDatetimeFields] Restitution datetime set to:', restitutionDatetimeInput.value);
+                }
             }
 
             // Initialize Société field visibility on page load
@@ -2029,7 +2097,7 @@
                             // Validate arrival fields
                             const transportArrival = document.querySelector('select[name="transport_type_arrival"]');
                             const pickupLocation = document.querySelector('select[name="pickup_location_arrival"]');
-                            const pickupTime = document.querySelector('input[name="pickup_time_arrival"]');
+                            const pickupDatetime = document.querySelector('input[name="pickup_datetime_arrival"]');
                             
                             if (!transportArrival || !transportArrival.value) {
                                 premiumValid = false;
@@ -2039,15 +2107,15 @@
                                 premiumValid = false;
                                 missingFields.push('Lieu de prise en charge');
                             }
-                            if (!pickupTime || !pickupTime.value) {
+                            if (!pickupDatetime || !pickupDatetime.value) {
                                 premiumValid = false;
-                                missingFields.push('Heure de prise en charge');
+                                missingFields.push('Date et heure de prise en charge');
                             }
                             
                             // Validate departure fields
                             const transportDeparture = document.querySelector('select[name="transport_type_departure"]');
                             const restitutionLocation = document.querySelector('select[name="restitution_location_departure"]');
-                            const restitutionTime = document.querySelector('input[name="restitution_time_departure"]');
+                            const restitutionDatetime = document.querySelector('input[name="restitution_datetime_departure"]');
                             
                             if (!transportDeparture || !transportDeparture.value) {
                                 premiumValid = false;
@@ -2057,9 +2125,9 @@
                                 premiumValid = false;
                                 missingFields.push('Lieu de restitution');
                             }
-                            if (!restitutionTime || !restitutionTime.value) {
+                            if (!restitutionDatetime || !restitutionDatetime.value) {
                                 premiumValid = false;
-                                missingFields.push('Heure de restitution');
+                                missingFields.push('Date et heure de restitution');
                             }
                             
                             if (!premiumValid) {
@@ -2094,12 +2162,31 @@
                         // Récupérer les libellés des lieux sélectionnés
                         const pickupLocationSelect = document.getElementById('modal-pickup-location-arrival');
                         const restitutionLocationSelect = document.getElementById('modal-restitution-location-departure');
-                        const pickupLocationLibelle = pickupLocationSelect && pickupLocationSelect.options[pickupLocationSelect.selectedIndex] 
-                            ? pickupLocationSelect.options[pickupLocationSelect.selectedIndex].text 
+                        const pickupLocationLibelle = pickupLocationSelect && pickupLocationSelect.options[pickupLocationSelect.selectedIndex]
+                            ? pickupLocationSelect.options[pickupLocationSelect.selectedIndex].text
                             : '';
-                        const restitutionLocationLibelle = restitutionLocationSelect && restitutionLocationSelect.options[restitutionLocationSelect.selectedIndex] 
-                            ? restitutionLocationSelect.options[restitutionLocationSelect.selectedIndex].text 
+                        const restitutionLocationLibelle = restitutionLocationSelect && restitutionLocationSelect.options[restitutionLocationSelect.selectedIndex]
+                            ? restitutionLocationSelect.options[restitutionLocationSelect.selectedIndex].text
                             : '';
+                        
+                        // Séparer datetime en date et heure
+                        const pickupDatetime = data.pickup_datetime_arrival || '';
+                        const restitutionDatetime = data.restitution_datetime_departure || '';
+                        
+                        let dateArrival = '', timeArrival = '';
+                        let dateDeparture = '', timeDeparture = '';
+                        
+                        if (pickupDatetime) {
+                            const [arrivalDate, arrivalTime] = pickupDatetime.split('T');
+                            dateArrival = arrivalDate || '';
+                            timeArrival = arrivalTime || '';
+                        }
+                        
+                        if (restitutionDatetime) {
+                            const [departureDate, departureTime] = restitutionDatetime.split('T');
+                            dateDeparture = departureDate || '';
+                            timeDeparture = departureTime || '';
+                        }
                         
                         // Collecter les infos premium
                         const premiumDetails = {
@@ -2110,16 +2197,15 @@
                             flight_number_departure: data.flight_number_departure || '',
                             train_number_arrival: data.train_number_arrival || '',
                             train_number_departure: data.train_number_departure || '',
-                            date_arrival: data.date_arrival || '',
-                            date_departure: data.date_departure || '',
+                            date_arrival: dateArrival,
+                            pickup_time_arrival: timeArrival,
+                            date_departure: dateDeparture,
+                            restitution_time_departure: timeDeparture,
                             pickup_location_arrival: data.pickup_location_arrival || '',
                             pickup_location_arrival_libelle: pickupLocationLibelle,
                             restitution_location_departure: data.restitution_location_departure || '',
                             restitution_location_departure_libelle: restitutionLocationLibelle,
-                            pickup_time_arrival: data.pickup_time_arrival || '',
-                            restitution_time_departure: data.restitution_time_departure || '',
-                            instructions_arrival: data.instructions_arrival || '',
-                            instructions_departure: data.instructions_departure || ''
+                            instructions_arrival: data.instructions_arrival || ''
                         };
                         
                         // Ajouter au payload pour l'envoi
