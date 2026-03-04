@@ -214,6 +214,13 @@ class BdmApiService
 
             $productsResult = $productsResponse->json();
             $lieuxResult = $lieuxResponse->json();
+            
+            // Log pour déboguer les lieux
+            Log::info('getQuote - Lieux reçus de BDM:', [
+                'statut' => $lieuxResult['statut'] ?? 'unknown',
+                'count' => count($lieuxResult['content'] ?? []),
+                'lieux' => $lieuxResult['content'] ?? []
+            ]);
 
             // Vérifier si le statut interne de l'API BDM indique un échec
             if (($productsResult['statut'] ?? 0) !== 1 || ($lieuxResult['statut'] ?? 0) !== 1) {
@@ -257,14 +264,14 @@ class BdmApiService
         // Construire commandeLignes à partir des baggages
         $commandeLignes = array_map(function($baggage) {
             return [
-                "idProduit" => $baggage['productId'],
-                "idService" => $baggage['serviceId'] ?? "dfb8ac1b-8bb1-4957-afb4-1faedaf641b7",
-                "dateDebut" => $baggage['dateDebut'],
-                "dateFin" => $baggage['dateFin'],
+                "idProduit" => $baggage['idProduit'] ?? $baggage['productId'] ?? null,
+                "idService" => $baggage['idService'] ?? $baggage['serviceId'] ?? "dfb8ac1b-8bb1-4957-afb4-1faedaf641b7",
+                "dateDebut" => $baggage['dateDebut'] ?? $baggage['dateDebut'],
+                "dateFin" => $baggage['dateFin'] ?? $baggage['dateFin'],
                 "prixTTC" => 0,
                 "prixTTCAvantRemise" => 0,
                 "tauxRemise" => 0,
-                "quantite" => $baggage['quantity']
+                "quantite" => $baggage['quantite'] ?? $baggage['quantity'] ?? 1
             ];
         }, $baggages);
 

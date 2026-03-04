@@ -240,8 +240,12 @@ function displayOptions(dureeEnMinutes) {
     const isDepotInFuture = diffInHours >= 72;
     const hasLieux = (typeof globalLieuxData !== 'undefined' && globalLieuxData) ? globalLieuxData.length > 0 : false;
 
-    // Afficher l'option Premium si lieux disponibles (sans exiger 72 h pour l'affichage)
-    isPremiumAvailable = hasLieux;
+    // Afficher l'option Premium si lieux disponibles OU si on veut tester sans lieux
+    // TEMPORAIRE: Toujours true pour déboguer - à retirer en production
+    isPremiumAvailable = true; // hasLieux;
+    
+    console.log('[displayOptions] globalLieuxData:', globalLieuxData);
+    console.log('[displayOptions] hasLieux:', hasLieux, 'isPremiumAvailable:', isPremiumAvailable, 'isDepotInFuture:', isDepotInFuture);
 }
 
 function updateAdvertModalButtons() {
@@ -262,14 +266,14 @@ function updateAdvertModalButtons() {
             addButton.classList.add('bg-transparent', 'border', 'border-gray-400', 'text-gray-700', 'hover:bg-gray-100');
         }
     });
-    
+
     // NOUVELLE PARTIE : Mise à jour du bouton "Continuer"
     const continueBtn = document.getElementById('continue-from-options-modal');
     if (continueBtn) {
-        const hasOptionsInCart = cartItems.some(item => 
+        const hasOptionsInCart = cartItems.some(item =>
             item.itemCategory === 'option' && (item.key === 'priority' || item.key === 'premium')
         );
-        
+
         if (hasOptionsInCart) {
             continueBtn.textContent = t('modal_validate_continue');
             continueBtn.classList.remove('bg-gray-200', 'text-gray-700');
@@ -281,6 +285,8 @@ function updateAdvertModalButtons() {
             continueBtn.classList.add('bg-yellow-custom', 'text-gray-dark');
         }
     }
+    
+    console.log('[updateAdvertModalButtons] Cart items:', cartItems.filter(i => i.itemCategory === 'option'));
 }
 
 function toggleOptionFromModal(optionKey) {
@@ -441,32 +447,46 @@ function showOptionsAdvertisementModal() {
         const prioritySection = document.getElementById('advert-option-priority');
         const premiumSection = document.getElementById('advert-option-premium');
         
+        // Vérifier que les éléments essentiels existent
+        if (!modal) {
+            console.error('Modal element not found!');
+            resolve('continued'); // Passer directement
+            return;
+        }
+
         // --- NOUVELLE LOGIQUE D'AFFICHAGE ---
-        
-        // Masquer les sections par défaut
-        prioritySection.classList.add('hidden');
-        premiumSection.classList.add('hidden');
+
+        // Masquer les sections par défaut (avec vérification)
+        if (prioritySection) prioritySection.classList.add('hidden');
+        if (premiumSection) premiumSection.classList.add('hidden');
 
         // Gérer l'affichage de l'option Priority
         if (staticOptions.priority && staticOptions.priority.id && staticOptions.priority.prixUnitaire > 0) {
             const priorityPriceEl = document.getElementById('advert-priority-price');
-            priorityPriceEl.textContent = `+${staticOptions.priority.prixUnitaire.toFixed(2)} €`;
-            prioritySection.classList.remove('hidden');
+            if (priorityPriceEl) {
+                priorityPriceEl.textContent = `+${staticOptions.priority.prixUnitaire.toFixed(2)} €`;
+            }
+            if (prioritySection) prioritySection.classList.remove('hidden');
         }
 
         // Gérer l'affichage de l'option Premium : afficher la carte dès que l'API renvoie un prix
         const premiumAvailableContent = document.getElementById('premium-available-content');
         const premiumUnavailableMessage = document.getElementById('premium-unavailable-message');
         const hasPremiumFromApi = staticOptions.premium && staticOptions.premium.id && staticOptions.premium.prixUnitaire > 0;
+        
+        console.log('[showOptionsAdvertisementModal] staticOptions.premium:', staticOptions.premium);
+        console.log('[showOptionsAdvertisementModal] hasPremiumFromApi:', hasPremiumFromApi, 'isPremiumAvailable:', isPremiumAvailable);
 
         if (hasPremiumFromApi) {
             if (isPremiumAvailable) {
                 // Lieux disponibles : afficher le formulaire et le bouton Ajouter
                 const premiumPriceEl = document.getElementById('advert-premium-price');
-                premiumPriceEl.textContent = `+${staticOptions.premium.prixUnitaire.toFixed(2)} €`;
+                if (premiumPriceEl) {
+                    premiumPriceEl.textContent = `+${staticOptions.premium.prixUnitaire.toFixed(2)} €`;
+                }
 
-                premiumAvailableContent.classList.remove('hidden');
-                premiumUnavailableMessage.classList.add('hidden');
+                if (premiumAvailableContent) premiumAvailableContent.classList.remove('hidden');
+                if (premiumUnavailableMessage) premiumUnavailableMessage.classList.add('hidden');
 
                 const premiumDetailsContainer = document.getElementById('premium-details-modal');
                 const lieux = (typeof globalLieuxData !== 'undefined' && Array.isArray(globalLieuxData)) ? globalLieuxData : [];
@@ -659,27 +679,29 @@ function showOptionsAdvertisementModal() {
                 // L'utilisateur DOIT remplir les deux sections
             } else {
                 // API renvoie Premium mais pas de lieux pour cet aéroport : afficher la carte avec message
-                premiumAvailableContent.classList.add('hidden');
-                premiumUnavailableMessage.classList.remove('hidden');
-                premiumUnavailableMessage.innerHTML = `<p class="text-lg font-semibold text-gray-600">${t('modal_premium_unavailable')}</p><p class="text-sm text-gray-500 mt-2">${t('modal_premium_unavailable_reason')}</p>`;
+                if (premiumAvailableContent) premiumAvailableContent.classList.add('hidden');
+                if (premiumUnavailableMessage) premiumUnavailableMessage.classList.remove('hidden');
+                if (premiumUnavailableMessage) {
+                    premiumUnavailableMessage.innerHTML = `<p class="text-lg font-semibold text-gray-600">${t('modal_premium_unavailable')}</p><p class="text-sm text-gray-500 mt-2">${t('modal_premium_unavailable_reason')}</p>`;
+                }
             }
-            premiumSection.classList.remove('hidden');
+            if (premiumSection) premiumSection.classList.remove('hidden');
         }
         // --- FIN DE LA NOUVELLE LOGIQUE ---
-        
+
         updateAdvertModalButtons(); // Met à jour l'état des boutons (Ajouter/Enlever)
 
         let optionsModalEscHandler;
         const closeModalAndResolve = (resolutionValue = 'continued') => {
-            modal.classList.add('hidden');
+            if (modal) modal.classList.add('hidden');
             if (typeof optionsModalEscHandler === 'function') {
                 document.removeEventListener('keydown', optionsModalEscHandler);
             }
-            continueBtn.onclick = null;
-            closeBtn.onclick = null;
-            modal.onclick = null;
-            addPriorityBtn.onclick = null;
-            addPremiumBtn.onclick = null;
+            if (continueBtn) continueBtn.onclick = null;
+            if (closeBtn) closeBtn.onclick = null;
+            if (modal) modal.onclick = null;
+            if (addPriorityBtn) addPriorityBtn.onclick = null;
+            if (addPremiumBtn) addPremiumBtn.onclick = null;
             resolve(resolutionValue);
         };
 
@@ -691,20 +713,22 @@ function showOptionsAdvertisementModal() {
         };
         document.addEventListener('keydown', optionsModalEscHandler);
 
-        addPriorityBtn.onclick = () => toggleOptionFromModal('priority');
-        addPremiumBtn.onclick = () => {
+        if (addPriorityBtn) addPriorityBtn.onclick = () => toggleOptionFromModal('priority');
+        if (addPremiumBtn) addPremiumBtn.onclick = () => {
             // Appeler toggleOptionFromModal qui gère la validation et l'ajout au panier
             toggleOptionFromModal('premium');
         };
-        continueBtn.onclick = () => closeModalAndResolve('continued');
-        closeBtn.onclick = () => closeModalAndResolve('cancelled');
-        modal.onclick = (e) => {
-            if (e.target === modal) {
-                closeModalAndResolve('cancelled');
-            }
-        };
-        
-        modal.classList.remove('hidden');
+        if (continueBtn) continueBtn.onclick = () => closeModalAndResolve('continued');
+        if (closeBtn) closeBtn.onclick = () => closeModalAndResolve('cancelled');
+        if (modal) {
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    closeModalAndResolve('cancelled');
+                }
+            };
+        }
+
+        if (modal) modal.classList.remove('hidden');
     });
 }
 

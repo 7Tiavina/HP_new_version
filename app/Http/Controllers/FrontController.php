@@ -491,14 +491,22 @@ class FrontController extends Controller
             if ($response && ($response['statut'] ?? 0) === 1 && isset($response['content'])) {
                 $priorityOption = null;
                 $premiumOption = null;
-    
-                // Process the API response to find our specific options
-                foreach ($response['content'] ?? [] as $optionItem) {
-                    $normalizedLibelle = Str::upper($optionItem['libelle'] ?? '');
 
-                    if (str_contains($normalizedLibelle, 'PRIORITY') && !str_contains($normalizedLibelle, 'CHECK-OUT')) {
+                // IDs fixes pour Priority et Premium
+                $priorityId = 'fbb2d232-27c8-43eb-a6a9-200b6225871a';
+                $premiumId = 'eb2bc6f4-b3f5-4911-90ce-9724250e21a3';
+
+                // Process the API response to find our specific options by ID
+                foreach ($response['content'] ?? [] as $optionItem) {
+                    $optionId = $optionItem['id'] ?? '';
+                    $referenceInterne = $optionItem['referenceInterne'] ?? '';
+
+                    // Detect Priority by ID or reference
+                    if ($optionId === $priorityId || strtoupper($referenceInterne) === 'PRIO') {
                         $priorityOption = $optionItem;
-                    } elseif (str_contains($normalizedLibelle, 'PREMIUM')) {
+                    }
+                    // Detect Premium by ID or reference
+                    elseif ($optionId === $premiumId || strtoupper($referenceInterne) === 'PREM') {
                         $premiumOption = $optionItem;
                     }
                 }
@@ -507,7 +515,7 @@ class FrontController extends Controller
                     'priority' => $priorityOption,
                     'premium' => $premiumOption
                 ]);
-    
+
                 return response()->json([
                     'statut' => 1,
                     'message' => 'Prix des options récupérés avec succès',

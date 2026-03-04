@@ -132,7 +132,7 @@ class PaymentController extends Controller
                 $bdmToken = $this->getBdmToken();
                 $idPlateforme = $validatedData['airportId'];
                 
-                // Build commandeLignes for API call (without options prices)
+                // Build commandeLignes for API call (with baggages to get correct options prices)
                 $apiCommandeLignes = [];
                 foreach ($commandeLignes as $ligne) {
                     $apiCommandeLignes[] = [
@@ -143,15 +143,19 @@ class PaymentController extends Controller
                         'quantite' => $ligne['quantite'],
                     ];
                 }
-                
+
                 // Call BDM API to get fresh option prices using BdmApiService
                 $bdmApiService = new \App\Services\BdmApiService();
-                
-                Log::info('[preparePayment] Calling BdmApiService::getCommandeOptionsQuote...');
-                
+
+                Log::info('[preparePayment] Calling BdmApiService::getCommandeOptionsQuote with baggages...', [
+                    'idPlateforme' => $idPlateforme,
+                    'baggages_count' => count($apiCommandeLignes),
+                ]);
+
+                // Pass the baggages to the API so it can calculate options prices correctly
                 $freshOptionsResult = $bdmApiService->getCommandeOptionsQuote(
                     $idPlateforme,
-                    [], // No baggages, we only want options prices
+                    $apiCommandeLignes, // Pass baggages (NOT empty array)
                     $validatedData['guest_email'] ?? ($user->email ?? null),
                     null // No premium details needed for price fetching
                 );
@@ -185,33 +189,43 @@ class PaymentController extends Controller
                         $optPrix = (float)($freshOption['prixUnitaire'] ?? 0);
                         $optTauxRemise = (float)($freshOption['tauxRemise'] ?? 0);
                         $optPrixAvantRemise = (float)($freshOption['prixUnitaireAvantRemise'] ?? $freshOption['prixUnitaire'] ?? 0);
-                        
+
                         Log::info('[preparePayment] Using FRESH price from BDM', [
                             'option_id' => $optionId,
                             'libelle' => $selectedOption['libelle'],
                             'fresh_price' => $optPrix,
+                            'fresh_price_before_discount' => $optPrixAvantRemise,
+                            'fresh_discount_rate' => $optTauxRemise,
                             'frontend_price' => $selectedOption['prix'] ?? $selectedOption['prixUnitaire'] ?? 0,
                         ]);
                     } else {
                         // Fallback to frontend price (should not happen)
                         $optPrix = (float)($selectedOption['prix'] ?? $selectedOption['prixUnitaire'] ?? 0);
-                        $optTauxRemise = (float)($selectedOption['tauxRemise'] ?? $selectedOption['taux_remise'] ?? 0);
+                        
+                        // Use default 10% discount for known options if API didn't return it
+                        $optTauxRemise = (float)($selectedOption['tauxRemise'] ?? $selectedOption['taux_remise'] ?? 10.0);
                         $optPrixAvantRemiseRaw = $selectedOption['prixTTCAvantRemise'] ?? $selectedOption['prix_ttc_avant_remise'] ?? null;
                         $optPrixAvantRemise = $optPrixAvantRemiseRaw !== null
                             ? (float)$optPrixAvantRemiseRaw
                             : ($optTauxRemise > 0 ? $optPrix / (1 - $optTauxRemise / 100) : $optPrix);
-                        
-                        Log::warning('[preparePayment] Using FALLBACK frontend price (BDM API failed)', [
+
+                        Log::warning('[preparePayment] Using FALLBACK frontend price (BDM API returned empty)', [
                             'option_id' => $optionId,
                             'libelle' => $selectedOption['libelle'],
                             'price' => $optPrix,
+                            'price_before_discount' => $optPrixAvantRemise,
+                            'discount_rate' => $optTauxRemise,
                         ]);
                     }
                     
                     $optionsTotal += $optPrix;
-                    
+
                     $commandeLignes[] = [
-                        "idProduit" => $selectedOption['id'], "idService" => $serviceId,
+                        "id" => $selectedOption['id'],
+                        "idProduit" => $selectedOption['id'],
+                        "reference" => $selectedOption['referenceInterne'] ?? null,
+                        "referenceInterne" => $selectedOption['referenceInterne'] ?? null,  // BDM pourrait avoir besoin des deux formats
+                        "idService" => $serviceId,
                         "dateDebut" => $validatedData['dateDepot'] . 'T' . $validatedData['heureDepot'] . ':00.000Z',
                         "dateFin" => $validatedData['dateRecuperation'] . 'T' . $validatedData['heureRecuperation'] . ':00.000Z',
                         "prixTTC" => $optPrix,
@@ -781,12 +795,26 @@ class PaymentController extends Controller
             foreach ($commandeData['commandeLignes'] as $ligne) {
                 $isOption = isset($ligne['is_option']) && $ligne['is_option'];
                 unset($ligne['is_option']);
+                
                 // API BDM/ERP exige prixTTCAvantRemise et tauxRemise sur chaque ligne
                 $prixTTC = (float)($ligne['prixTTC'] ?? 0);
                 $ligne['prixTTCAvantRemise'] = $ligne['prixTTCAvantRemise'] ?? $prixTTC;
                 $ligne['tauxRemise'] = $ligne['tauxRemise'] ?? 0;
+                
+                // IMPORTANT: Retirer les champs inutiles des options pour l'API BDM
                 if ($isOption) {
-                    $lignesOptions[] = $ligne;
+                    // BDM attend seulement les champs essentiels pour les options
+                    $lignesOptions[] = [
+                        'idProduit' => $ligne['idProduit'],
+                        'idService' => $ligne['idService'],
+                        'dateDebut' => $ligne['dateDebut'],
+                        'dateFin' => $ligne['dateFin'],
+                        'prixTTC' => $ligne['prixTTC'],
+                        'prixTTCAvantRemise' => $ligne['prixTTCAvantRemise'],
+                        'tauxRemise' => $ligne['tauxRemise'],
+                        'quantite' => $ligne['quantite']
+                        // Pas de libelleProduit, pas de id, pas de reference - juste idProduit et les prix
+                    ];
                 } else {
                     $lignesProduits[] = $ligne;
                 }

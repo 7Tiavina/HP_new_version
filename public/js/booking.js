@@ -567,6 +567,7 @@ async function handleTotalClick() {
 
             if (optionsQuoteResult.statut === 1 && optionsQuoteResult.content) {
                 console.log('Options from API:', optionsQuoteResult.content);
+                
                 // Normaliser les options (API BDM peut renvoyer prix_unitaire, Id, Libelle)
                 var norm = function (o) {
                     if (!o) return null;
@@ -576,12 +577,27 @@ async function handleTotalClick() {
                         prixUnitaire: parseFloat(o.prixUnitaire ?? o.prix_unitaire ?? o.prix ?? 0) || 0
                     };
                 };
-                staticOptions.priority = norm(optionsQuoteResult.content.priority);
-                staticOptions.premium = norm(optionsQuoteResult.content.premium);
+                
+                // Le backend retourne déjà un objet avec priority et premium
+                var apiPriority = optionsQuoteResult.content.priority;
+                var apiPremium = optionsQuoteResult.content.premium;
+                
+                var foundPriority = norm(apiPriority);
+                var foundPremium = norm(apiPremium);
+                
+                // Mettre à jour staticOptions seulement si on a trouvé les options
+                if (foundPriority && foundPriority.id) {
+                    staticOptions.priority = foundPriority;
+                }
+                if (foundPremium && foundPremium.id) {
+                    staticOptions.premium = foundPremium;
+                }
+                
                 console.log('Updated staticOptions:', staticOptions);
+                console.log('Priority found:', !!foundPriority?.id, 'Premium found:', !!foundPremium?.id);
 
                 // Déterminer si la modale doit être affichée
-                if (staticOptions.priority || staticOptions.premium) {
+                if (staticOptions.priority?.id || staticOptions.premium?.id) {
                     shouldShowOptionsModal = true;
                 }
 
@@ -659,7 +675,21 @@ async function handleTotalClick() {
         var rawOptions = cartItems.filter(i => i.itemCategory === 'option');
         var options = rawOptions.map(function (o) {
             var p = o.prix ?? o.prixUnitaire ?? 0;
-            return { id: o.id || '', libelle: o.libelle || '', prix: p, prixUnitaire: p, details: o.details || null };
+            // Récupérer referenceInterne depuis staticOptions si disponible
+            var refInterne = '';
+            if (o.key === 'priority' && staticOptions.priority && staticOptions.priority.referenceInterne) {
+                refInterne = staticOptions.priority.referenceInterne;
+            } else if (o.key === 'premium' && staticOptions.premium && staticOptions.premium.referenceInterne) {
+                refInterne = staticOptions.premium.referenceInterne;
+            }
+            return { 
+                id: o.id || '', 
+                libelle: o.libelle || '', 
+                prix: p, 
+                prixUnitaire: p, 
+                details: o.details || null,
+                referenceInterne: refInterne
+            };
         });
 
         var airportSelect = document.getElementById('airport-select');
