@@ -1076,8 +1076,11 @@ function applyLanguage(lang) {
             btn.classList.add('bg-gray-700', 'text-gray-300', 'hover:bg-gray-600');
         }
     });
-    
+
     console.warn('=== LANGUAGE APPLIED SUCCESSFULLY ===\n');
+    
+    // Dispatch custom event for other components to react to language changes
+    window.dispatchEvent(new CustomEvent('hp-language-changed', { detail: { language: lang } }));
 }
 
 // Set up event listeners

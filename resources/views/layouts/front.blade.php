@@ -165,8 +165,8 @@
                 el.querySelectorAll('[data-hp-auth-item="1"]').forEach(function (n) { n.remove(); });
             }
             function getTranslation(key, defaultVal) {
-                if (window.translate && typeof window.translate === 'function') {
-                    return window.translate(key, defaultVal);
+                if (window.translateKey && typeof window.translateKey === 'function') {
+                    return window.translateKey(key, defaultVal);
                 }
                 if (window.translations && window.currentLang) {
                     var lang = window.currentLang || 'fr';
