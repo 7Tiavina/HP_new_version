@@ -465,7 +465,13 @@ async function getQuoteAndDisplay() {
         if (result.statut === 1 && result.content) {
             var c = result.content;
             globalProductsData = Array.isArray(c.products) ? c.products : (Array.isArray(c) ? c : []);
-            globalLieuxData = Array.isArray(c.lieux) ? c.lieux : [];
+            // Pour premium : lieux statiques (1,2,3,4) si l'endpoint ne retourne rien
+            globalLieuxData = Array.isArray(c.lieux) && c.lieux.length > 0 ? c.lieux : [
+                { id: 1, libelle: 'Lieu 1' },
+                { id: 2, libelle: 'Lieu 2' },
+                { id: 3, libelle: 'Lieu 3' },
+                { id: 4, libelle: 'Lieu 4' }
+            ];
             // Pour tester les remises : ouvrir la console (F12) et vérifier que les produits ont tauxRemise ou prixUnitaireAvantRemise
             if (globalProductsData.length > 0 && typeof console !== 'undefined' && console.info) {
                 console.info('[Remises] Produits reçus de l\'API getQuote:', globalProductsData.map(p => ({
