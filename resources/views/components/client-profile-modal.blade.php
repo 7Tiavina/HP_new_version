@@ -5,7 +5,11 @@
             <h3 class="text-2xl font-bold" data-i18n="modal_title">Votre sécurité, notre priorité !</h3>
             <p class="text-[#212121] text-opacity-90 text-sm mt-1" data-i18n="modal_subtitle">
                 Pour la protection de vos biens et le respect des normes aéroportuaires (contrôle par rayons X), veuillez compléter vos informations de contact.
-            </p>        </div>
+            </p>
+            <p id="premium-modal-notice" class="text-[#212121] text-opacity-90 text-sm mt-2 font-semibold hidden" data-i18n="modal_premium_notice">
+                Vous avez opté pour l'option PREMIUM, quelques infos complémentaires sont nécessaires.
+            </p>
+        </div>
 
         <div class="p-8 relative">
             <div class="absolute inset-0 opacity-30 pointer-events-none" style="background-image: url('{{ asset('rayonx.png') }}'); background-size: cover; background-position: center; background-repeat: no-repeat;"></div>
@@ -93,6 +97,114 @@
                             <div id="societe-field-container" class="hidden">
                                 <label class="block text-xs font-bold text-gray-700 uppercase" data-i18n="label_societe">Nom de la Société</label>
                                 <input type="text" name="nomSociete" id="modal-nomSociete" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:ring-[#ffc107] text-gray-800 font-medium text-lg">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section infos PREMIUM -->
+                    <div id="premium-fields-modal-container" class="hidden space-y-4">
+                        <h4 class="font-bold text-[#212121] flex items-center">
+                            <span class="w-8 h-8 bg-[#ffc107] bg-opacity-20 text-[#212121] rounded-full flex items-center justify-center mr-2 text-sm font-bold">2</span>
+                            Informations PREMIUM
+                        </h4>
+
+                        <!-- Arrival Section -->
+                        <div class="p-4 bg-gray-100 rounded-xl">
+                            <h5 class="font-semibold text-gray-800 mb-3">Arrivée (Terminal → Agence)</h5>
+                            
+                            <div class="grid grid-cols-1 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase">Type de transport</label>
+                                    <select name="transport_type_arrival" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-2 text-gray-800 font-medium">
+                                        <option value="">Sélectionner</option>
+                                        <option value="airport">Avion</option>
+                                        <option value="train">Train</option>
+                                        <option value="public_transport">Transports en commun</option>
+                                        <option value="other">Autre</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="flight_number_arrival_container" class="hidden">
+                                    <label class="block text-xs font-bold text-gray-700 uppercase">Numéro de vol</label>
+                                    <input type="text" name="flight_number_arrival" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-2 text-gray-800 font-medium">
+                                </div>
+                                
+                                <div id="train_number_arrival_container" class="hidden">
+                                    <label class="block text-xs font-bold text-gray-700 uppercase">Numéro de train</label>
+                                    <input type="text" name="train_number_arrival" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-2 text-gray-800 font-medium">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase">Date d'arrivée</label>
+                                    <input type="date" name="date_arrival" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-2 text-gray-800 font-medium">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase">Lieu de prise en charge</label>
+                                    <select name="pickup_location_arrival" id="modal-pickup-location-arrival" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-2 text-gray-800 font-medium">
+                                        <option value="">Sélectionner</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase">Heure de prise en charge</label>
+                                    <input type="time" name="pickup_time_arrival" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-2 text-gray-800 font-medium">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase">Informations complémentaires</label>
+                                    <textarea name="instructions_arrival" rows="2" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-2 text-gray-800 font-medium"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Departure Section -->
+                        <div class="p-4 bg-gray-100 rounded-xl">
+                            <h5 class="font-semibold text-gray-800 mb-3">Départ (Agence → Terminal)</h5>
+                            
+                            <div class="grid grid-cols-1 gap-3">
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase">Type de transport</label>
+                                    <select name="transport_type_departure" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-2 text-gray-800 font-medium">
+                                        <option value="">Sélectionner</option>
+                                        <option value="airport">Avion</option>
+                                        <option value="train">Train</option>
+                                        <option value="public_transport">Transports en commun</option>
+                                        <option value="other">Autre</option>
+                                    </select>
+                                </div>
+                                
+                                <div id="flight_number_departure_container" class="hidden">
+                                    <label class="block text-xs font-bold text-gray-700 uppercase">Numéro de vol</label>
+                                    <input type="text" name="flight_number_departure" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-2 text-gray-800 font-medium">
+                                </div>
+                                
+                                <div id="train_number_departure_container" class="hidden">
+                                    <label class="block text-xs font-bold text-gray-700 uppercase">Numéro de train</label>
+                                    <input type="text" name="train_number_departure" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-2 text-gray-800 font-medium">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase">Date de départ</label>
+                                    <input type="date" name="date_departure" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-2 text-gray-800 font-medium">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase">Lieu de restitution</label>
+                                    <select name="restitution_location_departure" id="modal-restitution-location-departure" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-2 text-gray-800 font-medium">
+                                        <option value="">Sélectionner</option>
+                                    </select>
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase">Heure de restitution</label>
+                                    <input type="time" name="restitution_time_departure" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-2 text-gray-800 font-medium">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-gray-700 uppercase">Informations complémentaires</label>
+                                    <textarea name="instructions_departure" rows="2" class="mt-1 block w-full rounded-2xl border-2 border-gray-400 bg-gray-200 focus:bg-white focus:border-[#ffc107] focus:ring-[#ffc107] transition-all py-2 text-gray-800 font-medium"></textarea>
+                                </div>
                             </div>
                         </div>
                     </div>

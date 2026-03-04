@@ -301,125 +301,10 @@ function toggleOptionFromModal(optionKey) {
         let premiumDetails = {};
 
         if (optionKey === 'premium') {
-            // Afficher les sections si pas encore visibles
-            const premiumMessage = document.getElementById('premium-message-container');
-            const premiumInfo = document.getElementById('premium-required-fields-info');
-            const arrivalSection = document.getElementById('premium_fields_terminal_to_agence');
-            const departureSection = document.getElementById('premium_fields_agence_to_terminal');
-            const emptyState = document.getElementById('premium-empty-state');
-            
-            if (premiumMessage.classList.contains('hidden')) {
-                // Sections pas encore visibles, les afficher et faire défiler
-                premiumMessage.classList.remove('hidden');
-                premiumInfo.classList.remove('hidden');
-                arrivalSection.classList.remove('hidden');
-                departureSection.classList.remove('hidden');
-                emptyState.classList.add('hidden');
-                
-                document.getElementById('premium-details-modal').scrollIntoView({ behavior: 'smooth', block: 'start' });
-                return; // Ne pas ajouter au panier tout de suite
-            }
-            
-            // Validation pour les DEUX sections (arrivée ET départ)
-            const arrivalForm = document.getElementById('premium_fields_terminal_to_agence');
-            const departureForm = document.getElementById('premium_fields_agence_to_terminal');
-            
-            let isValid = true;
-            const missingFields = [];
-
-            // Fonction pour valider une section
-            const validateSection = (formContainer, sectionName, direction) => {
-                let sectionValid = true;
-                
-                // Reset borders first
-                formContainer.querySelectorAll('[data-required="true"]').forEach(input => {
-                    input.classList.remove('border-red-500');
-                });
-                
-                // Check required fields - only those that are currently visible
-                formContainer.querySelectorAll('[data-required="true"]').forEach(input => {
-                    // Check if field is visible (not hidden by CSS)
-                    const style = window.getComputedStyle(input);
-                    const isVisible = style.display !== 'none' && style.visibility !== 'hidden';
-                    
-                    // Also check parent containers aren't hidden
-                    let parent = input.parentElement;
-                    let parentVisible = true;
-                    while (parent && parent !== formContainer) {
-                        const parentStyle = window.getComputedStyle(parent);
-                        if (parentStyle.display === 'none' || parentStyle.visibility === 'hidden') {
-                            parentVisible = false;
-                            break;
-                        }
-                        parent = parent.parentElement;
-                    }
-                    
-                    if (parentVisible && !input.value.trim()) {
-                        sectionValid = false;
-                        isValid = false;
-                        input.classList.add('border-red-500');
-                    }
-                });
-                
-                // Additional validation for transport-specific fields if visible
-                const dir = direction.toLowerCase();
-                // Validate airport flight number field when airport is selected
-                const airportContainerEl = document.getElementById(`transport_details_${dir}_airport`);
-                if (airportContainerEl && window.getComputedStyle(airportContainerEl).display !== 'none') {
-                    const fieldEl = formContainer.querySelector(`input[name="flight_number_${dir}"]`);
-                    if (fieldEl && !fieldEl.value.trim()) {
-                        sectionValid = false;
-                        isValid = false;
-                        fieldEl.classList.add('border-red-500');
-                    }
-                }
-                // Validate train number field when train is selected
-                const trainContainerEl = document.getElementById(`transport_details_${dir}_train`);
-                if (trainContainerEl && window.getComputedStyle(trainContainerEl).display !== 'none') {
-                    const fieldEl = formContainer.querySelector(`input[name="train_number_${dir}"]`);
-                    if (fieldEl && !fieldEl.value.trim()) {
-                        sectionValid = false;
-                        isValid = false;
-                        fieldEl.classList.add('border-red-500');
-                    }
-                }
-                
-                if (!sectionValid) {
-                    missingFields.push(sectionName);
-                }
-                
-                return sectionValid;
-            };
-
-            // Valider les DEUX sections
-            validateSection(arrivalForm, t('premium_section_arrival'), 'arrival');
-            validateSection(departureForm, t('premium_section_departure'), 'departure');
-
-            if (!isValid) {
-                const message = missingFields.length === 2 
-                    ? t('premium_required_both')
-                    : t('premium_required_section').replace('{section}', missingFields.join(', '));
-                showCustomAlert(t('premium_form_incomplete_title'), message);
-                return;
-            }
-
-            // Collecter les données des DEUX sections
-            premiumDetails.direction = 'both'; // Indiquer que c'est un service complet
-            
-            [arrivalForm, departureForm].forEach(formContainer => {
-                formContainer.querySelectorAll('input, textarea, select').forEach(input => {
-                    if (input.value) {
-                        premiumDetails[input.name] = input.value;
-                        // Pour les selects, ajouter aussi le libellé
-                        if (input.tagName === 'SELECT' && (input.name === 'pickup_location_arrival' || input.name === 'restitution_location_departure')) {
-                            const selectedOption = input.options[input.selectedIndex];
-                            if (selectedOption) {
-                                premiumDetails[input.name + '_libelle'] = selectedOption.text;
-                            }
-                        }
-                    }
-                });
-            });
+            // Pour premium, on ajoute juste l'option sans demander les infos
+            // Les infos seront complétées dans la modale de paiement /payment
+            premiumDetails.direction = 'both';
+            console.log('[toggleOptionFromModal] Premium added to cart - details will be filled at payment step');
         }
 
         cartItems.push({
@@ -431,7 +316,7 @@ function toggleOptionFromModal(optionKey) {
             details: premiumDetails
         });
     }
-    
+
     updateCartDisplay();
     updateAdvertModalButtons();
 }
@@ -488,195 +373,16 @@ function showOptionsAdvertisementModal() {
                 if (premiumAvailableContent) premiumAvailableContent.classList.remove('hidden');
                 if (premiumUnavailableMessage) premiumUnavailableMessage.classList.add('hidden');
 
+                // === SUPPRESSION DES CHAMPS PREMIUM DANS LA MODALE D'OPTIONS ===
+                // Les champs seront affichés uniquement dans la modale de paiement /payment
                 const premiumDetailsContainer = document.getElementById('premium-details-modal');
-                const lieux = (typeof globalLieuxData !== 'undefined' && Array.isArray(globalLieuxData)) ? globalLieuxData : [];
-                const lieuxOptionsHTML = lieux.map(lieu => {
-                    var id = lieu.id ?? lieu.Id ?? lieu.ID;
-                    var libelle = lieu.libelle ?? lieu.Libelle ?? lieu.nom ?? '';
-                    return `<option value="${id || ''}">${libelle || ''}</option>`;
-                }).join('');
-
-                const orlyAirportId = '64f00ace-31b6-45b0-bcb2-b562b1ac08d9';
-                const cdgAirportId = '88bb89e0-b966-4420-9ed3-7a6745e4d947';
-                const isOrly = airportId === orlyAirportId;
-                const isCdg = airportId === cdgAirportId;
-
- 
-                const transportSpecificFields = (direction) => {
-                    const dir = direction.toLowerCase(); // 'arrival' or 'departure'
-                    return `
-                        <div id="transport_details_${dir}_airport" class="hidden mt-2">
-                            <label class="block text-sm font-medium text-gray-700">${t('premium_flight_number')} <span class="text-red-500">*</span></label>
-                            <input type="text" name="flight_number_${dir}" class="input-style w-full" placeholder="${t('premium_flight_placeholder')}" data-required="true">
-                        </div>
-                        <div id="transport_details_${dir}_train" class="hidden mt-2">
-                            <label class="block text-sm font-medium text-gray-700">${t('premium_train_number')} <span class="text-red-500">*</span></label>
-                            <input type="text" name="train_number_${dir}" class="input-style w-full" placeholder="${t('premium_train_placeholder')}" data-required="true">
+                if (premiumDetailsContainer) {
+                    premiumDetailsContainer.innerHTML = `
+                        <div class="text-center py-4 text-gray-600">
+                            <p class="text-sm">${t('premium_info_later')}</p>
                         </div>
                     `;
-                };
-
-                premiumDetailsContainer.innerHTML = `
-                <div id="premium-message-container" class="hidden bg-blue-50 border-l-4 border-blue-500 p-4 mb-4 rounded">
-                    <p class="text-sm text-blue-700"><strong>${t('premium_important')}:</strong> ${t('premium_both_required')}</p>
-                </div>
-                <p id="premium-required-fields-info" class="hidden font-medium text-gray-700 text-center mb-4">${t('premium_required_fields_info')} <span class="text-red-500">*</span></p>
-                <div id="premium_fields_terminal_to_agence" class="hidden mt-4 space-y-3 border-2 border-yellow-200 rounded-lg p-4 bg-yellow-50">
-                    <div class="flex items-center mb-3">
-                        <span class="text-3xl mr-3">
-                            <img src="/plane-arrival.svg" alt="${t('premium_arrival_alt')}" class="h-8 w-8 inline-block" />
-                        </span>
-                        <div>
-                            <h4 class="font-bold text-gray-900 text-lg">${t('premium_arrival_title')} <span class="text-red-500">*</span></h4>
-                            <p class="text-sm text-gray-600">${t('premium_arrival_subtitle')}</p>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">${t('premium_transport_label')} <span class="text-red-500">*</span></label>
-                        <select name="transport_type_arrival" class="input-style custom-select w-full" data-required="true">
-                            <option value="" selected disabled>${t('premium_select_placeholder')}</option>
-                            <option value="airport">${t('premium_transport_airport')}</option>
-                            <option value="public_transport">${t('premium_transport_public')}</option>
-                            <option value="train">${t('premium_transport_train')}</option>
-                            <option value="other">${t('premium_transport_other')}</option>
-                        </select>
-                    </div>
-                    ${transportSpecificFields('arrival')}
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="block text-sm font-medium text-gray-700">${t('premium_arrival_date')}</label><input type="date" id="flight_date_arrival" name="date_arrival" class="input-style w-full"></div>
-                        <div>
-                             <label class="block text-sm font-medium text-gray-700">${t('premium_pickup_location')} <span class="text-red-500">*</span></label>
-                             <select name="pickup_location_arrival" class="input-style custom-select w-full" data-required="true"><option value="" selected disabled>${t('premium_select_placeholder')}</option>${lieuxOptionsHTML}</select>
-                         </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">${t('premium_pickup_time')} <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <input type="time" id="pickup_time_arrival" name="pickup_time_arrival" class="input-style w-full pr-10 pl-4" data-required="true">
-                                <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div><label class="block text-sm font-medium text-gray-700">${t('premium_additional_info')} <span class="text-gray-400 text-xs">(${t('premium_optional')})</span></label><textarea name="instructions_arrival" class="input-style w-full" rows="2" placeholder="${t('premium_arrival_placeholder')}"></textarea></div>
-                </div>
-                <div id="premium_fields_agence_to_terminal" class="hidden mt-4 space-y-3 border-2 border-blue-200 rounded-lg p-4 bg-blue-50">
-                    <div class="flex items-center mb-3">
-                        <span class="text-3xl mr-3">
-                            <img src="/plane-departure.svg" alt="${t('premium_departure_alt')}" class="h-8 w-8 inline-block" />
-                        </span>
-                        <div>
-                            <h4 class="font-bold text-gray-900 text-lg">${t('premium_departure_title')} <span class="text-red-500">*</span></h4>
-                            <p class="text-sm text-gray-600">${t('premium_departure_subtitle')}</p>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">${t('premium_transport_label')} <span class="text-red-500">*</span></label>
-                        <select name="transport_type_departure" class="input-style custom-select w-full" data-required="true">
-                            <option value="" selected disabled>${t('premium_select_placeholder')}</option>
-                            <option value="airport">${t('premium_transport_airport')}</option>
-                            <option value="public_transport">${t('premium_transport_public')}</option>
-                            <option value="train">${t('premium_transport_train')}</option>
-                            <option value="other">${t('premium_transport_other')}</option>
-                        </select>
-                    </div>
-                    ${transportSpecificFields('departure')}
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="block text-sm font-medium text-gray-700">${t('premium_departure_date')}</label><input type="date" id="flight_date_departure" name="date_departure" class="input-style w-full"></div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">${t('premium_restitution_location')} <span class="text-red-500">*</span></label>
-                            <select name="restitution_location_departure" class="input-style custom-select w-full" data-required="true"><option value="" selected disabled>${t('premium_select_placeholder')}</option>${lieuxOptionsHTML}</select>
-                        </div>
-                    </div>
-                     <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">${t('premium_restitution_time')} <span class="text-red-500">*</span></label>
-                            <div class="relative">
-                                <input type="time" id="restitution_time_departure" name="restitution_time_departure" class="input-style w-full pr-10 pl-4" data-required="true">
-                                <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div><label class="block text-sm font-medium text-gray-700">${t('premium_additional_info')} <span class="text-gray-400 text-xs">(${t('premium_optional')})</span></label><textarea name="instructions_departure" class="input-style w-full" rows="2" placeholder="${t('premium_departure_placeholder')}"></textarea></div>
-                </div>
-                <div id="premium-empty-state" class="text-center py-8 text-gray-500">
-                    <p>${t('premium_empty_state')}</p>
-                </div>`;
-                
-                // --- START DYNAMIC PREMIUM LOGIC ---
-                
-                // Get elements
-                const flightDateArrival = document.getElementById('flight_date_arrival');
-                const pickupTimeArrival = document.getElementById('pickup_time_arrival');
-                const flightDateDeparture = document.getElementById('flight_date_departure');
-                const restitutionTimeDeparture = document.getElementById('restitution_time_departure');
-
-                // Pre-fill dates from main form
-                flightDateArrival.value = document.getElementById('date-depot').value;
-                pickupTimeArrival.value = document.getElementById('heure-depot').value;
-                flightDateDeparture.value = document.getElementById('date-recuperation').value;
-                restitutionTimeDeparture.value = document.getElementById('heure-recuperation').value;
-
-                // Initialiser Flatpickr sur les champs de temps du modal Premium (allowInput pour saisie clavier)
-                if (typeof flatpickr !== 'undefined') {
-                    flatpickr("#pickup_time_arrival", {
-                        enableTime: true,
-                        noCalendar: true,
-                        dateFormat: "H:i",
-                        time_24hr: true,
-                        minuteIncrement: 15,
-                        locale: "fr",
-                        defaultHour: 9,
-                        defaultMinute: 0,
-                        allowInput: true
-                    });
-
-                    flatpickr("#restitution_time_departure", {
-                        enableTime: true,
-                        noCalendar: true,
-                        dateFormat: "H:i",
-                        time_24hr: true,
-                        minuteIncrement: 15,
-                        locale: "fr",
-                        defaultHour: 18,
-                        defaultMinute: 0,
-                        allowInput: true
-                    });
                 }
-
-                // Transport type change handler
-                const setupTransportTypeHandler = (direction) => {
-                    const transportSelect = document.querySelector(`select[name="transport_type_${direction}"]`);
-                    const airportDetailsContainer = document.getElementById(`transport_details_${direction}_airport`);
-                    const trainDetailsContainer = document.getElementById(`transport_details_${direction}_train`);
-
-                    transportSelect.addEventListener('change', (e) => {
-                        // Hide all transport-specific fields by default
-                        if (airportDetailsContainer) airportDetailsContainer.classList.add('hidden');
-                        if (trainDetailsContainer) trainDetailsContainer.classList.add('hidden');
-                        
-                        // Show specific field based on selection
-                        const selectedType = e.target.value;
-                        if (selectedType === 'airport' && airportDetailsContainer) {
-                            airportDetailsContainer.classList.remove('hidden');
-                        } else if (selectedType === 'train' && trainDetailsContainer) {
-                            trainDetailsContainer.classList.remove('hidden');
-                        }
-                        // public_transport and other don't need number fields
-                    });
-                };
-
-                setupTransportTypeHandler('arrival');
-                setupTransportTypeHandler('departure');
-
-                // --- END DYNAMIC PREMIUM LOGIC ---
-
-                // Plus besoin de basculer les sections - elles sont toujours visibles maintenant
-                // L'utilisateur DOIT remplir les deux sections
             } else {
                 // API renvoie Premium mais pas de lieux pour cet aéroport : afficher la carte avec message
                 if (premiumAvailableContent) premiumAvailableContent.classList.add('hidden');

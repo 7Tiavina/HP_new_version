@@ -21,6 +21,7 @@ if (typeof window.translations === 'undefined') {
         // Modal
         modal_title: "Votre sécurité, notre priorité !",
         modal_subtitle: "Pour la protection de vos biens et le respect des normes aéroportuaires (contrôle par rayons X), veuillez compléter vos informations de contact.",
+        modal_premium_notice: "Vous avez opté pour l'option PREMIUM, quelques infos complémentaires sont nécessaires.",
         client_type_label: "Type de client",
         client_type_particulier: "Particulier",
         client_type_societe: "Société",
@@ -483,6 +484,7 @@ if (typeof window.translations === 'undefined') {
         premium_pickup_location: "Lieu de prise en charge",
         premium_pickup_time: "Heure de prise en charge",
         premium_additional_info: "Informations complémentaires",
+        premium_info_later: "Vous pourrez compléter les informations PREMIUM (lieux, horaires, transport) dans l'étape suivante lors du paiement.",
         premium_optional: "optionnel",
         premium_arrival_placeholder: "Précisions supplémentaires pour faciliter la prise en charge...",
         premium_departure_alt: "Départ",
@@ -521,6 +523,7 @@ if (typeof window.translations === 'undefined') {
         // Modal
         modal_title: "Your security, our priority!",
         modal_subtitle: "To protect your belongings and comply with airport standards (X-ray screening), please complete your contact information.",
+        modal_premium_notice: "You have chosen the PREMIUM option, some additional information is required.",
         client_type_label: "Client type",
         client_type_particulier: "Individual",
         client_type_societe: "Company",
@@ -983,6 +986,7 @@ if (typeof window.translations === 'undefined') {
         premium_pickup_location: "Pickup location",
         premium_pickup_time: "Pickup time",
         premium_additional_info: "Additional information",
+        premium_info_later: "You will be able to complete PREMIUM information (locations, times, transport) in the next step during payment.",
         premium_optional: "optional",
         premium_arrival_placeholder: "Extra details to facilitate pickup...",
         premium_departure_alt: "Departure",

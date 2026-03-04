@@ -1748,6 +1748,141 @@
                 clientSocieteRadio.addEventListener('change', toggleSocieteField);
             }
 
+            // === GESTION DES CHAMPS PREMIUM ===
+            const premiumFieldsContainer = document.getElementById('premium-fields-modal-container');
+            const premiumModalNotice = document.getElementById('premium-modal-notice');
+            
+            // Charger globalLieuxData depuis sessionStorage ou utiliser des valeurs statiques
+            let globalLieuxData = [];
+            try {
+                const state = JSON.parse(sessionStorage.getItem('formState'));
+                if (state && Array.isArray(state.globalLieuxData)) {
+                    globalLieuxData = state.globalLieuxData;
+                }
+            } catch (e) {
+                console.log('[Premium] Could not load globalLieuxData from sessionStorage');
+            }
+            
+            // Si globalLieuxData est vide, utiliser des lieux statiques (1,2,3,4)
+            if (!globalLieuxData || globalLieuxData.length === 0) {
+                globalLieuxData = [
+                    { id: 1, libelle: 'Lieu 1' },
+                    { id: 2, libelle: 'Lieu 2' },
+                    { id: 3, libelle: 'Lieu 3' },
+                    { id: 4, libelle: 'Lieu 4' }
+                ];
+                console.log('[Premium] Using static lieux (1,2,3,4)');
+            } else {
+                console.log('[Premium] Loaded globalLieuxData from sessionStorage:', globalLieuxData.length, 'lieux');
+            }
+            
+            // Vérifier si premium est dans le panier
+            function hasPremiumInCart() {
+                // cartItems est stocké dans formState, pas dans cartItems directement
+                const state = JSON.parse(sessionStorage.getItem('formState'));
+                if (!state || !state.cartItems) return false;
+                try {
+                    const cart = state.cartItems;
+                    return Array.isArray(cart) && cart.some(item => item.key === 'premium');
+                } catch (e) {
+                    console.error('[hasPremiumInCart] Error:', e);
+                    return false;
+                }
+            }
+            
+            // Afficher les champs premium si nécessaire
+            function updatePremiumFieldsVisibility() {
+                const hasPremium = hasPremiumInCart();
+                console.log('[updatePremiumFieldsVisibility] hasPremium:', hasPremium);
+                console.log('[updatePremiumFieldsVisibility] premiumFieldsContainer:', premiumFieldsContainer);
+                console.log('[updatePremiumFieldsVisibility] premiumModalNotice:', premiumModalNotice);
+                
+                if (premiumFieldsContainer && premiumModalNotice) {
+                    if (hasPremium) {
+                        premiumFieldsContainer.classList.remove('hidden');
+                        premiumModalNotice.classList.remove('hidden');
+                        console.log('[updatePremiumFieldsVisibility] Premium fields shown');
+                    } else {
+                        premiumFieldsContainer.classList.add('hidden');
+                        premiumModalNotice.classList.add('hidden');
+                        console.log('[updatePremiumFieldsVisibility] Premium fields hidden (no premium in cart)');
+                    }
+                }
+            }
+            
+            // Appeler au chargement et à l'ouverture du modal
+            updatePremiumFieldsVisibility();
+            if (openClientProfileModalBtn) {
+                openClientProfileModalBtn.addEventListener('click', () => {
+                    // Appeler après un petit délai pour s'assurer que le modal est ouvert
+                    setTimeout(() => {
+                        updatePremiumFieldsVisibility();
+                        fillPremiumLocations();
+                    }, 300);
+                });
+            }
+            
+            // Gestion des champs dynamiques transport (avion/train)
+            const setupTransportFieldHandler = (direction) => {
+                const transportSelect = document.querySelector(`select[name="transport_type_${direction}"]`);
+                const flightContainer = document.getElementById(`flight_number_${direction}_container`);
+                const trainContainer = document.getElementById(`train_number_${direction}_container`);
+                
+                if (transportSelect) {
+                    transportSelect.addEventListener('change', (e) => {
+                        const value = e.target.value;
+                        if (flightContainer) flightContainer.classList.toggle('hidden', value !== 'airport');
+                        if (trainContainer) trainContainer.classList.toggle('hidden', value !== 'train');
+                    });
+                    // Trigger initial state
+                    transportSelect.dispatchEvent(new Event('change'));
+                }
+            };
+            
+            setupTransportFieldHandler('arrival');
+            setupTransportFieldHandler('departure');
+            
+            // Remplir les lieux depuis globalLieuxData
+            function fillPremiumLocations() {
+                const arrivalSelect = document.getElementById('modal-pickup-location-arrival');
+                const departureSelect = document.getElementById('modal-restitution-location-departure');
+                
+                if (typeof globalLieuxData !== 'undefined' && Array.isArray(globalLieuxData) && globalLieuxData.length > 0) {
+                    const optionsHTML = globalLieuxData.map(lieu => 
+                        `<option value="${lieu.id}">${lieu.libelle || 'Lieu ' + lieu.id}</option>`
+                    ).join('');
+                    
+                    if (arrivalSelect) {
+                        arrivalSelect.innerHTML = '<option value="">Sélectionner</option>' + optionsHTML;
+                    }
+                    if (departureSelect) {
+                        departureSelect.innerHTML = '<option value="">Sélectionner</option>' + optionsHTML;
+                    }
+                } else {
+                    // Lieux statiques par défaut (1,2,3,4)
+                    const staticOptionsHTML = [
+                        { id: 1, libelle: 'Lieu 1' },
+                        { id: 2, libelle: 'Lieu 2' },
+                        { id: 3, libelle: 'Lieu 3' },
+                        { id: 4, libelle: 'Lieu 4' }
+                    ].map(lieu => `<option value="${lieu.id}">${lieu.libelle}</option>`).join('');
+                    
+                    if (arrivalSelect) {
+                        arrivalSelect.innerHTML = '<option value="">Sélectionner</option>' + staticOptionsHTML;
+                    }
+                    if (departureSelect) {
+                        departureSelect.innerHTML = '<option value="">Sélectionner</option>' + staticOptionsHTML;
+                    }
+                }
+            }
+            
+            // Remplir les lieux quand le modal s'ouvre
+            if (openClientProfileModalBtn) {
+                openClientProfileModalBtn.addEventListener('click', () => {
+                    setTimeout(fillPremiumLocations, 200);
+                });
+            }
+
             // Initialize Société field visibility on page load
             toggleSocieteField();
 
@@ -1883,6 +2018,64 @@
                         }
                         console.log('[MODAL SUBMIT] Validation passed.');
                     }
+                    
+                    // === VALIDATION DES CHAMPS PREMIUM ===
+                    if (hasPremiumInCart()) {
+                        const premiumFieldsContainer = document.getElementById('premium-fields-modal-container');
+                        if (premiumFieldsContainer && !premiumFieldsContainer.classList.contains('hidden')) {
+                            let premiumValid = true;
+                            let missingFields = [];
+                            
+                            // Validate arrival fields
+                            const transportArrival = document.querySelector('select[name="transport_type_arrival"]');
+                            const pickupLocation = document.querySelector('select[name="pickup_location_arrival"]');
+                            const pickupTime = document.querySelector('input[name="pickup_time_arrival"]');
+                            
+                            if (!transportArrival || !transportArrival.value) {
+                                premiumValid = false;
+                                missingFields.push('Type de transport (arrivée)');
+                            }
+                            if (!pickupLocation || !pickupLocation.value) {
+                                premiumValid = false;
+                                missingFields.push('Lieu de prise en charge');
+                            }
+                            if (!pickupTime || !pickupTime.value) {
+                                premiumValid = false;
+                                missingFields.push('Heure de prise en charge');
+                            }
+                            
+                            // Validate departure fields
+                            const transportDeparture = document.querySelector('select[name="transport_type_departure"]');
+                            const restitutionLocation = document.querySelector('select[name="restitution_location_departure"]');
+                            const restitutionTime = document.querySelector('input[name="restitution_time_departure"]');
+                            
+                            if (!transportDeparture || !transportDeparture.value) {
+                                premiumValid = false;
+                                missingFields.push('Type de transport (départ)');
+                            }
+                            if (!restitutionLocation || !restitutionLocation.value) {
+                                premiumValid = false;
+                                missingFields.push('Lieu de restitution');
+                            }
+                            if (!restitutionTime || !restitutionTime.value) {
+                                premiumValid = false;
+                                missingFields.push('Heure de restitution');
+                            }
+                            
+                            if (!premiumValid) {
+                                isSubmitting = false;
+                                if (submitBtn) {
+                                    submitBtn.disabled = false;
+                                    submitBtn.innerHTML = 'Confirmer et payer <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>';
+                                }
+                                await showCustomAlert('Informations PREMIUM incomplètes', 
+                                    'Veuillez remplir tous les champs obligatoires pour le service PREMIUM :<br>' + 
+                                    missingFields.join(', '));
+                                return;
+                            }
+                            console.log('[MODAL SUBMIT] Premium validation passed.');
+                        }
+                    }
 
                     // Auto-split long address to fit BDM 50-char limit
                     const addressInput = document.getElementById('modal-adresse');
@@ -1895,6 +2088,45 @@
 
                     const formData = new FormData(clientProfileForm);
                     const data = Object.fromEntries(formData.entries());
+
+                    // === AJOUT DES INFOS PREMIUM DANS LE PAYLOAD ===
+                    if (hasPremiumInCart()) {
+                        // Récupérer les libellés des lieux sélectionnés
+                        const pickupLocationSelect = document.getElementById('modal-pickup-location-arrival');
+                        const restitutionLocationSelect = document.getElementById('modal-restitution-location-departure');
+                        const pickupLocationLibelle = pickupLocationSelect && pickupLocationSelect.options[pickupLocationSelect.selectedIndex] 
+                            ? pickupLocationSelect.options[pickupLocationSelect.selectedIndex].text 
+                            : '';
+                        const restitutionLocationLibelle = restitutionLocationSelect && restitutionLocationSelect.options[restitutionLocationSelect.selectedIndex] 
+                            ? restitutionLocationSelect.options[restitutionLocationSelect.selectedIndex].text 
+                            : '';
+                        
+                        // Collecter les infos premium
+                        const premiumDetails = {
+                            direction: 'both',
+                            transport_type_arrival: data.transport_type_arrival || '',
+                            transport_type_departure: data.transport_type_departure || '',
+                            flight_number_arrival: data.flight_number_arrival || '',
+                            flight_number_departure: data.flight_number_departure || '',
+                            train_number_arrival: data.train_number_arrival || '',
+                            train_number_departure: data.train_number_departure || '',
+                            date_arrival: data.date_arrival || '',
+                            date_departure: data.date_departure || '',
+                            pickup_location_arrival: data.pickup_location_arrival || '',
+                            pickup_location_arrival_libelle: pickupLocationLibelle,
+                            restitution_location_departure: data.restitution_location_departure || '',
+                            restitution_location_departure_libelle: restitutionLocationLibelle,
+                            pickup_time_arrival: data.pickup_time_arrival || '',
+                            restitution_time_departure: data.restitution_time_departure || '',
+                            instructions_arrival: data.instructions_arrival || '',
+                            instructions_departure: data.instructions_departure || ''
+                        };
+                        
+                        // Ajouter au payload pour l'envoi
+                        data.premiumDetails = premiumDetails;
+                        
+                        console.log('[MODAL SUBMIT] Premium details collected:', premiumDetails);
+                    }
 
                     for (const key in data) {
                         if (data[key] === '') {

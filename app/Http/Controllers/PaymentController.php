@@ -47,29 +47,29 @@ class PaymentController extends Controller
                 'options.*.prix' => 'required_without:options.*.prixUnitaire|nullable|numeric',
                 'options.*.prixUnitaire' => 'required_without:options.*.prix|nullable|numeric',
                 'options.*.details' => 'nullable|array',
-                // Validation for Premium option details
+                // Validation for Premium option details - ALL OPTIONAL (will be filled at payment step)
                 'options.*.details.direction' => 'nullable|string|in:terminal_to_agence,agence_to_terminal,both',
-                
-                // Arrival flow (required for terminal_to_agence or both)
-                'options.*.details.transport_type_arrival' => 'required_if:options.*.details.direction,terminal_to_agence|required_if:options.*.details.direction,both|nullable|string',
+
+                // Arrival flow - ALL OPTIONAL (will be filled at payment step)
+                'options.*.details.transport_type_arrival' => 'nullable|string',
                 'options.*.details.flight_number_arrival' => 'nullable|string',
                 'options.*.details.train_number_arrival' => 'nullable|string',
                 'options.*.details.tgv_number_arrival' => 'nullable|string',
                 'options.*.details.car_plate_arrival' => 'nullable|string',
-                'options.*.details.date_arrival' => 'required_if:options.*.details.direction,terminal_to_agence|required_if:options.*.details.direction,both|nullable|date',
-                'options.*.details.pickup_location_arrival' => 'required_if:options.*.details.direction,terminal_to_agence|required_if:options.*.details.direction,both|nullable|string',
-                'options.*.details.pickup_time_arrival' => 'required_if:options.*.details.direction,terminal_to_agence|required_if:options.*.details.direction,both|nullable|date_format:H:i',
+                'options.*.details.date_arrival' => 'nullable|date',
+                'options.*.details.pickup_location_arrival' => 'nullable|string',
+                'options.*.details.pickup_time_arrival' => 'nullable|date_format:H:i',
                 'options.*.details.instructions_arrival' => 'nullable|string',
 
-                // Departure flow (required for agence_to_terminal or both)
-                'options.*.details.transport_type_departure' => 'required_if:options.*.details.direction,agence_to_terminal|required_if:options.*.details.direction,both|nullable|string',
+                // Departure flow - ALL OPTIONAL (will be filled at payment step)
+                'options.*.details.transport_type_departure' => 'nullable|string',
                 'options.*.details.flight_number_departure' => 'nullable|string',
                 'options.*.details.train_number_departure' => 'nullable|string',
                 'options.*.details.tgv_number_departure' => 'nullable|string',
                 'options.*.details.car_plate_departure' => 'nullable|string',
-                'options.*.details.date_departure' => 'required_if:options.*.details.direction,agence_to_terminal|required_if:options.*.details.direction,both|nullable|date',
-                'options.*.details.restitution_location_departure' => 'required_if:options.*.details.direction,agence_to_terminal|required_if:options.*.details.direction,both|nullable|string',
-                'options.*.details.restitution_time_departure' => 'required_if:options.*.details.direction,agence_to_terminal|required_if:options.*.details.direction,both|nullable|date_format:H:i',
+                'options.*.details.date_departure' => 'nullable|date',
+                'options.*.details.restitution_location_departure' => 'nullable|string',
+                'options.*.details.restitution_time_departure' => 'nullable|date_format:H:i',
                 'options.*.details.instructions_departure' => 'nullable|string',
             ]);
 
@@ -178,6 +178,17 @@ class PaymentController extends Controller
                     // If this is the premium option, store its details separately
                     if (stripos($selectedOption['libelle'], 'Premium') !== false) {
                         $premiumDetails = $selectedOption['details'] ?? null;
+                        
+                        // === FUSIONNER AVEC LES INFOS PREMIUM DE LA SESSION (si disponibles) ===
+                        $sessionPremiumDetails = Session::get('premiumDetails');
+                        if ($sessionPremiumDetails && is_array($sessionPremiumDetails)) {
+                            // Fusionner les données de la session avec celles du frontend
+                            $premiumDetails = array_merge($premiumDetails ?? [], $sessionPremiumDetails);
+                            Log::info('[preparePayment] Merged premium details from session', [
+                                'session_premium_details' => $sessionPremiumDetails,
+                                'merged_premium_details' => $premiumDetails,
+                            ]);
+                        }
                     }
 
                     // Try to get fresh price from BDM API response
@@ -387,6 +398,24 @@ class PaymentController extends Controller
                 'ville'             => 'sometimes|nullable|string|max:255',
                 'codePostal'        => 'sometimes|nullable|string|max:20',
                 'pays'              => 'sometimes|nullable|string|max:255',
+                
+                // Premium details (optional, only if premium option is selected)
+                'premiumDetails' => 'sometimes|nullable|array',
+                'premiumDetails.direction' => 'sometimes|nullable|string|in:terminal_to_agence,agence_to_terminal,both',
+                'premiumDetails.transport_type_arrival' => 'sometimes|nullable|string',
+                'premiumDetails.transport_type_departure' => 'sometimes|nullable|string',
+                'premiumDetails.flight_number_arrival' => 'sometimes|nullable|string',
+                'premiumDetails.flight_number_departure' => 'sometimes|nullable|string',
+                'premiumDetails.train_number_arrival' => 'sometimes|nullable|string',
+                'premiumDetails.train_number_departure' => 'sometimes|nullable|string',
+                'premiumDetails.date_arrival' => 'sometimes|nullable|string',
+                'premiumDetails.date_departure' => 'sometimes|nullable|string',
+                'premiumDetails.pickup_location_arrival' => 'sometimes|nullable|string',
+                'premiumDetails.restitution_location_departure' => 'sometimes|nullable|string',
+                'premiumDetails.pickup_time_arrival' => 'sometimes|nullable|string',
+                'premiumDetails.restitution_time_departure' => 'sometimes|nullable|string',
+                'premiumDetails.instructions_arrival' => 'sometimes|nullable|string',
+                'premiumDetails.instructions_departure' => 'sometimes|nullable|string',
             ]);
 
             Log::info('[updateGuestInfoInSession] Validation passed', ['validated' => $validated]);
@@ -445,18 +474,127 @@ class PaymentController extends Controller
                 // Preserve is_guest flag and other client data fields
                 $originalIsGuest = $commandeData['client']['is_guest'];
                 $originalEmail = $commandeData['client']['email'] ?? null;
-                
+
                 // Merge new data while preserving critical flags
                 $commandeData['client'] = array_merge($commandeData['client'], $data);
-                
+
                 // Ensure is_guest and email are preserved
                 $commandeData['client']['is_guest'] = $originalIsGuest;
                 $commandeData['client']['email'] = $originalEmail;
-                
+
+                // === STOCKER LES INFOS PREMIUM DANS LA SESSION ET METTRE A JOUR COMMANDEINFOS ===
+                if (isset($validated['premiumDetails']) && is_array($validated['premiumDetails'])) {
+                    $premiumDetails = $validated['premiumDetails'];
+                    $commandeData['premiumDetails'] = $premiumDetails;
+                    
+                    // === GENERER COMMANDEINFOS DEPUIS LES INFOS PREMIUM ===
+                    $commandeInfos = [
+                        'modeTransport' => '',
+                        'lieu' => '',
+                        'commentaires' => '',
+                    ];
+                    
+                    if (isset($premiumDetails['direction'])) {
+                        $commentairesArray = [];
+                        $directionText = ($premiumDetails['direction'] ?? '') === 'both' 
+                            ? 'Service Premium complet (Arrivée + Départ)' 
+                            : 'Service Premium';
+                        $commentairesArray[] = "Type de service: " . $directionText;
+                        
+                        // === ARRIVAL FLOW ===
+                        if (!empty($premiumDetails['transport_type_arrival'])) {
+                            $modeTransport = $premiumDetails['transport_type_arrival'];
+                            $displayModeTransport = [
+                                'airport' => 'Aéroport',
+                                'public_transport' => 'Transport en commun',
+                                'train' => 'Train',
+                                'other' => 'Autre',
+                            ][$modeTransport] ?? ucfirst(str_replace('_', ' ', $modeTransport));
+                            
+                            if (empty($commandeInfos['modeTransport'])) {
+                                $commandeInfos['modeTransport'] = $displayModeTransport;
+                            }
+                            
+                            if ($modeTransport === 'airport' && !empty($premiumDetails['flight_number_arrival'])) {
+                                $commentairesArray[] = "Vol arrivée: " . $premiumDetails['flight_number_arrival'];
+                            }
+                            if ($modeTransport === 'train' && !empty($premiumDetails['train_number_arrival'])) {
+                                $commentairesArray[] = "Train arrivée: " . $premiumDetails['train_number_arrival'];
+                            }
+                        }
+                        
+                        // === DEPARTURE FLOW ===
+                        if (!empty($premiumDetails['transport_type_departure'])) {
+                            $modeTransport = $premiumDetails['transport_type_departure'];
+                            $displayModeTransport = [
+                                'airport' => 'Aéroport',
+                                'public_transport' => 'Transport en commun',
+                                'train' => 'Train',
+                                'other' => 'Autre',
+                            ][$modeTransport] ?? ucfirst(str_replace('_', ' ', $modeTransport));
+                            
+                            if (empty($commandeInfos['modeTransport'])) {
+                                $commandeInfos['modeTransport'] = $displayModeTransport;
+                            }
+                            
+                            if ($modeTransport === 'airport' && !empty($premiumDetails['flight_number_departure'])) {
+                                $commentairesArray[] = "Vol départ: " . $premiumDetails['flight_number_departure'];
+                            }
+                            if ($modeTransport === 'train' && !empty($premiumDetails['train_number_departure'])) {
+                                $commentairesArray[] = "Train départ: " . $premiumDetails['train_number_departure'];
+                            }
+                        }
+                        
+                        // === LIEU (pickup location priority) ===
+                        if (!empty($premiumDetails['pickup_location_arrival_libelle'])) {
+                            $commandeInfos['lieu'] = $premiumDetails['pickup_location_arrival_libelle'];
+                        } else if (!empty($premiumDetails['restitution_location_departure_libelle'])) {
+                            $commandeInfos['lieu'] = $premiumDetails['restitution_location_departure_libelle'];
+                        } else if (!empty($premiumDetails['pickup_location_arrival'])) {
+                            $commandeInfos['lieu'] = "Lieu ID: " . $premiumDetails['pickup_location_arrival'];
+                        } else if (!empty($premiumDetails['restitution_location_departure'])) {
+                            $commandeInfos['lieu'] = "Lieu ID: " . $premiumDetails['restitution_location_departure'];
+                        } else {
+                            $commandeInfos['lieu'] = 'Non spécifié';
+                        }
+                        
+                        // === DATES ET HEURES ===
+                        if (!empty($premiumDetails['date_arrival'])) {
+                            $commentairesArray[] = "Date arrivée: " . $premiumDetails['date_arrival'];
+                        }
+                        if (!empty($premiumDetails['pickup_time_arrival'])) {
+                            $commentairesArray[] = "Heure prise en charge: " . $premiumDetails['pickup_time_arrival'];
+                        }
+                        if (!empty($premiumDetails['date_departure'])) {
+                            $commentairesArray[] = "Date départ: " . $premiumDetails['date_departure'];
+                        }
+                        if (!empty($premiumDetails['restitution_time_departure'])) {
+                            $commentairesArray[] = "Heure restitution: " . $premiumDetails['restitution_time_departure'];
+                        }
+                        
+                        // === INSTRUCTIONS ===
+                        if (!empty($premiumDetails['instructions_arrival'])) {
+                            $commentairesArray[] = "Infos arrivée: " . $premiumDetails['instructions_arrival'];
+                        }
+                        if (!empty($premiumDetails['instructions_departure'])) {
+                            $commentairesArray[] = "Infos départ: " . $premiumDetails['instructions_departure'];
+                        }
+                        
+                        $commandeInfos['commentaires'] = implode('; ', $commentairesArray);
+                    }
+                    
+                    $commandeData['commandeInfos'] = $commandeInfos;
+                    
+                    Log::info('[updateGuestInfoInSession] commandeInfos generated from premium details', [
+                        'commandeInfos' => $commandeInfos,
+                    ]);
+                }
+
                 Session::put('commande_en_cours', $commandeData);
                 Log::info('[updateGuestInfoInSession] commande_en_cours updated with guest info', [
                     'client_email' => $commandeData['client']['email'] ?? null,
                     'is_guest' => $commandeData['client']['is_guest'] ?? null,
+                    'has_premium_details' => isset($commandeData['premiumDetails']),
                 ]);
             }
 
