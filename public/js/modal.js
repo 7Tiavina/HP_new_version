@@ -228,24 +228,16 @@ function setupGlobalModalListeners() {
 // =================================================================================
 
 function displayOptions(dureeEnMinutes) {
-    // Premium : on l'affiche dès que l'API le propose ET qu'il y a des lieux (72 h reste une recommandation, pas un blocage d'affichage)
-    const dateDepot = (document.getElementById('date-depot') || {}).value || '';
-    const heureDepot = (document.getElementById('heure-depot') || {}).value || '';
-    const depotDateTime = new Date(`${dateDepot}T${heureDepot}`);
-    const now = new Date();
-
-    const validDate = dateDepot && heureDepot && !isNaN(depotDateTime.getTime());
-    const diffInMs = validDate ? depotDateTime - now : 0;
-    const diffInHours = diffInMs / (1000 * 60 * 60);
-    const isDepotInFuture = diffInHours >= 72;
-    const hasLieux = (typeof globalLieuxData !== 'undefined' && globalLieuxData) ? globalLieuxData.length > 0 : false;
-
-    // Afficher l'option Premium si lieux disponibles OU si on veut tester sans lieux
-    // TEMPORAIRE: Toujours true pour déboguer - à retirer en production
-    isPremiumAvailable = true; // hasLieux;
+    // Premium : on l'affiche seulement si l'API le retourne avec un id et un prix
+    // Les 72h et les lieux sont juste des recommandations, pas des conditions d'affichage
+    const hasPremiumFromApi = staticOptions.premium && staticOptions.premium.id && staticOptions.premium.prixUnitaire > 0;
+    const hasPriorityFromApi = staticOptions.priority && staticOptions.priority.id && staticOptions.priority.prixUnitaire > 0;
     
-    console.log('[displayOptions] globalLieuxData:', globalLieuxData);
-    console.log('[displayOptions] hasLieux:', hasLieux, 'isPremiumAvailable:', isPremiumAvailable, 'isDepotInFuture:', isDepotInFuture);
+    isPremiumAvailable = hasPremiumFromApi;
+    
+    console.log('[displayOptions] staticOptions.premium:', staticOptions.premium);
+    console.log('[displayOptions] hasPremiumFromApi:', hasPremiumFromApi);
+    console.log('[displayOptions] hasPriorityFromApi:', hasPriorityFromApi);
 }
 
 function updateAdvertModalButtons() {
@@ -354,43 +346,35 @@ function showOptionsAdvertisementModal() {
             if (prioritySection) prioritySection.classList.remove('hidden');
         }
 
-        // Gérer l'affichage de l'option Premium : afficher la carte dès que l'API renvoie un prix
+        // Gérer l'affichage de l'option Premium : afficher seulement si l'API renvoie un prix et un id
         const premiumAvailableContent = document.getElementById('premium-available-content');
         const premiumUnavailableMessage = document.getElementById('premium-unavailable-message');
         const hasPremiumFromApi = staticOptions.premium && staticOptions.premium.id && staticOptions.premium.prixUnitaire > 0;
-        
+
         console.log('[showOptionsAdvertisementModal] staticOptions.premium:', staticOptions.premium);
-        console.log('[showOptionsAdvertisementModal] hasPremiumFromApi:', hasPremiumFromApi, 'isPremiumAvailable:', isPremiumAvailable);
+        console.log('[showOptionsAdvertisementModal] hasPremiumFromApi:', hasPremiumFromApi);
 
         if (hasPremiumFromApi) {
-            if (isPremiumAvailable) {
-                // Lieux disponibles : afficher le formulaire et le bouton Ajouter
-                const premiumPriceEl = document.getElementById('advert-premium-price');
-                if (premiumPriceEl) {
-                    premiumPriceEl.textContent = `+${staticOptions.premium.prixUnitaire.toFixed(2)} €`;
-                }
-
-                if (premiumAvailableContent) premiumAvailableContent.classList.remove('hidden');
-                if (premiumUnavailableMessage) premiumUnavailableMessage.classList.add('hidden');
-
-                // === SUPPRESSION DES CHAMPS PREMIUM DANS LA MODALE D'OPTIONS ===
-                // Les champs seront affichés uniquement dans la modale de paiement /payment
-                const premiumDetailsContainer = document.getElementById('premium-details-modal');
-                if (premiumDetailsContainer) {
-                    premiumDetailsContainer.innerHTML = `
-                        <div class="text-center py-4 text-gray-600">
-                            <p class="text-sm">${t('premium_info_later')}</p>
-                        </div>
-                    `;
-                }
-            } else {
-                // API renvoie Premium mais pas de lieux pour cet aéroport : afficher la carte avec message
-                if (premiumAvailableContent) premiumAvailableContent.classList.add('hidden');
-                if (premiumUnavailableMessage) premiumUnavailableMessage.classList.remove('hidden');
-                if (premiumUnavailableMessage) {
-                    premiumUnavailableMessage.innerHTML = `<p class="text-lg font-semibold text-gray-600">${t('modal_premium_unavailable')}</p><p class="text-sm text-gray-500 mt-2">${t('modal_premium_unavailable_reason')}</p>`;
-                }
+            // Afficher premium avec le bon prix récupéré de l'API
+            const premiumPriceEl = document.getElementById('advert-premium-price');
+            if (premiumPriceEl) {
+                premiumPriceEl.textContent = `+${staticOptions.premium.prixUnitaire.toFixed(2)} €`;
             }
+
+            if (premiumAvailableContent) premiumAvailableContent.classList.remove('hidden');
+            if (premiumUnavailableMessage) premiumUnavailableMessage.classList.add('hidden');
+
+            // === SUPPRESSION DES CHAMPS PREMIUM DANS LA MODALE D'OPTIONS ===
+            // Les champs seront affichés uniquement dans la modale de paiement /payment
+            const premiumDetailsContainer = document.getElementById('premium-details-modal');
+            if (premiumDetailsContainer) {
+                premiumDetailsContainer.innerHTML = `
+                    <div class="text-center py-4 text-gray-600">
+                        <p class="text-sm">${t('premium_info_later')}</p>
+                    </div>
+                `;
+            }
+            
             if (premiumSection) premiumSection.classList.remove('hidden');
         }
         // --- FIN DE LA NOUVELLE LOGIQUE ---
