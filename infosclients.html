@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html class="light" lang="fr">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Premium Booking - Details</title>
+    
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#EAB308",
+                        "background-light": "#FFFFFF",
+                        "background-dark": "#0F172A",
+                    },
+                    fontFamily: {
+                        display: ["Playfair Display", "serif"],
+                        sans: ["Inter", "sans-serif"],
+                    },
+                },
+            },
+        };
+
+        // Fonction pour afficher/masquer les champs spécifiques
+        function toggleTransport(type, section) {
+            const detailField = document.getElementById(`${section}_details`);
+            const label = document.getElementById(`${section}_label`);
+            
+            if (type === 'avion' || type === 'train') {
+                detailField.classList.remove('hidden');
+                label.innerText = type === 'avion' ? 'N° de Vol' : 'N° de Train';
+            } else {
+                detailField.classList.add('hidden');
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .premium-blur { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+            input:focus ~ label, input:not(:placeholder-shown) ~ label {
+                transform: translateY(-1.25rem) scale(0.85);
+                color: #EAB308;
+            }
+            select { appearance: none; }
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-100 font-sans min-h-screen pb-32">
+
+    <main class="max-w-4xl mx-auto px-6 py-12">
+        <form class="space-y-16">
+            
+            <section class="space-y-8">
+                <div class="relative overflow-hidden p-8 rounded-2xl bg-slate-900 text-white border border-white/5 shadow-2xl">
+                    <div class="max-w-xl relative z-10">
+                        <div class="flex items-center space-x-2 text-primary mb-3">
+                            <span class="material-symbols-outlined text-xl fill-1">workspace_premium</span>
+                            <span class="text-xs font-bold uppercase tracking-widest">Option Premium Activée</span>
+                        </div>
+                        <h3 class="text-xl md:text-2xl font-display font-medium">Détails de votre trajet</h3>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center space-x-3 mb-6">
+                            <span class="material-symbols-outlined text-primary">flight_land</span>
+                            <h4 class="font-bold">Arrivée</h4>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Moyen de transport</label>
+                                <select onchange="toggleTransport(this.value, 'arr')" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm p-3 focus:ring-2 focus:ring-primary">
+                                    <option value="autre">Voiture / Autre</option>
+                                    <option value="avion">Avion</option>
+                                    <option value="train">Train</option>
+                                </select>
+                            </div>
+
+                            <div id="arr_details" class="hidden grid grid-cols-2 gap-4 animate-in fade-in duration-300">
+                                <div>
+                                    <label id="arr_label" class="block text-[10px] font-bold text-slate-400 uppercase mb-1">N° de Vol</label>
+                                    <input class="w-full px-0 py-2 bg-transparent border-0 border-b border-slate-200 dark:border-slate-700 focus:ring-0 focus:border-primary text-sm font-medium" type="text" placeholder="Ex: AF123"/>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Provenance</label>
+                                    <input class="w-full px-0 py-2 bg-transparent border-0 border-b border-slate-200 dark:border-slate-700 focus:ring-0 focus:border-primary text-sm font-medium" type="text" placeholder="Ville"/>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Date & Heure</label>
+                                <input class="w-full px-0 py-2 bg-transparent border-0 border-b border-slate-200 dark:border-slate-700 focus:ring-0 focus:border-primary text-sm font-medium" type="datetime-local"/>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-slate-800">
+                        <div class="flex items-center space-x-3 mb-6">
+                            <span class="material-symbols-outlined text-slate-400">flight_takeoff</span>
+                            <h4 class="font-bold">Départ</h4>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Moyen de transport</label>
+                                <select onchange="toggleTransport(this.value, 'dep')" class="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm p-3 focus:ring-2 focus:ring-primary">
+                                    <option value="autre">Voiture / Autre</option>
+                                    <option value="avion">Avion</option>
+                                    <option value="train">Train</option>
+                                </select>
+                            </div>
+
+                            <div id="dep_details" class="hidden grid grid-cols-2 gap-4 animate-in fade-in duration-300">
+                                <div>
+                                    <label id="dep_label" class="block text-[10px] font-bold text-slate-400 uppercase mb-1">N° de Vol</label>
+                                    <input class="w-full px-0 py-2 bg-transparent border-0 border-b border-slate-200 dark:border-slate-700 focus:ring-0 focus:border-primary text-sm font-medium" type="text" placeholder="Ex: TGV 6601"/>
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Destination</label>
+                                    <input class="w-full px-0 py-2 bg-transparent border-0 border-b border-slate-200 dark:border-slate-700 focus:ring-0 focus:border-primary text-sm font-medium" type="text" placeholder="Ville"/>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-1">Heure de restitution</label>
+                                <input class="w-full px-0 py-2 bg-transparent border-0 border-b border-slate-200 dark:border-slate-700 focus:ring-0 focus:border-primary text-sm font-medium" type="datetime-local"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="flex justify-end pt-8">
+                <button class="px-12 py-4 bg-primary text-white rounded-full font-bold shadow-lg hover:scale-105 transition-transform flex items-center space-x-2">
+                    <span>Continuer</span>
+                    <span class="material-symbols-outlined">arrow_forward</span>
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 premium-blur bg-white/90 dark:bg-slate-900/90 px-8 py-4 rounded-full flex items-center space-x-10 shadow-2xl border border-white/10 z-50">
+        <div class="flex flex-col">
+            <span class="text-[10px] uppercase text-slate-400 font-bold">Total</span>
+            <span class="text-xl font-bold">189.00€</span>
+        </div>
+        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+            <span class="material-symbols-outlined">shopping_cart</span>
+        </div>
+    </div>
+
+</body>
+</html>
