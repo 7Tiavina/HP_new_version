@@ -76,6 +76,10 @@ function populateDrawerOptions() {
     
     isPremiumAvailable = hasPremiumFromApi;
     
+    console.log('[populateDrawerOptions] staticOptions:', staticOptions);
+    console.log('[populateDrawerOptions] Priority:', staticOptions.priority);
+    console.log('[populateDrawerOptions] Premium:', staticOptions.premium);
+    
     // Priority Option
     const priorityCard = document.getElementById('drawer-option-priority');
     if (priorityCard) {
@@ -83,7 +87,24 @@ function populateDrawerOptions() {
             priorityCard.classList.remove('hidden');
             const priceEl = document.getElementById('drawer-priority-price');
             if (priceEl) {
-                priceEl.textContent = '+' + formatPrice(staticOptions.priority.prixUnitaire) + ' €';
+                const unitPrice = staticOptions.priority.prixUnitaire || 0;
+                const unitPriceBeforeDiscount = staticOptions.priority.prixUnitaireAvantRemise || staticOptions.priority.prix_unitaire_avant_remise || null;
+                
+                console.log('[populateDrawerOptions] Priority prices:', {
+                    unitPrice,
+                    unitPriceBeforeDiscount,
+                    allKeys: Object.keys(staticOptions.priority)
+                });
+                
+                if (unitPriceBeforeDiscount != null && unitPriceBeforeDiscount > unitPrice) {
+                    // Show discounted price with strikethrough original price
+                    priceEl.innerHTML = `
+                        <span class="text-lg text-gray-400 line-through font-normal mr-2">${formatPrice(unitPriceBeforeDiscount)} €</span>
+                        <span class="text-green-600">+${formatPrice(unitPrice)} €</span>
+                    `;
+                } else {
+                    priceEl.textContent = '+' + formatPrice(unitPrice) + ' €';
+                }
             }
         } else {
             priorityCard.classList.add('hidden');
@@ -102,7 +123,24 @@ function populateDrawerOptions() {
             }
             const priceEl = document.getElementById('drawer-premium-price');
             if (priceEl) {
-                priceEl.textContent = '+' + formatPrice(staticOptions.premium.prixUnitaire) + ' €';
+                const unitPrice = staticOptions.premium.prixUnitaire || 0;
+                const unitPriceBeforeDiscount = staticOptions.premium.prixUnitaireAvantRemise || staticOptions.premium.prix_unitaire_avant_remise || null;
+                
+                console.log('[populateDrawerOptions] Premium prices:', {
+                    unitPrice,
+                    unitPriceBeforeDiscount,
+                    allKeys: Object.keys(staticOptions.premium)
+                });
+                
+                if (unitPriceBeforeDiscount != null && unitPriceBeforeDiscount > unitPrice) {
+                    // Show discounted price with strikethrough original price
+                    priceEl.innerHTML = `
+                        <span class="text-lg text-gray-400 line-through font-normal mr-2">${formatPrice(unitPriceBeforeDiscount)} €</span>
+                        <span class="text-purple-600">+${formatPrice(unitPrice)} €</span>
+                    `;
+                } else {
+                    priceEl.textContent = '+' + formatPrice(unitPrice) + ' €';
+                }
             }
         } else {
             if (premiumUnavailableMsg) {
@@ -110,6 +148,33 @@ function populateDrawerOptions() {
             }
         }
     }
+    
+    // Update buttons state
+    updateButtonsState();
+}
+
+/**
+ * Update add/remove buttons state based on cart
+ */
+function updateButtonsState() {
+    ['priority', 'premium'].forEach(optionKey => {
+        const isInCart = cartItems.some(item => item.key === optionKey);
+        
+        const addBtn = document.getElementById(`add-${optionKey}-btn`);
+        const removeBtn = document.getElementById(`remove-${optionKey}-btn`);
+        
+        if (addBtn) {
+            addBtn.disabled = isInCart;
+            addBtn.classList.toggle('opacity-50', isInCart);
+            addBtn.classList.toggle('cursor-not-allowed', isInCart);
+        }
+        
+        if (removeBtn) {
+            removeBtn.disabled = !isInCart;
+            removeBtn.classList.toggle('opacity-50', !isInCart);
+            removeBtn.classList.toggle('cursor-not-allowed', !isInCart);
+        }
+    });
 }
 
 /**
@@ -222,8 +287,8 @@ function updateDrawerCart() {
     cartItemsContainer.innerHTML = html;
     cartTotalEl.textContent = formatPrice(total) + ' €';
     
-    // Update checkboxes state
-    updateDrawerCheckboxes();
+    // Update buttons state
+    updateButtonsState();
     
     // Scroll to cart when options change
     scrollToCart();
@@ -237,19 +302,6 @@ function scrollToCart() {
     if (cartSection) {
         cartSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-}
-
-/**
- * Update drawer checkboxes based on cart
- */
-function updateDrawerCheckboxes() {
-    ['priority', 'premium'].forEach(optionKey => {
-        const toggle = document.getElementById(`drawer-${optionKey}-toggle`);
-        if (!toggle) return;
-        
-        const isInCart = cartItems.some(item => item.key === optionKey);
-        toggle.checked = isInCart;
-    });
 }
 
 /**
@@ -284,29 +336,7 @@ function setupDrawerEventListeners() {
         };
     }
     
-    // Priority toggle
-    const priorityToggle = document.getElementById('drawer-priority-toggle');
-    if (priorityToggle) {
-        priorityToggle.onchange = (e) => {
-            if (e.target.checked) {
-                addOptionToCart('priority');
-            } else {
-                removeOptionFromCart('priority');
-            }
-        };
-    }
-    
-    // Premium toggle
-    const premiumToggle = document.getElementById('drawer-premium-toggle');
-    if (premiumToggle) {
-        premiumToggle.onchange = (e) => {
-            if (e.target.checked) {
-                addOptionToCart('premium');
-            } else {
-                removeOptionFromCart('premium');
-            }
-        };
-    }
+    // NO checkbox listeners - using add/remove buttons instead
 }
 
 /**
@@ -325,12 +355,14 @@ function addOptionToCart(optionKey) {
         key: optionKey,
         libelle: option.libelle,
         prix: option.prixUnitaire,
+        prixUnitaire: option.prixUnitaire,
         quantity: 1,
         details: {} // Empty details, will be filled at payment step
     });
     
     updateCartDisplay();
     updateDrawerCart();
+    updateButtonsState();
 }
 
 /**
@@ -342,6 +374,7 @@ function removeOptionFromCart(optionKey) {
         cartItems.splice(index, 1);
         updateCartDisplay();
         updateDrawerCart();
+        updateButtonsState();
     }
 }
 

@@ -580,7 +580,10 @@ async function handleTotalClick() {
                     return {
                         id: o.id ?? o.Id ?? o.ID,
                         libelle: o.libelle ?? o.Libelle ?? o.nom ?? '',
-                        prixUnitaire: parseFloat(o.prixUnitaire ?? o.prix_unitaire ?? o.prix ?? 0) || 0
+                        prixUnitaire: parseFloat(o.prixUnitaire ?? o.prix_unitaire ?? o.prix ?? 0) || 0,
+                        prixUnitaireAvantRemise: o.prixUnitaireAvantRemise ?? o.prix_unitaire_avant_remise ?? null,
+                        tauxRemise: o.tauxRemise ?? o.taux_remise ?? null,
+                        referenceInterne: o.referenceInterne ?? o.ReferenceInterne ?? null
                     };
                 };
                 
