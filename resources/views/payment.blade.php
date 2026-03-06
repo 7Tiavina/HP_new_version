@@ -158,14 +158,6 @@
             </button>
         </div>
 
-        <!-- Afficheur de message d'erreur -->
-        @if(!$isProfileComplete)
-            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="status">
-                <p class="font-bold" data-i18n="payment_security_title">Votre sécurité est notre priorité</p>
-                <p data-i18n="payment_security_text">Afin de garantir la protection de vos effets personnels et de respecter les normes de sécurité par rayons X, merci de compléter les informations manquantes.</p>
-            </div>
-        @endif
-
         @if ($commandeData)
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <!-- Colonne de gauche : Récapitulatif de la commande -->

@@ -315,10 +315,8 @@ if (typeof window.translations === 'undefined') {
         modal_remove_cart: "Enlever du panier",
         modal_validate_continue: "Valider et continuer →",
         modal_edit_dates: "Modifier les dates",
-        
+
         // Payment Page Details
-        payment_security_title: "Votre sécurité est notre priorité",
-        payment_security_text: "Afin de garantir la protection de vos effets personnels et de respecter les normes de sécurité par rayons X, merci de compléter les informations manquantes.",
         payment_order_summary: "Récapitulatif de votre commande",
         payment_service: "Service :",
         payment_luggage_storage: "Consigne de bagage",
@@ -817,10 +815,8 @@ if (typeof window.translations === 'undefined') {
         modal_remove_cart: "Remove from cart",
         modal_validate_continue: "Validate and continue →",
         modal_edit_dates: "Edit dates",
-        
+
         // Payment Page Details
-        payment_security_title: "Your security is our priority",
-        payment_security_text: "To ensure the protection of your personal belongings and comply with X-ray security standards, please complete the missing information.",
         payment_order_summary: "Your order summary",
         payment_service: "Service:",
         payment_luggage_storage: "Luggage storage",
