@@ -839,7 +839,7 @@
                 promptContainer.classList.add('hidden');
 
                 if (title === 'Erreur') {
-                    confirmBtn.textContent = 'Retour au formulaire';
+                    confirmBtn.textContent = 'OK';
                 } else {
                     confirmBtn.textContent = 'OK';
                 }
@@ -848,9 +848,7 @@
 
                 const closeModal = () => {
                     modal.classList.add('hidden');
-                    if (title === 'Erreur') {
-                        window.location.href = '{{ route("form-consigne") }}';
-                    }
+                    // No redirect on error - stay on payment page
                     resolve(true);
                 };
 
@@ -1858,10 +1856,56 @@
             
             // Appeler au chargement et à l'ouverture du modal
             updatePremiumFieldsVisibility();
+
+            // === GESTION DES ÉTAPES DU MODAL (STEP 1 / STEP 2) ===
+            const step1Content = document.getElementById('step-1-content');
+            const step2Content = document.getElementById('step-2-content');
+            const step1Title = document.getElementById('step-1-title');
+            const step2Title = document.getElementById('step-2-title');
+            const step1Indicator = document.getElementById('step-1-indicator');
+            const step2Indicator = document.getElementById('step-2-indicator');
+            const backToStep1Btn = document.getElementById('backToStep1Btn');
+            const btnContinueText = document.getElementById('btn-continue-text');
+            const btnConfirmText = document.getElementById('btn-confirm-text');
+            
+            let currentStep = 1;
+            
+            function goToStep(step) {
+                if (step === 1) {
+                    step1Content.classList.remove('hidden');
+                    step2Content.classList.add('hidden');
+                    step1Title.classList.remove('hidden');
+                    step2Title.classList.add('hidden');
+                    step1Indicator.classList.remove('bg-white', 'bg-opacity-30', 'text-white');
+                    step1Indicator.classList.add('bg-white', 'text-yellow-600');
+                    step2Indicator.classList.add('bg-white', 'bg-opacity-30', 'text-white');
+                    step2Indicator.classList.remove('bg-white', 'text-yellow-600');
+                    backToStep1Btn.classList.add('hidden');
+                    btnContinueText.classList.remove('hidden');
+                    btnConfirmText.classList.add('hidden');
+                    currentStep = 1;
+                } else if (step === 2) {
+                    step1Content.classList.add('hidden');
+                    step2Content.classList.remove('hidden');
+                    step1Title.classList.add('hidden');
+                    step2Title.classList.remove('hidden');
+                    step1Indicator.classList.add('bg-white', 'bg-opacity-30', 'text-white');
+                    step1Indicator.classList.remove('bg-white', 'text-yellow-600');
+                    step2Indicator.classList.remove('bg-white', 'bg-opacity-30', 'text-white');
+                    step2Indicator.classList.add('bg-white', 'text-yellow-600');
+                    backToStep1Btn.classList.remove('hidden');
+                    btnContinueText.classList.add('hidden');
+                    btnConfirmText.classList.remove('hidden');
+                    currentStep = 2;
+                }
+            }
             
             // Handler for modal open button - with async lieux loading
             if (openClientProfileModalBtn) {
                 openClientProfileModalBtn.addEventListener('click', async () => {
+                    // Reset to step 1 when opening modal
+                    goToStep(1);
+                    
                     // Wait for lieux to be loaded if not already done
                     let waitForLieux = setInterval(() => {
                         if (globalLieuxData && globalLieuxData.length > 0) {
@@ -1870,7 +1914,7 @@
                             fillPremiumLocations();
                         }
                     }, 100);
-                    
+
                     // Timeout safety: force display after 2 seconds even if lieux not loaded
                     setTimeout(() => {
                         clearInterval(waitForLieux);
@@ -1880,6 +1924,49 @@
                 });
             }
             
+            // Back to step 1 button
+            if (backToStep1Btn) {
+                backToStep1Btn.addEventListener('click', () => {
+                    goToStep(1);
+                });
+            }
+            
+            // Continue to step 2 button (saveClientProfileBtn when on step 1)
+            const saveClientProfileBtn = document.getElementById('saveClientProfileBtn');
+            if (saveClientProfileBtn) {
+                saveClientProfileBtn.addEventListener('click', async (e) => {
+                    console.log('[SAVE BUTTON CLICKED] currentStep:', currentStep);
+                    console.log('[SAVE BUTTON CLICKED] hasPremiumInCart():', hasPremiumInCart());
+                    
+                    // If on step 1 with premium, validate and go to step 2
+                    if (currentStep === 1 && hasPremiumInCart()) {
+                        console.log('[SAVE BUTTON] Step 1 + Premium, validating...');
+                        
+                        // Validate step 1 fields
+                        const nom = document.getElementById('modal-nom').value.trim();
+                        const prenom = document.getElementById('modal-prenom').value.trim();
+                        const telephone = document.getElementById('modal-telephone').value.trim();
+                        const adresse = document.getElementById('modal-adresse').value.trim();
+                        
+                        if (!nom || !prenom || !telephone || !adresse) {
+                            await showCustomAlert('Erreur', 'Veuillez remplir tous les champs obligatoires.');
+                            return;
+                        }
+                        
+                        console.log('[SAVE BUTTON] Validation passed, going to step 2');
+                        // Go to step 2
+                        goToStep(2);
+                        return; // Stop here, don't submit
+                    }
+                    
+                    // If on step 2 or no premium, submit the form manually
+                    console.log('[SAVE BUTTON] Submitting form...');
+                    if (clientProfileForm) {
+                        clientProfileForm.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                    }
+                });
+            }
+
             // Gestion des champs dynamiques transport (avion/train)
             const setupTransportFieldHandler = (direction) => {
                 const transportSelect = document.querySelector(`select[name="transport_type_${direction}"]`);
@@ -2109,20 +2196,25 @@
 
             if (clientProfileForm) {
                 let isSubmitting = false; // Prevent double submission
-                
+
                 clientProfileForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
-                    
+
+                    console.log('=== [MODAL SUBMIT] FORM SUBMIT TRIGGERED ===');
+                    console.log('[MODAL SUBMIT] currentStep:', currentStep);
+                    console.log('[MODAL SUBMIT] hasPremiumInCart():', hasPremiumInCart());
+                    console.log('[MODAL SUBMIT] isSubmitting:', isSubmitting);
+
                     // Prevent double submission
                     if (isSubmitting) {
                         console.log('[MODAL SUBMIT] Already submitting, ignoring...');
                         return;
                     }
-                    
+
                     console.log('=== [MODAL SUBMIT] Form submission intercepted ===');
                     console.log('[MODAL SUBMIT] isGuest:', isGuest);
                     console.log('[MODAL SUBMIT] Form data:', Object.fromEntries(new FormData(clientProfileForm).entries()));
-                    
+
                     isSubmitting = true;
                     const submitBtn = document.getElementById('saveClientProfileBtn');
                     if (submitBtn) {
@@ -2142,21 +2234,32 @@
                             await showCustomAlert(t('error'), t('alert_fill_required'));
                             return;
                         }
-                        console.log('[MODAL SUBMIT] Validation passed.');
+                        console.log('[MODAL SUBMIT] Guest validation passed.');
                     }
-                    
+
                     // === VALIDATION DES CHAMPS PREMIUM ===
+                    console.log('[MODAL SUBMIT] Checking premium in cart:', hasPremiumInCart());
                     if (hasPremiumInCart()) {
-                        const premiumFieldsContainer = document.getElementById('premium-fields-modal-container');
-                        if (premiumFieldsContainer && !premiumFieldsContainer.classList.contains('hidden')) {
+                        console.log('[MODAL SUBMIT] Premium is in cart, checking step...');
+                        // Check if we're on step 2 (premium step)
+                        const step2Content = document.getElementById('step-2-content');
+                        const isOnStep2 = step2Content && !step2Content.classList.contains('hidden');
+                        console.log('[MODAL SUBMIT] isOnStep2:', isOnStep2);
+                        
+                        if (isOnStep2) {
+                            console.log('[MODAL SUBMIT] Validating premium fields...');
                             let premiumValid = true;
                             let missingFields = [];
-                            
+
                             // Validate arrival fields
                             const transportArrival = document.querySelector('select[name="transport_type_arrival"]');
                             const pickupLocation = document.querySelector('select[name="pickup_location_arrival"]');
                             const pickupDatetime = document.querySelector('input[name="pickup_datetime_arrival"]');
-                            
+
+                            console.log('[MODAL SUBMIT] transportArrival:', transportArrival?.value);
+                            console.log('[MODAL SUBMIT] pickupLocation:', pickupLocation?.value);
+                            console.log('[MODAL SUBMIT] pickupDatetime:', pickupDatetime?.value);
+
                             if (!transportArrival || !transportArrival.value) {
                                 premiumValid = false;
                                 missingFields.push('Type de transport (arrivée)');
@@ -2169,12 +2272,16 @@
                                 premiumValid = false;
                                 missingFields.push('Date et heure de prise en charge');
                             }
-                            
+
                             // Validate departure fields
                             const transportDeparture = document.querySelector('select[name="transport_type_departure"]');
                             const restitutionLocation = document.querySelector('select[name="restitution_location_departure"]');
                             const restitutionDatetime = document.querySelector('input[name="restitution_datetime_departure"]');
-                            
+
+                            console.log('[MODAL SUBMIT] transportDeparture:', transportDeparture?.value);
+                            console.log('[MODAL SUBMIT] restitutionLocation:', restitutionLocation?.value);
+                            console.log('[MODAL SUBMIT] restitutionDatetime:', restitutionDatetime?.value);
+
                             if (!transportDeparture || !transportDeparture.value) {
                                 premiumValid = false;
                                 missingFields.push('Type de transport (départ)');
@@ -2187,20 +2294,27 @@
                                 premiumValid = false;
                                 missingFields.push('Date et heure de restitution');
                             }
-                            
+
+                            console.log('[MODAL SUBMIT] premiumValid:', premiumValid);
+                            console.log('[MODAL SUBMIT] missingFields:', missingFields);
+
                             if (!premiumValid) {
                                 isSubmitting = false;
                                 if (submitBtn) {
                                     submitBtn.disabled = false;
                                     submitBtn.innerHTML = 'Confirmer et payer <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>';
                                 }
-                                await showCustomAlert('Informations PREMIUM incomplètes', 
-                                    'Veuillez remplir tous les champs obligatoires pour le service PREMIUM :<br>' + 
+                                await showCustomAlert('Informations PREMIUM incomplètes',
+                                    'Veuillez remplir tous les champs obligatoires pour le service PREMIUM :<br>' +
                                     missingFields.join(', '));
                                 return;
                             }
                             console.log('[MODAL SUBMIT] Premium validation passed.');
+                        } else {
+                            console.log('[MODAL SUBMIT] Not on step 2, skipping premium validation');
                         }
+                    } else {
+                        console.log('[MODAL SUBMIT] No premium in cart, skipping premium validation');
                     }
 
                     // Auto-split long address to fit BDM 50-char limit

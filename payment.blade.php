@@ -792,7 +792,7 @@
                 promptContainer.classList.add('hidden');
 
                 if (title === 'Erreur') {
-                    confirmBtn.textContent = 'Retour au formulaire';
+                    confirmBtn.textContent = 'OK';
                 } else {
                     confirmBtn.textContent = 'OK';
                 }
@@ -801,9 +801,7 @@
 
                 const closeModal = () => {
                     modal.classList.add('hidden');
-                    if (title === 'Erreur') {
-                        window.location.href = '{{ route("form-consigne") }}';
-                    }
+                    // No redirect on error - stay on payment page
                     resolve(true);
                 };
 
