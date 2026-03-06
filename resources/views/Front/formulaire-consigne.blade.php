@@ -243,56 +243,145 @@
     </div>
 </div>
 
-<!-- Options Advertisement Modal -->
-<div id="options-advert-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-[10004] flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-6xl transform transition-all max-h-[90vh] overflow-y-auto relative">
-        <!-- Close Button -->
-        <button id="close-options-advert-modal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 z-10">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+<!-- Options Side Drawer (New UX) -->
+<div id="options-drawer-overlay" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 z-[10003] transition-opacity opacity-0" style="backdrop-filter: blur(4px);"></div>
+<div id="options-drawer" class="hidden fixed top-0 right-0 h-full w-full max-w-lg bg-white shadow-2xl z-[10004] transform translate-x-full transition-transform duration-400 ease-out">
+    <!-- Drawer Header -->
+    <div class="bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 p-8 text-center relative overflow-hidden">
+        <!-- Decorative elements -->
+        <div class="absolute top-0 left-0 w-32 h-32 bg-white opacity-10 rounded-full -translate-x-16 -translate-y-16"></div>
+        <div class="absolute bottom-0 right-0 w-24 h-24 bg-white opacity-10 rounded-full translate-x-12 translate-y-12"></div>
+        
+        <button id="close-options-drawer" class="absolute top-4 right-4 text-white hover:text-yellow-100 transition-colors z-10">
+            <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
             </svg>
         </button>
+        <h2 class="text-3xl font-bold text-gray-900" data-i18n="drawer_options_title">Options & Services</h2>
+        <p class="mt-2 text-gray-800 text-sm font-medium" data-i18n="drawer_options_subtitle">Personnalisez votre expérience de voyage</p>
+    </div>
 
-        <div class="p-8 text-center">
-            <h2 class="text-3xl font-bold text-gray-800" data-i18n="modal_optimize_title">Optimisez votre expérience !</h2>
-            <p class="mt-2 text-gray-600" data-i18n="modal_optimize_subtitle">Ajoutez nos services exclusifs pour un voyage sans tracas.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200">
-            <!-- Priority Option -->
-            <div id="advert-option-priority" class="hidden bg-white p-8">
-                <div class="text-center">
-                    <span class="inline-block bg-yellow-100 text-yellow-800 text-xs font-semibold px-2.5 py-0.5 rounded-full" data-i18n="modal_priority_label">PRIORITAIRE</span>
-                    <h3 class="mt-4 text-2xl font-bold text-gray-900" data-i18n="modal_priority_title">Service Priority</h3>
-                    <p class="mt-2 text-gray-500" data-i18n="modal_priority_desc">Bénéficiez d'un traitement prioritaire pour vos bagages à la dépose et à la récupération.</p>
-                    <p id="advert-priority-price" class="mt-4 text-3xl font-extrabold text-gray-900">+15 €</p>
-                    <button id="add-priority-from-modal" data-option-key="priority" class="mt-6 w-full bg-transparent border border-gray-400 text-gray-700 font-bold py-3 px-4 rounded-lg btn-hover hover:bg-gray-100" data-i18n="modal_add_cart">Ajouter au panier</button>
-                </div>
-            </div>
-
-            <!-- Premium Option -->
-            <div id="advert-option-premium" class="hidden bg-white p-8 relative">
-                <div id="premium-available-content">
-                    <div class="text-center">
-                        <span class="inline-block bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded-full" data-i18n="modal_premium_label">PREMIUM</span>
-                        <h3 class="mt-4 text-2xl font-bold text-gray-900" data-i18n="modal_premium_title">Service Premium</h3>
-                        <p class="mt-2 text-gray-500" data-i18n="modal_premium_desc">Permet de remettre ou récupérer ses bagages directement à l'endroit exact choisi à l'aéroport, avec l'aide d'un porteur dédié. Le client indique le lieu, son mode de transport et un commentaire, et l'équipe s'occupe de tout.</p>
-                        <p id="advert-premium-price" class="mt-4 text-3xl font-extrabold text-gray-900">+25 €</p>
-                        <div id="premium-details-modal" class="mt-4 text-left space-y-3">
-                            <!-- Premium specific fields will be injected here -->
-                        </div>
-                        <button id="add-premium-from-modal" data-option-key="premium" class="mt-6 w-full bg-transparent border border-gray-400 text-gray-700 font-bold py-3 px-4 rounded-lg btn-hover hover:bg-gray-100" data-i18n="modal_add_cart">Ajouter au panier</button>
+    <!-- Drawer Body -->
+    <div class="p-8 space-y-6 overflow-y-auto" style="max-height: calc(100vh - 280px);">
+        
+        <!-- Priority Option Card -->
+        <div id="drawer-option-priority" class="hidden group relative bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl p-6 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-200 border-2 border-yellow-200 hover:border-yellow-400">
+            <div class="flex items-start gap-5">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-yellow-300 to-yellow-500 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300">
+                        <img src="/priority-logo.png" alt="Priority" class="w-14 h-14 object-contain" onerror="this.style.display='none'; this.parentElement.innerHTML='⚡'; this.parentElement.classList.add('text-3xl');">
                     </div>
                 </div>
-                <div id="premium-unavailable-message" class="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-90 rounded-lg hidden">
-                    <p class="text-lg font-semibold text-gray-600" data-i18n="modal_premium_unavailable">Service Premium indisponible</p>
+                
+                <!-- Content -->
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="inline-block bg-gradient-to-r from-yellow-400 to-yellow-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm" data-i18n="drawer_priority_label">PRIORITAIRE</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900" data-i18n="drawer_priority_title">Service Priority</h3>
+                    <p class="mt-1.5 text-sm text-gray-600 leading-relaxed" data-i18n="drawer_priority_desc">Traitement prioritaire de vos bagages à la dépose et à la récupération. Gagnez du temps et évitez les files d'attente.</p>
+                    <p id="drawer-priority-price" class="mt-3 text-2xl font-bold text-yellow-600">+15,00 €</p>
+                </div>
+            </div>
+            
+            <!-- Custom Checkbox -->
+            <div class="mt-5 pt-4 border-t border-yellow-200">
+                <label class="flex items-center justify-between cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
+                            <input type="checkbox" id="drawer-priority-toggle" class="sr-only peer">
+                            <div class="w-7 h-7 bg-white border-2 border-yellow-300 rounded-lg peer-focus:ring-2 peer-focus:ring-yellow-400 peer-focus:ring-offset-2 transition-all duration-200 
+                                peer-checked:bg-gradient-to-br peer-checked:from-yellow-400 peer-checked:to-yellow-500 peer-checked:border-yellow-500
+                                hover:border-yellow-400 shadow-sm">
+                                <svg class="w-5 h-5 text-white absolute top-0.5 left-0.5 opacity-0 peer-checked:opacity-100 transition-opacity duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700 group-hover:text-yellow-600 transition-colors" data-i18n="drawer_add_option">Ajouter au panier</span>
+                    </div>
+                    <span class="text-xs text-gray-500 group-hover:text-yellow-500 transition-colors">Cliquez pour ajouter</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Premium Option Card -->
+        <div id="drawer-option-premium" class="hidden group relative bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 transition-all duration-300 hover:shadow-lg hover:shadow-purple-200 border-2 border-purple-200 hover:border-purple-400">
+            <div class="flex items-start gap-5">
+                <!-- Logo -->
+                <div class="flex-shrink-0">
+                    <div class="w-20 h-20 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform duration-300">
+                        <img src="/premium-logo.png" alt="Premium" class="w-14 h-14 object-contain" onerror="this.style.display='none'; this.parentElement.innerHTML='💎'; this.parentElement.classList.add('text-3xl');">
+                    </div>
+                </div>
+                
+                <!-- Content -->
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="inline-block bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm" data-i18n="drawer_premium_label">PREMIUM</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900" data-i18n="drawer_premium_title">Service Premium</h3>
+                    <p class="mt-1.5 text-sm text-gray-600 leading-relaxed" data-i18n="drawer_premium_desc_simple">Remise ou récupération de vos bagages à l'endroit exact choisi dans l'aéroport avec porteur dédié. Service VIP complet.</p>
+                    <p id="drawer-premium-price" class="mt-3 text-2xl font-bold text-purple-600">+25,00 €</p>
+                </div>
+            </div>
+            
+            <!-- Custom Checkbox -->
+            <div class="mt-5 pt-4 border-t border-purple-200">
+                <label class="flex items-center justify-between cursor-pointer group">
+                    <div class="flex items-center gap-3">
+                        <div class="relative">
+                            <input type="checkbox" id="drawer-premium-toggle" class="sr-only peer">
+                            <div class="w-7 h-7 bg-white border-2 border-purple-300 rounded-lg peer-focus:ring-2 peer-focus:ring-purple-400 peer-focus:ring-offset-2 transition-all duration-200 
+                                peer-checked:bg-gradient-to-br peer-checked:from-purple-500 peer-checked:to-purple-600 peer-checked:border-purple-600
+                                hover:border-purple-400 shadow-sm">
+                                <svg class="w-5 h-5 text-white absolute top-0.5 left-0.5 opacity-0 peer-checked:opacity-100 transition-opacity duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </div>
+                        </div>
+                        <span class="text-sm font-semibold text-gray-700 group-hover:text-purple-600 transition-colors" data-i18n="drawer_add_option">Ajouter au panier</span>
+                    </div>
+                    <span class="text-xs text-gray-500 group-hover:text-purple-500 transition-colors">Service VIP</span>
+                </label>
+            </div>
+            
+            <!-- Premium Unavailable Overlay -->
+            <div id="premium-drawer-unavailable-message" class="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-95 rounded-2xl hidden backdrop-blur-sm">
+                <div class="text-center p-6">
+                    <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                        </svg>
+                    </div>
+                    <p class="text-sm font-semibold text-gray-600" data-i18n="drawer_premium_unavailable">Service Premium indisponible</p>
                 </div>
             </div>
         </div>
 
-        <div class="p-6 text-center bg-gray-50">
-            <button id="continue-from-options-modal" class="bg-yellow-custom text-gray-dark font-bold py-3 px-8 rounded-full btn-hover" data-i18n="modal_validate_continue">Valider et continuer →</button>
+        <!-- Cart Summary -->
+        <div class="border-t-2 border-gray-300 pt-6 mt-8">
+            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <svg class="w-5 h-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+                <span data-i18n="drawer_cart_title">Votre panier</span>
+            </h3>
+            <div id="drawer-cart-items" class="space-y-3">
+                <!-- Cart items will be injected here -->
+            </div>
+            <div class="mt-5 pt-5 border-t-2 border-gray-300 flex items-center justify-between bg-gradient-to-r from-yellow-50 to-amber-50 -mx-6 px-6 py-4 rounded-b-xl">
+                <span class="text-base font-bold text-gray-700" data-i18n="drawer_total">Total à payer</span>
+                <span id="drawer-cart-total" class="text-2xl font-bold text-gray-900">0,00 €</span>
+            </div>
         </div>
+
+    </div>
+
+    <!-- Drawer Footer -->
+    <div class="border-t border-gray-200 p-6 bg-gradient-to-r from-gray-50 to-white">
+        <button id="confirm-options-drawer" class="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-4 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl hover:shadow-yellow-200 transform hover:-translate-y-0.5 duration-200 text-lg" data-i18n="drawer_confirm">Continuer mon paiement</button>
     </div>
 </div>
 
@@ -688,6 +777,7 @@
 <script src="{{ asset('js/modal.js') }}?v={{ $jsVersion('js/modal.js') }}"></script>
 <script src="{{ asset('js/quick-date-modal.js') }}?v={{ $jsVersion('js/quick-date-modal.js') }}"></script>
 <script src="{{ asset('js/cart.js') }}?v={{ $jsVersion('js/cart.js') }}"></script>
+<script src="{{ asset('js/options-drawer.js') }}?v={{ $jsVersion('js/options-drawer.js') }}"></script>
 <script src="{{ asset('js/booking.js') }}?v={{ $jsVersion('js/booking.js') }}"></script>
 
 <!-- Scripts for timepicker discret -->

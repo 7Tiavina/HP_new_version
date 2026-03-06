@@ -602,7 +602,7 @@ async function handleTotalClick() {
                 console.log('Updated staticOptions:', staticOptions);
                 console.log('Priority found:', !!foundPriority?.id, 'Premium found:', !!foundPremium?.id);
 
-                // Déterminer si la modale doit être affichée
+                // Déterminer si le drawer doit être affiché
                 if (staticOptions.priority?.id || staticOptions.premium?.id) {
                     shouldShowOptionsModal = true;
                 }
@@ -618,13 +618,14 @@ async function handleTotalClick() {
         if (shouldShowOptionsModal) {
             // Calculer la disponibilité de premium
             displayOptions(0); // L'argument n'est pas utilisé mais la fonction est appelée pour isPremiumAvailable
-            const result = await showOptionsAdvertisementModal();
-            if (result === 'cancelled') {
+            // Utiliser le nouveau drawer au lieu de l'ancienne modale
+            const result = await window.openOptionsDrawer();
+            if (result === false) {
                 if (loader) loader.classList.add('hidden');
-                return; // L'utilisateur a annulé depuis la modale
+                return; // L'utilisateur a fermé le drawer
             }
         }
-        
+
         // --- FIN NOUVELLE LOGIQUE ---
 
         // Le reste du processus de paiement continue ici

@@ -1077,10 +1077,8 @@ body {
 #hp-booking-root .delete-item-btn { color: #e5a0a0; }
 #hp-booking-root .delete-item-btn:hover { color: #e5b0b0; }
 #hp-booking-root #custom-modal-overlay,
-#hp-booking-root #options-advert-modal,
 #hp-booking-root #quick-date-modal { background: rgba(0,0,0,0.85) !important; }
 #hp-booking-root #custom-modal,
-#hp-booking-root #options-advert-modal > div,
 #hp-booking-root #quick-date-modal > div { background: var(--luxe-card) !important; border: 1px solid var(--luxe-border); }
 #hp-booking-root #custom-modal .border-gray-200,
 #hp-booking-root #quick-date-modal .border-gray-200 { border-color: var(--luxe-border) !important; }
@@ -1088,6 +1086,31 @@ body {
 #hp-booking-root .bg-amber-50 { background: rgba(201, 169, 98, 0.15) !important; border-color: var(--luxe-border) !important; }
 #hp-booking-root .text-amber-700 { color: var(--luxe-gold-light) !important; }
 #hp-booking-root .grid.gap-px.bg-gray-200 { background: var(--luxe-border) !important; }
+
+/* Options Drawer - Luxe Theme */
+#hp-booking-root #options-drawer-overlay { background: rgba(0,0,0,0.85) !important; }
+#hp-booking-root #options-drawer { background: var(--luxe-card) !important; border-left: 1px solid var(--luxe-border); }
+#hp-booking-root #options-drawer .text-gray-900,
+#hp-booking-root #options-drawer .text-gray-800 { color: var(--luxe-cream) !important; }
+#hp-booking-root #options-drawer .text-gray-700,
+#hp-booking-root #options-drawer .text-gray-600,
+#hp-booking-root #options-drawer .text-gray-500 { color: var(--luxe-cream-muted) !important; }
+#hp-booking-root #options-drawer .border-gray-200,
+#hp-booking-root #options-drawer .border-gray-300 { border-color: var(--luxe-border) !important; }
+#hp-booking-root #options-drawer .bg-gray-50 { background: rgba(201, 169, 98, 0.08) !important; }
+#hp-booking-root #options-drawer input,
+#hp-booking-root #options-drawer select,
+#hp-booking-root #options-drawer textarea { 
+    background: var(--luxe-surface) !important; 
+    border-color: var(--luxe-border) !important; 
+    color: var(--luxe-cream) !important; 
+}
+#hp-booking-root #options-drawer input:focus,
+#hp-booking-root #options-drawer select:focus,
+#hp-booking-root #options-drawer textarea:focus { 
+    border-color: var(--luxe-gold) !important; 
+    box-shadow: 0 0 0 2px rgba(201, 169, 98, 0.2) !important; 
+}
 
 /* Aéroport + dates display (step 2) — visible + luxe */
 #hp-booking-root #baggage-selection-step .bg-gray-100 {
