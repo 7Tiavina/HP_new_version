@@ -98,13 +98,13 @@ class CommandeController extends Controller
                 \Illuminate\Support\Facades\Log::error("Erreur lors du décodage Base64 pour la facture de la commande ID: {$id}.");
                 abort(500, 'Erreur lors de la lecture de la facture.');
             }
-            
+
             // Format invoice/commande number with airport prefix
             $baseRef = $commande->id_api_commande ?? $commande->paymentClient->monetico_order_id ?? $commande->id;
             $orlyAirportId = '64f00ace-31b6-45b0-bcb2-b562b1ac08d9';
             $cdgAirportId = '88bb89e0-b966-4420-9ed3-7a6745e4d947';
             $airportId = $commande->id_plateforme ?? null;
-            
+
             if ($airportId === $orlyAirportId) {
                 $reference = 'F-ORY-' . $baseRef;
             } elseif ($airportId === $cdgAirportId) {
@@ -112,7 +112,7 @@ class CommandeController extends Controller
             } else {
                 $reference = $baseRef;
             }
-            
+
             $fileName = "facture-HelloPassenger-{$reference}.pdf";
 
             return response($pdfContent)

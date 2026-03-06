@@ -1751,31 +1751,85 @@
             // === GESTION DES CHAMPS PREMIUM ===
             const premiumFieldsContainer = document.getElementById('premium-fields-modal-container');
             const premiumModalNotice = document.getElementById('premium-modal-notice');
-            
-            // Charger globalLieuxData depuis sessionStorage ou utiliser des valeurs statiques
+
+            // Charger globalLieuxData depuis sessionStorage ou faire un appel API
             let globalLieuxData = [];
+            let airportIdForLieux = null;
+
             try {
                 const state = JSON.parse(sessionStorage.getItem('formState'));
                 if (state && Array.isArray(state.globalLieuxData)) {
                     globalLieuxData = state.globalLieuxData;
+                    airportIdForLieux = state.airportId;
                 }
             } catch (e) {
                 console.log('[Premium] Could not load globalLieuxData from sessionStorage');
             }
-            
-            // Si globalLieuxData est vide, utiliser des lieux statiques (1,2,3,4)
-            if (!globalLieuxData || globalLieuxData.length === 0) {
-                globalLieuxData = [
-                    { id: 1, libelle: 'Lieu 1' },
-                    { id: 2, libelle: 'Lieu 2' },
-                    { id: 3, libelle: 'Lieu 3' },
-                    { id: 4, libelle: 'Lieu 4' }
-                ];
-                console.log('[Premium] Using static lieux (1,2,3,4)');
-            } else {
-                console.log('[Premium] Loaded globalLieuxData from sessionStorage:', globalLieuxData.length, 'lieux');
+
+            // Fonction pour charger les lieux depuis l'API BDM
+            async function loadLieuxFromApi(airportId) {
+                if (!airportId) {
+                    console.warn('[Premium] No airport ID available to load lieux');
+                    return false;
+                }
+
+                try {
+                    console.log('[Premium] Fetching lieux from API for airport:', airportId);
+                    const response = await fetch('/api/plateforme/' + airportId + '/lieux', {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.statut === 1 && Array.isArray(result.content)) {
+                            globalLieuxData = result.content;
+                            console.log('[Premium] Lieux loaded from API:', globalLieuxData.length, 'lieux');
+                            return true;
+                        }
+                    }
+                    console.warn('[Premium] API response not successful:', response.status);
+                    return false;
+                } catch (error) {
+                    console.error('[Premium] Error fetching lieux from API:', error);
+                    return false;
+                }
             }
-            
+
+            // Initialisation asynchrone des lieux
+            (async function initLieux() {
+                // Si globalLieuxData est vide, essayer de charger depuis l'API
+                if (!globalLieuxData || globalLieuxData.length === 0) {
+                    // Try to get airportId from sessionStorage
+                    try {
+                        const state = JSON.parse(sessionStorage.getItem('formState'));
+                        airportIdForLieux = state ? state.airportId : null;
+                    } catch (e) {
+                        console.log('[Premium] Could not get airportId from sessionStorage');
+                    }
+
+                    if (airportIdForLieux) {
+                        await loadLieuxFromApi(airportIdForLieux);
+                    }
+
+                    // Fallback to static lieux only if API call failed
+                    if (!globalLieuxData || globalLieuxData.length === 0) {
+                        globalLieuxData = [
+                            { id: 1, libelle: 'Lieu 1' },
+                            { id: 2, libelle: 'Lieu 2' },
+                            { id: 3, libelle: 'Lieu 3' },
+                            { id: 4, libelle: 'Lieu 4' }
+                        ];
+                        console.log('[Premium] Using static lieux (1,2,3,4) as fallback');
+                    }
+                } else {
+                    console.log('[Premium] Loaded globalLieuxData from sessionStorage:', globalLieuxData.length, 'lieux');
+                }
+            })();
+
             // Vérifier si premium est dans le panier
             function hasPremiumInCart() {
                 // cartItems est stocké dans formState, pas dans cartItems directement
@@ -1812,13 +1866,25 @@
             
             // Appeler au chargement et à l'ouverture du modal
             updatePremiumFieldsVisibility();
+            
+            // Handler for modal open button - with async lieux loading
             if (openClientProfileModalBtn) {
-                openClientProfileModalBtn.addEventListener('click', () => {
-                    // Appeler après un petit délai pour s'assurer que le modal est ouvert
+                openClientProfileModalBtn.addEventListener('click', async () => {
+                    // Wait for lieux to be loaded if not already done
+                    let waitForLieux = setInterval(() => {
+                        if (globalLieuxData && globalLieuxData.length > 0) {
+                            clearInterval(waitForLieux);
+                            updatePremiumFieldsVisibility();
+                            fillPremiumLocations();
+                        }
+                    }, 100);
+                    
+                    // Timeout safety: force display after 2 seconds even if lieux not loaded
                     setTimeout(() => {
+                        clearInterval(waitForLieux);
                         updatePremiumFieldsVisibility();
                         fillPremiumLocations();
-                    }, 300);
+                    }, 2000);
                 });
             }
             

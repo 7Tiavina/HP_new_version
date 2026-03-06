@@ -610,4 +610,56 @@ class FrontController extends Controller
             ], 200);
         }
     }
+
+    /**
+     * Récupère les lieux pour une plateforme donnée depuis l'API BDM.
+     *
+     * @param string $idPlateforme
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLieux(string $idPlateforme)
+    {
+        Log::info('Appel à l\'API BDM pour les lieux', ['idPlateforme' => $idPlateforme]);
+
+        try {
+            $token = $this->bdmApiService->getAuthToken();
+            $baseUrl = $this->bdmApiService->getBaseUrl();
+
+            $response = Http::withToken($token)
+                ->withHeaders(['Accept' => 'application/json'])
+                ->get("{$baseUrl}/api/plateforme/{$idPlateforme}/lieux");
+
+            if ($response->failed()) {
+                Log::error("Échec de l'appel API BDM pour les lieux.", [
+                    'status' => $response->status(),
+                    'body' => $response->body(),
+                ]);
+                throw new \Exception('Erreur lors de la communication avec le service de réservation.');
+            }
+
+            $result = $response->json();
+
+            // Vérifier si le statut interne de l'API BDM indique un échec
+            if (($result['statut'] ?? 0) !== 1) {
+                Log::error("Réponse API BDM avec un statut d'échec pour les lieux.", [
+                    'response' => $result,
+                ]);
+                throw new \Exception("Les données de lieux n'ont pas pu être chargées.");
+            }
+
+            // Retourner les lieux
+            return response()->json([
+                'statut' => 1,
+                'message' => 'Lieux récupérés avec succès',
+                'content' => $result['content'] ?? [],
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la récupération des lieux via BDM API', ['error' => $e->getMessage()]);
+            return response()->json([
+                'statut' => 0,
+                'message' => 'Erreur technique lors de la récupération des lieux : ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

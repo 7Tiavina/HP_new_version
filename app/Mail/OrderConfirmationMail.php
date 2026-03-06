@@ -101,17 +101,17 @@ class OrderConfirmationMail extends Mailable
 
         // Fallback: Use id_api_commande as primary reference and format it
         $baseRef = $this->commande->id_api_commande ?? $this->commande->paymentClient->monetico_order_id ?? $this->commande->id;
-        
+
         $orlyAirportId = '64f00ace-31b6-45b0-bcb2-b562b1ac08d9';
         $cdgAirportId = '88bb89e0-b966-4420-9ed3-7a6745e4d947';
         $airportId = $this->commande->id_plateforme ?? null;
-        
+
         if ($airportId === $orlyAirportId) {
             return 'F-ORY-' . $baseRef;
         } elseif ($airportId === $cdgAirportId) {
             return 'F-CDG-' . $baseRef;
         }
-        
+
         return $baseRef;
     }
 }

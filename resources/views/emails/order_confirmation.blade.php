@@ -1,16 +1,16 @@
 @php
     $isEn = ($lang ?? 'fr') === 'en';
-    
+
     // First, try to extract the invoice number directly from the PDF (same as in the PDF invoice from BDM API)
     $orderRef = $commande->getInvoiceNumberFromPdf();
-    
+
     // Fallback: Format invoice/commande number with airport prefix
     if (!$orderRef) {
         $baseRef = $commande->id_api_commande ?? $commande->paymentClient->monetico_order_id ?? $commande->id;
         $orlyAirportId = '64f00ace-31b6-45b0-bcb2-b562b1ac08d9';
         $cdgAirportId = '88bb89e0-b966-4420-9ed3-7a6745e4d947';
         $airportId = $commande->id_plateforme ?? null;
-        
+
         if ($airportId === $orlyAirportId) {
             $orderRef = 'F-ORY-' . $baseRef;
         } elseif ($airportId === $cdgAirportId) {

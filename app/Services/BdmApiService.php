@@ -16,6 +16,15 @@ class BdmApiService
     }
 
     /**
+     * Get the base URL for the BDM API
+     * @return string
+     */
+    public function getBaseUrl(): string
+    {
+        return $this->baseUrl;
+    }
+
+    /**
      * Récupère un token d'authentification pour l'API BDM, en le mettant en cache.
      * @return string
      * @throws \Illuminate\Http\Client\RequestException
@@ -309,10 +318,16 @@ class BdmApiService
                     $commentParts[] = "Indicatif de ligne d'arrivée: {$premiumDetails['train_number_arrival']}";
                 }
                 if (isset($premiumDetails['date_arrival'])) $commentParts[] = "Date d'arrivée: {$premiumDetails['date_arrival']}";
-                if (isset($premiumDetails['pickup_location_arrival_libelle'])) $commentParts[] = "Lieu de prise en charge: {$premiumDetails['pickup_location_arrival_libelle']}";
+                // Send both ID and libelle - ID for API, libelle for display
+                if (isset($premiumDetails['pickup_location_arrival'])) {
+                    $commentParts[] = "Lieu de prise en charge (ID): {$premiumDetails['pickup_location_arrival']}";
+                }
+                if (isset($premiumDetails['pickup_location_arrival_libelle'])) {
+                    $commentParts[] = "Lieu de prise en charge: {$premiumDetails['pickup_location_arrival_libelle']}";
+                }
                 if (isset($premiumDetails['pickup_time_arrival'])) $commentParts[] = "Heure de prise en charge: {$premiumDetails['pickup_time_arrival']}";
                 if (isset($premiumDetails['instructions_arrival'])) $commentParts[] = "Informations complémentaires: {$premiumDetails['instructions_arrival']}";
-                
+
                 // Informations de DÉPART
                 $commentParts[] = "\n--- DÉPART ---";
                 if (isset($premiumDetails['transport_type_departure'])) {
@@ -334,7 +349,13 @@ class BdmApiService
                     $commentParts[] = "Indicatif de ligne de départ: {$premiumDetails['train_number_departure']}";
                 }
                 if (isset($premiumDetails['date_departure'])) $commentParts[] = "Date de départ: {$premiumDetails['date_departure']}";
-                if (isset($premiumDetails['restitution_location_departure_libelle'])) $commentParts[] = "Lieu de restitution: {$premiumDetails['restitution_location_departure_libelle']}";
+                // Send both ID and libelle - ID for API, libelle for display
+                if (isset($premiumDetails['restitution_location_departure'])) {
+                    $commentParts[] = "Lieu de restitution (ID): {$premiumDetails['restitution_location_departure']}";
+                }
+                if (isset($premiumDetails['restitution_location_departure_libelle'])) {
+                    $commentParts[] = "Lieu de restitution: {$premiumDetails['restitution_location_departure_libelle']}";
+                }
                 if (isset($premiumDetails['restitution_time_departure'])) $commentParts[] = "Heure de restitution: {$premiumDetails['restitution_time_departure']}";
                 if (isset($premiumDetails['instructions_departure'])) $commentParts[] = "Informations complémentaires: {$premiumDetails['instructions_departure']}";
                 
