@@ -29,6 +29,12 @@ function openOptionsDrawer() {
         setTimeout(() => {
             overlay.classList.remove('opacity-0');
             drawer.classList.remove('translate-x-full');
+            
+            // Force scroll to top to show options first
+            const drawerBody = drawer.querySelector('.p-8.pb-4.overflow-y-auto');
+            if (drawerBody) {
+                drawerBody.scrollTop = 0;
+            }
         }, 10);
         
         // Populate drawer with current options
@@ -107,7 +113,7 @@ function populateDrawerOptions() {
 }
 
 /**
- * Update drawer cart display
+ * Update drawer cart display - mirrors cart.js logic for accurate pricing
  */
 function updateDrawerCart() {
     const cartItemsContainer = document.getElementById('drawer-cart-items');
@@ -117,6 +123,8 @@ function updateDrawerCart() {
     
     // Get all items in cart (baggage + options)
     const allItems = cartItems || [];
+    
+    console.log('[updateDrawerCart] Cart items:', allItems);
     
     if (allItems.length === 0) {
         cartItemsContainer.innerHTML = `
@@ -134,24 +142,52 @@ function updateDrawerCart() {
         return;
     }
     
+    // Get products from API for baggage pricing
+    const products = (typeof globalProductsData !== 'undefined' && Array.isArray(globalProductsData)) ? globalProductsData : [];
+    
+    // Helper function to find product by ID
+    function productById(id) {
+        const s = id != null ? String(id) : '';
+        return products.find(p => (p.id != null ? String(p.id) : '') === s) || null;
+    }
+    
+    // Helper function to get unit price from product (same as cart.js)
+    function unitPrice(p) {
+        if (!p) return 0;
+        const n = p.prixUnitaire ?? p.prix_unitaire ?? p.prixTTC ?? p.prix_ttc ?? p.price ?? p.unitPrice;
+        if (typeof n === 'number' && !isNaN(n)) return n;
+        if (typeof n === 'string') {
+            const parsed = parseFloat(n.replace(',', '.'));
+            if (!isNaN(parsed)) return parsed;
+        }
+        return 0;
+    }
+    
     // Build cart items HTML with correct pricing from API
     let html = '';
     let total = 0;
     
     allItems.forEach((item, index) => {
-        // Use prixUnitaire from API for options, or calculated price for baggage
-        let itemTotal = 0;
-        let unitPrice = 0;
+        console.log('[updateDrawerCart] Item:', item);
         
-        if (item.itemCategory === 'option') {
-            // Options: use prixUnitaire directly from API
-            unitPrice = item.prixUnitaire || item.prix || 0;
-            itemTotal = unitPrice * (item.quantity || 1);
-        } else {
-            // Baggage: use prix from cart (already calculated from API)
-            unitPrice = item.prix || 0;
-            itemTotal = unitPrice * (item.quantity || 1);
+        let itemTotal = 0;
+        let unitPriceValue = 0;
+        let libelle = item.libelle || '';
+        
+        if (item.itemCategory === 'baggage') {
+            // Baggage: get price from globalProductsData like cart.js does
+            const product = productById(item.productId);
+            unitPriceValue = unitPrice(product);
+            itemTotal = unitPriceValue * (item.quantity || 1);
+            libelle = product ? (product.libelle || product.nom || libelle) : libelle;
+            libelle = (item.quantity || 1) + ' × ' + libelle;
+        } else if (item.itemCategory === 'option') {
+            // Options: use prixUnitaire from API
+            unitPriceValue = parseFloat(item.prixUnitaire) || parseFloat(item.prix) || 0;
+            itemTotal = unitPriceValue * (item.quantity || 1);
         }
+        
+        console.log('[updateDrawerCart] unitPrice:', unitPriceValue, 'itemTotal:', itemTotal);
         
         total += itemTotal;
         
@@ -166,10 +202,9 @@ function updateDrawerCart() {
                     ${icon}
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-bold text-gray-900 truncate">${item.libelle || 'Article'}</p>
+                    <p class="text-sm font-bold text-gray-900 truncate">${libelle}</p>
                     <p class="text-xs text-gray-500">
-                        ${formatPrice(unitPrice)} € x ${item.quantity || 1}
-                        ${item.itemCategory !== 'option' && item.discountApplied ? '<span class="text-green-600 ml-1">(promo)</span>' : ''}
+                        ${formatPrice(unitPriceValue)} € x ${item.quantity || 1}
                     </p>
                 </div>
                 <div class="text-right flex-shrink-0">
@@ -181,6 +216,8 @@ function updateDrawerCart() {
             </div>
         `;
     });
+    
+    console.log('[updateDrawerCart] Total:', total);
     
     cartItemsContainer.innerHTML = html;
     cartTotalEl.textContent = formatPrice(total) + ' €';
