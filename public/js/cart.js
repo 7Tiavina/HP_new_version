@@ -122,6 +122,18 @@ function updateCartDisplay() {
 
     var discountAmount = subtotalNormal > total ? Math.round((subtotalNormal - total) * 100) / 100 : 0;
     var hasRemise = discountAmount >= 0.01;
+    
+    // Get discount rate from first product with remise
+    var discountRate = 0;
+    if (products.length > 0) {
+        var firstWithRemise = products.find(function (p) {
+            var t = p.tauxRemise ?? p.taux_remise;
+            return t != null && t !== '' && Number(t) > 0;
+        });
+        if (firstWithRemise) {
+            discountRate = firstWithRemise.tauxRemise ?? firstWithRemise.taux_remise ?? 0;
+        }
+    }
 
     if (typeof console !== 'undefined' && console.info && products.length > 0) {
         var firstWithRemise = products.find(function (p) {
@@ -129,7 +141,7 @@ function updateCartDisplay() {
             var t = p.tauxRemise ?? p.taux_remise;
             return (b != null && b !== '') || (t != null && t !== '' && Number(t) > 0);
         });
-        console.info('[Remises panier] sous-total normal=', subtotalNormal, 'total=', total, 'remise=', discountAmount, 'hasRemise=', hasRemise, 'exemple produit avec remise=', firstWithRemise ? { libelle: firstWithRemise.libelle, prixUnitaire: firstWithRemise.prixUnitaire ?? firstWithRemise.prix_unitaire, prixUnitaireAvantRemise: firstWithRemise.prixUnitaireAvantRemise ?? firstWithRemise.prix_unitaire_avant_remise, tauxRemise: firstWithRemise.tauxRemise ?? firstWithRemise.taux_remise } : 'aucun');
+        console.info('[Remises panier] sous-total normal=', subtotalNormal, 'total=', total, 'remise=', discountAmount, 'hasRemise=', hasRemise, 'discountRate=', discountRate, 'exemple produit avec remise=', firstWithRemise ? { libelle: firstWithRemise.libelle, prixUnitaire: firstWithRemise.prixUnitaire ?? firstWithRemise.prix_unitaire, prixUnitaireAvantRemise: firstWithRemise.prixUnitaireAvantRemise ?? firstWithRemise.prix_unitaire_avant_remise, tauxRemise: firstWithRemise.tauxRemise ?? firstWithRemise.taux_remise } : 'aucun');
     }
 
     if (cartSubtotal) {
@@ -138,7 +150,11 @@ function updateCartDisplay() {
         cartSubtotal.style.display = hasRemise ? 'flex' : 'none';
     }
     if (cartDiscount) {
+        var discountTextEl = cartDiscount.querySelector('.discount-text');
         var discountAmountEl = cartDiscount.querySelector('.discount-amount');
+        if (discountTextEl && discountRate > 0) {
+            discountTextEl.textContent = 'Offre réservation en ligne (-' + Number(discountRate).toFixed(0) + '%)';
+        }
         if (discountAmountEl) discountAmountEl.textContent = (hasRemise ? '-' : '') + formatPrice(discountAmount);
         cartDiscount.style.display = hasRemise ? 'flex' : 'none';
     }

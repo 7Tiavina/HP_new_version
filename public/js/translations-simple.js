@@ -353,7 +353,7 @@ if (typeof window.translations === 'undefined') {
         payment_discount_online: "Promotion réservation en ligne",
         payment_total_to_pay: "Total à payer",
         cart_subtotal: "Sous-total",
-        cart_discount_online: "Offre réservation en ligne : -10% (consigne bagages uniquement)",
+        cart_discount_online: "Offre réservation en ligne",
         
         // Dashboard Client
         dashboard_welcome: "Bienvenue",
@@ -855,7 +855,7 @@ if (typeof window.translations === 'undefined') {
         payment_discount_online: "Online booking promotion",
         payment_total_to_pay: "Total to pay",
         cart_subtotal: "Subtotal",
-        cart_discount_online: "Online booking offer: -10% (luggage storage only)",
+        cart_discount_online: "Online booking offer",
         
         // Dashboard Client
         dashboard_welcome: "Welcome",

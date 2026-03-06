@@ -735,11 +735,11 @@
                     </div>
                     <div id="cart-subtotal" class="py-2 flex justify-between items-center border-t border-gray-200 mt-2" style="display: none;">
                         <span class="subtotal-text text-sm text-gray-600" data-i18n="payment_total_normal">Total normal</span>
-                        <span class="subtotal-amount text-sm text-gray-600"></span>
+                        <span class="subtotal-amount text-sm text-gray-400 line-through"></span>
                     </div>
                     <div id="cart-discount" class="py-2 flex justify-between items-center border-t border-gray-200 mt-2" style="display: none;">
                         <span class="discount-text text-sm text-green-600 font-semibold" data-i18n="cart_discount_online">
-                            Offre réservation en ligne (consigne bagages uniquement)
+                            Offre réservation en ligne
                         </span>
                         <span class="discount-amount text-sm text-green-600 font-semibold"></span>
                     </div>
