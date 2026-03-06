@@ -7,6 +7,8 @@
     if ($airportId === $orlyAirportId) { $invoiceRef = 'F-ORY-' . $baseRef; }
     elseif ($airportId === $cdgAirportId) { $invoiceRef = 'F-CDG-' . $baseRef; }
     else { $invoiceRef = $baseRef; }
+    
+    $isEn = $lang === 'en';
 @endphp
 
 @extends('layouts.front')
@@ -29,9 +31,20 @@
             </div>
             <h1 class="text-3xl font-bold text-gray-800 mb-2" data-i18n="success_title">Paiement réussi !</h1>
             <p class="text-gray-600 mb-6" data-i18n="success_subtitle">Votre commande a été confirmée et votre facture a été générée.</p>
+            
+            <!-- Email notification message -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <p class="text-gray-700">
+                    {{ $isEn 
+                        ? 'Thank you for your order! A confirmation email with your invoice has been sent to ' . $commande->client_email 
+                        : 'Merci pour votre commande ! Un email de confirmation avec votre facture a été envoyé à ' . $commande->client_email
+                    }}
+                </p>
+            </div>
+            
             <div class="flex justify-center space-x-4 mb-8">
                 <a href="{{ route('invoices.show', ['id' => $commande->id, 'lang' => $lang]) }}"
-                   download="facture-HelloPassenger-{{ $invoiceRef }}.pdf"
+                   download="{{ $invoiceRef }}.pdf"
                    id="download-invoice-link"
                    class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center">
                     <span data-i18n="success_download">Télécharger ma facture</span>
