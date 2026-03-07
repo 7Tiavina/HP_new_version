@@ -163,7 +163,7 @@
 
                                 <div>
                                     <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide">Informations complémentaires</label>
-                                    <textarea name="instructions_arrival" rows="2" class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-green-400 focus:ring-4 focus:ring-green-100 transition-all py-3 text-gray-800 font-medium" placeholder="Précisions pour faciliter la prise en charge..."></textarea>
+                                    <textarea name="instructions_arrival" rows="2" class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-green-400 focus:ring-4 focus:ring-green-100 transition-all py-3 text-gray-800 font-medium" placeholder="commentaires..."></textarea>
                                 </div>
                             </div>
                         </div>

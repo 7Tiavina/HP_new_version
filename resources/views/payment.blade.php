@@ -926,6 +926,8 @@
                 plainPhoneInput.addEventListener('input', function() {
                     const cleaned = plainPhoneInput.value.replace(/[^\d+\s\-\(\)]/g, '');
                     if (cleaned !== plainPhoneInput.value) plainPhoneInput.value = cleaned;
+                    // Remove error border when user types
+                    plainPhoneInput.classList.remove('input-error');
                 });
 
                 plainPhoneInput.addEventListener('blur', function() {
@@ -2069,13 +2071,49 @@
                     if (currentStep === 1 && hasPremiumInCart()) {
                         console.log('[SAVE BUTTON] Step 1 + Premium, validating...');
 
-                        // Validate step 1 fields
-                        const nom = document.getElementById('modal-nom').value.trim();
-                        const prenom = document.getElementById('modal-prenom').value.trim();
-                        const telephone = document.getElementById('modal-telephone').value.trim();
-                        const adresse = document.getElementById('modal-adresse').value.trim();
+                        // Get step 1 fields
+                        const nomEl = document.getElementById('modal-nom');
+                        const prenomEl = document.getElementById('modal-prenom');
+                        const telephoneEl = document.getElementById('modal-telephone');
+                        const adresseEl = document.getElementById('modal-adresse');
 
-                        if (!nom || !prenom || !telephone || !adresse) {
+                        const nom = nomEl.value.trim();
+                        const prenom = prenomEl.value.trim();
+                        const telephone = telephoneEl.value.trim();
+                        const adresse = adresseEl.value.trim();
+
+                        let hasError = false;
+
+                        // Validate and mark fields with red border
+                        if (!nom) {
+                            nomEl.classList.add('input-error');
+                            hasError = true;
+                        } else {
+                            nomEl.classList.remove('input-error');
+                        }
+
+                        if (!prenom) {
+                            prenomEl.classList.add('input-error');
+                            hasError = true;
+                        } else {
+                            prenomEl.classList.remove('input-error');
+                        }
+
+                        if (!telephone) {
+                            telephoneEl.classList.add('input-error');
+                            hasError = true;
+                        } else {
+                            telephoneEl.classList.remove('input-error');
+                        }
+
+                        if (!adresse) {
+                            adresseEl.classList.add('input-error');
+                            hasError = true;
+                        } else {
+                            adresseEl.classList.remove('input-error');
+                        }
+
+                        if (hasError) {
                             await showCustomAlert('Erreur', 'Veuillez remplir tous les champs obligatoires.');
                             return;
                         }
@@ -2168,8 +2206,8 @@
                         console.log('[SAVE BUTTON] Missing fields:', missingFields);
 
                         if (missingFields.length > 0) {
-                            await showCustomAlert('Informations PREMIUM incomplètes',
-                                'Veuillez remplir tous les champs obligatoires :<br>' + missingFields.join(', '));
+                            await showCustomAlert('Champs obligatoires manquants',
+                                'Veuillez remplir tous les champs obligatoires pour le premium.');
                             return;
                         }
 
@@ -2335,6 +2373,16 @@
             // Initialize Société field visibility on page load
             toggleSocieteField();
 
+            // Add input listeners to remove error borders when user types
+            ['modal-nom', 'modal-prenom', 'modal-adresse'].forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (field) {
+                    field.addEventListener('input', () => {
+                        field.classList.remove('input-error');
+                    });
+                }
+            });
+
             function validateGuestForm() {
                 console.log('validateGuestForm called');
 
@@ -2353,7 +2401,7 @@
                         isValid = false;
                         if (input) input.classList.add('input-error');
                     } else {
-                        input.classList.remove('input-error');
+                        if (input) input.classList.remove('input-error');
                     }
                 });
 
