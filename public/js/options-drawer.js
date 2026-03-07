@@ -13,34 +13,41 @@ function openOptionsDrawer() {
     return new Promise(resolve => {
         const drawer = document.getElementById('options-drawer');
         const overlay = document.getElementById('options-drawer-overlay');
-        
+
         if (!drawer || !overlay) {
             console.error('[openOptionsDrawer] Drawer or overlay not found');
             return;
         }
-        
+
         optionsDrawerResolve = resolve;
-        
+
+        // Hide chatbot when drawer is open
+        const chatbotWidget = document.getElementById('chatbot-widget');
+        if (chatbotWidget) {
+            chatbotWidget.style.display = 'none';
+            console.log('[openOptionsDrawer] Chatbot hidden');
+        }
+
         // Show elements
         overlay.classList.remove('hidden');
         drawer.classList.remove('hidden');
-        
+
         // Trigger animation after a small delay
         setTimeout(() => {
             overlay.classList.remove('opacity-0');
             drawer.classList.remove('translate-x-full');
-            
+
             // Force scroll to top to show options first
-            const drawerBody = drawer.querySelector('.p-8.pb-4.overflow-y-auto');
+            const drawerBody = drawer.querySelector('.flex-1.overflow-y-auto');
             if (drawerBody) {
                 drawerBody.scrollTop = 0;
             }
         }, 10);
-        
+
         // Populate drawer with current options
         populateDrawerOptions();
         updateDrawerCart();
-        
+
         // Setup event listeners
         setupDrawerEventListeners();
     });
@@ -52,18 +59,25 @@ function openOptionsDrawer() {
 function closeOptionsDrawer() {
     const drawer = document.getElementById('options-drawer');
     const overlay = document.getElementById('options-drawer-overlay');
-    
+
     if (!drawer || !overlay) return;
-    
+
     // Trigger close animation
     overlay.classList.add('opacity-0');
     drawer.classList.add('translate-x-full');
-    
+
     // Hide after animation completes
     setTimeout(() => {
         drawer.classList.add('hidden');
         overlay.classList.add('hidden');
         overlay.classList.remove('opacity-0');
+
+        // Show chatbot again when drawer is closed
+        const chatbotWidget = document.getElementById('chatbot-widget');
+        if (chatbotWidget) {
+            chatbotWidget.style.display = 'block';
+            console.log('[closeOptionsDrawer] Chatbot shown');
+        }
     }, 300); // Match transition duration
 }
 

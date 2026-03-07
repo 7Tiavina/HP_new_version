@@ -245,147 +245,137 @@
 
 <!-- Options Side Drawer (New UX) -->
 <div id="options-drawer-overlay" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 z-[10003] transition-opacity opacity-0" style="backdrop-filter: blur(4px);"></div>
-<div id="options-drawer" class="hidden fixed top-0 right-0 h-full w-full max-w-2xl bg-white shadow-2xl z-[10004] transform translate-x-full transition-transform duration-400 ease-out">
-    <!-- Drawer Header -->
-    <div class="bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 p-8 text-center relative overflow-hidden flex-shrink-0">
-        <!-- Decorative elements -->
-        <div class="absolute top-0 left-0 w-32 h-32 bg-white opacity-10 rounded-full -translate-x-16 -translate-y-16"></div>
-        <div class="absolute bottom-0 right-0 w-24 h-24 bg-white opacity-10 rounded-full translate-x-12 translate-y-12"></div>
-        
-        <button id="close-options-drawer" class="absolute top-4 right-4 text-white hover:text-yellow-100 transition-colors z-10">
-            <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+<div id="options-drawer" class="hidden fixed top-0 right-0 h-full w-full max-w-2xl bg-white shadow-2xl z-[10004] transform translate-x-full transition-transform duration-400 ease-out flex flex-col">
+    <!-- Drawer Header - Reduced -->
+    <div class="bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 p-5 text-center relative overflow-hidden flex-shrink-0">
+        <button id="close-options-drawer" class="absolute top-3 right-3 text-white hover:text-yellow-100 transition-colors z-10">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
             </svg>
         </button>
-        <h2 class="text-3xl font-bold text-gray-900" data-i18n="drawer_options_title">Options & Services</h2>
-        <p class="mt-2 text-gray-800 text-sm font-medium" data-i18n="drawer_options_subtitle">Personnalisez votre expérience de voyage</p>
+        <h2 class="text-2xl font-bold text-gray-900" data-i18n="drawer_options_title">Options & Services</h2>
+        <p class="mt-1 text-gray-800 text-xs font-medium" data-i18n="drawer_options_subtitle">Personnalisez votre expérience de voyage</p>
     </div>
 
-    <!-- Drawer Body -->
-    <div class="p-8 pb-4 overflow-y-auto" style="max-height: calc(100vh - 320px);">
-        
-        <!-- Options Section -->
-        <div class="space-y-6 mb-8">
-            <h3 class="text-lg font-bold text-gray-900 flex items-center gap-2 pb-3 border-b-2 border-gray-200">
-                <svg class="w-5 h-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                </svg>
-                <span>Ajouter des options</span>
-            </h3>
-        
-            <!-- Priority Option Card -->
-            <div id="drawer-option-priority" class="hidden group relative bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 transition-all duration-300 hover:shadow-lg hover:shadow-green-200 border-2 border-green-200 hover:border-green-400">
-                <div class="flex items-start gap-5">
-                    <!-- Logo -->
-                    <div class="flex-shrink-0">
-                        <div class="w-40 h-40 bg-gradient-to-br from-green-400 to-green-600 rounded-2xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
-                            <img src="/priority-logo.png" alt="Priority" class="w-32 h-32 object-contain" onerror="this.style.display='none'; this.parentElement.innerHTML='⚡'; this.parentElement.classList.add('text-7xl');">
-                        </div>
-                    </div>
-                    
-                    <!-- Content -->
-                    <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="inline-block bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm" data-i18n="drawer_priority_label">PRIORITAIRE</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-gray-900" data-i18n="drawer_priority_title">Service Priority</h3>
-                        <p class="mt-1.5 text-sm text-gray-600 leading-relaxed" data-i18n="drawer_priority_desc">Traitement prioritaire de vos bagages à la dépose et à la récupération. Gagnez du temps et évitez les files d'attente.</p>
-                        <p id="drawer-priority-price" class="mt-3 text-2xl font-bold text-green-600"></p>
-                    </div>
-                </div>
-                
-                <!-- Add/Remove Buttons -->
-                <div class="mt-5 pt-4 border-t border-green-200">
-                    <div class="flex items-center justify-end gap-3">
-                        <button id="add-priority-btn" onclick="addOptionToCart('priority')" class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Ajouter au panier">
-                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                            </svg>
-                        </button>
-                        <button id="remove-priority-btn" onclick="removeOptionFromCart('priority')" class="w-12 h-12 bg-gradient-to-br from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Retirer du panier">
-                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-            </div>
+    <!-- Drawer Body - Scrollable -->
+    <div class="flex-1 overflow-y-auto p-6">
 
-            <!-- Premium Option Card -->
-            <div id="drawer-option-premium" class="hidden group relative bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-6 transition-all duration-300 hover:shadow-lg hover:shadow-purple-200 border-2 border-purple-200 hover:border-purple-400">
-                <div class="flex items-start gap-5">
+        <!-- Premium Option Card - First Priority -->
+        <div class="mb-6">
+            <div id="drawer-option-premium" class="hidden group relative bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-5 transition-all duration-300 hover:shadow-lg hover:shadow-purple-200 border-2 border-purple-200 hover:border-purple-400">
+                <div class="flex items-start gap-4">
                     <!-- Logo -->
                     <div class="flex-shrink-0">
-                        <div class="w-40 h-40 bg-gradient-to-br from-purple-400 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
-                            <img src="/premium-logo.png" alt="Premium" class="w-32 h-32 object-contain" onerror="this.style.display='none'; this.parentElement.innerHTML='💎'; this.parentElement.classList.add('text-7xl');">
+                        <div class="w-28 h-28 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                            <img src="/premium-logo.png" alt="Premium" class="w-24 h-24 object-contain" onerror="this.style.display='none'; this.parentElement.innerHTML='💎'; this.parentElement.classList.add('text-6xl');">
                         </div>
                     </div>
-                    
+
                     <!-- Content -->
                     <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span class="inline-block bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm" data-i18n="drawer_premium_label">PREMIUM</span>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="inline-block bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm" data-i18n="drawer_premium_label">PREMIUM</span>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-900" data-i18n="drawer_premium_title">Service Premium</h3>
-                        <p class="mt-1.5 text-sm text-gray-600 leading-relaxed" data-i18n="drawer_premium_desc_simple">Remise ou récupération de vos bagages à l'endroit exact choisi dans l'aéroport avec porteur dédié. Service VIP complet.</p>
-                        <p id="drawer-premium-price" class="mt-3 text-2xl font-bold text-purple-600"></p>
+                        <h3 class="text-lg font-bold text-gray-900" data-i18n="drawer_premium_title">Service Premium</h3>
+                        <p class="mt-1 text-xs text-gray-600 leading-relaxed" data-i18n="drawer_premium_desc_simple">Remise ou récupération de vos bagages à l'endroit exact choisi dans l'aéroport avec porteur dédié. Service VIP complet.</p>
+                        <p id="drawer-premium-price" class="mt-2 text-xl font-bold text-purple-600"></p>
                     </div>
                 </div>
-                
+
                 <!-- Add/Remove Buttons -->
-                <div class="mt-5 pt-4 border-t border-purple-200">
-                    <div class="flex items-center justify-end gap-3">
-                        <button id="add-premium-btn" onclick="addOptionToCart('premium')" class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Ajouter au panier">
-                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <div class="mt-4 pt-3 border-t border-purple-200">
+                    <div class="flex items-center justify-end gap-2">
+                        <button id="add-premium-btn" onclick="addOptionToCart('premium')" class="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Ajouter au panier">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
                             </svg>
                         </button>
-                        <button id="remove-premium-btn" onclick="removeOptionFromCart('premium')" class="w-12 h-12 bg-gradient-to-br from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Retirer du panier">
-                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <button id="remove-premium-btn" onclick="removeOptionFromCart('premium')" class="w-10 h-10 bg-gradient-to-br from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Retirer du panier">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                             </svg>
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- Premium Unavailable Overlay -->
                 <div id="premium-drawer-unavailable-message" class="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-95 rounded-2xl hidden backdrop-blur-sm">
-                    <div class="text-center p-6">
-                        <div class="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-3">
-                            <svg class="w-8 h-8 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <div class="text-center p-4">
+                        <div class="w-14 h-14 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-2">
+                            <svg class="w-7 h-7 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                             </svg>
                         </div>
-                        <p class="text-sm font-semibold text-gray-600" data-i18n="drawer_premium_unavailable">Service Premium indisponible</p>
+                        <p class="text-xs font-semibold text-gray-600" data-i18n="drawer_premium_unavailable">Service Premium indisponible</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Priority Option Card -->
+        <div class="mb-6">
+            <div id="drawer-option-priority" class="hidden group relative bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-5 transition-all duration-300 hover:shadow-lg hover:shadow-green-200 border-2 border-green-200 hover:border-green-400">
+                <div class="flex items-start gap-4">
+                    <!-- Logo -->
+                    <div class="flex-shrink-0">
+                        <div class="w-28 h-28 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                            <img src="/priority-logo.png" alt="Priority" class="w-24 h-24 object-contain" onerror="this.style.display='none'; this.parentElement.innerHTML='⚡'; this.parentElement.classList.add('text-6xl');">
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="inline-block bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm" data-i18n="drawer_priority_label">PRIORITAIRE</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900" data-i18n="drawer_priority_title">Service Priority</h3>
+                        <p class="mt-1 text-xs text-gray-600 leading-relaxed" data-i18n="drawer_priority_desc">Traitement prioritaire de vos bagages à la dépose et à la récupération. Gagnez du temps et évitez les files d'attente.</p>
+                        <p id="drawer-priority-price" class="mt-2 text-xl font-bold text-green-600"></p>
+                    </div>
+                </div>
+
+                <!-- Add/Remove Buttons -->
+                <div class="mt-4 pt-3 border-t border-green-200">
+                    <div class="flex items-center justify-end gap-2">
+                        <button id="add-priority-btn" onclick="addOptionToCart('priority')" class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Ajouter au panier">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                        </button>
+                        <button id="remove-priority-btn" onclick="removeOptionFromCart('priority')" class="w-10 h-10 bg-gradient-to-br from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Retirer du panier">
+                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Cart Summary Section -->
-        <div class="border-t-2 border-gray-300 pt-6">
-            <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+        <div class="border-t-2 border-gray-300 pt-5 mb-4">
+            <h3 class="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
                 <svg class="w-5 h-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
                 <span data-i18n="drawer_cart_title">Votre panier</span>
             </h3>
-            <div id="drawer-cart-items" class="space-y-3 mb-4">
+            <div id="drawer-cart-items" class="space-y-2 mb-3">
                 <!-- Cart items will be injected here -->
             </div>
-            <div class="mt-5 pt-5 border-t-2 border-gray-300 bg-gradient-to-r from-yellow-50 to-amber-50 -mx-8 px-8 py-5 rounded-b-2xl">
+            <div class="mt-4 pt-4 border-t-2 border-gray-300 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl p-4">
                 <div class="flex items-center justify-between">
-                    <span class="text-base font-bold text-gray-700" data-i18n="drawer_total">Total à payer</span>
-                    <span id="drawer-cart-total" class="text-3xl font-bold text-gray-900">0,00 €</span>
+                    <span class="text-sm font-bold text-gray-700" data-i18n="drawer_total">Total à payer</span>
+                    <span id="drawer-cart-total" class="text-2xl font-bold text-gray-900">0,00 €</span>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- Drawer Footer -->
-    <div class="border-t border-gray-200 p-6 bg-gradient-to-r from-gray-50 to-white flex-shrink-0">
-        <button id="confirm-options-drawer" class="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-4 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl hover:shadow-yellow-200 transform hover:-translate-y-0.5 duration-200 text-lg" data-i18n="drawer_confirm">Continuer mon paiement</button>
+    <!-- Drawer Footer - Fixed at bottom -->
+    <div class="border-t border-gray-200 p-4 bg-gradient-to-r from-gray-50 to-white flex-shrink-0">
+        <button id="confirm-options-drawer" class="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl hover:shadow-yellow-200 transform hover:-translate-y-0.5 duration-200 text-base" data-i18n="drawer_confirm">Continuer mon paiement</button>
     </div>
 </div>
 
