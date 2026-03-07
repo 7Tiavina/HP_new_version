@@ -2,18 +2,15 @@
     <div class="relative mx-auto w-full max-w-3xl shadow-2xl bg-white overflow-hidden transform transition-all my-8 flex flex-col" style="max-height: 90vh;">
 
         <!-- Modal Header -->
-        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 p-6 text-center flex-shrink-0">
+        <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 p-4 text-center flex-shrink-0">
             <div class="flex items-center justify-center gap-3 mb-2">
-                <div id="step-1-indicator" class="w-10 h-10 bg-white text-yellow-600 rounded-full flex items-center justify-center font-bold shadow-lg">1</div>
-                <div class="w-16 h-1 bg-white bg-opacity-50"></div>
-                <div id="step-2-indicator" class="w-10 h-10 bg-white bg-opacity-30 text-white rounded-full flex items-center justify-center font-bold">2</div>
+                <div id="step-1-indicator" class="w-8 h-8 bg-white text-yellow-600 rounded-full flex items-center justify-center font-bold shadow-lg text-sm">1</div>
+                <div class="w-12 h-1 bg-white bg-opacity-50"></div>
+                <div id="step-2-indicator" class="w-8 h-8 bg-white bg-opacity-30 text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900" data-i18n="modal_title">Complétez vos informations</h3>
-            <p id="step-1-title" class="text-gray-800 text-base mt-1">Informations client</p>
-            <p id="step-2-title" class="text-gray-800 text-base mt-1 hidden">Informations PREMIUM</p>
-            <p id="premium-modal-notice" class="text-gray-900 text-sm mt-2 font-semibold hidden bg-white bg-opacity-30 inline-block px-4 py-1.5 rounded-full">
-                ⭐ Option PREMIUM sélectionnée
-            </p>
+            <h3 class="text-xl font-bold text-gray-900" data-i18n="modal_title">Complétez vos informations</h3>
+            <p id="step-1-title" class="text-gray-800 text-sm mt-0.5">Informations client</p>
+            <p id="step-2-title" class="text-gray-800 text-sm mt-0.5 hidden">Informations PREMIUM</p>
         </div>
 
         <!-- Modal Body - Scrollable -->
@@ -24,18 +21,18 @@
                 <input type="hidden" name="email" id="modal-email">
 
                 <!-- STEP 1: Client Information -->
-                <div id="step-1-content" class="space-y-6">
-                    <!-- Type de Client -->
-                    <div class="p-6 bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl border border-gray-200">
-                        <label class="block text-sm font-bold text-gray-700 uppercase mb-4 tracking-wide" data-i18n="client_type_label">Type de client</label>
-                        <div class="flex gap-4">
-                            <label class="flex-1 flex items-center p-4 bg-white rounded-xl border-2 border-gray-200 cursor-pointer hover:border-yellow-400 transition-all">
-                                <input type="radio" id="client-particulier" name="clientType" value="particulier" checked class="w-5 h-5 text-yellow-500 focus:ring-yellow-400">
-                                <span class="ml-3 text-base font-medium text-gray-800" data-i18n="client_type_particulier">Particulier</span>
+                <div id="step-1-content" class="space-y-5">
+                    <!-- Type de Client - Reduced -->
+                    <div class="p-4 bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl border border-gray-200">
+                        <label class="block text-xs font-bold text-gray-700 uppercase mb-3 tracking-wide" data-i18n="client_type_label">Type de client</label>
+                        <div class="flex gap-3">
+                            <label class="flex-1 flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 cursor-pointer hover:border-yellow-400 transition-all">
+                                <input type="radio" id="client-particulier" name="clientType" value="particulier" checked class="w-4 h-4 text-yellow-500 focus:ring-yellow-400">
+                                <span class="ml-2 text-sm font-medium text-gray-800" data-i18n="client_type_particulier">Particulier</span>
                             </label>
-                            <label class="flex-1 flex items-center p-4 bg-white rounded-xl border-2 border-gray-200 cursor-pointer hover:border-yellow-400 transition-all">
-                                <input type="radio" id="client-societe" name="clientType" value="societe" class="w-5 h-5 text-yellow-500 focus:ring-yellow-400">
-                                <span class="ml-3 text-base font-medium text-gray-800" data-i18n="client_type_societe">Société</span>
+                            <label class="flex-1 flex items-center p-3 bg-white rounded-lg border-2 border-gray-200 cursor-pointer hover:border-yellow-400 transition-all">
+                                <input type="radio" id="client-societe" name="clientType" value="societe" class="w-4 h-4 text-yellow-500 focus:ring-yellow-400">
+                                <span class="ml-2 text-sm font-medium text-gray-800" data-i18n="client_type_societe">Société</span>
                             </label>
                         </div>
                     </div>
@@ -102,7 +99,7 @@
                                     </div>
                                     <div>
                                         <h5 class="font-bold text-blue-900">Pourquoi ces informations ?</h5>
-                                        <p class="text-sm text-blue-700 mt-1">Ces informations sont nécessaires pour finaliser votre réservation et respecter les réglementations aéroportuaires.</p>
+                                        <p class="text-sm text-blue-700 mt-1">Pour finaliser votre réservation et permettre le contrôle de sécurité des bagages par rayons X conformément aux réglementations aéroportuaires.</p>
                                     </div>
                                 </div>
                             </div>
@@ -113,7 +110,9 @@
                 <!-- STEP 2: Premium Information -->
                 <div id="step-2-content" class="hidden space-y-6">
                     <div class="mb-6 p-4 bg-purple-50 rounded-xl border border-purple-200">
-                        <p class="text-sm text-purple-800"><span class="font-bold">⚠️ Important :</span> Tous les champs ci-dessous sont obligatoires pour le service PREMIUM.</p>
+                        <p class="text-sm text-purple-800">
+                            <span class="font-bold">ℹ️ Information :</span> Vous avez sélectionné l'option <span class="font-semibold">Premium</span>. Veuillez remplir les informations de transport ci-dessous pour permettre à notre équipe de préparer votre service VIP.
+                        </p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
