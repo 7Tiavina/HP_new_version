@@ -324,23 +324,34 @@
                     <!-- Bloc de paiement -->
                     <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center">
                         <h2 class="text-xl font-bold text-gray-800 mb-4 text-center" data-i18n="secure_payment">Paiement sécurisé</h2>
-                        @if($isProfileComplete)
+                        
+                        @php
+                            // Utiliser les variables passées par le controller
+                            $paymentUnlocked = $isProfileAndPremiumComplete ?? false;
+                            $hasPremium = $hasPremiumInCart ?? false;
+                            $premiumComplete = $premiumDetailsComplete ?? false;
+                        @endphp
+                        
+                        @if($paymentUnlocked)
                             <!-- Formulaire Monetico -->
                             <div id="monetico-form-wrapper" class="mx-auto" style="min-height: 300px;">
                                 @if($formToken)
                                     <div class="kr-smart-form" kr-form-token="{{ $formToken }}"></div>
-                                    
+
                                     <!-- Debug Logs -->
                                     <script>
                                         console.log('[Monetico Debug] Form Token:', '{{ $formToken }}');
                                         console.log('[Monetico Debug] isProfileComplete:', '{{ $isProfileComplete ?? false }}');
-                                        console.log('[Monetico Debug] hasSavedCard:', '{{ $hasSavedCard ?? false }}');
-                                        
+                                        console.log('[Monetico Debug] hasPremiumInCart:', '{{ $hasPremiumInCart ? 'true' : 'false' }}');
+                                        console.log('[Monetico Debug] premiumDetailsComplete:', '{{ $premiumDetailsComplete ? 'true' : 'false' }}');
+                                        console.log('[Monetico Debug] isProfileAndPremiumComplete:', '{{ $isProfileAndPremiumComplete ? 'true' : 'false' }}');
+                                        console.log('[Monetico Debug] paymentUnlocked:', '{{ $paymentUnlocked ? 'true' : 'false' }}');
+
                                         window.addEventListener('load', function() {
                                             console.log('[Monetico Debug] Window loaded');
                                             console.log('[Monetico Debug] KR object exists:', typeof window.KR !== 'undefined');
                                             console.log('[Monetico Debug] KRPaymentForm exists:', typeof window.KRPaymentForm !== 'undefined');
-                                            
+
                                             // Check if form is rendered
                                             const formElement = document.querySelector('.kr-smart-form');
                                             console.log('[Monetico Debug] Form element found:', formElement !== null);
@@ -356,7 +367,18 @@
                                     </div>
                                 @endif
                             </div>
-                        @else
+                        @elseif($hasPremium && !$premiumComplete)
+                            <div class="p-4 bg-orange-100 border border-orange-300 rounded-md text-center">
+                                <p class="font-semibold text-orange-800 mb-2">⚠️ Informations PREMIUM manquantes</p>
+                                <p class="text-sm text-orange-700 mb-3">Vous avez sélectionné l'option PREMIUM. Veuillez compléter les informations de transport pour finaliser votre réservation.</p>
+                                <button id="completePremiumBtn" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-6 rounded-full transition-colors inline-flex items-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    Compléter les infos PREMIUM
+                                </button>
+                            </div>
+                        @elseif(!$isProfileComplete)
                             <div class="p-4 bg-gray-100 rounded-md text-center text-gray-600" data-i18n="payment_complete_info">
                                 Veuillez compléter vos informations pour activer le paiement.
                             </div>
@@ -1674,12 +1696,26 @@
             const isProfileComplete = @json($isProfileComplete);
             const isGuest = @json($isGuest);
             console.log('Script loaded. isGuest:', isGuest, 'isProfileComplete:', isProfileComplete);
-            
+
             const clientProfileModal = document.getElementById('clientProfileModal');
             const closeClientProfileModalBtn = document.getElementById('closeClientProfileModalBtn');
             const clientProfileForm = document.getElementById('clientProfileForm');
             const userData = @json($user);
+
+            // Variables pour premium (à utiliser directement)
+            const serverHasPremiumInCart = @json($hasPremiumInCart ?? false);
+            const serverPremiumDetailsComplete = @json($premiumDetailsComplete ?? false);
+            const serverIsProfileAndPremiumComplete = @json($isProfileAndPremiumComplete ?? false);
+
+            // Exposer les données de commande pour hasPremiumInCart()
+            window.commandeData = @json($commandeData ?? null);
+
             let areAdditionalFieldsVisible = false;
+
+            console.log('[PAYMENT PAGE INIT] isProfileComplete:', isProfileComplete);
+            console.log('[PAYMENT PAGE INIT] serverHasPremiumInCart:', serverHasPremiumInCart);
+            console.log('[PAYMENT PAGE INIT] serverPremiumDetailsComplete:', serverPremiumDetailsComplete);
+            console.log('[PAYMENT PAGE INIT] serverIsProfileAndPremiumComplete:', serverIsProfileAndPremiumComplete);
 
             const additionalFieldsContainer = document.getElementById('additional-fields-container');
             const toggleAdditionalFieldsBtn = document.getElementById('toggleAdditionalFieldsBtn');
@@ -1739,8 +1775,10 @@
             }
 
             // === GESTION DES CHAMPS PREMIUM ===
-            const premiumFieldsContainer = document.getElementById('premium-fields-modal-container');
             const premiumModalNotice = document.getElementById('premium-modal-notice');
+
+            // Note: premiumFieldsContainer n'existe plus car les champs premium sont dans #step-2-content
+            // step2Content est déclaré plus bas dans la section "GESTION DES ÉTAPES DU MODAL"
 
             // Charger globalLieuxData depuis sessionStorage ou faire un appel API
             let globalLieuxData = [];
@@ -1822,34 +1860,78 @@
 
             // Vérifier si premium est dans le panier
             function hasPremiumInCart() {
-                // cartItems est stocké dans formState, pas dans cartItems directement
-                const state = JSON.parse(sessionStorage.getItem('formState'));
-                if (!state || !state.cartItems) return false;
+                // Utiliser d'abord la variable serveur (priorité)
+                if (typeof serverHasPremiumInCart !== 'undefined') {
+                    return serverHasPremiumInCart;
+                }
+                
+                // Vérifier dans sessionStorage (formState)
                 try {
-                    const cart = state.cartItems;
-                    return Array.isArray(cart) && cart.some(item => item.key === 'premium');
+                    const state = JSON.parse(sessionStorage.getItem('formState'));
+                    if (state && state.cartItems) {
+                        const cart = state.cartItems;
+                        if (Array.isArray(cart) && cart.some(item => item.key === 'premium')) {
+                            return true;
+                        }
+                    }
                 } catch (e) {
-                    console.error('[hasPremiumInCart] Error:', e);
+                    console.error('[hasPremiumInCart] Error reading formState:', e);
+                }
+                
+                // Vérifier dans les données de commande
+                if (window.commandeData && window.commandeData.commandeLignes) {
+                    const lignes = window.commandeData.commandeLignes;
+                    if (Array.isArray(lignes) && lignes.some(ligne => {
+                        return ligne.libelleProduit && ligne.libelleProduit.toLowerCase().includes('premium');
+                    })) {
+                        return true;
+                    }
+                }
+                
+                return false;
+            }
+            
+            // Vérifier si les infos premium sont complètes
+            function isPremiumComplete() {
+                // Utiliser d'abord la variable serveur (priorité)
+                if (typeof serverPremiumDetailsComplete !== 'undefined') {
+                    return serverPremiumDetailsComplete;
+                }
+                
+                // Vérifier dans sessionStorage
+                try {
+                    const state = JSON.parse(sessionStorage.getItem('formState'));
+                    if (!state || !state.premiumDetails) return false;
+                    
+                    const details = state.premiumDetails;
+                    return !!(
+                        details.transport_type_arrival &&
+                        details.pickup_location_arrival &&
+                        details.transport_type_departure &&
+                        details.restitution_location_departure
+                    );
+                } catch (e) {
+                    console.error('[isPremiumComplete] Error:', e);
                     return false;
                 }
             }
-            
+
             // Afficher les champs premium si nécessaire
             function updatePremiumFieldsVisibility() {
                 const hasPremium = hasPremiumInCart();
+                const premiumComplete = isPremiumComplete();
                 console.log('[updatePremiumFieldsVisibility] hasPremium:', hasPremium);
-                console.log('[updatePremiumFieldsVisibility] premiumFieldsContainer:', premiumFieldsContainer);
+                console.log('[updatePremiumFieldsVisibility] premiumComplete:', premiumComplete);
                 console.log('[updatePremiumFieldsVisibility] premiumModalNotice:', premiumModalNotice);
-                
-                if (premiumFieldsContainer && premiumModalNotice) {
+
+                // Afficher/masquer le notice premium
+                if (premiumModalNotice) {
                     if (hasPremium) {
-                        premiumFieldsContainer.classList.remove('hidden');
                         premiumModalNotice.classList.remove('hidden');
-                        console.log('[updatePremiumFieldsVisibility] Premium fields shown');
+                        console.log('[updatePremiumFieldsVisibility] Premium notice shown');
                     } else {
-                        premiumFieldsContainer.classList.add('hidden');
                         premiumModalNotice.classList.add('hidden');
-                        console.log('[updatePremiumFieldsVisibility] Premium fields hidden (no premium in cart)');
+                        console.log('[updatePremiumFieldsVisibility] Premium notice hidden (no premium in cart)');
                     }
                 }
             }
@@ -1903,9 +1985,27 @@
             // Handler for modal open button - with async lieux loading
             if (openClientProfileModalBtn) {
                 openClientProfileModalBtn.addEventListener('click', async () => {
-                    // Reset to step 1 when opening modal
-                    goToStep(1);
+                    // Vérifier si premium est dans le panier
+                    const hasPremium = hasPremiumInCart();
+                    const premiumComplete = isPremiumComplete();
                     
+                    console.log('[MODAL OPEN] hasPremium:', hasPremium, 'premiumComplete:', premiumComplete);
+                    
+                    // Décider de l'étape à afficher
+                    if (hasPremium && !premiumComplete) {
+                        // Premium dans le panier mais pas complété → ouvrir directement step 2
+                        console.log('[MODAL OPEN] Premium detected but incomplete, opening step 2');
+                        goToStep(2);
+                    } else if (hasPremium && premiumComplete) {
+                        // Premium déjà complété → ouvrir step 2 pour modification
+                        console.log('[MODAL OPEN] Premium complete, opening step 2 for review');
+                        goToStep(2);
+                    } else {
+                        // Pas de premium → ouvrir step 1
+                        console.log('[MODAL OPEN] No premium, opening step 1');
+                        goToStep(1);
+                    }
+
                     // Wait for lieux to be loaded if not already done
                     let waitForLieux = setInterval(() => {
                         if (globalLieuxData && globalLieuxData.length > 0) {
@@ -1924,6 +2024,17 @@
                 });
             }
             
+            // Bouton pour compléter les infos PREMIUM (affiché quand paiement bloqué)
+            document.addEventListener('DOMContentLoaded', function() {
+                const completePremiumBtn = document.getElementById('completePremiumBtn');
+                if (completePremiumBtn && openClientProfileModalBtn) {
+                    completePremiumBtn.addEventListener('click', function() {
+                        console.log('[COMPLETE PREMIUM BTN] Opening modal for premium completion');
+                        openClientProfileModalBtn.click();
+                    });
+                }
+            });
+            
             // Back to step 1 button
             if (backToStep1Btn) {
                 backToStep1Btn.addEventListener('click', () => {
@@ -1933,32 +2044,88 @@
             
             // Continue to step 2 button (saveClientProfileBtn when on step 1)
             const saveClientProfileBtn = document.getElementById('saveClientProfileBtn');
+            
             if (saveClientProfileBtn) {
                 saveClientProfileBtn.addEventListener('click', async (e) => {
                     console.log('[SAVE BUTTON CLICKED] currentStep:', currentStep);
                     console.log('[SAVE BUTTON CLICKED] hasPremiumInCart():', hasPremiumInCart());
-                    
+                    console.log('[SAVE BUTTON CLICKED] isPremiumComplete():', isPremiumComplete());
+
                     // If on step 1 with premium, validate and go to step 2
                     if (currentStep === 1 && hasPremiumInCart()) {
                         console.log('[SAVE BUTTON] Step 1 + Premium, validating...');
-                        
+
                         // Validate step 1 fields
                         const nom = document.getElementById('modal-nom').value.trim();
                         const prenom = document.getElementById('modal-prenom').value.trim();
                         const telephone = document.getElementById('modal-telephone').value.trim();
                         const adresse = document.getElementById('modal-adresse').value.trim();
-                        
+
                         if (!nom || !prenom || !telephone || !adresse) {
                             await showCustomAlert('Erreur', 'Veuillez remplir tous les champs obligatoires.');
                             return;
                         }
-                        
-                        console.log('[SAVE BUTTON] Validation passed, going to step 2');
+
+                        // Validate phone number
+                        const phoneEl = document.getElementById('modal-telephone');
+                        if (phoneEl && itiInstance) {
+                            const raw = phoneEl.value.trim();
+                            if (raw) {
+                                const countryData = itiInstance.getSelectedCountryData();
+                                const normalized = normalizePhoneNumber(raw, countryData);
+                                if (!normalized) {
+                                    await showCustomAlert('Erreur', 'Numéro de téléphone invalide. Veuillez le saisir avec le code pays (ex: +33).');
+                                    return;
+                                }
+                            }
+                        }
+
+                        console.log('[SAVE BUTTON] Step 1 validation passed, going to step 2');
                         // Go to step 2
                         goToStep(2);
                         return; // Stop here, don't submit
                     }
-                    
+
+                    // If on step 2 with premium, validate premium fields before submitting
+                    if (currentStep === 2 && hasPremiumInCart()) {
+                        console.log('[SAVE BUTTON] Step 2 + Premium, validating premium fields...');
+                        
+                        const transportArrival = document.querySelector('select[name="transport_type_arrival"]');
+                        const pickupLocation = document.querySelector('select[name="pickup_location_arrival"]');
+                        const pickupDatetime = document.querySelector('input[name="pickup_datetime_arrival"]');
+                        const transportDeparture = document.querySelector('select[name="transport_type_departure"]');
+                        const restitutionLocation = document.querySelector('select[name="restitution_location_departure"]');
+                        const restitutionDatetime = document.querySelector('input[name="restitution_datetime_departure"]');
+                        
+                        console.log('[SAVE BUTTON] Field values:', {
+                            transportArrival: transportArrival?.value,
+                            pickupLocation: pickupLocation?.value,
+                            pickupDatetime: pickupDatetime?.value,
+                            transportDeparture: transportDeparture?.value,
+                            restitutionLocation: restitutionLocation?.value,
+                            restitutionDatetime: restitutionDatetime?.value
+                        });
+                        
+                        const missingFields = [];
+                        
+                        if (!transportArrival || !transportArrival.value) missingFields.push('Type de transport (arrivée)');
+                        if (!pickupLocation || !pickupLocation.value) missingFields.push('Lieu de prise en charge');
+                        if (!pickupDatetime || !pickupDatetime.value) missingFields.push('Date et heure de prise en charge');
+                        if (!transportDeparture || !transportDeparture.value) missingFields.push('Type de transport (départ)');
+                        if (!restitutionLocation || !restitutionLocation.value) missingFields.push('Lieu de restitution');
+                        if (!restitutionDatetime || !restitutionDatetime.value) missingFields.push('Date et heure de restitution');
+                        
+                        console.log('[SAVE BUTTON] Missing fields:', missingFields);
+                        
+                        if (missingFields.length > 0) {
+                            await showCustomAlert('Informations PREMIUM incomplètes', 
+                                'Veuillez remplir tous les champs obligatoires :<br>' + missingFields.join(', '));
+                            return;
+                        }
+                        
+                        console.log('[SAVE BUTTON] Premium validation passed, submitting form');
+                    }
+
                     // If on step 2 or no premium, submit the form manually
                     console.log('[SAVE BUTTON] Submitting form...');
                     if (clientProfileForm) {
@@ -2398,7 +2565,6 @@
 
                     try {
                         clientProfileModal.classList.add('hidden');
-                        console.log('[MODAL SUBMIT] Modal hidden, sending request...');
 
                         const response = await fetch(url, {
                             method: 'POST',
@@ -2416,20 +2582,32 @@
 
                         if (response.ok && result.success) {
                             console.log('[MODAL SUBMIT] SUCCESS - Redirecting to payment page...');
-                            
+
                             // Update userData locally to reflect the changes
                             userData.prenom = data.prenom || userData.prenom;
                             userData.nom = data.nom || userData.nom;
                             userData.telephone = data.telephone || userData.telephone;
                             userData.adresse = data.adresse || userData.adresse;
-                            
+
+                            // === SAUVEGARDER LES INFOS PREMIUM DANS SESSIONSTORAGE ===
+                            if (hasPremiumInCart() && data.premiumDetails) {
+                                try {
+                                    const state = JSON.parse(sessionStorage.getItem('formState')) || {};
+                                    state.premiumDetails = data.premiumDetails;
+                                    sessionStorage.setItem('formState', JSON.stringify(state));
+                                    console.log('[MODAL SUBMIT] Premium details saved to sessionStorage');
+                                } catch (e) {
+                                    console.error('[MODAL SUBMIT] Error saving premium details to sessionStorage:', e);
+                                }
+                            }
+
                             // Hide modal and show loader
                             clientProfileModal.classList.add('hidden');
                             const loader = document.getElementById('loader');
                             if (loader) {
                                 loader.classList.remove('hidden');
                             }
-                            
+
                             console.log('[MODAL SUBMIT] Profile saved, redirecting to payment page...');
                             // Redirect to payment page to refresh server session
                             window.location.href = '{{ route("payment") }}';
@@ -2548,6 +2726,40 @@
             @if(session('error'))
                 showCustomAlert(t('error'), '{{ session('error') }}');
             @endif
+
+            // === OUVERTURE AUTOMATIQUE DE LA MODALE AU CHARGEMENT ===
+            // Vérifier si on doit ouvrir automatiquement la modale
+            (function checkAndOpenModal() {
+                const hasPremium = hasPremiumInCart();
+                const premiumComplete = isPremiumComplete();
+                
+                console.log('[AUTO-OPEN CHECK] hasPremium:', hasPremium, 'premiumComplete:', premiumComplete);
+                console.log('[AUTO-OPEN CHECK] isProfileComplete:', isProfileComplete);
+                
+                // Cas 1 : Infos clients incomplètes → ouvrir modale (step 1)
+                if (!isProfileComplete) {
+                    console.log('[AUTO-OPEN] Profile incomplete, opening modal at step 1');
+                    setTimeout(() => {
+                        if (openClientProfileModalBtn) {
+                            openClientProfileModalBtn.click();
+                        }
+                    }, 500);
+                    return;
+                }
+                
+                // Cas 2 : Premium dans le panier mais infos premium incomplètes → ouvrir modale (step 2)
+                if (hasPremium && !premiumComplete) {
+                    console.log('[AUTO-OPEN] Premium in cart but incomplete, opening modal at step 2');
+                    setTimeout(() => {
+                        if (openClientProfileModalBtn) {
+                            openClientProfileModalBtn.click();
+                        }
+                    }, 500);
+                    return;
+                }
+                
+                console.log('[AUTO-OPEN] No need to open modal automatically');
+            })();
 
             // Vérifier que le formulaire Monetico est bien chargé (pour info seulement)
             window.addEventListener('load', function() {

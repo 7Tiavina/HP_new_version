@@ -1,5 +1,5 @@
 <div id="clientProfileModal" class="fixed inset-0 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center p-0 bg-gray-900 bg-opacity-75 backdrop-blur-sm">
-    <div class="relative mx-auto w-full max-w-none shadow-2xl bg-white overflow-hidden transform transition-all h-full flex flex-col">
+    <div class="relative mx-auto w-full max-w-3xl shadow-2xl bg-white overflow-hidden transform transition-all my-8 flex flex-col" style="max-height: 90vh;">
 
         <!-- Modal Header -->
         <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 p-6 text-center flex-shrink-0">

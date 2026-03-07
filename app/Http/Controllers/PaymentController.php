@@ -584,6 +584,15 @@ class PaymentController extends Controller
                 }
 
                 Session::put('commande_en_cours', $commandeData);
+                
+                // === IMPORTANT: Sauvegarder premiumDetails dans la session principale aussi ===
+                if (isset($validated['premiumDetails']) && is_array($validated['premiumDetails'])) {
+                    Session::put('premiumDetails', $validated['premiumDetails']);
+                    Log::info('[updateGuestInfoInSession] premiumDetails saved to session', [
+                        'premiumDetails' => $validated['premiumDetails'],
+                    ]);
+                }
+                
                 Log::info('[updateGuestInfoInSession] commande_en_cours updated with guest info', [
                     'client_email' => $commandeData['client']['email'] ?? null,
                     'is_guest' => $commandeData['client']['is_guest'] ?? null,
@@ -829,11 +838,52 @@ class PaymentController extends Controller
 
         $isProfileComplete = !empty($user->telephone);
         Log::info('[showPaymentPage] isProfileComplete: ' . ($isProfileComplete ? 'TRUE' : 'FALSE') . ' (telephone: ' . ($user->telephone ?? 'NULL') . ')');
+
+        // === VERIFICATION PREMIUM ===
+        // Vérifier si premium est dans le panier
+        $hasPremiumInCart = false;
+        $commandeLignes = $commandeData['commandeLignes'] ?? [];
+        foreach ($commandeLignes as $ligne) {
+            if (isset($ligne['libelleProduit']) && stripos($ligne['libelleProduit'], 'Premium') !== false) {
+                $hasPremiumInCart = true;
+                break;
+            }
+        }
         
+        // Vérifier si les infos premium sont complètes
+        $premiumDetailsComplete = false;
+        if ($hasPremiumInCart) {
+            $premiumDetails = Session::get('premiumDetails');
+            $commandeInfos = $commandeData['commandeInfos'] ?? [];
+            
+            // Vérifier si on a les infos essentielles
+            if ($premiumDetails && 
+                !empty($premiumDetails['transport_type_arrival']) && 
+                !empty($premiumDetails['pickup_location_arrival']) &&
+                !empty($premiumDetails['transport_type_departure']) && 
+                !empty($premiumDetails['restitution_location_departure'])) {
+                $premiumDetailsComplete = true;
+            }
+        }
+        
+        // Le profil n'est considéré complet que si :
+        // - Sans premium : isProfileComplete = true
+        // - Avec premium : isProfileComplete = true ET premiumDetailsComplete = true
+        $isProfileAndPremiumComplete = false;
+        if ($hasPremiumInCart) {
+            $isProfileAndPremiumComplete = $isProfileComplete && $premiumDetailsComplete;
+        } else {
+            $isProfileAndPremiumComplete = $isProfileComplete;
+        }
+        
+        Log::info('[showPaymentPage] hasPremiumInCart: ' . ($hasPremiumInCart ? 'TRUE' : 'FALSE'));
+        Log::info('[showPaymentPage] premiumDetailsComplete: ' . ($premiumDetailsComplete ? 'TRUE' : 'FALSE'));
+        Log::info('[showPaymentPage] isProfileAndPremiumComplete: ' . ($isProfileAndPremiumComplete ? 'TRUE' : 'FALSE'));
+
         $formToken = null;
 
-        if ($isProfileComplete) {
-            Log::info('[showPaymentPage] Client profile is complete. Proceeding to get formToken for pre-authorization.');
+        if ($isProfileAndPremiumComplete) {
+            Log::info('[showPaymentPage] Client profile and premium (if applicable) are complete. Proceeding to get formToken for pre-authorization.');
             // S'assurer que les données client sont correctement formatées (pas un objet Laravel)
             $commandeData['client'] = $this->getClientData($user, null);
             Session::put('commande_en_cours', $commandeData);
@@ -866,12 +916,15 @@ class PaymentController extends Controller
 
         Log::info('[showPaymentPage] END - Returning view', [
             'isProfileComplete' => $isProfileComplete,
+            'isProfileAndPremiumComplete' => $isProfileAndPremiumComplete,
+            'hasPremiumInCart' => $hasPremiumInCart,
+            'premiumDetailsComplete' => $premiumDetailsComplete,
             'isGuest' => $isGuest,
             'hasFormToken' => $formToken !== null,
         ]);
         Log::info('----------------------------------------------------');
 
-        return view('payment', compact('user', 'formToken', 'isProfileComplete', 'isGuest', 'errorMessage', 'hasError'));
+        return view('payment', compact('user', 'formToken', 'isProfileComplete', 'isProfileAndPremiumComplete', 'hasPremiumInCart', 'premiumDetailsComplete', 'isGuest', 'errorMessage', 'hasError'));
     }
 
     public function paymentSuccess(Request $request)
