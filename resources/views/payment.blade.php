@@ -246,23 +246,24 @@
                         
                         <ul class="divide-y divide-gray-200">
                             @foreach($commandeData['commandeLignes'] as $ligne)
+                                @php
+                                    $prixTTC = (float)($ligne['prixTTC'] ?? 0);
+                                    $prixTTCAvantRemise = (float)($ligne['prixTTCAvantRemise'] ?? $prixTTC);
+                                    $hasDiscount = $prixTTCAvantRemise > $prixTTC;
+                                @endphp
                                 <li class="py-4 flex justify-between items-center">
                                     <div>
                                         <p class="font-semibold text-gray-800">{{ $ligne['libelleProduit'] }}</p>
                                         <p class="text-sm text-gray-500"><span data-i18n="payment_quantity">Quantité :</span> {{ $ligne['quantite'] }}</p>
                                     </div>
                                     <div class="text-right">
-                                        @if(isset($commandeData['discount_amount']) && $commandeData['discount_amount'] > 0 && isset($ligne['prixTTCAvantRemise']) && (float)($ligne['prixTTCAvantRemise']) > (float)($ligne['prixTTC']))
-                                            <p class="text-sm text-gray-400 line-through">{{ number_format($ligne['prixTTCAvantRemise'], 2, ',', ' ') }} €</p>
-                                            <p class="font-semibold text-gray-800">{{ number_format($ligne['prixTTC'], 2, ',', ' ') }} €</p>
-                                        @elseif(isset($commandeData['total_normal_price']) && $commandeData['discount_amount'] > 0)
-                                            @php
-                                                $itemNormalPrice = isset($ligne['prixTTCAvantRemise']) ? (float)$ligne['prixTTCAvantRemise'] : ($ligne['prixTTC'] / (1 - ($commandeData['discount_percent'] ?? 10) / 100));
-                                            @endphp
-                                            <p class="text-sm text-gray-400 line-through">{{ number_format($itemNormalPrice, 2, ',', ' ') }} €</p>
-                                            <p class="font-semibold text-gray-800">{{ number_format($ligne['prixTTC'], 2, ',', ' ') }} €</p>
+                                        @if($hasDiscount)
+                                            <div class="flex items-center gap-2 justify-end">
+                                                <p class="text-sm text-gray-400 line-through">{{ number_format($prixTTCAvantRemise, 2, ',', ' ') }} €</p>
+                                                <p class="font-semibold text-gray-800">{{ number_format($prixTTC, 2, ',', ' ') }} €</p>
+                                            </div>
                                         @else
-                                            <p class="font-semibold text-gray-800">{{ number_format($ligne['prixTTC'], 2, ',', ' ') }} €</p>
+                                            <p class="font-semibold text-gray-800">{{ number_format($prixTTC, 2, ',', ' ') }} €</p>
                                         @endif
                                     </div>
                                 </li>

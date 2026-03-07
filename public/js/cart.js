@@ -78,34 +78,52 @@ function updateCartDisplay() {
         var libelle = item.libelle || '';
         var linePrice = 0;
         var lineNormal = 0;
+        var unitPriceValue = 0;
+        var unitPriceBeforeDiscountValue = null;
 
         if (item.itemCategory === 'baggage') {
             var product = productById(item.productId) || (item.libelle ? productByLibelle(item.libelle) : null);
-            var unit = unitPrice(product);
-            var beforeDiscount = product ? unitPriceBeforeDiscount(product) : null;
+            unitPriceValue = unitPrice(product);
+            unitPriceBeforeDiscountValue = product ? unitPriceBeforeDiscount(product) : null;
             var qty = item.quantity || 0;
-            linePrice = qty * unit;
-            if (beforeDiscount != null && beforeDiscount > unit) {
-                lineNormal += qty * beforeDiscount;
+            linePrice = qty * unitPriceValue;
+            if (unitPriceBeforeDiscountValue != null && unitPriceBeforeDiscountValue > unitPriceValue) {
+                lineNormal += qty * unitPriceBeforeDiscountValue;
             } else {
                 lineNormal += linePrice;
             }
             libelle = product ? productLibelle(product) : (libelle || ('Produit #' + (item.productId || index)));
             libelle = (qty > 1 ? qty + ' × ' : '') + libelle;
         } else if (item.itemCategory === 'option') {
-            linePrice = (typeof item.prix === 'number' && !isNaN(item.prix)) ? item.prix : 0;
-            lineNormal = linePrice;
+            unitPriceValue = (typeof item.prix === 'number' && !isNaN(item.prix)) ? item.prix : 0;
+            unitPriceBeforeDiscountValue = (typeof item.prixUnitaireAvantRemise === 'number' && !isNaN(item.prixUnitaireAvantRemise)) ? item.prixUnitaireAvantRemise : 
+                                           (typeof item.prix_ttc_avant_remise === 'number' && !isNaN(item.prix_ttc_avant_remise)) ? item.prix_ttc_avant_remise : unitPriceValue;
+            linePrice = unitPriceValue;
+            lineNormal = unitPriceBeforeDiscountValue;
         }
 
         total += linePrice;
         subtotalNormal += lineNormal;
 
+        var hasDiscount = unitPriceBeforeDiscountValue != null && unitPriceBeforeDiscountValue > unitPriceValue;
+
         var row = document.createElement('div');
         row.className = 'flex justify-between items-center py-2';
+        
+        var priceHtml = '';
+        if (hasDiscount) {
+            priceHtml = '<div class="flex items-center gap-2">' +
+                        '<span class="text-xs text-gray-400 line-through">' + formatPrice(lineNormal) + '</span>' +
+                        '<span class="text-sm font-semibold text-gray-900">' + formatPrice(linePrice) + '</span>' +
+                        '</div>';
+        } else {
+            priceHtml = '<span class="text-sm font-semibold text-gray-900">' + formatPrice(linePrice) + '</span>';
+        }
+        
         row.innerHTML =
             '<div class="flex-1 text-sm text-gray-800">' + escapeHtml(libelle) + '</div>' +
             '<div class="flex items-center space-x-2">' +
-            '<span class="text-sm font-semibold text-gray-900">' + formatPrice(linePrice) + '</span>' +
+            priceHtml +
             '<button type="button" class="delete-item-btn text-red-500 hover:text-red-700 p-1" data-index="' + index + '" aria-label="Supprimer">' +
             '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>' +
             '</button>' +

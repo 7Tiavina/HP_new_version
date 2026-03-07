@@ -248,33 +248,39 @@ function updateDrawerCart() {
     
     allItems.forEach((item, index) => {
         console.log('[updateDrawerCart] Item:', item);
-        
+
         let itemTotal = 0;
         let unitPriceValue = 0;
+        let unitPriceBeforeDiscount = 0;
         let libelle = item.libelle || '';
-        
+
         if (item.itemCategory === 'baggage') {
             // Baggage: get price from globalProductsData like cart.js does
             const product = productById(item.productId);
             unitPriceValue = unitPrice(product);
+            // Get price before discount
+            unitPriceBeforeDiscount = product?.prixUnitaireAvantRemise ?? product?.prix_unitaire_avant_remise ?? unitPriceValue;
             itemTotal = unitPriceValue * (item.quantity || 1);
             libelle = product ? (product.libelle || product.nom || libelle) : libelle;
             libelle = (item.quantity || 1) + ' × ' + libelle;
         } else if (item.itemCategory === 'option') {
             // Options: use prixUnitaire from API
             unitPriceValue = parseFloat(item.prixUnitaire) || parseFloat(item.prix) || 0;
+            unitPriceBeforeDiscount = parseFloat(item.prixUnitaireAvantRemise) || parseFloat(item.prix_ttc_avant_remise) || unitPriceValue;
             itemTotal = unitPriceValue * (item.quantity || 1);
         }
-        
-        console.log('[updateDrawerCart] unitPrice:', unitPriceValue, 'itemTotal:', itemTotal);
-        
+
+        console.log('[updateDrawerCart] unitPrice:', unitPriceValue, 'unitPriceBeforeDiscount:', unitPriceBeforeDiscount, 'itemTotal:', itemTotal);
+
         total += itemTotal;
-        
+
         const isOption = item.itemCategory === 'option';
         const icon = item.key === 'priority' ? '⚡' : (item.key === 'premium' ? '💎' : '🧳');
-        const gradientClass = item.key === 'priority' ? 'from-yellow-50 to-amber-50 border-yellow-200' : 
+        const gradientClass = item.key === 'priority' ? 'from-yellow-50 to-amber-50 border-yellow-200' :
                              (item.key === 'premium' ? 'from-purple-50 to-indigo-50 border-purple-200' : 'from-gray-50 to-white border-gray-200');
-        
+
+        const hasDiscount = unitPriceBeforeDiscount > unitPriceValue;
+
         html += `
             <div class="flex items-center gap-3 p-4 bg-gradient-to-r ${gradientClass} rounded-xl border transition-all hover:shadow-md">
                 <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-xl shadow-sm flex-shrink-0">
@@ -282,14 +288,24 @@ function updateDrawerCart() {
                 </div>
                 <div class="flex-1 min-w-0">
                     <p class="text-sm font-bold text-gray-900 truncate">${libelle}</p>
-                    <p class="text-xs text-gray-500">
-                        ${formatPrice(unitPriceValue)} € x ${item.quantity || 1}
-                    </p>
+                    <div class="flex items-center gap-2">
+                        <p class="text-xs text-gray-500">
+                            ${formatPrice(unitPriceValue)} € x ${item.quantity || 1}
+                        </p>
+                        ${hasDiscount ? 
+                            `<span class="text-xs text-gray-400 line-through">${formatPrice(unitPriceBeforeDiscount)} €</span>` : 
+                            ''}
+                    </div>
                 </div>
                 <div class="text-right flex-shrink-0">
-                    <p class="text-sm font-bold text-gray-900">${formatPrice(itemTotal)} €</p>
-                    ${isOption ? 
-                        `<button onclick="removeOptionFromDrawer('${item.key}')" class="text-xs text-red-500 hover:text-red-700 font-medium mt-0.5 transition-colors">Retirer</button>` : 
+                    <div class="flex items-center gap-2 justify-end">
+                        ${hasDiscount ? 
+                            `<span class="text-xs text-gray-400 line-through">${formatPrice(unitPriceBeforeDiscount * (item.quantity || 1))} €</span>` : 
+                            ''}
+                        <p class="text-sm font-bold text-gray-900">${formatPrice(itemTotal)} €</p>
+                    </div>
+                    ${isOption ?
+                        `<button onclick="removeOptionFromDrawer('${item.key}')" class="text-xs text-red-500 hover:text-red-700 font-medium mt-0.5 transition-colors">Retirer</button>` :
                         ''}
                 </div>
             </div>
