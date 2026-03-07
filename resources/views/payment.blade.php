@@ -2103,14 +2103,14 @@
                     // If on step 2 with premium, validate premium fields before submitting
                     if (currentStep === 2 && hasPremiumInCart()) {
                         console.log('[SAVE BUTTON] Step 2 + Premium, validating premium fields...');
-                        
+
                         const transportArrival = document.querySelector('select[name="transport_type_arrival"]');
                         const pickupLocation = document.querySelector('select[name="pickup_location_arrival"]');
                         const pickupDatetime = document.querySelector('input[name="pickup_datetime_arrival"]');
                         const transportDeparture = document.querySelector('select[name="transport_type_departure"]');
                         const restitutionLocation = document.querySelector('select[name="restitution_location_departure"]');
                         const restitutionDatetime = document.querySelector('input[name="restitution_datetime_departure"]');
-                        
+
                         console.log('[SAVE BUTTON] Field values:', {
                             transportArrival: transportArrival?.value,
                             pickupLocation: pickupLocation?.value,
@@ -2119,24 +2119,60 @@
                             restitutionLocation: restitutionLocation?.value,
                             restitutionDatetime: restitutionDatetime?.value
                         });
-                        
+
                         const missingFields = [];
-                        
-                        if (!transportArrival || !transportArrival.value) missingFields.push('Type de transport (arrivée)');
-                        if (!pickupLocation || !pickupLocation.value) missingFields.push('Lieu de prise en charge');
-                        if (!pickupDatetime || !pickupDatetime.value) missingFields.push('Date et heure de prise en charge');
-                        if (!transportDeparture || !transportDeparture.value) missingFields.push('Type de transport (départ)');
-                        if (!restitutionLocation || !restitutionLocation.value) missingFields.push('Lieu de restitution');
-                        if (!restitutionDatetime || !restitutionDatetime.value) missingFields.push('Date et heure de restitution');
-                        
+
+                        // Validate and mark fields with red border
+                        if (!transportArrival || !transportArrival.value) {
+                            missingFields.push('Type de transport (arrivée)');
+                            if (transportArrival) transportArrival.classList.add('input-error');
+                        } else {
+                            if (transportArrival) transportArrival.classList.remove('input-error');
+                        }
+
+                        if (!pickupLocation || !pickupLocation.value) {
+                            missingFields.push('Lieu de prise en charge');
+                            if (pickupLocation) pickupLocation.classList.add('input-error');
+                        } else {
+                            if (pickupLocation) pickupLocation.classList.remove('input-error');
+                        }
+
+                        if (!pickupDatetime || !pickupDatetime.value) {
+                            missingFields.push('Date et heure de prise en charge');
+                            if (pickupDatetime) pickupDatetime.classList.add('input-error');
+                        } else {
+                            if (pickupDatetime) pickupDatetime.classList.remove('input-error');
+                        }
+
+                        if (!transportDeparture || !transportDeparture.value) {
+                            missingFields.push('Type de transport (départ)');
+                            if (transportDeparture) transportDeparture.classList.add('input-error');
+                        } else {
+                            if (transportDeparture) transportDeparture.classList.remove('input-error');
+                        }
+
+                        if (!restitutionLocation || !restitutionLocation.value) {
+                            missingFields.push('Lieu de restitution');
+                            if (restitutionLocation) restitutionLocation.classList.add('input-error');
+                        } else {
+                            if (restitutionLocation) restitutionLocation.classList.remove('input-error');
+                        }
+
+                        if (!restitutionDatetime || !restitutionDatetime.value) {
+                            missingFields.push('Date et heure de restitution');
+                            if (restitutionDatetime) restitutionDatetime.classList.add('input-error');
+                        } else {
+                            if (restitutionDatetime) restitutionDatetime.classList.remove('input-error');
+                        }
+
                         console.log('[SAVE BUTTON] Missing fields:', missingFields);
-                        
+
                         if (missingFields.length > 0) {
-                            await showCustomAlert('Informations PREMIUM incomplètes', 
+                            await showCustomAlert('Informations PREMIUM incomplètes',
                                 'Veuillez remplir tous les champs obligatoires :<br>' + missingFields.join(', '));
                             return;
                         }
-                        
+
                         console.log('[SAVE BUTTON] Premium validation passed, submitting form');
                     }
 
@@ -2153,15 +2189,34 @@
                 const transportSelect = document.querySelector(`select[name="transport_type_${direction}"]`);
                 const flightContainer = document.getElementById(`flight_number_${direction}_container`);
                 const trainContainer = document.getElementById(`train_number_${direction}_container`);
-                
+
                 if (transportSelect) {
                     transportSelect.addEventListener('change', (e) => {
                         const value = e.target.value;
                         if (flightContainer) flightContainer.classList.toggle('hidden', value !== 'airport');
                         if (trainContainer) trainContainer.classList.toggle('hidden', value !== 'train');
+                        
+                        // Remove error border when user selects a value
+                        transportSelect.classList.remove('input-error');
                     });
                     // Trigger initial state
                     transportSelect.dispatchEvent(new Event('change'));
+                }
+                
+                // Also listen for changes on datetime fields
+                const datetimeInput = document.querySelector(`input[name="${direction === 'arrival' ? 'pickup_datetime_arrival' : 'restitution_datetime_departure'}"]`);
+                if (datetimeInput) {
+                    datetimeInput.addEventListener('input', () => {
+                        datetimeInput.classList.remove('input-error');
+                    });
+                }
+                
+                // Listen for changes on location fields
+                const locationSelect = document.querySelector(`select[name="${direction === 'arrival' ? 'pickup_location_arrival' : 'restitution_location_departure'}"]`);
+                if (locationSelect) {
+                    locationSelect.addEventListener('change', () => {
+                        locationSelect.classList.remove('input-error');
+                    });
                 }
             };
             
