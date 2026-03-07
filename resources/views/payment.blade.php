@@ -1990,20 +1990,33 @@
                     const hasPremium = hasPremiumInCart();
                     const premiumComplete = isPremiumComplete();
                     
-                    console.log('[MODAL OPEN] hasPremium:', hasPremium, 'premiumComplete:', premiumComplete);
+                    // Vérifier si les infos client sont déjà remplies
+                    const nom = document.getElementById('modal-nom')?.value?.trim() || '';
+                    const prenom = document.getElementById('modal-prenom')?.value?.trim() || '';
+                    const telephone = document.getElementById('modal-telephone')?.value?.trim() || '';
+                    const adresse = document.getElementById('modal-adresse')?.value?.trim() || '';
                     
+                    const clientInfoComplete = nom && prenom && telephone && adresse;
+
+                    console.log('[MODAL OPEN] hasPremium:', hasPremium, 'premiumComplete:', premiumComplete);
+                    console.log('[MODAL OPEN] clientInfoComplete:', clientInfoComplete);
+
                     // Décider de l'étape à afficher
-                    if (hasPremium && !premiumComplete) {
-                        // Premium dans le panier mais pas complété → ouvrir directement step 2
-                        console.log('[MODAL OPEN] Premium detected but incomplete, opening step 2');
+                    if (!clientInfoComplete) {
+                        // Infos client incomplètes → TOUJOURS ouvrir step 1 en premier
+                        console.log('[MODAL OPEN] Client info incomplete, opening step 1 first');
+                        goToStep(1);
+                    } else if (hasPremium && !premiumComplete) {
+                        // Infos client complètes + Premium dans le panier mais pas complété → ouvrir step 2
+                        console.log('[MODAL OPEN] Client info complete, Premium incomplete, opening step 2');
                         goToStep(2);
                     } else if (hasPremium && premiumComplete) {
-                        // Premium déjà complété → ouvrir step 2 pour modification
-                        console.log('[MODAL OPEN] Premium complete, opening step 2 for review');
+                        // Tout complet → ouvrir step 2 pour vérification/modification
+                        console.log('[MODAL OPEN] All info complete, opening step 2 for review');
                         goToStep(2);
                     } else {
-                        // Pas de premium → ouvrir step 1
-                        console.log('[MODAL OPEN] No premium, opening step 1');
+                        // Pas de premium, infos client complètes → ouvrir step 1 pour modification
+                        console.log('[MODAL OPEN] No premium, client info complete, opening step 1');
                         goToStep(1);
                     }
 
@@ -2734,11 +2747,14 @@
                 const hasPremium = hasPremiumInCart();
                 const premiumComplete = isPremiumComplete();
                 
+                // Vérifier si les infos client sont déjà remplies (côté serveur)
+                const clientInfoComplete = isProfileComplete;
+                
                 console.log('[AUTO-OPEN CHECK] hasPremium:', hasPremium, 'premiumComplete:', premiumComplete);
-                console.log('[AUTO-OPEN CHECK] isProfileComplete:', isProfileComplete);
+                console.log('[AUTO-OPEN CHECK] clientInfoComplete:', clientInfoComplete);
                 
                 // Cas 1 : Infos clients incomplètes → ouvrir modale (step 1)
-                if (!isProfileComplete) {
+                if (!clientInfoComplete) {
                     console.log('[AUTO-OPEN] Profile incomplete, opening modal at step 1');
                     setTimeout(() => {
                         if (openClientProfileModalBtn) {
@@ -2748,9 +2764,9 @@
                     return;
                 }
                 
-                // Cas 2 : Premium dans le panier mais infos premium incomplètes → ouvrir modale (step 2)
-                if (hasPremium && !premiumComplete) {
-                    console.log('[AUTO-OPEN] Premium in cart but incomplete, opening modal at step 2');
+                // Cas 2 : Infos clients complètes + Premium dans le panier mais incomplet → ouvrir modale (step 2)
+                if (clientInfoComplete && hasPremium && !premiumComplete) {
+                    console.log('[AUTO-OPEN] Client info complete, Premium incomplete, opening modal at step 2');
                     setTimeout(() => {
                         if (openClientProfileModalBtn) {
                             openClientProfileModalBtn.click();
