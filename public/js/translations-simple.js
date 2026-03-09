@@ -129,7 +129,7 @@ if (typeof window.translations === 'undefined') {
         footer_description: "Hello Passenger est une plateforme qui vous permet de réserver un transport de bagages vers ou depuis l'aéroport ainsi que de stocker vos bagages en consigne dans notre agence située à Paris CDG et Paris ORLY.",
         footer_cdg: "Terminal 2, gare TGV – Niveau 4, face à l'hôtel Sheraton, entre 2C et 2E.",
         footer_orly: "Terminal 3, niveau arrivées.",
-        footer_since: "depuis 2015",
+        footer_since: "depuis 2001",
         footer_credits: "© <span>Hello Passenger</span> 2026. Tous droits réservés.",
         footer_access: "Plan d'accès",
         footer_cdg_address: "Terminal 2 - Gare TGV - Niveau 4<br>Opposition Hôtel Sheraton",
@@ -393,6 +393,13 @@ if (typeof window.translations === 'undefined') {
         header_orders: "Commandes",
         header_users: "Utilisateurs",
         header_analytics: "Analytiques",
+
+        // Header Contact Info
+        header_location: "Localisation: Aéroport de Paris CDG et Orly",
+        header_phone: "Appelez-nous: +33 (0)1 34 38 58 98",
+        header_email: "Email: contact@hellopassenger.com",
+        social_facebook: "Facebook",
+        social_linkedin: "LinkedIn",
         
         // Status
         status_completed: "Terminé",
@@ -740,7 +747,7 @@ if (typeof window.translations === 'undefined') {
         footer_description: "Hello Passenger is a platform that allows you to book a transport of luggage to or from the airport as well as to store your luggage in consignment in our agency located in Paris CDG and Paris ORLY.",
         footer_cdg: "Terminal 2, TGV station – Level 4, opposite Sheraton Hotel, between 2C and 2E.",
         footer_orly: "Terminal 3, arrival level.",
-        footer_since: "since 2015",
+        footer_since: "since 2001",
         footer_credits: "© <span>Hello Passenger</span> 2026. All rights reserved.",
         footer_access: "Access Plan",
         footer_cdg_address: "Terminal 2 - TGV Station - Level 4<br>Opposite Sheraton Hotel",
@@ -1004,6 +1011,13 @@ if (typeof window.translations === 'undefined') {
         header_orders: "Orders",
         header_users: "Users",
         header_analytics: "Analytics",
+
+        // Header Contact Info
+        header_location: "Location: Paris CDG & Orly Airports",
+        header_phone: "Call us: +33 (0)1 34 38 58 98",
+        header_email: "Email: contact@hellopassenger.com",
+        social_facebook: "Facebook",
+        social_linkedin: "LinkedIn",
         
         // Status
         status_completed: "Completed",

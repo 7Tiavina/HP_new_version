@@ -105,6 +105,70 @@
         box-shadow: 0 4px 12px rgba(255, 196, 57, 0.4);
     }
 
+    /* --- CONTACT INFO TOP --- */
+    .contact-info-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        max-width: 1920px;
+        width: 98%;
+        margin: 0 auto 10px auto;
+        padding: 12px 40px;
+        background-color: #1a1a1a;
+        border-radius: 10px;
+        color: #ffffff;
+        font-size: 14px;
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .contact-item svg {
+        width: 16px;
+        height: 16px;
+        stroke: #ffffff;
+        stroke-width: 2;
+        fill: none;
+        flex-shrink: 0;
+    }
+
+    .social-links {
+        display: flex;
+        gap: 15px;
+        flex-shrink: 0;
+    }
+
+    .social-links a {
+        display: flex;
+        align-items: center;
+        transition: opacity 0.3s;
+    }
+
+    .social-links a:hover {
+        opacity: 0.7;
+    }
+
+    .social-links svg {
+        width: 18px;
+        height: 18px;
+        fill: #ffffff;
+    }
+
+    @media (max-width: 900px) {
+        .contact-info-top {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .social-links {
+            margin-top: 5px;
+        }
+    }
+
     /* --- BARRE D'INFOS NOIRE --- */
     .info-bar {
         background-color: #1a1a1a;
@@ -229,6 +293,30 @@
 </style>
 
 <div class="hp-nav-container">
+    <!-- Contact Info - Top Bar -->
+    <div class="contact-info-top">
+        <div class="contact-item">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span data-i18n="header_location">Location: Paris CDG & Orly Airports</span>
+        </div>
+        <div class="contact-item">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.81 12.81 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path></svg>
+            <span data-i18n="header_phone">Call us: +33 (0)1 34 38 58 98</span>
+        </div>
+        <div class="contact-item">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <span data-i18n="header_email">Email: contact@hellopassenger.com</span>
+        </div>
+        <div class="social-links">
+            <a href="https://www.facebook.com/hello.passenger.officiel/" target="_blank" aria-label="Facebook">
+                <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+            </a>
+            <a href="https://www.linkedin.com/company/hello-passenger" target="_blank" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+            </a>
+        </div>
+    </div>
+
     <nav class="navbar">
         <div class="nav-left">
             <div class="burger-dots" onclick="console.log('Menu clicked')">
@@ -253,30 +341,4 @@
             <a href="{{ $formUrl }}" class="btn-reserve" data-i18n="nav_book">Réserver</a>
         </div>
     </nav>
-
-    <div class="info-bar">
-        <div class="info-group">
-            <div class="info-item">
-                <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                <span>Location: Aéroport de Paris CDG et Orly</span>
-            </div>
-            <div class="info-item">
-                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.81 12.81 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path></svg>
-                <span>Appelez-nous: +33 (0)1 34 38 58 98</span>
-            </div>
-            <div class="info-item">
-                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                <span>Email: contact@hellopassenger.com</span>
-            </div>
-        </div>
-
-        <div class="social-links">
-            <a href="https://www.facebook.com/votrepage" target="_blank" aria-label="Facebook">
-                <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
-            </a>
-            <a href="https://www.linkedin.com/company/votrepage" target="_blank" aria-label="LinkedIn">
-                <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-            </a>
-        </div>
-    </div>
 </div>
