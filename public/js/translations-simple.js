@@ -420,6 +420,7 @@ if (typeof window.translations === 'undefined') {
         drawer_orly_address: "Terminal 3 / Niveau d'arrivée",
         drawer_contact: "Contact",
         drawer_book: "Réserver",
+        drawer_become_partner: "Become A Partner",
 
         // Status
         status_completed: "Terminé",
@@ -1058,6 +1059,7 @@ if (typeof window.translations === 'undefined') {
         drawer_orly_address: "Terminal 3 / Arrival Level",
         drawer_contact: "Contact",
         drawer_book: "Book Now",
+        drawer_become_partner: "Become A Partner",
 
         // Status
         status_completed: "Completed",
