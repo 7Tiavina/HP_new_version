@@ -10,6 +10,65 @@
 @push('styles')
     <link rel="stylesheet" href="{{ asset('css/flatpickr/material_blue.css') }}">
     <link rel="stylesheet" href="{{ asset('css/booking-form.css') }}?v={{ file_exists(public_path('css/booking-form.css')) ? filemtime(public_path('css/booking-form.css')) : '1' }}">
+    
+    <!-- Import Poppins font to match Hero section -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Apply Poppins to entire form and enlarge text */
+        #hp-booking-root,
+        #hp-booking-root * {
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        /* Enlarge title */
+        #hp-booking-root h1[data-i18n="form_title"] {
+            font-weight: 700 !important;
+            font-size: 42px !important;
+            line-height: 1.2 !important;
+            color: #1a1a1a !important;
+        }
+
+        /* Enlarge description */
+        #hp-booking-root p[data-i18n="form_description"] {
+            font-weight: 400 !important;
+            font-size: 18px !important;
+            line-height: 1.6 !important;
+            color: #1a1a1a !important;
+        }
+
+        /* Enlarge labels */
+        #hp-booking-root label {
+            font-weight: 500 !important;
+            font-size: 16px !important;
+            color: #1a1a1a !important;
+        }
+
+        /* Enlarge date/time labels (h3) */
+        #hp-booking-root h3 {
+            font-weight: 600 !important;
+            font-size: 17px !important;
+            color: #1a1a1a !important;
+        }
+
+        /* Enlarge inputs and selects */
+        #hp-booking-root input,
+        #hp-booking-root select {
+            font-size: 16px !important;
+        }
+
+        /* Enlarge breadcrumb */
+        #hp-booking-root .breadcrumb,
+        #hp-booking-root [data-i18n="breadcrumb_home"],
+        #hp-booking-root [data-i18n="breadcrumb_booking"] {
+            font-size: 16px !important;
+        }
+
+        /* Enlarge required text */
+        #hp-booking-root [data-i18n="form_required_fields"] {
+            font-size: 15px !important;
+        }
+    </style>
     <script>
         window.tailwind = window.tailwind || {};
         window.tailwind.config = {
