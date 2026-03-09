@@ -20,12 +20,14 @@
     /* --- BLOC BLANC (NAV) --- */
     .navbar {
         background-color: #ffffff;
-        width: 100%;
+        max-width: 1920px;
+        width: 98%;
         height: 100px;
         display: flex;
         align-items: center;
         padding: 0 40px;
         border-radius: 12px;
+        margin: 0 auto;
     }
 
     .nav-left {
