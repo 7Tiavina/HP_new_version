@@ -352,8 +352,7 @@ if (typeof window.translations === 'undefined') {
         payment_total_to_pay: "Total à payer",
         cart_subtotal: "Sous-total",
         cart_discount_online: "Offre réservation en ligne",
-        cart_discount_online_en: "Online booking discount",
-        
+
         // Dashboard Client
         dashboard_welcome: "Bienvenue",
         dashboard_subtitle: "Gérez vos réservations et votre compte",
@@ -636,45 +635,45 @@ if (typeof window.translations === 'undefined') {
         edit: "Edit",
         not_provided: "Not provided",
         
-        // Payment Modal - Client Info (EN)
-        modal_title_en: "Complete your information",
-        client_type_label_en: "Customer type",
-        client_type_particulier_en: "Individual",
-        client_type_societe_en: "Company",
-        label_prenom_en: "First name",
-        label_nom_en: "Last name",
-        label_adresse_en: "Address",
-        label_telephone_en: "Mobile phone",
-        label_societe_en: "Company name",
-        btn_complete_profile_en: "Complete my profile (optional)",
-        phone_hint_en: "Enter your number with country code (e.g.: +33 6 12 34 56 78)",
-        why_info_title_en: "Why this information?",
-        why_info_text_en: "To finalize your booking and allow X-ray security screening of luggage in accordance with airport regulations.",
-        
-        // Payment Modal - Premium Info (EN)
-        premium_info_notice_en: "ℹ️ Information: You have selected the Premium option. Please fill in the transport information below to allow our team to prepare your VIP service.",
-        premium_arrival_title_en: "Arrival (Terminal → Agency)",
-        premium_departure_title_en: "Departure (Agency → Terminal)",
-        premium_transport_label_en: "Transport type",
-        premium_flight_number_en: "Flight number",
-        premium_train_number_en: "Train number",
-        premium_pickup_location_en: "Pickup location",
-        premium_restitution_location_en: "Return location",
-        premium_datetime_label_en: "Date and time",
-        premium_instructions_en: "Additional information",
-        premium_instructions_placeholder_en: "comments...",
-        premium_airport_en: "Airplane",
-        premium_train_en: "Train",
-        premium_public_transport_en: "Public transport",
-        premium_other_en: "Other",
-        premium_select_en: "Select",
-        
-        // Payment Section (EN)
-        your_info_en: "Your information",
-        secure_payment_en: "Secure payment",
-        payment_missing_premium_title_en: "⚠️ PREMIUM information missing",
-        payment_missing_premium_text_en: "You have selected the PREMIUM option. Please complete the transport information to finalize your booking.",
-        payment_complete_premium_btn_en: "Complete PREMIUM info",
+        // Payment Modal - Client Info
+        modal_title: "Complete your information",
+        client_type_label: "Customer type",
+        client_type_particulier: "Individual",
+        client_type_societe: "Company",
+        label_prenom: "First name",
+        label_nom: "Last name",
+        label_adresse: "Address",
+        label_telephone: "Mobile phone",
+        label_societe: "Company name",
+        btn_complete_profile: "Complete my profile (optional)",
+        phone_hint: "Enter your number with country code (e.g.: +33 6 12 34 56 78)",
+        why_info_title: "Why this information?",
+        why_info_text: "To finalize your booking and allow X-ray security screening of luggage in accordance with airport regulations.",
+
+        // Payment Modal - Premium Info
+        premium_info_notice: "ℹ️ Information: You have selected the Premium option. Please fill in the transport information below to allow our team to prepare your VIP service.",
+        premium_arrival_title: "Arrival (Terminal → Agency)",
+        premium_departure_title: "Departure (Agency → Terminal)",
+        premium_transport_label: "Transport type",
+        premium_flight_number: "Flight number",
+        premium_train_number: "Train number",
+        premium_pickup_location: "Pickup location",
+        premium_restitution_location: "Return location",
+        premium_datetime_label: "Date and time",
+        premium_instructions: "Additional information",
+        premium_instructions_placeholder: "comments...",
+        premium_airport: "Airplane",
+        premium_train: "Train",
+        premium_public_transport: "Public transport",
+        premium_other: "Other",
+        premium_select: "Select",
+
+        // Payment Section
+        your_info: "Your information",
+        secure_payment: "Secure payment",
+        payment_missing_premium_title: "⚠️ PREMIUM information missing",
+        payment_missing_premium_text: "You have selected the PREMIUM option. Please complete the transport information to finalize your booking.",
+        payment_complete_premium_btn: "Complete PREMIUM info",
         
         // Options & Services Drawer
         drawer_options_title: "Options & Services",
@@ -689,10 +688,10 @@ if (typeof window.translations === 'undefined') {
         drawer_cart_title: "Your cart",
         drawer_total: "Total to pay",
         drawer_confirm: "Continue to payment",
-        
-        // Cart (EN)
-        cart_discount_online_en: "Online booking discount",
-        
+
+        // Cart
+        cart_discount_online: "Online booking discount",
+
         // Login/Register
         login_title: "Login",
         login_subtitle: "Access your account",
