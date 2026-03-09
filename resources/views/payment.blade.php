@@ -2271,16 +2271,19 @@
                 const arrivalSelect = document.getElementById('modal-pickup-location-arrival');
                 const departureSelect = document.getElementById('modal-restitution-location-departure');
                 
+                // Get current language and translation for "Select"
+                const selectText = t('premium_select', 'Sélectionner');
+
                 if (typeof globalLieuxData !== 'undefined' && Array.isArray(globalLieuxData) && globalLieuxData.length > 0) {
-                    const optionsHTML = globalLieuxData.map(lieu => 
+                    const optionsHTML = globalLieuxData.map(lieu =>
                         `<option value="${lieu.id}">${lieu.libelle || 'Lieu ' + lieu.id}</option>`
                     ).join('');
-                    
+
                     if (arrivalSelect) {
-                        arrivalSelect.innerHTML = '<option value="">Sélectionner</option>' + optionsHTML;
+                        arrivalSelect.innerHTML = `<option value="">${selectText}</option>` + optionsHTML;
                     }
                     if (departureSelect) {
-                        departureSelect.innerHTML = '<option value="">Sélectionner</option>' + optionsHTML;
+                        departureSelect.innerHTML = `<option value="">${selectText}</option>` + optionsHTML;
                     }
                 } else {
                     // Lieux statiques par défaut (1,2,3,4)
@@ -2290,12 +2293,12 @@
                         { id: 3, libelle: 'Lieu 3' },
                         { id: 4, libelle: 'Lieu 4' }
                     ].map(lieu => `<option value="${lieu.id}">${lieu.libelle}</option>`).join('');
-                    
+
                     if (arrivalSelect) {
-                        arrivalSelect.innerHTML = '<option value="">Sélectionner</option>' + staticOptionsHTML;
+                        arrivalSelect.innerHTML = `<option value="">${selectText}</option>` + staticOptionsHTML;
                     }
                     if (departureSelect) {
-                        departureSelect.innerHTML = '<option value="">Sélectionner</option>' + staticOptionsHTML;
+                        departureSelect.innerHTML = `<option value="">${selectText}</option>` + staticOptionsHTML;
                     }
                 }
             }
