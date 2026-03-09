@@ -676,19 +676,19 @@ if (typeof window.translations === 'undefined') {
         payment_missing_premium_text_en: "You have selected the PREMIUM option. Please complete the transport information to finalize your booking.",
         payment_complete_premium_btn_en: "Complete PREMIUM info",
         
-        // Options Drawer (EN)
-        drawer_options_title_en: "Options & Services",
-        drawer_options_subtitle_en: "Personalize your travel experience",
-        drawer_priority_label_en: "PRIORITY",
-        drawer_priority_title_en: "Priority Service",
-        drawer_priority_desc_en: "Priority handling of your luggage at drop-off and pickup. Save time and avoid queues.",
-        drawer_premium_label_en: "PREMIUM",
-        drawer_premium_title_en: "Premium Service",
-        drawer_premium_desc_simple_en: "Drop-off or pickup of your luggage at the exact location chosen in the airport with dedicated porter. Full VIP service.",
-        drawer_premium_unavailable_en: "Premium service unavailable",
-        drawer_cart_title_en: "Your cart",
-        drawer_total_en: "Total to pay",
-        drawer_confirm_en: "Continue to payment",
+        // Options & Services Drawer
+        drawer_options_title: "Options & Services",
+        drawer_options_subtitle: "Personalize your travel experience",
+        drawer_priority_label: "PRIORITY",
+        drawer_priority_title: "Priority Service",
+        drawer_priority_desc: "Priority handling of your luggage at drop-off and pickup. Save time and avoid queues.",
+        drawer_premium_label: "PREMIUM",
+        drawer_premium_title: "Premium Service",
+        drawer_premium_desc_simple: "Drop-off or pickup of your luggage at the exact location chosen in the airport with dedicated porter. Full VIP service.",
+        drawer_premium_unavailable: "Premium service unavailable",
+        drawer_cart_title: "Your cart",
+        drawer_total: "Total to pay",
+        drawer_confirm: "Continue to payment",
         
         // Cart (EN)
         cart_discount_online_en: "Online booking discount",
