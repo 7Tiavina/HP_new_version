@@ -412,6 +412,15 @@ if (typeof window.translations === 'undefined') {
         nav_contact: "Contact",
         btn_book: "Réserver",
 
+        // Drawer
+        drawer_access_plan: "Plan d'accès",
+        drawer_cdg: "Aéroport de Paris CDG",
+        drawer_cdg_address: "Terminal 2 / Gare TGV - Niveau 4<br>Opposition Hôtel Sheraton",
+        drawer_orly: "Aéroport de Paris ORLY",
+        drawer_orly_address: "Terminal 3 / Niveau d'arrivée",
+        drawer_contact: "Contact",
+        drawer_book: "Réserver",
+
         // Status
         status_completed: "Terminé",
         status_pending: "En attente",
@@ -1040,6 +1049,15 @@ if (typeof window.translations === 'undefined') {
         nav_locate: "Find Us",
         nav_contact: "Contact",
         btn_book: "Book Now",
+
+        // Drawer
+        drawer_access_plan: "Access Plan",
+        drawer_cdg: "Paris CDG Airport",
+        drawer_cdg_address: "Terminal 2 / TGV Station - Level 4<br>Opposite Sheraton Hotel",
+        drawer_orly: "Paris ORLY Airport",
+        drawer_orly_address: "Terminal 3 / Arrival Level",
+        drawer_contact: "Contact",
+        drawer_book: "Book Now",
 
         // Status
         status_completed: "Completed",

@@ -429,22 +429,22 @@
     <div class="hp-drawer-main">
         <img src="{{ asset('HP-Logo-White.png') }}" class="drawer-logo" alt="Logo White">
         
-        <h3 class="drawer-section-title">Plan d'accès</h3>
+        <h3 class="drawer-section-title" data-i18n="drawer_access_plan">Plan d'accès</h3>
         
-        <a href="#" class="drawer-link">Aéroport de Paris CDG</a>
-        <p class="drawer-text">Terminal 2 / Gare TGV - Niveau 4<br>Opposition Hôtel Sheraton</p>
+        <a href="#" class="drawer-link" data-i18n="drawer_cdg">Aéroport de Paris CDG</a>
+        <p class="drawer-text" data-i18n="drawer_cdg_address">Terminal 2 / Gare TGV - Niveau 4<br>Opposition Hôtel Sheraton</p>
         <img src="{{ asset('PA_CDG_FR_JAN_2026_9446a22942.jpeg') }}" class="drawer-map-img">
 
-        <a href="#" class="drawer-link">Aéroport de Paris ORLY</a>
-        <p class="drawer-text">Terminal 3 / Niveau d'arrivée</p>
+        <a href="#" class="drawer-link" data-i18n="drawer_orly">Aéroport de Paris ORLY</a>
+        <p class="drawer-text" data-i18n="drawer_orly_address">Terminal 3 / Niveau d'arrivée</p>
         <img src="{{ asset('PA_ORY_FR_JUN_2025_9ac2300e1c-1020x1020.jpeg') }}" class="drawer-map-img">
 
-        <h3 class="drawer-section-title">Contact</h3>
+        <h3 class="drawer-section-title" data-i18n="drawer_contact">Contact</h3>
         <p class="drawer-link">+33 (0)1 34 38 58 98</p>
         <p class="drawer-text" style="text-decoration: underline;">contact@hellopassenger.com</p>
         
         <div class="drawer-footer-btn" onclick="window.location.href='{{ $formUrl }}'">
-            <div class="text">Réserver</div>
+            <div class="text" data-i18n="drawer_book">Réserver</div>
             <div class="icon">↗</div>
         </div>
     </div>
