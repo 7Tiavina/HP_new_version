@@ -679,13 +679,6 @@
 
             </div>
 
-            <div class="bg-yellow-custom rounded-lg p-6">
-                <h3 class="font-bold text-black mb-2" data-i18n="form_attention">ATTENTION !</h3>
-                <p class="text-sm text-black leading-relaxed" data-i18n="form_attention_text">
-                    Les trajets pour la livraison ou la récupération des bagages peuvent inclure les gares : Gare du Nord, Châtelet Les Halles, Gare de Lyon, ou Saint-Michel Notre-Dame.
-                </p>
-            </div>
-
             <div class="bg-gray-800 rounded-lg p-4 flex items-center justify-between">
                 <p class="text-white text-sm" data-i18n="form_partner_text">
                     Vous êtes un professionnel du tourisme ? Facilitez le voyage de vos clients !
