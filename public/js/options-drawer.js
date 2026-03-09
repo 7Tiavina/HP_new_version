@@ -87,13 +87,13 @@ function closeOptionsDrawer() {
 function populateDrawerOptions() {
     const hasPremiumFromApi = staticOptions.premium && staticOptions.premium.id && staticOptions.premium.prixUnitaire > 0;
     const hasPriorityFromApi = staticOptions.priority && staticOptions.priority.id && staticOptions.priority.prixUnitaire > 0;
-    
+
     isPremiumAvailable = hasPremiumFromApi;
-    
+
     console.log('[populateDrawerOptions] staticOptions:', staticOptions);
     console.log('[populateDrawerOptions] Priority:', staticOptions.priority);
     console.log('[populateDrawerOptions] Premium:', staticOptions.premium);
-    
+
     // Priority Option
     const priorityCard = document.getElementById('drawer-option-priority');
     if (priorityCard) {
@@ -103,13 +103,13 @@ function populateDrawerOptions() {
             if (priceEl) {
                 const unitPrice = staticOptions.priority.prixUnitaire || 0;
                 const unitPriceBeforeDiscount = staticOptions.priority.prixUnitaireAvantRemise || staticOptions.priority.prix_unitaire_avant_remise || null;
-                
+
                 console.log('[populateDrawerOptions] Priority prices:', {
                     unitPrice,
                     unitPriceBeforeDiscount,
                     allKeys: Object.keys(staticOptions.priority)
                 });
-                
+
                 if (unitPriceBeforeDiscount != null && unitPriceBeforeDiscount > unitPrice) {
                     // Show discounted price with strikethrough original price
                     priceEl.innerHTML = `
@@ -124,11 +124,11 @@ function populateDrawerOptions() {
             priorityCard.classList.add('hidden');
         }
     }
-    
+
     // Premium Option
     const premiumCard = document.getElementById('drawer-option-premium');
     const premiumUnavailableMsg = document.getElementById('premium-drawer-unavailable-message');
-    
+
     if (premiumCard) {
         if (hasPremiumFromApi) {
             premiumCard.classList.remove('hidden');
@@ -139,13 +139,13 @@ function populateDrawerOptions() {
             if (priceEl) {
                 const unitPrice = staticOptions.premium.prixUnitaire || 0;
                 const unitPriceBeforeDiscount = staticOptions.premium.prixUnitaireAvantRemise || staticOptions.premium.prix_unitaire_avant_remise || null;
-                
+
                 console.log('[populateDrawerOptions] Premium prices:', {
                     unitPrice,
                     unitPriceBeforeDiscount,
                     allKeys: Object.keys(staticOptions.premium)
                 });
-                
+
                 if (unitPriceBeforeDiscount != null && unitPriceBeforeDiscount > unitPrice) {
                     // Show discounted price with strikethrough original price
                     priceEl.innerHTML = `
@@ -162,9 +162,14 @@ function populateDrawerOptions() {
             }
         }
     }
-    
+
     // Update buttons state
     updateButtonsState();
+    
+    // Apply translations to drawer content
+    if (typeof applyLanguage === 'function') {
+        setTimeout(() => applyLanguage(), 100);
+    }
 }
 
 /**

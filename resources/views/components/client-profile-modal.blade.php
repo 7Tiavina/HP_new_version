@@ -57,8 +57,8 @@
                             </div>
 
                             <div>
-                                <label for="modal-telephone" class="block text-xs font-bold text-gray-600 uppercase tracking-wide">Téléphone mobile <span class="text-red-500">*</span></label>
-                                <p class="text-xs text-gray-500 mt-1">Entrez votre numéro avec le code pays (ex : +33 6 12 34 56 78)</p>
+                                <label for="modal-telephone" class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="label_telephone">Téléphone mobile <span class="text-red-500">*</span></label>
+                                <p class="text-xs text-gray-500 mt-1" data-i18n="phone_hint">Entrez votre numéro avec le code pays (ex : +33 6 12 34 56 78)</p>
                                 <div class="mt-2">
                                     <input type="tel" name="telephone" id="modal-telephone" required placeholder="+33 6 12 34 56 78" autocomplete="off" class="block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-yellow-400 focus:ring-4 focus:ring-yellow-100 transition-all py-3 text-gray-800 font-medium">
                                 </div>
@@ -98,8 +98,8 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <h5 class="font-bold text-blue-900">Pourquoi ces informations ?</h5>
-                                        <p class="text-sm text-blue-700 mt-1">Pour finaliser votre réservation et permettre le contrôle de sécurité des bagages par rayons X conformément aux réglementations aéroportuaires.</p>
+                                        <h5 class="font-bold text-blue-900" data-i18n="why_info_title">Pourquoi ces informations ?</h5>
+                                        <p class="text-sm text-blue-700 mt-1" data-i18n="why_info_text">Pour finaliser votre réservation et permettre le contrôle de sécurité des bagages par rayons X conformément aux réglementations aéroportuaires.</p>
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
                 <!-- STEP 2: Premium Information -->
                 <div id="step-2-content" class="hidden space-y-6">
                     <div class="mb-6 p-4 bg-purple-50 rounded-xl border border-purple-200">
-                        <p class="text-sm text-purple-800">
+                        <p class="text-sm text-purple-800" data-i18n="premium_info_notice">
                             <span class="font-bold">ℹ️ Information :</span> Vous avez sélectionné l'option <span class="font-semibold">Premium</span>. Veuillez remplir les informations de transport ci-dessous pour permettre à notre équipe de préparer votre service VIP.
                         </p>
                     </div>
@@ -124,46 +124,46 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                                     </svg>
                                 </div>
-                                <h5 class="ml-3 font-bold text-gray-900 text-lg">Arrivée (Terminal → Agence)</h5>
+                                <h5 class="ml-3 font-bold text-gray-900 text-lg" data-i18n="premium_arrival_title">Arrivée (Terminal → Agence)</h5>
                             </div>
 
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide">Type de transport <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_transport_label">Type de transport <span class="text-red-500">*</span></label>
                                     <select name="transport_type_arrival" required class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-white focus:border-green-400 focus:ring-4 focus:ring-green-100 transition-all py-3 text-gray-800 font-medium">
-                                        <option value="">Sélectionner</option>
-                                        <option value="airport">Avion</option>
-                                        <option value="train">Train</option>
-                                        <option value="public_transport">Transports en commun</option>
-                                        <option value="other">Autre</option>
+                                        <option value="" data-i18n="premium_select">Sélectionner</option>
+                                        <option value="airport" data-i18n="premium_airport">Avion</option>
+                                        <option value="train" data-i18n="premium_train">Train</option>
+                                        <option value="public_transport" data-i18n="premium_public_transport">Transports en commun</option>
+                                        <option value="other" data-i18n="premium_other">Autre</option>
                                     </select>
                                 </div>
 
                                 <div id="flight_number_arrival_container" class="hidden">
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide">Numéro de vol</label>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_flight_number">Numéro de vol</label>
                                     <input type="text" name="flight_number_arrival" class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-green-400 focus:ring-4 focus:ring-green-100 transition-all py-3 text-gray-800 font-medium" placeholder="Ex: AF1234">
                                 </div>
 
                                 <div id="train_number_arrival_container" class="hidden">
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide">Numéro de train</label>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_train_number">Numéro de train</label>
                                     <input type="text" name="train_number_arrival" class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-green-400 focus:ring-4 focus:ring-green-100 transition-all py-3 text-gray-800 font-medium" placeholder="Ex: TGV8823">
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide">Lieu de prise en charge <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_pickup_location">Lieu de prise en charge <span class="text-red-500">*</span></label>
                                     <select name="pickup_location_arrival" id="modal-pickup-location-arrival" required class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-white focus:border-green-400 focus:ring-4 focus:ring-green-100 transition-all py-3 text-gray-800 font-medium">
-                                        <option value="">Sélectionner</option>
+                                        <option value="" data-i18n="premium_select">Sélectionner</option>
                                     </select>
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide">Date et heure <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_datetime_label">Date et heure <span class="text-red-500">*</span></label>
                                     <input type="datetime-local" name="pickup_datetime_arrival" id="pickup-datetime-arrival" required class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-green-400 focus:ring-4 focus:ring-green-100 transition-all py-3 text-gray-800 font-medium">
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide">Informations complémentaires</label>
-                                    <textarea name="instructions_arrival" rows="2" class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-green-400 focus:ring-4 focus:ring-green-100 transition-all py-3 text-gray-800 font-medium" placeholder="commentaires..."></textarea>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_instructions">Informations complémentaires</label>
+                                    <textarea name="instructions_arrival" rows="2" class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-green-400 focus:ring-4 focus:ring-green-100 transition-all py-3 text-gray-800 font-medium" data-i18n-placeholder="premium_instructions_placeholder" placeholder="commentaires..."></textarea>
                                 </div>
                             </div>
                         </div>
@@ -176,40 +176,40 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
                                     </svg>
                                 </div>
-                                <h5 class="ml-3 font-bold text-gray-900 text-lg">Départ (Agence → Terminal)</h5>
+                                <h5 class="ml-3 font-bold text-gray-900 text-lg" data-i18n="premium_departure_title">Départ (Agence → Terminal)</h5>
                             </div>
 
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide">Type de transport <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_transport_label">Type de transport <span class="text-red-500">*</span></label>
                                     <select name="transport_type_departure" required class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all py-3 text-gray-800 font-medium">
-                                        <option value="">Sélectionner</option>
-                                        <option value="airport">Avion</option>
-                                        <option value="train">Train</option>
-                                        <option value="public_transport">Transports en commun</option>
-                                        <option value="other">Autre</option>
+                                        <option value="" data-i18n="premium_select">Sélectionner</option>
+                                        <option value="airport" data-i18n="premium_airport">Avion</option>
+                                        <option value="train" data-i18n="premium_train">Train</option>
+                                        <option value="public_transport" data-i18n="premium_public_transport">Transports en commun</option>
+                                        <option value="other" data-i18n="premium_other">Autre</option>
                                     </select>
                                 </div>
 
                                 <div id="flight_number_departure_container" class="hidden">
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide">Numéro de vol</label>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_flight_number">Numéro de vol</label>
                                     <input type="text" name="flight_number_departure" class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all py-3 text-gray-800 font-medium" placeholder="Ex: AF456">
                                 </div>
 
                                 <div id="train_number_departure_container" class="hidden">
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide">Numéro de train</label>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_train_number">Numéro de train</label>
                                     <input type="text" name="train_number_departure" class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all py-3 text-gray-800 font-medium" placeholder="Ex: TGV8824">
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide">Lieu de restitution <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_restitution_location">Lieu de restitution <span class="text-red-500">*</span></label>
                                     <select name="restitution_location_departure" id="modal-restitution-location-departure" required class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all py-3 text-gray-800 font-medium">
-                                        <option value="">Sélectionner</option>
+                                        <option value="" data-i18n="premium_select">Sélectionner</option>
                                     </select>
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide">Date et heure <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_datetime_label">Date et heure <span class="text-red-500">*</span></label>
                                     <input type="datetime-local" name="restitution_datetime_departure" id="restitution-datetime-departure" required class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all py-3 text-gray-800 font-medium">
                                 </div>
                             </div>
@@ -226,12 +226,12 @@
                     Annuler
                 </button>
                 <div class="flex gap-4 w-full md:w-auto">
-                    <button id="backToStep1Btn" type="button" class="hidden w-full md:w-auto px-8 py-3 text-gray-600 font-bold hover:text-gray-800 transition-all border-2 border-gray-300 rounded-xl hover:border-gray-400 hover:bg-gray-100">
+                    <button id="backToStep1Btn" type="button" class="hidden w-full md:w-auto px-8 py-3 text-gray-600 font-bold hover:text-gray-800 transition-all border-2 border-gray-300 rounded-xl hover:border-gray-400 hover:bg-gray-100" data-i18n="btn_back">
                         ← Retour
                     </button>
                     <button id="saveClientProfileBtn" type="button" class="w-full md:w-auto px-12 py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all flex items-center justify-center text-lg">
-                        <span id="btn-continue-text">Continuer</span>
-                        <span id="btn-confirm-text" class="hidden">Confirmer et payer</span>
+                        <span id="btn-continue-text" data-i18n="btn_continue">Continuer</span>
+                        <span id="btn-confirm-text" class="hidden" data-i18n="btn_confirm_pay">Confirmer et payer</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>

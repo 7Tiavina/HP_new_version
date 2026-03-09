@@ -352,6 +352,7 @@ if (typeof window.translations === 'undefined') {
         payment_total_to_pay: "Total à payer",
         cart_subtotal: "Sous-total",
         cart_discount_online: "Offre réservation en ligne",
+        cart_discount_online_en: "Online booking discount",
         
         // Dashboard Client
         dashboard_welcome: "Bienvenue",
@@ -438,6 +439,60 @@ if (typeof window.translations === 'undefined') {
         agency_hours_message: "Notre agence est ouverte de 07h00 à 21h00 7/7. ",
         agency_hours_both_out: "Les horaires de dépôt et de retrait sont en dehors des heures d'ouverture.",
         agency_hours_dropoff_out: "L'horaire de dépôt est en dehors des heures d'ouverture.",
+        
+        // Options & Services Drawer
+        drawer_options_title: "Options & Services",
+        drawer_options_subtitle: "Personnalisez votre expérience de voyage",
+        drawer_priority_label: "PRIORITAIRE",
+        drawer_priority_title: "Service Priority",
+        drawer_priority_desc: "Traitement prioritaire de vos bagages à la dépose et à la récupération. Gagnez du temps et évitez les files d'attente.",
+        drawer_premium_label: "PREMIUM",
+        drawer_premium_title: "Service Premium",
+        drawer_premium_desc_simple: "Remise ou récupération de vos bagages à l'endroit exact choisi dans l'aéroport avec porteur dédié. Service VIP complet.",
+        drawer_premium_unavailable: "Service Premium indisponible",
+        drawer_cart_title: "Votre panier",
+        drawer_total: "Total à payer",
+        drawer_confirm: "Continuer mon paiement",
+        
+        // Payment Modal - Client Info
+        modal_title: "Complétez vos informations",
+        client_type_label: "Type de client",
+        client_type_particulier: "Particulier",
+        client_type_societe: "Société",
+        label_prenom: "Prénom",
+        label_nom: "Nom",
+        label_adresse: "Adresse",
+        label_telephone: "Téléphone mobile",
+        label_societe: "Nom de la Société",
+        btn_complete_profile: "Compléter mon profil (facultatif)",
+        phone_hint: "Entrez votre numéro avec le code pays (ex : +33 6 12 34 56 78)",
+        why_info_title: "Pourquoi ces informations ?",
+        why_info_text: "Pour finaliser votre réservation et permettre le contrôle de sécurité des bagages par rayons X conformément aux réglementations aéroportuaires.",
+        
+        // Payment Modal - Premium Info
+        premium_info_notice: "ℹ️ Information : Vous avez sélectionné l'option Premium. Veuillez remplir les informations de transport ci-dessous pour permettre à notre équipe de préparer votre service VIP.",
+        premium_arrival_title: "Arrivée (Terminal → Agence)",
+        premium_departure_title: "Départ (Agence → Terminal)",
+        premium_transport_label: "Type de transport",
+        premium_flight_number: "Numéro de vol",
+        premium_train_number: "Numéro de train",
+        premium_pickup_location: "Lieu de prise en charge",
+        premium_restitution_location: "Lieu de restitution",
+        premium_datetime_label: "Date et heure",
+        premium_instructions: "Informations complémentaires",
+        premium_instructions_placeholder: "commentaires...",
+        premium_airport: "Avion",
+        premium_train: "Train",
+        premium_public_transport: "Transports en commun",
+        premium_other: "Autre",
+        premium_select: "Sélectionner",
+        
+        // Payment Section
+        your_info: "Vos informations",
+        secure_payment: "Paiement sécurisé",
+        payment_missing_premium_title: "⚠️ Informations PREMIUM manquantes",
+        payment_missing_premium_text: "Vous avez sélectionné l'option PREMIUM. Veuillez compléter les informations de transport pour finaliser votre réservation.",
+        payment_complete_premium_btn: "Compléter les infos PREMIUM",
         agency_hours_pickup_out: "L'horaire de retrait est en dehors des heures d'ouverture.",
         agency_hours_contact: "Pour toutes demandes hors horaire merci de nous contacter au +33 <strong>1 34 38 58 98</strong>.",
         alert_pricing_fetch_error: "Une erreur technique est survenue lors de la récupération des tarifs.",
@@ -580,6 +635,63 @@ if (typeof window.translations === 'undefined') {
         country: "Country",
         edit: "Edit",
         not_provided: "Not provided",
+        
+        // Payment Modal - Client Info (EN)
+        modal_title_en: "Complete your information",
+        client_type_label_en: "Customer type",
+        client_type_particulier_en: "Individual",
+        client_type_societe_en: "Company",
+        label_prenom_en: "First name",
+        label_nom_en: "Last name",
+        label_adresse_en: "Address",
+        label_telephone_en: "Mobile phone",
+        label_societe_en: "Company name",
+        btn_complete_profile_en: "Complete my profile (optional)",
+        phone_hint_en: "Enter your number with country code (e.g.: +33 6 12 34 56 78)",
+        why_info_title_en: "Why this information?",
+        why_info_text_en: "To finalize your booking and allow X-ray security screening of luggage in accordance with airport regulations.",
+        
+        // Payment Modal - Premium Info (EN)
+        premium_info_notice_en: "ℹ️ Information: You have selected the Premium option. Please fill in the transport information below to allow our team to prepare your VIP service.",
+        premium_arrival_title_en: "Arrival (Terminal → Agency)",
+        premium_departure_title_en: "Departure (Agency → Terminal)",
+        premium_transport_label_en: "Transport type",
+        premium_flight_number_en: "Flight number",
+        premium_train_number_en: "Train number",
+        premium_pickup_location_en: "Pickup location",
+        premium_restitution_location_en: "Return location",
+        premium_datetime_label_en: "Date and time",
+        premium_instructions_en: "Additional information",
+        premium_instructions_placeholder_en: "comments...",
+        premium_airport_en: "Airplane",
+        premium_train_en: "Train",
+        premium_public_transport_en: "Public transport",
+        premium_other_en: "Other",
+        premium_select_en: "Select",
+        
+        // Payment Section (EN)
+        your_info_en: "Your information",
+        secure_payment_en: "Secure payment",
+        payment_missing_premium_title_en: "⚠️ PREMIUM information missing",
+        payment_missing_premium_text_en: "You have selected the PREMIUM option. Please complete the transport information to finalize your booking.",
+        payment_complete_premium_btn_en: "Complete PREMIUM info",
+        
+        // Options Drawer (EN)
+        drawer_options_title_en: "Options & Services",
+        drawer_options_subtitle_en: "Personalize your travel experience",
+        drawer_priority_label_en: "PRIORITY",
+        drawer_priority_title_en: "Priority Service",
+        drawer_priority_desc_en: "Priority handling of your luggage at drop-off and pickup. Save time and avoid queues.",
+        drawer_premium_label_en: "PREMIUM",
+        drawer_premium_title_en: "Premium Service",
+        drawer_premium_desc_simple_en: "Drop-off or pickup of your luggage at the exact location chosen in the airport with dedicated porter. Full VIP service.",
+        drawer_premium_unavailable_en: "Premium service unavailable",
+        drawer_cart_title_en: "Your cart",
+        drawer_total_en: "Total to pay",
+        drawer_confirm_en: "Continue to payment",
+        
+        // Cart (EN)
+        cart_discount_online_en: "Online booking discount",
         
         // Login/Register
         login_title: "Login",
@@ -1023,17 +1135,22 @@ window.t = (key, fallback) => translateKey(key, fallback);
 window.currentLang = window.currentLang || (localStorage.getItem('app_language') || 'fr');
 
 function applyLanguage(lang) {
+    // Si aucune langue n'est passée, utiliser la langue actuelle
+    if (!lang) {
+        lang = getCurrentLanguage();
+    }
+    
     console.warn('=== APPLYING LANGUAGE:', lang, '===');
     window.currentLang = lang;
     localStorage.setItem('app_language', lang);
-    
+
     // Update all text with data-i18n
     const elements = document.querySelectorAll('[data-i18n]');
     console.log('Found', elements.length, 'elements to translate');
-    
+
     elements.forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (window.translations[lang][key]) {
+        if (window.translations[lang] && window.translations[lang][key]) {
             const oldText = el.textContent;
             el.innerHTML = window.translations[lang][key];
             console.log('✓ Translated:', key, 'from', oldText, 'to', window.translations[lang][key]);

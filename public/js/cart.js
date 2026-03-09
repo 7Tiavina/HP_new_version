@@ -171,7 +171,12 @@ function updateCartDisplay() {
         var discountTextEl = cartDiscount.querySelector('.discount-text');
         var discountAmountEl = cartDiscount.querySelector('.discount-amount');
         if (discountTextEl && discountRate > 0) {
-            discountTextEl.textContent = 'Offre réservation en ligne (-' + Number(discountRate).toFixed(0) + '%)';
+            // Use translation if available
+            var discountText = 'Offre réservation en ligne';
+            if (typeof window.translateKey === 'function') {
+                discountText = window.translateKey('cart_discount_online', 'Offre réservation en ligne');
+            }
+            discountTextEl.textContent = discountText + ' (-' + Number(discountRate).toFixed(0) + '%)';
         }
         if (discountAmountEl) discountAmountEl.textContent = (hasRemise ? '-' : '') + formatPrice(discountAmount);
         cartDiscount.style.display = hasRemise ? 'flex' : 'none';

@@ -370,9 +370,9 @@
                             </div>
                         @elseif($hasPremium && !$premiumComplete)
                             <div class="p-4 bg-orange-100 border border-orange-300 rounded-md text-center">
-                                <p class="font-semibold text-orange-800 mb-2">⚠️ Informations PREMIUM manquantes</p>
-                                <p class="text-sm text-orange-700 mb-3">Vous avez sélectionné l'option PREMIUM. Veuillez compléter les informations de transport pour finaliser votre réservation.</p>
-                                <button id="completePremiumBtn" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-6 rounded-full transition-colors inline-flex items-center">
+                                <p class="font-semibold text-orange-800 mb-2" data-i18n="payment_missing_premium_title">⚠️ Informations PREMIUM manquantes</p>
+                                <p class="text-sm text-orange-700 mb-3" data-i18n="payment_missing_premium_text">Vous avez sélectionné l'option PREMIUM. Veuillez compléter les informations de transport pour finaliser votre réservation.</p>
+                                <button id="completePremiumBtn" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-6 rounded-full transition-colors inline-flex items-center" data-i18n="payment_complete_premium_btn">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
@@ -2020,6 +2020,11 @@
                         // Pas de premium, infos client complètes → ouvrir step 1 pour modification
                         console.log('[MODAL OPEN] No premium, client info complete, opening step 1');
                         goToStep(1);
+                    }
+                    
+                    // Apply translations to modal content
+                    if (typeof applyLanguage === 'function') {
+                        setTimeout(() => applyLanguage(), 100);
                     }
 
                     // Wait for lieux to be loaded if not already done
