@@ -205,6 +205,159 @@
     .nav-right-group .register-link:hover {
         color: #ffc439;
     }
+
+    /* --- DRAWER (LEFT SIDE) --- */
+    .hp-drawer-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        visibility: hidden;
+        opacity: 0;
+        transition: 0.4s;
+        z-index: 9998;
+        backdrop-filter: blur(4px);
+    }
+
+    .hp-drawer-wrapper {
+        position: fixed;
+        top: 0;
+        left: -520px;
+        width: 480px;
+        max-width: 90%;
+        height: 100%;
+        z-index: 9999;
+        transition: 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        display: flex;
+        padding: 15px;
+    }
+
+    .hp-drawer-wrapper.open {
+        left: 0;
+    }
+
+    .hp-drawer-overlay.open {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .hp-drawer-main {
+        flex: 1;
+        height: 100%;
+        background: #1a1a1a;
+        color: #ffffff;
+        padding: 40px 30px;
+        overflow-y: auto;
+        border-radius: 30px;
+        box-shadow: 15px 0 50px rgba(0,0,0,0.5);
+    }
+
+    .hp-drawer-side-bar {
+        width: 50px;
+        height: 100%;
+        margin-left: 15px;
+        background: url('{{ asset('HP-Drawer-black-fond.jpeg') }}') no-repeat center center;
+        background-size: cover;
+        border-radius: 30px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 30px;
+        cursor: pointer;
+    }
+
+    .hp-drawer-close-btn {
+        font-size: 35px;
+        color: #888;
+        transition: color 0.3s;
+        font-weight: 300;
+    }
+
+    .hp-drawer-side-bar:hover .hp-drawer-close-btn {
+        color: #fff;
+    }
+
+    .drawer-logo {
+        width: 120px;
+        margin-bottom: 40px;
+    }
+
+    .drawer-section-title {
+        font-size: 16px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin: 25px 0 12px 0;
+        border-bottom: 1px solid #333;
+        padding-bottom: 10px;
+    }
+
+    .drawer-link {
+        color: #ffc439;
+        text-decoration: none;
+        font-weight: 600;
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+    }
+
+    .drawer-text {
+        font-size: 12px;
+        color: #aaa;
+        margin-bottom: 12px;
+        line-height: 1.6;
+    }
+
+    .drawer-map-img {
+        width: 100%;
+        max-width: 280px;
+        border-radius: 15px;
+        margin: 10px 0 15px 0;
+        border: 1px solid #333;
+    }
+
+    .drawer-footer-btn {
+        margin-top: 35px;
+        display: flex;
+        align-items: center;
+        background: #252525;
+        border: 1px solid #333;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .drawer-footer-btn .text {
+        padding: 16px;
+        flex: 1;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 13px;
+        color: #fff;
+    }
+
+    .drawer-footer-btn .icon {
+        background: #8bb3e6;
+        padding: 16px 20px;
+        color: #1a1a1a;
+        font-weight: bold;
+        font-size: 18px;
+    }
+
+    .grid-dots {
+        cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+        .hp-drawer-wrapper {
+            width: 100%;
+            left: -100%;
+        }
+        .hp-drawer-main {
+            padding: 30px 20px;
+        }
+    }
 </style>
 
 <div class="hp-nav-container">
@@ -269,3 +422,60 @@
         </div>
     </nav>
 </div>
+
+<!-- Drawer Overlay & Wrapper -->
+<div class="hp-drawer-overlay" id="hp-drawer-overlay" onclick="toggleDrawer()"></div>
+<div class="hp-drawer-wrapper" id="hp-drawer">
+    <div class="hp-drawer-main">
+        <img src="{{ asset('HP-Logo-White.png') }}" class="drawer-logo" alt="Logo White">
+        
+        <h3 class="drawer-section-title">Plan d'accès</h3>
+        
+        <a href="#" class="drawer-link">Aéroport de Paris CDG</a>
+        <p class="drawer-text">Terminal 2 / Gare TGV - Niveau 4<br>Opposition Hôtel Sheraton</p>
+        <img src="{{ asset('PA_CDG_FR_JAN_2026_9446a22942.jpeg') }}" class="drawer-map-img">
+
+        <a href="#" class="drawer-link">Aéroport de Paris ORLY</a>
+        <p class="drawer-text">Terminal 3 / Niveau d'arrivée</p>
+        <img src="{{ asset('PA_ORY_FR_JUN_2025_9ac2300e1c-1020x1020.jpeg') }}" class="drawer-map-img">
+
+        <h3 class="drawer-section-title">Contact</h3>
+        <p class="drawer-link">+33 (0)1 34 38 58 98</p>
+        <p class="drawer-text" style="text-decoration: underline;">contact@hellopassenger.com</p>
+        
+        <div class="drawer-footer-btn" onclick="window.location.href='{{ $formUrl }}'">
+            <div class="text">Réserver</div>
+            <div class="icon">↗</div>
+        </div>
+    </div>
+    
+    <div class="hp-drawer-side-bar" onclick="toggleDrawer()">
+        <div class="hp-drawer-close-btn">&times;</div>
+    </div>
+</div>
+
+<script>
+    function toggleDrawer() {
+        const drawer = document.getElementById('hp-drawer');
+        const overlay = document.getElementById('hp-drawer-overlay');
+        
+        if (!drawer || !overlay) return;
+        
+        drawer.classList.toggle('open');
+        overlay.classList.toggle('open');
+        
+        // Prevent body scroll when drawer is open
+        document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : 'auto';
+    }
+
+    // Add click listener to grid-dots
+    document.addEventListener('DOMContentLoaded', function() {
+        const gridDots = document.querySelector('.grid-dots');
+        if (gridDots) {
+            gridDots.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleDrawer();
+            });
+        }
+    });
+</script>
