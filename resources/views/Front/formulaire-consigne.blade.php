@@ -68,6 +68,22 @@
         #hp-booking-root [data-i18n="form_required_fields"] {
             font-size: 15px !important;
         }
+
+        /* Add spacing between Hero and header/nav */
+        .hp-hero-section {
+            margin-top: 20px !important;
+        }
+
+        /* Add spacing between breadcrumb and form */
+        #hp-booking-root .hp-breadcrumb-wrapper {
+            margin-bottom: 40px !important;
+        }
+
+        /* Add spacing around form container */
+        .hp-form-wrapper {
+            padding-top: 40px !important;
+            padding-bottom: 60px !important;
+        }
     </style>
     <script>
         window.tailwind = window.tailwind || {};
@@ -526,7 +542,8 @@
     <!-- Tooltip content will be injected here -->
 </div>
 
-<div class="max-w-6xl mx-auto px-6 py-8">
+<!-- Main form container with increased top spacing -->
+<div class="max-w-6xl mx-auto px-6 py-8" style="margin-top: 60px; padding-top: 50px;">
     <div class="flex justify-between items-center mb-2">
         <h1 class="text-3xl font-bold text-gray-800" data-i18n="form_title">Réserver une consigne</h1>
         <button id="reset-form-btn" class="text-sm text-red-600 hover:text-red-800 font-medium flex items-center space-x-1 transition-colors">
@@ -540,7 +557,8 @@
         Sélectionnez le type de consigne et suivez les étapes du formulaire. Nous vous indiquerons les informations à fournir.
     </p>
 
-    <div class="flex justify-between items-center mb-8">
+    <!-- Breadcrumb with increased spacing -->
+    <div class="hp-breadcrumb-wrapper flex justify-between items-center mb-12" style="margin-top: 30px;">
         <div class="flex items-center space-x-2 text-sm text-gray-500">
             <span data-i18n="breadcrumb_home">Accueil</span>
             <span>→</span>
@@ -554,7 +572,8 @@
         </button>
     </div>
 
-    <div class="grid lg:grid-cols-3 gap-8">
+    <!-- Form content with increased spacing -->
+    <div class="grid lg:grid-cols-3 gap-8" style="margin-top: 40px;">
         <div class="lg:col-span-2 space-y-6">
             <!-- Étape 1: Aéroport et Dates -->
             <div id="step-1" class="{{ $isModal ? 'hp-step-active' : '' }}" style="display: block;">
