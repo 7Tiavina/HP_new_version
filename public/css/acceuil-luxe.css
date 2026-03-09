@@ -1185,76 +1185,70 @@ body {
 /* ============================================
    FOOTER - Floating block design
    ============================================ */
-.footer-wrapper {
-  padding: 20px;
-  width: 100%;
-  box-sizing: border-box;
-  background: #ffffff;
-}
 
 .custom-footer {
-  background-color: #2a2a2a;
-  border-radius: 40px;
-  padding: 60px 50px;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  padding: 100px 60px 60px;
+  position: relative;
   max-width: 1920px;
   width: 98%;
   margin: 0 auto;
   box-sizing: border-box;
-  position: relative;
 }
 
 .footer-grid {
+  max-width: 1400px;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  gap: 30px;
+  gap: 50px;
   border-top: 1px solid #333;
-  padding-top: 40px;
+  padding-top: 50px;
 }
 
 /* Colonne 1 : Logo & Depuis */
-.brand-col {
+.footer-col {
   display: flex;
   flex-direction: column;
 }
 
-.brand-col .footer-logo {
-  height: 60px;
-  width: fit-content;
-  margin-bottom: 20px;
+.footer-col .footer-logo {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 25px;
 }
 
 .since-text {
   font-size: 50px;
-  font-weight: 900;
+  font-weight: 800;
   color: transparent;
   -webkit-text-stroke: 1px #ffc439;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
-.credits {
-  font-size: 13px;
-  color: #888;
-}
-
-.credits span {
-  color: #ffc439;
-  font-weight: bold;
+.footer-col .credits {
+  font-size: 15px;
+  color: #ffffff;
+  margin-bottom: 10px;
 }
 
 /* Styles colonnes */
 .footer-col h3 {
-  font-size: 18px;
-  margin-bottom: 20px;
+  font-size: 20px;
+  margin-bottom: 25px;
   font-weight: 600;
   color: #ffffff;
 }
 
 .footer-col p, .footer-col a {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.8;
-  color: #ffffff;
+  color: #bbb;
   text-decoration: none;
   display: block;
+  margin-bottom: 12px;
 }
 
 .footer-col a:hover {
@@ -1263,7 +1257,18 @@ body {
 
 .yellow-text {
   color: #ffc439 !important;
-  font-weight: bold;
+  font-weight: 600;
+}
+
+/* Bouton footer spécifique */
+.footer-reserve {
+  display: inline-block;
+  color: #ffc439 !important;
+  border-bottom: 1px solid #ffc439;
+  padding-bottom: 5px;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-decoration: none;
 }
 
 /* Réseaux Sociaux */
