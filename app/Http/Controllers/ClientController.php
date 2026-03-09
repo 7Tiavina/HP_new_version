@@ -345,6 +345,7 @@ class ClientController extends Controller
             'ville' => 'nullable|string|max:150',
             'codePostal' => 'nullable|string|max:20',
             'pays' => 'nullable|string|max:100',
+            'premiumDetails' => 'nullable|array',
         ]);
 
         Log::info('[ClientController@updateProfile] Validation passed', ['validated' => $validated]);
@@ -365,6 +366,119 @@ class ClientController extends Controller
                 'client_id' => $client->id,
                 'new_data' => $validated,
             ]);
+
+            // === HANDLE PREMIUM DETAILS FOR CONNECTED CLIENTS (SAME AS GUEST FLOW) ===
+            if ($request->has('premiumDetails') && is_array($request->premiumDetails)) {
+                Log::info('[ClientController@updateProfile] Premium details detected for connected client', [
+                    'premiumDetails' => $request->premiumDetails,
+                ]);
+
+                // Store premium details in session (same as guest flow)
+                session(['premiumDetails' => $request->premiumDetails]);
+
+                // Update or create commande_en_cours with premium info
+                $commandeEnCours = session('commande_en_cours');
+                
+                if ($commandeEnCours) {
+                    // === GENERER COMMANDEINFOS DEPUIS LES INFOS PREMIUM (MEME LOGIQUE QUE GUEST) ===
+                    $premiumDetails = $request->premiumDetails;
+                    $commandeInfos = [
+                        'modeTransport' => '',
+                        'lieu' => '',
+                        'commentaires' => '',
+                    ];
+
+                    if (isset($premiumDetails['direction'])) {
+                        $commentairesArray = [];
+                        $commentairesArray[] = "Type de service: Service Premium complet (Arrivée + Départ)";
+
+                        // === ARRIVAL FLOW ===
+                        if (!empty($premiumDetails['transport_type_arrival'])) {
+                            $modeTransport = $premiumDetails['transport_type_arrival'];
+                            $displayModeTransport = [
+                                'airport' => 'Aéroport',
+                                'public_transport' => 'Transport en commun',
+                                'train' => 'Train',
+                                'other' => 'Autre',
+                            ][$modeTransport] ?? ucfirst(str_replace('_', ' ', $modeTransport));
+
+                            $commandeInfos['modeTransport'] = $displayModeTransport;
+
+                            if ($modeTransport === 'airport' && !empty($premiumDetails['flight_number_arrival'])) {
+                                $commentairesArray[] = "Vol arrivée: " . $premiumDetails['flight_number_arrival'];
+                            }
+                            if ($modeTransport === 'train' && !empty($premiumDetails['train_number_arrival'])) {
+                                $commentairesArray[] = "Train arrivée: " . $premiumDetails['train_number_arrival'];
+                            }
+                        }
+
+                        // === DEPARTURE FLOW ===
+                        if (!empty($premiumDetails['transport_type_departure'])) {
+                            $modeTransport = $premiumDetails['transport_type_departure'];
+                            $displayModeTransport = [
+                                'airport' => 'Aéroport',
+                                'public_transport' => 'Transport en commun',
+                                'train' => 'Train',
+                                'other' => 'Autre',
+                            ][$modeTransport] ?? ucfirst(str_replace('_', ' ', $modeTransport));
+
+                            // Only set if not already set from arrival
+                            if (empty($commandeInfos['modeTransport'])) {
+                                $commandeInfos['modeTransport'] = $displayModeTransport;
+                            }
+
+                            if ($modeTransport === 'airport' && !empty($premiumDetails['flight_number_departure'])) {
+                                $commentairesArray[] = "Vol départ: " . $premiumDetails['flight_number_departure'];
+                            }
+                            if ($modeTransport === 'train' && !empty($premiumDetails['train_number_departure'])) {
+                                $commentairesArray[] = "Train départ: " . $premiumDetails['train_number_departure'];
+                            }
+                        }
+
+                        // === LIEU (pickup location priority) ===
+                        if (!empty($premiumDetails['pickup_location_arrival_libelle'])) {
+                            $commandeInfos['lieu'] = $premiumDetails['pickup_location_arrival_libelle'];
+                        } else if (!empty($premiumDetails['restitution_location_departure_libelle'])) {
+                            $commandeInfos['lieu'] = $premiumDetails['restitution_location_departure_libelle'];
+                        } else if (!empty($premiumDetails['pickup_location_arrival'])) {
+                            $commandeInfos['lieu'] = "Lieu ID: " . $premiumDetails['pickup_location_arrival'];
+                        } else if (!empty($premiumDetails['restitution_location_departure'])) {
+                            $commandeInfos['lieu'] = "Lieu ID: " . $premiumDetails['restitution_location_departure'];
+                        } else {
+                            $commandeInfos['lieu'] = 'Non spécifié';
+                        }
+
+                        // === DATES ET HEURES ===
+                        if (!empty($premiumDetails['date_arrival'])) {
+                            $commentairesArray[] = "Date arrivée: " . $premiumDetails['date_arrival'];
+                        }
+                        if (!empty($premiumDetails['pickup_time_arrival'])) {
+                            $commentairesArray[] = "Heure prise en charge: " . $premiumDetails['pickup_time_arrival'];
+                        }
+                        if (!empty($premiumDetails['date_departure'])) {
+                            $commentairesArray[] = "Date départ: " . $premiumDetails['date_departure'];
+                        }
+                        if (!empty($premiumDetails['restitution_time_departure'])) {
+                            $commentairesArray[] = "Heure restitution: " . $premiumDetails['restitution_time_departure'];
+                        }
+
+                        // === INSTRUCTIONS ===
+                        if (!empty($premiumDetails['instructions_arrival'])) {
+                            $commentairesArray[] = "Infos complémentaires: " . $premiumDetails['instructions_arrival'];
+                        }
+
+                        $commandeInfos['commentaires'] = implode('; ', $commentairesArray);
+                    }
+
+                    $commandeEnCours['commandeInfos'] = $commandeInfos;
+                    session(['commande_en_cours' => $commandeEnCours]);
+                    Log::info('[ClientController@updateProfile] commande_en_cours updated with premium info', [
+                        'commandeInfos' => $commandeInfos,
+                    ]);
+                }
+
+                Log::info('[ClientController@updateProfile] Premium details saved to session for connected client');
+            }
 
             if ($request->expectsJson()) {
                 Log::info('=== [ClientController@updateProfile] SUCCESS (JSON) ===');
