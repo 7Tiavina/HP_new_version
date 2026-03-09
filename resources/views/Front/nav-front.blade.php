@@ -167,6 +167,44 @@
     @media (max-width: 1150px) {
         .nav-center-menu, .contact-left { display: none; }
     }
+
+    /* Auth injection in nav */
+    .nav-right-group .luxe-auth-inject {
+        display: inline-flex;
+        align-items: center;
+        gap: 1rem;
+    }
+    .nav-right-group .luxe-auth-inject a,
+    .nav-right-group .luxe-auth-inject button {
+        color: #1a1a1a;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        font-family: inherit;
+        transition: color 0.3s;
+    }
+    .nav-right-group .luxe-auth-inject a:hover,
+    .nav-right-group .luxe-auth-inject button:hover {
+        color: #ffc439;
+    }
+
+    /* Login/Register links */
+    .nav-right-group .login-link,
+    .nav-right-group .register-link {
+        color: #1a1a1a;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+    .nav-right-group .login-link:hover,
+    .nav-right-group .register-link:hover {
+        color: #ffc439;
+    }
 </style>
 
 <div class="hp-nav-container">
@@ -199,27 +237,35 @@
         </div>
 
         <ul class="nav-center-menu">
-            <li><a href="#">Nos Services Bagages <span class="chevron-down"></span></a></li>
-            <li><a href="#">A Propos</a></li>
-            <li><a href="#">Nous Localiser</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="#" data-i18n="nav_services">Nos Services Bagages</a></li>
+            <li><a href="#about" data-i18n="nav_about">A Propos</a></li>
+            <li><a href="#locate" data-i18n="nav_locate">Nous Localiser</a></li>
+            <li><a href="#contact" data-i18n="nav_contact">Contact</a></li>
         </ul>
 
         <div class="nav-right-group">
-            <div class="lang-box">
-                <img src="https://flagcdn.com/w20/us.png" width="20" alt="EN"> EN
-            </div>
-            
+            <!-- Translation Widget -->
+            @include('components.translation-widget')
+
+            <!-- User Icon -->
             <div class="icon-action">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
             </div>
 
+            <!-- Auth Links (Login/Register or Logout) -->
+            <div class="luxe-auth-inject"></div>
+
+            <!-- Menu Dots -->
             <div class="icon-action grid-dots">
                 <span></span><span></span>
                 <span></span><span></span>
             </div>
 
-            <a href="{{ $formUrl }}" class="btn-reserve">Réserver</a>
+            <!-- Bouton Réserver -->
+            <a href="{{ $formUrl }}" class="btn-reserve" data-i18n="btn_book">Réserver</a>
         </div>
     </nav>
 </div>

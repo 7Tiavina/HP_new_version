@@ -177,28 +177,67 @@
                 return defaultVal;
             }
             function setLoggedOut() {
-                document.querySelectorAll('a.login-link, a.register-link').forEach(function (a) { a.style.display = ''; });
-                clearInject();
-            }
-            function setLoggedIn() {
-                document.querySelectorAll('a.login-link, a.register-link').forEach(function (a) { a.style.display = 'none'; });
+                // Show login/register links
                 var inject = document.querySelector('.luxe-auth-inject');
                 if (!inject) return;
                 clearInject();
 
-                var myAccountText = getTranslation('my_account', 'Mon compte');
+                var loginText = getTranslation('login_btn', 'Se connecter');
+                var registerText = getTranslation('create_account_short', "S'inscrire");
+
+                // Create Login link
+                var spanLogin = document.createElement('span');
+                spanLogin.setAttribute('data-hp-auth-item', '1');
+                var aLogin = document.createElement('a');
+                aLogin.href = '#login';
+                aLogin.className = 'login-link';
+                aLogin.textContent = loginText;
+                aLogin.style.color = '#1a1a1a';
+                aLogin.onclick = function(e) {
+                    e.preventDefault();
+                    if (window.openLoginModal) window.openLoginModal();
+                };
+                spanLogin.appendChild(aLogin);
+                inject.appendChild(spanLogin);
+
+                // Create Register link
+                var spanRegister = document.createElement('span');
+                spanRegister.setAttribute('data-hp-auth-item', '1');
+                var aRegister = document.createElement('a');
+                aRegister.href = '#signup';
+                aRegister.className = 'register-link';
+                aRegister.textContent = registerText;
+                aRegister.style.color = '#1a1a1a';
+                aRegister.onclick = function(e) {
+                    e.preventDefault();
+                    if (window.openRegisterModal) window.openRegisterModal();
+                };
+                spanRegister.appendChild(aRegister);
+                inject.appendChild(spanRegister);
+            }
+            function setLoggedIn() {
+                // Hide login/register links
+                document.querySelectorAll('a.login-link, a.register-link').forEach(function (a) { a.style.display = 'none'; });
+
+                var inject = document.querySelector('.luxe-auth-inject');
+                if (!inject) return;
+                clearInject();
+
+                var myAccountText = getTranslation('header_my_dashboard', 'Mon compte');
                 var logoutText = getTranslation('logout_btn', 'Déconnexion');
 
+                // Create My Account link
                 var spanAccount = document.createElement('span');
                 spanAccount.setAttribute('data-hp-auth-item', '1');
-                spanAccount.style.marginRight = '1rem';
                 var aAccount = document.createElement('a');
                 aAccount.href = DASHBOARD_URL;
                 aAccount.textContent = myAccountText;
-                aAccount.style.color = 'var(--luxe-gold)';
+                aAccount.style.color = '#1a1a1a';
+                aAccount.style.fontWeight = '600';
                 spanAccount.appendChild(aAccount);
                 inject.appendChild(spanAccount);
 
+                // Create Logout button
                 var spanLogout = document.createElement('span');
                 spanLogout.setAttribute('data-hp-auth-item', '1');
                 var form = document.createElement('form');
@@ -216,9 +255,9 @@
                 btn.style.border = 'none';
                 btn.style.padding = '0';
                 btn.style.cursor = 'pointer';
-                btn.style.color = 'var(--luxe-cream-muted)';
-                btn.style.fontSize = '0.9rem';
-                btn.style.fontWeight = '500';
+                btn.style.color = '#1a1a1a';
+                btn.style.fontSize = '15px';
+                btn.style.fontWeight = '600';
                 btn.textContent = logoutText;
                 form.appendChild(btn);
                 spanLogout.appendChild(form);

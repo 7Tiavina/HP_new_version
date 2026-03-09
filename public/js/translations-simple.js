@@ -400,7 +400,14 @@ if (typeof window.translations === 'undefined') {
         header_email: "Email: contact@hellopassenger.com",
         social_facebook: "Facebook",
         social_linkedin: "LinkedIn",
-        
+
+        // Navigation
+        nav_services: "Nos Services Bagages",
+        nav_about: "A Propos",
+        nav_locate: "Nous Localiser",
+        nav_contact: "Contact",
+        btn_book: "Réserver",
+
         // Status
         status_completed: "Terminé",
         status_pending: "En attente",
@@ -1018,7 +1025,14 @@ if (typeof window.translations === 'undefined') {
         header_email: "Email: contact@hellopassenger.com",
         social_facebook: "Facebook",
         social_linkedin: "LinkedIn",
-        
+
+        // Navigation
+        nav_services: "Luggage Services",
+        nav_about: "About Us",
+        nav_locate: "Find Us",
+        nav_contact: "Contact",
+        btn_book: "Book Now",
+
         // Status
         status_completed: "Completed",
         status_pending: "Pending",
