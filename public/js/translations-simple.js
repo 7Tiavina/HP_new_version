@@ -141,9 +141,13 @@ if (typeof window.translations === 'undefined') {
         footer_faq: "FAQ",
         footer_contact_link: "Contact",
         footer_book: "Réservez maintenant ↗",
+        footer_created_by: "Créé par Agence Blablabla",
+        footer_contact: "Contactez-nous",
+        footer_cdg: "Aéroport de Paris CDG",
+        footer_cdg_address: "Terminal 2<br>Gare TGV - Niveau 4<br>Opposition Hôtel Sheraton",
+        footer_orly: "Aéroport de Paris ORLY",
+        footer_orly_address: "Terminal 3<br>Niveau d'arrivée",
         promo_intro: "Profitez de 10€ de réduction avec le code",
-        footer_copyright: "© 2026 par Hello Passenger. Tous droits réservés.",
-        footer_created: "Créé par <span class=\"text-yellow-500 font-bold\">Blablabla Agency</span>.",
         
         // Errors
         error_required_field: "Ce champ est requis",
@@ -766,9 +770,13 @@ if (typeof window.translations === 'undefined') {
         footer_faq: "FAQ",
         footer_contact_link: "Contact",
         footer_book: "Book Now ↗",
+        footer_created_by: "Created by Blablabla Agency",
+        footer_contact: "Contact Us",
+        footer_cdg: "Paris CDG Airport",
+        footer_cdg_address: "Terminal 2<br>TGV Station - Level 4<br>Opposite Sheraton Hotel",
+        footer_orly: "Paris ORLY Airport",
+        footer_orly_address: "Terminal 3<br>Arrival Level",
         promo_intro: "Enjoy €10 off your booking with the code",
-        footer_copyright: "© 2026 by Hello Passenger. All Rights Reserved.",
-        footer_created: "Created by <span class=\"text-yellow-500 font-bold\">Blablabla Agency</span>.",
         
         // Errors
         error_required_field: "This field is required",

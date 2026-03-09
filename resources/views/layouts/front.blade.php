@@ -90,26 +90,26 @@
         <div class="footer-grid">
             <div class="footer-col">
                 <img src="{{ asset('HP-Logo.png') }}" alt="Logo" class="footer-logo">
-                <div class="since-text">depuis 2001</div>
-                <p>© Hello Passenger {{ date('Y') }}. Tous droits réservés.</p>
-                <p style="font-size:12px; opacity:0.6;">Créé par Agence Blablabla</p>
-            </div>
-            
-            <div class="footer-col">
-                <h3>Plan d'accès</h3>
-                <a href="#" class="yellow-text">Aéroport de Paris CDG</a>
-                <p>Terminal 2<br>Gare TGV - Niveau 4<br>Opposition Hôtel Sheraton</p>
-                <br>
-                <a href="#" class="yellow-text">Aéroport de Paris ORLY</a>
-                <p>Terminal 3<br>Niveau d'arrivée</p>
+                <div class="since-text" data-i18n="footer_since">depuis 2001</div>
+                <p data-i18n="footer_credits">© Hello Passenger {{ date('Y') }}. Tous droits réservés.</p>
+                <p style="font-size:12px; opacity:0.6;" data-i18n="footer_created_by">Créé par Agence Blablabla</p>
             </div>
 
             <div class="footer-col">
-                <h3>Contactez-nous</h3>
+                <h3 data-i18n="footer_access">Plan d'accès</h3>
+                <a href="#" class="yellow-text" data-i18n="footer_cdg">Aéroport de Paris CDG</a>
+                <p data-i18n="footer_cdg_address">Terminal 2<br>Gare TGV - Niveau 4<br>Opposition Hôtel Sheraton</p>
+                <br>
+                <a href="#" class="yellow-text" data-i18n="footer_orly">Aéroport de Paris ORLY</a>
+                <p data-i18n="footer_orly_address">Terminal 3<br>Niveau d'arrivée</p>
+            </div>
+
+            <div class="footer-col">
+                <h3 data-i18n="footer_contact">Contactez-nous</h3>
                 <a href="tel:+33134385898" class="yellow-text">+33 (0)1 34 38 58 98</a>
-                <h3>Email</h3>
+                <h3 data-i18n="footer_email">Email</h3>
                 <a href="mailto:contact@hellopassenger.com" class="yellow-text">contact@hellopassenger.com</a>
-                <h3 style="margin-top:20px;">Suivez-nous</h3>
+                <h3 style="margin-top:20px;" data-i18n="footer_follow">Suivez-nous</h3>
                 <div class="socials" style="justify-content: flex-start; gap: 15px;">
                     <a href="#"><svg viewBox="0 0 24 24" style="fill:#ffc439; width:20px; height:20px;"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
                     <a href="#"><svg viewBox="0 0 24 24" style="fill:#ffc439; width:20px; height:20px;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z"/></svg></a>
@@ -117,12 +117,12 @@
             </div>
 
             <div class="footer-col">
-                <h3>Liens Rapides</h3>
-                <a href="{{ $formUrl }}">Services</a>
-                <a href="#faq">FAQ</a>
-                <a href="#contact">Contact</a>
+                <h3 data-i18n="footer_links">Liens Rapides</h3>
+                <a href="{{ $formUrl }}" data-i18n="footer_services">Services</a>
+                <a href="#faq" data-i18n="footer_faq">FAQ</a>
+                <a href="#contact" data-i18n="footer_contact_link">Contact</a>
                 <br><br>
-                <a href="{{ $formUrl }}" class="footer-reserve">Réservez maintenant ↗</a>
+                <a href="{{ $formUrl }}" class="footer-reserve" data-i18n="footer_book">Réservez maintenant ↗</a>
             </div>
         </div>
     </footer>
