@@ -905,8 +905,8 @@
     // Listener pour le bouton de réinitialisation
     document.getElementById('reset-form-btn').addEventListener('click', async function () {
         const confirmed = await showCustomConfirm(
-            'Réinitialiser la commande',
-            'Voulez-vous vraiment continuer ? Toutes les données saisies pour votre commande actuelle seront définitivement perdues.'
+            t('payment_reset_title', 'Réinitialiser la commande'),
+            t('payment_reset_text', 'Voulez-vous vraiment continuer ? Toutes les données saisies pour votre commande actuelle seront définitivement perdues.')
         );
         if (confirmed) {
             const loader = document.getElementById('loader');
