@@ -159,11 +159,11 @@
         </div>
 
         @if ($commandeData)
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                 <!-- Colonne de gauche : Récapitulatif de la commande -->
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-800 mb-6" data-i18n="payment_order_summary">Récapitulatif de votre commande</h1>
                     <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <h1 class="text-2xl font-bold text-gray-800 mb-6" data-i18n="payment_order_summary">Récapitulatif de votre commande</h1>
                         @php
                             // --- Duration Calculation ---
                             $duration_in_minutes = $commandeData['duration_in_minutes'] ?? 0;
