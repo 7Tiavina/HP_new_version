@@ -69,9 +69,20 @@ function updateCartDisplay() {
     function productLibelle(p) {
         return (p && (p.libelle || p.nom)) || '';
     }
+    /** Taux de remise en pourcentage */
+    function discountRate(p) {
+        if (!p) return 0;
+        var t = p.tauxRemise ?? p.taux_remise;
+        if (t != null && t !== '') {
+            var taux = typeof t === 'number' ? t : parseFloat(String(t).replace(',', '.'));
+            if (!isNaN(taux) && taux > 0 && taux < 100) return taux;
+        }
+        return 0;
+    }
 
     var total = 0;
     var subtotalNormal = 0;  /* total avant remise (pour affichage "Total normal") */
+    var totalSavings = 0;    /* économies totales */
     var fragments = [];
 
     items.forEach(function (item, index) {
@@ -80,11 +91,13 @@ function updateCartDisplay() {
         var lineNormal = 0;
         var unitPriceValue = 0;
         var unitPriceBeforeDiscountValue = null;
+        var lineDiscountRate = 0;
 
         if (item.itemCategory === 'baggage') {
             var product = productById(item.productId) || (item.libelle ? productByLibelle(item.libelle) : null);
             unitPriceValue = unitPrice(product);
             unitPriceBeforeDiscountValue = product ? unitPriceBeforeDiscount(product) : null;
+            lineDiscountRate = product ? discountRate(product) : 0;
             var qty = item.quantity || 0;
             linePrice = qty * unitPriceValue;
             if (unitPriceBeforeDiscountValue != null && unitPriceBeforeDiscountValue > unitPriceValue) {
@@ -96,38 +109,47 @@ function updateCartDisplay() {
             libelle = (qty > 1 ? qty + ' × ' : '') + libelle;
         } else if (item.itemCategory === 'option') {
             unitPriceValue = (typeof item.prix === 'number' && !isNaN(item.prix)) ? item.prix : 0;
-            unitPriceBeforeDiscountValue = (typeof item.prixUnitaireAvantRemise === 'number' && !isNaN(item.prixUnitaireAvantRemise)) ? item.prixUnitaireAvantRemise : 
+            unitPriceBeforeDiscountValue = (typeof item.prixUnitaireAvantRemise === 'number' && !isNaN(item.prixUnitaireAvantRemise)) ? item.prixUnitaireAvantRemise :
                                            (typeof item.prix_ttc_avant_remise === 'number' && !isNaN(item.prix_ttc_avant_remise)) ? item.prix_ttc_avant_remise : unitPriceValue;
             linePrice = unitPriceValue;
             lineNormal = unitPriceBeforeDiscountValue;
+            // Pour les options, calculer le taux de remise
+            if (unitPriceBeforeDiscountValue > unitPriceValue && unitPriceBeforeDiscountValue > 0) {
+                lineDiscountRate = Math.round(((unitPriceBeforeDiscountValue - unitPriceValue) / unitPriceBeforeDiscountValue) * 100);
+            }
         }
 
         total += linePrice;
         subtotalNormal += lineNormal;
+        totalSavings += (lineNormal - linePrice);
 
-        var hasDiscount = unitPriceBeforeDiscountValue != null && unitPriceBeforeDiscountValue > unitPriceValue;
+        var hasDiscount = unitPriceBeforeDiscountValue != null && unitPriceBeforeDiscountValue > unitPriceValue && lineDiscountRate > 0;
 
         var row = document.createElement('div');
-        row.className = 'flex justify-between items-center py-2';
-        
-        var priceHtml = '';
+        row.className = 'cart-item flex justify-between items-center py-3 border-b border-gray-150 last:border-0';
+
+        // Construction du HTML pour le nom du produit avec badge de remise
+        var libelleHtml = '<div class="flex-1">';
+        libelleHtml += '<div class="flex items-center gap-2">';
+        libelleHtml += '<span class="text-sm font-medium text-gray-800">' + escapeHtml(libelle) + '</span>';
         if (hasDiscount) {
-            priceHtml = '<div class="flex items-center gap-2">' +
-                        '<span class="text-xs text-gray-400 line-through">' + formatPrice(lineNormal) + '</span>' +
-                        '<span class="text-sm font-semibold text-gray-900">' + formatPrice(linePrice) + '</span>' +
-                        '</div>';
-        } else {
-            priceHtml = '<span class="text-sm font-semibold text-gray-900">' + formatPrice(linePrice) + '</span>';
+            libelleHtml += '<span class="badge-promo inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-700">-' + lineDiscountRate.toFixed(0) + '%</span>';
         }
+        libelleHtml += '</div>';
+        libelleHtml += '</div>';
         
-        row.innerHTML =
-            '<div class="flex-1 text-sm text-gray-800">' + escapeHtml(libelle) + '</div>' +
-            '<div class="flex items-center space-x-2">' +
-            priceHtml +
-            '<button type="button" class="delete-item-btn text-red-500 hover:text-red-700 p-1" data-index="' + index + '" aria-label="Supprimer">' +
+        // Affichage des prix alignés avec prix barré si remise
+        var priceHtml = '<div class="flex items-center gap-3">';
+        if (hasDiscount) {
+            priceHtml += '<span class="text-xs text-gray-400 line-through">' + formatPrice(lineNormal) + '</span>';
+        }
+        priceHtml += '<span class="text-sm font-bold text-gray-900 min-w-[60px] text-right">' + formatPrice(linePrice) + '</span>';
+        priceHtml += '<button type="button" class="delete-item-btn text-red-500 hover:text-red-700 p-1" data-index="' + index + '" aria-label="Supprimer">' +
             '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>' +
-            '</button>' +
-            '</div>';
+            '</button>';
+        priceHtml += '</div>';
+
+        row.innerHTML = libelleHtml + priceHtml;
         fragments.push(row);
     });
 
@@ -140,7 +162,7 @@ function updateCartDisplay() {
 
     var discountAmount = subtotalNormal > total ? Math.round((subtotalNormal - total) * 100) / 100 : 0;
     var hasRemise = discountAmount >= 0.01;
-    
+
     // Get discount rate from first product with remise
     var discountRate = 0;
     if (products.length > 0) {
@@ -159,13 +181,12 @@ function updateCartDisplay() {
             var t = p.tauxRemise ?? p.taux_remise;
             return (b != null && b !== '') || (t != null && t !== '' && Number(t) > 0);
         });
-        console.info('[Remises panier] sous-total normal=', subtotalNormal, 'total=', total, 'remise=', discountAmount, 'hasRemise=', hasRemise, 'discountRate=', discountRate, 'exemple produit avec remise=', firstWithRemise ? { libelle: firstWithRemise.libelle, prixUnitaire: firstWithRemise.prixUnitaire ?? firstWithRemise.prix_unitaire, prixUnitaireAvantRemise: firstWithRemise.prixUnitaireAvantRemise ?? firstWithRemise.prix_unitaire_avant_remise, tauxRemise: firstWithRemise.tauxRemise ?? firstWithRemise.taux_remise } : 'aucun');
+        console.info('[Remises panier] sous-total normal=', subtotalNormal, 'total=', total, 'remise=', discountAmount, 'hasRemise=', hasRemise, 'discountRate=', discountRate, 'totalSavings=', totalSavings, 'exemple produit avec remise=', firstWithRemise ? { libelle: firstWithRemise.libelle, prixUnitaire: firstWithRemise.prixUnitaire ?? firstWithRemise.prix_unitaire, prixUnitaireAvantRemise: firstWithRemise.prixUnitaireAvantRemise ?? firstWithRemise.prix_unitaire_avant_remise, tauxRemise: firstWithRemise.tauxRemise ?? firstWithRemise.taux_remise } : 'aucun');
     }
 
+    // Affichage du sous-total et des économies
     if (cartSubtotal) {
-        var subtotalEl = cartSubtotal.querySelector('.subtotal-amount');
-        if (subtotalEl) subtotalEl.textContent = formatPrice(subtotalNormal);
-        cartSubtotal.style.display = hasRemise ? 'flex' : 'none';
+        cartSubtotal.style.display = 'none';
     }
     if (cartDiscount) {
         var discountTextEl = cartDiscount.querySelector('.discount-text');
@@ -181,6 +202,11 @@ function updateCartDisplay() {
         if (discountAmountEl) discountAmountEl.textContent = (hasRemise ? '-' : '') + formatPrice(discountAmount);
         cartDiscount.style.display = hasRemise ? 'flex' : 'none';
     }
+    
+    // Affichage de la ligne "Vous économisez" - supprimé
+    var savingsRow = document.getElementById('cart-savings');
+    var savingsAmount = document.getElementById('cart-savings-amount');
+    if (savingsRow) savingsRow.style.display = 'none';
 
     if (typeof saveStateToSession === 'function') saveStateToSession();
 }

@@ -780,10 +780,6 @@
                         </svg>
                     </div>
                     <h3 class="font-bold text-lg text-black mb-2" data-i18n="form_empty_cart">Votre panier est vide :(</h3>
-                    <div class="bg-gray-100 rounded p-3 mt-4">
-                        <p class="text-sm text-gray-600 mb-2" data-i18n="form_total">Total:</p>
-                        <p class="text-2xl font-bold text-black total-panier">0€</p>
-                    </div>
                 </div>
                 <div id="cart-summary" class="bg-white border-2 border-yellow-400 rounded-lg p-6 shadow-sm" style="display: none;">
                     <div class="flex justify-between items-center mb-4">
@@ -791,19 +787,21 @@
                         <div id="cart-duration" class="text-sm text-gray-600 font-medium"></div>
                         <div class="custom-spinner" role="status" aria-hidden="true" id="loading-spinner-cart" style="display: none;"></div>
                     </div>
-                    <div id="cart-items-container" class="panier-content divide-y divide-gray-200">
+                    <div id="cart-items-container" class="panier-content">
                         <!-- Cart items will be injected here -->
                     </div>
-                    <div id="cart-subtotal" class="py-2 flex justify-between items-center border-t border-gray-200 mt-2" style="display: none;">
-                        <span class="subtotal-text text-sm text-gray-600" data-i18n="payment_total_normal">Total normal</span>
-                        <span class="subtotal-amount text-sm text-gray-400 line-through"></span>
-                    </div>
-                    <div id="cart-discount" class="py-2 flex justify-between items-center border-t border-gray-200 mt-2" style="display: none;">
-                        <span class="discount-text text-sm text-green-600 font-semibold" data-i18n="cart_discount_online">
-                            Offre réservation en ligne
+                    
+                    <!-- Ligne de remise (affichée seulement si remise) -->
+                    <div id="cart-discount" class="py-3 flex justify-between items-center border-t border-gray-200 mt-3" style="display: none;">
+                        <span class="discount-text text-sm text-green-600 font-semibold flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                            </svg>
+                            <span data-i18n="cart_discount_online">Offre réservation en ligne</span>
                         </span>
                         <span class="discount-amount text-sm text-green-600 font-semibold"></span>
                     </div>
+                    
                     <div class="bg-yellow-custom rounded p-3 mt-4 flex justify-center items-center summary-total-container cursor-pointer hover:opacity-90 transition-opacity" role="button" tabindex="0" id="btn-proceed-payment" aria-label="Procéder au paiement">
                         <span class="text-lg font-bold text-gray-dark" data-i18n="form_proceed_payment">Procéder au paiement</span>
                     </div>
@@ -1194,6 +1192,30 @@
 #hp-booking-root #sticky-summary > .bg-white:first-child {
   margin-top: 0 !important;
   padding-top: 1.5rem !important;
+}
+
+/* Styles pour le panier amélioré */
+#hp-booking-root .cart-item {
+  border-bottom: 1px solid #f3f4f6 !important;
+}
+#hp-booking-root .cart-item:last-child {
+  border-bottom: 0 !important;
+}
+#hp-booking-root .badge-promo {
+  background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
+  color: #166534 !important;
+  font-weight: 700 !important;
+  box-shadow: 0 1px 2px rgba(22, 101, 52, 0.1) !important;
+}
+#hp-booking-root .old-price {
+  color: #9ca3af !important;
+  text-decoration: line-through !important;
+  font-size: 0.75rem !important;
+}
+#hp-booking-root .current-price {
+  color: #111827 !important;
+  font-weight: 700 !important;
+  font-size: 0.875rem !important;
 }
 </style>
 @endpush
