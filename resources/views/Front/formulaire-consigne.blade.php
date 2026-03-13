@@ -348,28 +348,29 @@
 
                     <!-- Content -->
                     <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="inline-block bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm" data-i18n="drawer_premium_label">PREMIUM</span>
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="inline-block bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm" data-i18n="drawer_premium_label">PREMIUM</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900" data-i18n="drawer_premium_title">Service Premium</h3>
+                                <p class="mt-1 text-xs text-gray-600 leading-relaxed" data-i18n="drawer_premium_desc_simple">Remise ou récupération de vos bagages à l'endroit exact choisi dans l'aéroport avec porteur dédié. Service VIP complet.</p>
+                            </div>
+                            <!-- Add/Remove Buttons - Integrated -->
+                            <div class="flex flex-col gap-1 flex-shrink-0">
+                                <button id="add-premium-btn" onclick="addOptionToCart('premium')" class="w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Ajouter au panier">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                </button>
+                                <button id="remove-premium-btn" onclick="removeOptionFromCart('premium')" class="w-8 h-8 bg-gradient-to-br from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Retirer du panier">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900" data-i18n="drawer_premium_title">Service Premium</h3>
-                        <p class="mt-1 text-xs text-gray-600 leading-relaxed" data-i18n="drawer_premium_desc_simple">Remise ou récupération de vos bagages à l'endroit exact choisi dans l'aéroport avec porteur dédié. Service VIP complet.</p>
                         <p id="drawer-premium-price" class="mt-2 text-xl font-bold text-purple-600"></p>
-                    </div>
-                </div>
-
-                <!-- Add/Remove Buttons -->
-                <div class="mt-4 pt-3 border-t border-purple-200">
-                    <div class="flex items-center justify-end gap-2">
-                        <button id="add-premium-btn" onclick="addOptionToCart('premium')" class="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Ajouter au panier">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                            </svg>
-                        </button>
-                        <button id="remove-premium-btn" onclick="removeOptionFromCart('premium')" class="w-10 h-10 bg-gradient-to-br from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Retirer du panier">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        </button>
                     </div>
                 </div>
 
@@ -400,28 +401,29 @@
 
                     <!-- Content -->
                     <div class="flex-1">
-                        <div class="flex items-center gap-2 mb-1">
-                            <span class="inline-block bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm" data-i18n="drawer_priority_label">PRIORITAIRE</span>
+                        <div class="flex items-start justify-between gap-3">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-1">
+                                    <span class="inline-block bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm" data-i18n="drawer_priority_label">PRIORITAIRE</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900" data-i18n="drawer_priority_title">Service Priority</h3>
+                                <p class="mt-1 text-xs text-gray-600 leading-relaxed" data-i18n="drawer_priority_desc">Traitement prioritaire de vos bagages à la dépose et à la récupération. Gagnez du temps et évitez les files d'attente.</p>
+                            </div>
+                            <!-- Add/Remove Buttons - Integrated -->
+                            <div class="flex flex-col gap-1 flex-shrink-0">
+                                <button id="add-priority-btn" onclick="addOptionToCart('priority')" class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Ajouter au panier">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                                    </svg>
+                                </button>
+                                <button id="remove-priority-btn" onclick="removeOptionFromCart('priority')" class="w-8 h-8 bg-gradient-to-br from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Retirer du panier">
+                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-900" data-i18n="drawer_priority_title">Service Priority</h3>
-                        <p class="mt-1 text-xs text-gray-600 leading-relaxed" data-i18n="drawer_priority_desc">Traitement prioritaire de vos bagages à la dépose et à la récupération. Gagnez du temps et évitez les files d'attente.</p>
                         <p id="drawer-priority-price" class="mt-2 text-xl font-bold text-green-600"></p>
-                    </div>
-                </div>
-
-                <!-- Add/Remove Buttons -->
-                <div class="mt-4 pt-3 border-t border-green-200">
-                    <div class="flex items-center justify-end gap-2">
-                        <button id="add-priority-btn" onclick="addOptionToCart('priority')" class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Ajouter au panier">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                            </svg>
-                        </button>
-                        <button id="remove-priority-btn" onclick="removeOptionFromCart('priority')" class="w-10 h-10 bg-gradient-to-br from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Retirer du panier">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        </button>
                     </div>
                 </div>
             </div>
