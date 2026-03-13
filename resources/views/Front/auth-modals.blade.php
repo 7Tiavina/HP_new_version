@@ -1,5 +1,10 @@
 <!-- Previous (original) auth modals found in `_public_html/resources/views/Front/header-front.blade.php` -->
 
+<!-- intl-tel-input CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
+<!-- intl-tel-input JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+
 <style>
     /* Fallback styles for the loader animation even if Tailwind isn't ready yet */
     @keyframes hpProgress {
@@ -17,6 +22,21 @@
     #forgotPasswordModal label,
     #loginErrorModal label {
         color: #ffffff !important;
+    }
+    
+    /* intl-tel-input dark theme */
+    #registerModal .iti__country-list {
+        background-color: #1f2937 !important;
+        border-color: #374151 !important;
+    }
+    #registerModal .iti__country {
+        color: #ffffff !important;
+    }
+    #registerModal .iti__country:hover {
+        background-color: #374151 !important;
+    }
+    #registerModal .iti__highlight {
+        background-color: #f9c52d !important;
     }
 </style>
 
@@ -167,8 +187,8 @@
 
             <div>
                 <label for="registerTelephone" class="block text-sm font-bold text-gray-300 mb-2" data-i18n="telephone">TÉLÉPHONE :</label>
-                <input id="registerTelephone" name="telephone" type="tel" value="{{ old('telephone') }}"
-                       placeholder="+33 6 12 34 56 78 (avec code pays)"
+                <input id="registerTelephone" name="telephone" type="text" value="{{ old('telephone') }}"
+                       placeholder="+33 6 12 34 56 78"
                        autocomplete="off"
                        class="w-full px-4 py-3 border-2 border-gray-600 bg-gray-800 text-white rounded-lg focus:border-[#f9c52d] focus:ring-2 focus:ring-[#f9c52d] focus:outline-none transition-all" />
                 <p class="text-xs text-gray-400 mt-1" data-i18n="phone_country_code_hint">⚠️ Veuillez renseigner votre numéro avec le code pays (ex: +33 pour la France, +230 pour Maurice)</p>
@@ -542,6 +562,26 @@
         const q = window.__hpAuthQueue || [];
         window.__hpAuthQueue = [];
         q.forEach((t) => { if (t === 'register') openRegisterModal(); else openLoginModal(); });
+
+        // Initialize intl-tel-input for register phone field (like in payment.blade.php)
+        const phoneInput = document.getElementById('registerTelephone');
+        let itiInstance = null;
+        
+        if (phoneInput && window.intlTelInput) {
+            itiInstance = window.intlTelInput(phoneInput, {
+                initialCountry: 'auto',
+                geoIpLookup: function(callback) {
+                    fetch('https://ipapi.co/json')
+                        .then(function(res) { return res.json(); })
+                        .then(function(data) { callback(data.country_code); })
+                        .catch(function() { callback('fr'); });
+                },
+                utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js',
+                preferredCountries: ['fr', 'mu', 'be', 'ch', 'ca'],
+                autoPlaceholder: 'aggressive',
+                separateDialCode: false
+            });
+        }
     })();
 </script>
 
