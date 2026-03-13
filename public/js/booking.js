@@ -29,11 +29,26 @@ function alignStickyWithBaggage() {
 }
 
 const productMapJs = {
-    'Accessoires': { type: 'accessory', description: () => t('luggage_accessoires_desc', 'Petits objets comme un sac à main, un ordinateur portable ou un casque.') },
-    'Bagage cabine': { type: 'cabin', description: () => t('luggage_bagage_cabine_desc', 'Valise de taille cabine, généralement jusqu\'\u00e0 55x35x25 cm.') },
-    'Bagage soute': { type: 'hold', description: () => t('luggage_bagage_soute_desc', 'Grande valise enregistrée en soute.') },
-    'Bagage spécial': { type: 'special', description: () => t('luggage_bagage_special_desc', 'Objets volumineux ou hors format comme un équipement de sport ou un instrument de musique.') },
-    'Vestiaire': { type: 'cloakroom', description: () => t('luggage_vestiaire_desc', 'Pour les manteaux, vestes ou autres vêtements sur cintre.') }
+    'Accessoires': { 
+        type: 'accessory', 
+        description: () => t('luggage_accessoires_desc', 'Moins de 3 kg. Petits objets : sac à main, sac d’ordinateur, caméra.') 
+    },
+    'Bagage cabine': { 
+        type: 'cabin', 
+        description: () => t('luggage_bagage_cabine_desc', 'Moins de 9 kg. Dimensions max : 55 x 35 x 25 cm.') 
+    },
+    'Bagage soute': { 
+        type: 'hold', 
+        description: () => t('luggage_bagage_soute_desc', 'Moins de 30 kg. Somme des dimensions (L+l+h) inférieure à 158 cm.') 
+    },
+    'Bagage spécial': { 
+        type: 'special', 
+        description: () => t('luggage_bagage_special_desc', 'Plus de 30 kg ou dimensions hors format (L+l+h > 158 cm) : sport, musique, etc.') 
+    },
+    'Vestiaire': { 
+        type: 'cloakroom', 
+        description: () => t('luggage_vestiaire_desc', 'Pour les manteaux, vestes ou autres vêtements sur cintre.') 
+    }
 };
 
 let isPriorityAvailable = false;

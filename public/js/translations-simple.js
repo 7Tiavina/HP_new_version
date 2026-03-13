@@ -331,10 +331,10 @@ if (typeof window.translations === 'undefined') {
         luggage_bagage_soute: "Bagage soute",
         luggage_bagage_special: "Bagage spécial",
         luggage_vestiaire: "Vestiaire",
-        luggage_accessoires_desc: "Petits objets comme un sac à main, un ordinateur portable ou un casque.",
-        luggage_bagage_cabine_desc: "Valise de taille cabine, généralement jusqu'à 55x35x25 cm.",
-        luggage_bagage_soute_desc: "Grande valise enregistrée en soute.",
-        luggage_bagage_special_desc: "Objets volumineux ou hors format comme un équipement de sport ou un instrument de musique.",
+        luggage_accessoires_desc: "Moins de 3 kg. Petits objets : sac à main, sac d'ordinateur, caméra.",
+        luggage_bagage_cabine_desc: "Moins de 9 kg. Dimensions max : 55 x 35 x 25 cm.",
+        luggage_bagage_soute_desc: "Moins de 30 kg. Somme des dimensions (L+l+h) inférieure à 158 cm.",
+        luggage_bagage_special_desc: "Plus de 30 kg ou dimensions hors format (L+l+h > 158 cm) : sport, musique, etc.",
         luggage_vestiaire_desc: "Pour les manteaux, vestes ou autres vêtements sur cintre.",
         
         // Time units
@@ -970,10 +970,10 @@ if (typeof window.translations === 'undefined') {
         luggage_bagage_soute: "Checked baggage",
         luggage_bagage_special: "Special baggage",
         luggage_vestiaire: "Cloakroom",
-        luggage_accessoires_desc: "Small items like a handbag, laptop, or headphones.",
-        luggage_bagage_cabine_desc: "Cabin-size suitcase, typically up to 55x35x25 cm.",
-        luggage_bagage_soute_desc: "Large suitcase checked in hold.",
-        luggage_bagage_special_desc: "Bulky or oversized items like sports equipment or a musical instrument.",
+        luggage_accessoires_desc: "Less than 3 kg. Small items: handbag, computer bag, camera.",
+        luggage_bagage_cabine_desc: "Less than 9 kg. Max dimensions: 55 x 35 x 25 cm.",
+        luggage_bagage_soute_desc: "Less than 30 kg. Sum of dimensions (L+W+H) less than 158 cm.",
+        luggage_bagage_special_desc: "More than 30 kg or oversized dimensions (L+W+H > 158 cm): sports, music, etc.",
         luggage_vestiaire_desc: "For coats, jackets, or other hanging garments.",
         
         // Time units

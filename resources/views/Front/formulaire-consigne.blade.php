@@ -843,8 +843,7 @@
 <script src="{{ asset('js/quick-date-modal.js') }}?v={{ $jsVersion('js/quick-date-modal.js') }}"></script>
 <script src="{{ asset('js/cart.js') }}?v={{ $jsVersion('js/cart.js') }}"></script>
 <script src="{{ asset('js/options-drawer.js') }}?v={{ $jsVersion('js/options-drawer.js') }}"></script>
-<script src="{{ asset('js/booking.js') }}?v={{ $jsVersion('js/booking.js') }}"></script>
-
+<script src="{{ asset('js/booking.js') }}?v={{ $jsVersion('js/booking.js') }}&t={{ time() }}"></script> 
 <!-- Scripts for timepicker discret -->
 <script>
     // Fonction pour formater l'heure avec zéro devant
