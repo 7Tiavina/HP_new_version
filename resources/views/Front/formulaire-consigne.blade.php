@@ -783,7 +783,7 @@
                 </div>
                 <div id="cart-summary" class="bg-white border-2 border-yellow-400 rounded-lg p-6 shadow-sm" style="display: none;">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg text-black" data-i18n="form_your_cart">Votre panier</h3>
+                        <h3 class="font-bold text-lg text-black text-center w-full" data-i18n="form_your_cart">Votre panier</h3>
                         <div id="cart-duration" class="text-sm text-gray-600 font-medium"></div>
                         <div class="custom-spinner" role="status" aria-hidden="true" id="loading-spinner-cart" style="display: none;"></div>
                     </div>

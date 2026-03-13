@@ -264,16 +264,39 @@ function updateDrawerCart() {
             const product = productById(item.productId);
             unitPriceValue = unitPrice(product);
             // Get price before discount
-            unitPriceBeforeDiscount = product?.prixUnitaireAvantRemise ?? product?.prix_unitaire_avant_remise ?? unitPriceValue;
+            const avant = product?.prixUnitaireAvantRemise ?? product?.prix_unitaire_avant_remise;
+            const taux = product?.tauxRemise ?? product?.taux_remise;
+            if (avant != null && avant !== '') {
+                unitPriceBeforeDiscount = typeof avant === 'number' ? avant : parseFloat(String(avant).replace(',', '.'));
+            } else if (taux != null && taux !== '' && taux > 0) {
+                const t = typeof taux === 'number' ? taux : parseFloat(String(taux).replace(',', '.'));
+                if (!isNaN(t) && t > 0 && t < 100 && unitPriceValue > 0) {
+                    unitPriceBeforeDiscount = Math.round((unitPriceValue / (1 - t / 100)) * 100) / 100;
+                }
+            }
+            if (unitPriceBeforeDiscount === 0) unitPriceBeforeDiscount = unitPriceValue;
             itemTotal = unitPriceValue * (item.quantity || 1);
             libelle = product ? (product.libelle || product.nom || libelle) : libelle;
             libelle = (item.quantity || 1) + ' × ' + libelle;
         } else if (item.itemCategory === 'option') {
             // Options: use prixUnitaire from API
             unitPriceValue = parseFloat(item.prixUnitaire) || parseFloat(item.prix) || 0;
-            unitPriceBeforeDiscount = parseFloat(item.prixUnitaireAvantRemise) || parseFloat(item.prix_ttc_avant_remise) || unitPriceValue;
+            const avant = parseFloat(item.prixUnitaireAvantRemise) || parseFloat(item.prix_ttc_avant_remise) || 0;
+            const taux = parseFloat(item.tauxRemise) || parseFloat(item.taux_remise) || 0;
+            if (avant > 0) {
+                unitPriceBeforeDiscount = avant;
+            } else if (taux > 0 && unitPriceValue > 0) {
+                unitPriceBeforeDiscount = Math.round((unitPriceValue / (1 - taux / 100)) * 100) / 100;
+            } else {
+                unitPriceBeforeDiscount = unitPriceValue;
+            }
             itemTotal = unitPriceValue * (item.quantity || 1);
         }
+
+        const hasDiscount = unitPriceBeforeDiscount > unitPriceValue && unitPriceBeforeDiscount > 0;
+        const discountRate = hasDiscount && unitPriceBeforeDiscount > 0 
+            ? Math.round(((unitPriceBeforeDiscount - unitPriceValue) / unitPriceBeforeDiscount) * 100) 
+            : 0;
 
         console.log('[updateDrawerCart] unitPrice:', unitPriceValue, 'unitPriceBeforeDiscount:', unitPriceBeforeDiscount, 'itemTotal:', itemTotal);
 
@@ -284,33 +307,34 @@ function updateDrawerCart() {
         const gradientClass = item.key === 'priority' ? 'from-yellow-50 to-amber-50 border-yellow-200' :
                              (item.key === 'premium' ? 'from-purple-50 to-indigo-50 border-purple-200' : 'from-gray-50 to-white border-gray-200');
 
-        const hasDiscount = unitPriceBeforeDiscount > unitPriceValue;
-
         html += `
             <div class="flex items-center gap-3 p-4 bg-gradient-to-r ${gradientClass} rounded-xl border transition-all hover:shadow-md">
                 <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-xl shadow-sm flex-shrink-0">
                     ${icon}
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-bold text-gray-900 truncate">${libelle}</p>
                     <div class="flex items-center gap-2">
-                        <p class="text-xs text-gray-500">
-                            ${formatPrice(unitPriceValue)} € x ${item.quantity || 1}
-                        </p>
-                        ${hasDiscount ? 
-                            `<span class="text-xs text-gray-400 line-through">${formatPrice(unitPriceBeforeDiscount)} €</span>` : 
+                        <p class="text-sm font-bold text-gray-900 truncate">${libelle}</p>
+                        ${hasDiscount ?
+                            `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-bold bg-green-100 text-green-700">-${discountRate}%</span>` :
                             ''}
+                    </div>
+                    <div class="flex items-center gap-2 mt-1">
+                        ${hasDiscount ?
+                            `<span class="text-xs text-gray-400 line-through">${formatPrice(unitPriceBeforeDiscount)} €</span>` :
+                            ''}
+                        <span class="text-xs font-semibold text-gray-700">${formatPrice(unitPriceValue)} € x ${item.quantity || 1}</span>
                     </div>
                 </div>
                 <div class="text-right flex-shrink-0">
-                    <div class="flex items-center gap-2 justify-end">
-                        ${hasDiscount ? 
-                            `<span class="text-xs text-gray-400 line-through">${formatPrice(unitPriceBeforeDiscount * (item.quantity || 1))} €</span>` : 
+                    <div class="flex flex-col items-end gap-1">
+                        ${hasDiscount ?
+                            `<span class="text-xs text-gray-400 line-through">${formatPrice(unitPriceBeforeDiscount * (item.quantity || 1))} €</span>` :
                             ''}
                         <p class="text-sm font-bold text-gray-900">${formatPrice(itemTotal)} €</p>
                     </div>
                     ${isOption ?
-                        `<button onclick="removeOptionFromDrawer('${item.key}')" class="text-xs text-red-500 hover:text-red-700 font-medium mt-0.5 transition-colors">Retirer</button>` :
+                        `<button onclick="removeOptionFromDrawer('${item.key}')" class="text-xs text-red-500 hover:text-red-700 font-medium mt-1 transition-colors">Retirer</button>` :
                         ''}
                 </div>
             </div>
@@ -380,10 +404,10 @@ function setupDrawerEventListeners() {
 function addOptionToCart(optionKey) {
     const option = staticOptions[optionKey];
     if (!option) return;
-    
+
     // Check if already in cart
     if (cartItems.some(item => item.key === optionKey)) return;
-    
+
     cartItems.push({
         itemCategory: 'option',
         id: option.id,
@@ -391,10 +415,14 @@ function addOptionToCart(optionKey) {
         libelle: option.libelle,
         prix: option.prixUnitaire,
         prixUnitaire: option.prixUnitaire,
+        prixUnitaireAvantRemise: option.prixUnitaireAvantRemise ?? null,
+        prix_ttc_avant_remise: option.prix_ttc_avant_remise ?? null,
+        tauxRemise: option.tauxRemise ?? null,
+        taux_remise: option.taux_remise ?? null,
         quantity: 1,
         details: {} // Empty details, will be filled at payment step
     });
-    
+
     updateCartDisplay();
     updateDrawerCart();
     updateButtonsState();
