@@ -133,8 +133,8 @@
                                     <select name="transport_type_arrival" required class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-white focus:border-green-400 focus:ring-4 focus:ring-green-100 transition-all py-3 text-gray-800 font-medium">
                                         <option value="" data-i18n="premium_select">Sélectionner</option>
                                         <option value="airport" data-i18n="premium_airport">Avion</option>
-                                        <option value="train" data-i18n="premium_train">Train</option>
-                                        <option value="public_transport" data-i18n="premium_public_transport">Transports en commun</option>
+                                        <option value="train" data-i18n="premium_train">TGV</option>
+                                        <option value="public_transport" data-i18n="premium_public_transport">Métro / RER</option>
                                         <option value="other" data-i18n="premium_other">Autre</option>
                                     </select>
                                 </div>
@@ -145,7 +145,7 @@
                                 </div>
 
                                 <div id="train_number_arrival_container" class="hidden">
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_train_number">Numéro de train</label>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_train_number">Numéro de TGV</label>
                                     <input type="text" name="train_number_arrival" class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-green-400 focus:ring-4 focus:ring-green-100 transition-all py-3 text-gray-800 font-medium" placeholder="Ex: TGV8823">
                                 </div>
 
@@ -157,7 +157,18 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_datetime_label">Date et heure <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide flex items-center gap-1 group">
+                                        <span data-i18n="premium_datetime_label">Date et heure</span>
+                                        <span class="text-red-500">*</span>
+                                        <div class="relative inline-block">
+                                            <svg class="w-4 h-4 text-gray-400 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <div class="absolute left-0 top-6 transform ml-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg shadow-lg w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                                Les dates et heures de prise en charge peuvent être modifiées et peuvent être différentes de celles de la consigne.
+                                            </div>
+                                        </div>
+                                    </label>
                                     <input type="datetime-local" name="pickup_datetime_arrival" id="pickup-datetime-arrival" required class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-green-400 focus:ring-4 focus:ring-green-100 transition-all py-3 text-gray-800 font-medium">
                                 </div>
 
@@ -185,8 +196,8 @@
                                     <select name="transport_type_departure" required class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all py-3 text-gray-800 font-medium">
                                         <option value="" data-i18n="premium_select">Sélectionner</option>
                                         <option value="airport" data-i18n="premium_airport">Avion</option>
-                                        <option value="train" data-i18n="premium_train">Train</option>
-                                        <option value="public_transport" data-i18n="premium_public_transport">Transports en commun</option>
+                                        <option value="train" data-i18n="premium_train">TGV</option>
+                                        <option value="public_transport" data-i18n="premium_public_transport">Métro / RER</option>
                                         <option value="other" data-i18n="premium_other">Autre</option>
                                     </select>
                                 </div>
@@ -197,7 +208,7 @@
                                 </div>
 
                                 <div id="train_number_departure_container" class="hidden">
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_train_number">Numéro de train</label>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_train_number">Numéro de TGV</label>
                                     <input type="text" name="train_number_departure" class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all py-3 text-gray-800 font-medium" placeholder="Ex: TGV8824">
                                 </div>
 
@@ -209,7 +220,18 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="premium_datetime_label">Date et heure <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide flex items-center gap-1 group">
+                                        <span data-i18n="premium_datetime_label">Date et heure</span>
+                                        <span class="text-red-500">*</span>
+                                        <div class="relative inline-block">
+                                            <svg class="w-4 h-4 text-gray-400 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <div class="absolute left-0 top-6 transform ml-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg shadow-lg w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                                Les dates et heures de restitution peuvent être modifiées et peuvent être différentes de celles de la consigne.
+                                            </div>
+                                        </div>
+                                    </label>
                                     <input type="datetime-local" name="restitution_datetime_departure" id="restitution-datetime-departure" required class="mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-100 transition-all py-3 text-gray-800 font-medium">
                                 </div>
                             </div>
