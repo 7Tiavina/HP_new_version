@@ -202,14 +202,14 @@ function updateButtonsState() {
 function updateDrawerCart() {
     const cartItemsContainer = document.getElementById('drawer-cart-items');
     const cartTotalEl = document.getElementById('drawer-cart-total');
-    
+
     if (!cartItemsContainer || !cartTotalEl) return;
-    
+
     // Get all items in cart (baggage + options)
     const allItems = cartItems || [];
-    
+
     console.log('[updateDrawerCart] Cart items:', allItems);
-    
+
     if (allItems.length === 0) {
         cartItemsContainer.innerHTML = `
             <div class="text-center py-8">
@@ -225,16 +225,16 @@ function updateDrawerCart() {
         cartTotalEl.textContent = '0,00 €';
         return;
     }
-    
+
     // Get products from API for baggage pricing
     const products = (typeof globalProductsData !== 'undefined' && Array.isArray(globalProductsData)) ? globalProductsData : [];
-    
+
     // Helper function to find product by ID
     function productById(id) {
         const s = id != null ? String(id) : '';
         return products.find(p => (p.id != null ? String(p.id) : '') === s) || null;
     }
-    
+
     // Helper function to get unit price from product (same as cart.js)
     function unitPrice(p) {
         if (!p) return 0;
@@ -246,11 +246,40 @@ function updateDrawerCart() {
         }
         return 0;
     }
-    
+
+    // Map product libelle to image path (same as Blade template)
+    function getProductImage(libelle) {
+        const imageMap = {
+            'Accessoires': 'accessoires.png',
+            'Bagage cabine': 'bag_cabine.png',
+            'Bagage soute': 'bag_soute.png',
+            'Bagage spécial': 'bag_special.png',
+            'Vestiaire': 'vestiaire.png'
+        };
+        const imageName = imageMap[libelle] || null;
+        if (imageName) {
+            return `<img src="/${imageName}" alt="${libelle}" class="w-10 h-10 object-contain p-1" onerror="this.style.display='none'; this.parentElement.innerHTML='🧳';" />`;
+        }
+        return '🧳';
+    }
+
+    // Get icon for item (image for baggage, new images for options)
+    function getItemIcon(item, productLibelle) {
+        if (item.itemCategory === 'option') {
+            if (item.key === 'priority') {
+                return `<img src="/icon_priority.png" alt="Priority" class="w-10 h-10 object-contain p-1" onerror="this.style.display='none'; this.parentElement.innerHTML='⚡';" />`;
+            } else if (item.key === 'premium') {
+                return `<img src="/icon_premium.png" alt="Premium" class="w-10 h-10 object-contain p-1" onerror="this.style.display='none'; this.parentElement.innerHTML='💎';" />`;
+            }
+        }
+        // For baggage, use product images
+        return getProductImage(productLibelle || '');
+    }
+
     // Build cart items HTML with correct pricing from API
     let html = '';
     let total = 0;
-    
+
     allItems.forEach((item, index) => {
         console.log('[updateDrawerCart] Item:', item);
 
@@ -258,6 +287,7 @@ function updateDrawerCart() {
         let unitPriceValue = 0;
         let unitPriceBeforeDiscount = 0;
         let libelle = item.libelle || '';
+        let itemIcon = '';
 
         if (item.itemCategory === 'baggage') {
             // Baggage: get price from globalProductsData like cart.js does
@@ -278,6 +308,8 @@ function updateDrawerCart() {
             itemTotal = unitPriceValue * (item.quantity || 1);
             libelle = product ? (product.libelle || product.nom || libelle) : libelle;
             libelle = (item.quantity || 1) + ' × ' + libelle;
+            // Use product image for baggage
+            itemIcon = getItemIcon(item, product?.libelle || product?.nom || '');
         } else if (item.itemCategory === 'option') {
             // Options: use prixUnitaire from API
             unitPriceValue = parseFloat(item.prixUnitaire) || parseFloat(item.prix) || 0;
@@ -291,6 +323,8 @@ function updateDrawerCart() {
                 unitPriceBeforeDiscount = unitPriceValue;
             }
             itemTotal = unitPriceValue * (item.quantity || 1);
+            // Use new icon images for options
+            itemIcon = getItemIcon(item, '');
         }
 
         const hasDiscount = unitPriceBeforeDiscount > unitPriceValue && unitPriceBeforeDiscount > 0;
@@ -303,14 +337,13 @@ function updateDrawerCart() {
         total += itemTotal;
 
         const isOption = item.itemCategory === 'option';
-        const icon = item.key === 'priority' ? '⚡' : (item.key === 'premium' ? '💎' : '🧳');
         const gradientClass = item.key === 'priority' ? 'from-yellow-50 to-amber-50 border-yellow-200' :
                              (item.key === 'premium' ? 'from-purple-50 to-indigo-50 border-purple-200' : 'from-gray-50 to-white border-gray-200');
 
         html += `
             <div class="flex items-center gap-3 p-4 bg-gradient-to-r ${gradientClass} rounded-xl border transition-all hover:shadow-md">
-                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-xl shadow-sm flex-shrink-0">
-                    ${icon}
+                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-xl shadow-sm flex-shrink-0 overflow-hidden">
+                    ${itemIcon}
                 </div>
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-2">

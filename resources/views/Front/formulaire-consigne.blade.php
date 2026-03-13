@@ -342,7 +342,7 @@
                     <!-- Logo -->
                     <div class="flex-shrink-0">
                         <div class="w-28 h-28 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-                            <img src="/premium-logo.png" alt="Premium" class="w-24 h-24 object-contain" onerror="this.style.display='none'; this.parentElement.innerHTML='💎'; this.parentElement.classList.add('text-6xl');">
+                            <img src="/icon_premium.png" alt="Premium" class="w-24 h-24 object-contain p-2" onerror="this.style.display='none'; this.parentElement.innerHTML='💎'; this.parentElement.classList.add('text-6xl');">
                         </div>
                     </div>
 
@@ -395,7 +395,7 @@
                     <!-- Logo -->
                     <div class="flex-shrink-0">
                         <div class="w-28 h-28 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
-                            <img src="/priority-logo.png" alt="Priority" class="w-24 h-24 object-contain" onerror="this.style.display='none'; this.parentElement.innerHTML='⚡'; this.parentElement.classList.add('text-6xl');">
+                            <img src="/icon_priority.png" alt="Priority" class="w-24 h-24 object-contain p-2" onerror="this.style.display='none'; this.parentElement.innerHTML='⚡'; this.parentElement.classList.add('text-6xl');">
                         </div>
                     </div>
 
