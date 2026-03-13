@@ -479,7 +479,7 @@ if (typeof window.translations === 'undefined') {
         drawer_premium_unavailable: "Service Premium indisponible",
         drawer_cart_title: "Votre panier",
         drawer_total: "Total à payer",
-        drawer_confirm: "Continuer mon paiement",
+        drawer_confirm: "Continuer",
         
         // Payment Modal - Client Info
         modal_title: "Complétez vos informations",
@@ -715,7 +715,7 @@ if (typeof window.translations === 'undefined') {
         drawer_premium_unavailable: "Premium service unavailable",
         drawer_cart_title: "Your cart",
         drawer_total: "Total to pay",
-        drawer_confirm: "Continue to payment",
+        drawer_confirm: "Continue",
 
         // Cart
         cart_discount_online: "Online booking discount",

@@ -356,16 +356,11 @@
                                 <h3 class="text-lg font-bold text-gray-900" data-i18n="drawer_premium_title">Service Premium</h3>
                                 <p class="mt-1 text-xs text-gray-600 leading-relaxed" data-i18n="drawer_premium_desc_simple">Remise ou récupération de vos bagages à l'endroit exact choisi dans l'aéroport avec porteur dédié. Service VIP complet.</p>
                             </div>
-                            <!-- Add/Remove Buttons - Integrated -->
+                            <!-- Add Button - Integrated -->
                             <div class="flex flex-col gap-1 flex-shrink-0">
                                 <button id="add-premium-btn" onclick="addOptionToCart('premium')" class="w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Ajouter au panier">
-                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                                    </svg>
-                                </button>
-                                <button id="remove-premium-btn" onclick="removeOptionFromCart('premium')" class="w-8 h-8 bg-gradient-to-br from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Retirer du panier">
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                     </svg>
                                 </button>
                             </div>
@@ -409,16 +404,11 @@
                                 <h3 class="text-lg font-bold text-gray-900" data-i18n="drawer_priority_title">Service Priority</h3>
                                 <p class="mt-1 text-xs text-gray-600 leading-relaxed" data-i18n="drawer_priority_desc">Traitement prioritaire de vos bagages à la dépose et à la récupération. Gagnez du temps et évitez les files d'attente.</p>
                             </div>
-                            <!-- Add/Remove Buttons - Integrated -->
+                            <!-- Add Button - Integrated -->
                             <div class="flex flex-col gap-1 flex-shrink-0">
                                 <button id="add-priority-btn" onclick="addOptionToCart('priority')" class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Ajouter au panier">
-                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                                    </svg>
-                                </button>
-                                <button id="remove-priority-btn" onclick="removeOptionFromCart('priority')" class="w-8 h-8 bg-gradient-to-br from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Retirer du panier">
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                     </svg>
                                 </button>
                             </div>
@@ -451,8 +441,13 @@
     </div>
 
     <!-- Drawer Footer - Fixed at bottom -->
-    <div class="border-t border-gray-200 p-4 bg-gradient-to-r from-gray-50 to-white flex-shrink-0">
-        <button id="confirm-options-drawer" class="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-3.5 px-6 rounded-xl transition-all shadow-lg hover:shadow-xl hover:shadow-yellow-200 transform hover:-translate-y-0.5 duration-200 text-base" data-i18n="drawer_confirm">Continuer mon paiement</button>
+    <div class="border-t border-gray-200 p-4 bg-gradient-to-r from-gray-50 to-white flex-shrink-0 flex justify-end">
+        <button id="confirm-options-drawer" class="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-3 px-8 rounded-full transition-all shadow-lg hover:shadow-xl hover:shadow-yellow-200 transform hover:-translate-y-0.5 duration-200 text-base flex items-center gap-2" data-i18n="drawer_confirm">
+            <span>Continuer</span>
+            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+        </button>
     </div>
 </div>
 
