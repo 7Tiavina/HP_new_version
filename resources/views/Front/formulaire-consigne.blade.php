@@ -558,13 +558,13 @@
     </p>
 
     <!-- Breadcrumb with increased spacing -->
-    <div class="hp-breadcrumb-wrapper flex justify-between items-center mb-12" style="margin-top: 30px;">
-        <div class="flex items-center space-x-2 text-sm text-gray-500">
+    <div class="hp-breadcrumb-wrapper flex justify-between items-center mb-12" style="margin-top: 30px; align-items: center;">
+        <div class="flex items-center space-x-2 text-sm text-gray-500" style="display: flex; align-items: center;">
             <span data-i18n="breadcrumb_home">Accueil</span>
             <span>→</span>
             <span class="text-gray-800 font-medium" data-i18n="breadcrumb_booking">Réserver une consigne</span>
         </div>
-        <button id="back-to-step-1-btn" class="hidden bg-yellow-custom text-gray-dark font-bold py-2 px-4 rounded-full btn-hover flex items-center">
+        <button id="back-to-step-1-btn" class="hidden bg-yellow-custom text-gray-dark font-bold py-2 px-4 rounded-full btn-hover flex items-center" style="align-self: center;">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
@@ -1005,6 +1005,13 @@
             }, 500);
         }
     });
+
+    // Réaligner lors du redimensionnement de la fenêtre
+    window.addEventListener('resize', function() {
+        if (typeof alignStickyWithBaggage === 'function') {
+            setTimeout(alignStickyWithBaggage, 50);
+        }
+    });
 </script>
 @endpush
 
@@ -1165,6 +1172,29 @@
 }
 #hp-booking-root #airport-select.input-error {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23b91c1c' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+}
+
+/* Alignement du panier avec la section aéroport sélectionné */
+#hp-booking-root #sticky-wrapper {
+  align-self: start !important;
+  margin-top: 0 !important;
+}
+#hp-booking-root #sticky-summary {
+  position: sticky;
+  top: 0 !important;
+  margin-top: 0 !important;
+}
+#hp-booking-root .grid.lg\:grid-cols-3 {
+  align-items: start !important;
+}
+#hp-booking-root #baggage-selection-step {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+#hp-booking-root #baggage-selection-step > .bg-gray-100:first-child,
+#hp-booking-root #sticky-summary > .bg-white:first-child {
+  margin-top: 0 !important;
+  padding-top: 1.5rem !important;
 }
 </style>
 @endpush

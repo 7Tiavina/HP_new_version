@@ -11,6 +11,23 @@ const getLang = () => (window.getCurrentLanguage ? window.getCurrentLanguage() :
 const ROUTES = (window.APP_ROUTES || {});
 const routeUrl = (key, fallback) => ROUTES[key] || fallback;
 
+/**
+ * Alignement dynamique du panier avec la section Aéroport sélectionné
+ */
+function alignStickyWithBaggage() {
+    const baggageStep = document.getElementById('baggage-selection-step');
+    const stickyWrapper = document.getElementById('sticky-wrapper');
+    
+    if (!baggageStep || !stickyWrapper || stickyWrapper.style.display === 'none') return;
+    
+    const baggageTop = baggageStep.getBoundingClientRect().top;
+    const gridTop = stickyWrapper.parentElement.getBoundingClientRect().top;
+    const offset = baggageTop - gridTop;
+    
+    stickyWrapper.style.paddingTop = offset + 'px';
+    console.log('Panier aligné avec offset:', offset + 'px');
+}
+
 const productMapJs = {
     'Accessoires': { type: 'accessory', description: () => t('luggage_accessoires_desc', 'Petits objets comme un sac à main, un ordinateur portable ou un casque.') },
     'Bagage cabine': { type: 'cabin', description: () => t('luggage_bagage_cabine_desc', 'Valise de taille cabine, généralement jusqu\'\u00e0 55x35x25 cm.') },
@@ -963,6 +980,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             document.getElementById('back-to-step-1-btn').classList.remove('hidden');
             document.getElementById('sticky-wrapper').style.display = 'block';
+            
+            // Aligner le panier avec la section Aéroport sélectionné
+            if (typeof alignStickyWithBaggage === 'function') {
+                setTimeout(alignStickyWithBaggage, 50);
+            }
+            
             displaySelectedDates();
             getQuoteAndDisplay();
             saveStateToSession();
@@ -1060,6 +1083,10 @@ document.addEventListener('DOMContentLoaded', function () {
             tooltip.classList.add('hidden');
         }
     });
+
+    // Initialiser l'alignement du panier après le chargement
+    setTimeout(alignStickyWithBaggage, 100);
+    setTimeout(alignStickyWithBaggage, 500);
 });
 
 window.addEventListener('pageshow', function(event) {
