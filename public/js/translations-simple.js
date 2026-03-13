@@ -284,7 +284,7 @@ if (typeof window.translations === 'undefined') {
         form_empty_cart: "Votre panier est vide :(",
         form_total: "Total:",
         form_your_cart: "Votre panier",
-        form_proceed_payment: "Procéder au paiement",
+        form_proceed_payment: "Continuer",
         
         // Payment Success
         success_title: "Paiement réussi !",
@@ -923,7 +923,7 @@ if (typeof window.translations === 'undefined') {
         form_empty_cart: "Your cart is empty :(",
         form_total: "Total:",
         form_your_cart: "Your cart",
-        form_proceed_payment: "Proceed to payment",
+        form_proceed_payment: "Continue",
         
         // Payment Success
         success_title: "Payment successful!",
