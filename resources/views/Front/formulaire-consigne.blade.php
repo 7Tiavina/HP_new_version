@@ -351,11 +351,11 @@
 
         <!-- Premium Option Card - First Priority -->
         <div class="mb-6">
-            <div id="drawer-option-premium" class="hidden group relative bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-5 transition-all duration-300 hover:shadow-lg hover:shadow-purple-200 border-2 border-purple-200 hover:border-purple-400">
+            <div id="drawer-option-premium" class="hidden group relative bg-gradient-to-br from-yellow-50 to-amber-50 rounded-2xl p-5 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-200 border-2 border-yellow-200 hover:border-yellow-400">
                 <div class="flex items-start gap-4">
                     <!-- Logo -->
                     <div class="flex-shrink-0">
-                        <div class="w-28 h-28 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                        <div class="w-28 h-28 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
                             <img src="/icon_premium.png" alt="Premium" class="w-24 h-24 object-contain p-2" onerror="this.style.display='none'; this.parentElement.innerHTML='💎'; this.parentElement.classList.add('text-6xl');">
                         </div>
                     </div>
@@ -365,21 +365,21 @@
                         <div class="flex items-start justify-between gap-3">
                             <div class="flex-1">
                                 <div class="flex items-center gap-2 mb-1">
-                                    <span class="inline-block bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm" data-i18n="drawer_premium_label">PREMIUM</span>
+                                    <span class="inline-block bg-gradient-to-r from-yellow-500 to-yellow-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm" data-i18n="drawer_premium_label">PREMIUM</span>
                                 </div>
                                 <h3 class="text-lg font-bold text-gray-900" data-i18n="drawer_premium_title">Service Premium</h3>
                                 <p class="mt-1 text-xs text-gray-600 leading-relaxed" data-i18n="drawer_premium_desc_simple">Remise ou récupération de vos bagages à l'endroit exact choisi dans l'aéroport avec porteur dédié. Service VIP complet.</p>
                             </div>
                             <!-- Add Button - Integrated -->
                             <div class="flex flex-col gap-1 flex-shrink-0">
-                                <button id="add-premium-btn" onclick="addOptionToCart('premium')" class="w-8 h-8 bg-gradient-to-br from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Ajouter au panier">
+                                <button id="add-premium-btn" onclick="addOptionToCart('premium')" class="w-8 h-8 bg-gradient-to-br from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Ajouter au panier">
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
-                        <p id="drawer-premium-price" class="mt-2 text-xl font-bold text-purple-600"></p>
+                        <p id="drawer-premium-price" class="mt-2 text-xl font-bold text-yellow-600"></p>
                     </div>
                 </div>
 
@@ -399,11 +399,11 @@
 
         <!-- Priority Option Card -->
         <div class="mb-6">
-            <div id="drawer-option-priority" class="hidden group relative bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-5 transition-all duration-300 hover:shadow-lg hover:shadow-green-200 border-2 border-green-200 hover:border-green-400">
+            <div id="drawer-option-priority" class="hidden group relative bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-5 transition-all duration-300 hover:shadow-lg hover:shadow-gray-200 border-2 border-gray-200 hover:border-gray-400">
                 <div class="flex items-start gap-4">
                     <!-- Logo -->
                     <div class="flex-shrink-0">
-                        <div class="w-28 h-28 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+                        <div class="w-28 h-28 bg-gradient-to-br from-gray-400 to-gray-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
                             <img src="/icon_priority.png" alt="Priority" class="w-24 h-24 object-contain p-2" onerror="this.style.display='none'; this.parentElement.innerHTML='⚡'; this.parentElement.classList.add('text-6xl');">
                         </div>
                     </div>
@@ -413,21 +413,21 @@
                         <div class="flex items-start justify-between gap-3">
                             <div class="flex-1">
                                 <div class="flex items-center gap-2 mb-1">
-                                    <span class="inline-block bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm" data-i18n="drawer_priority_label">PRIORITAIRE</span>
+                                    <span class="inline-block bg-gradient-to-r from-gray-500 to-gray-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm" data-i18n="drawer_priority_label">PRIORITAIRE</span>
                                 </div>
                                 <h3 class="text-lg font-bold text-gray-900" data-i18n="drawer_priority_title">Service Priority</h3>
                                 <p class="mt-1 text-xs text-gray-600 leading-relaxed" data-i18n="drawer_priority_desc">Traitement prioritaire de vos bagages à la dépose et à la récupération. Gagnez du temps et évitez les files d'attente.</p>
                             </div>
                             <!-- Add Button - Integrated -->
                             <div class="flex flex-col gap-1 flex-shrink-0">
-                                <button id="add-priority-btn" onclick="addOptionToCart('priority')" class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-500 hover:from-green-500 hover:to-green-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Ajouter au panier">
+                                <button id="add-priority-btn" onclick="addOptionToCart('priority')" class="w-8 h-8 bg-gradient-to-br from-gray-400 to-gray-500 hover:from-gray-500 hover:to-gray-600 text-white rounded-lg shadow hover:shadow-lg transition-all flex items-center justify-center transform hover:scale-105" title="Ajouter au panier">
                                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                     </svg>
                                 </button>
                             </div>
                         </div>
-                        <p id="drawer-priority-price" class="mt-2 text-xl font-bold text-green-600"></p>
+                        <p id="drawer-priority-price" class="mt-2 text-xl font-bold text-gray-600"></p>
                     </div>
                 </div>
             </div>
