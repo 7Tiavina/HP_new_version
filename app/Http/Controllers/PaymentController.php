@@ -625,29 +625,85 @@ class PaymentController extends Controller
         }
     }
 
-
-    private function getBdmToken(): string
+    /**
+     * Get BDM API token with automatic refresh on expiration
+     * Token cached for only 5 minutes to avoid expiration issues
+     */
+    private function getBdmToken(bool $forceRefresh = false): string
     {
-        return Cache::remember('bdm_api_token', 3300, function () {
-            Log::info('Cache BDM token expir%c3%a9. Demande d%c3%a0 un nouveau token.');
-            $response = Http::post(config('services.bdm.base_url') . '/User/Login', [
+        $cacheKey = 'bdm_api_token';
+        $cacheTtl = 300; // 5 minutes instead of 55 to avoid expiration
+        
+        // If force refresh, forget the cached token
+        if ($forceRefresh) {
+            Cache::forget($cacheKey);
+            Log::info('Forcing BDM token refresh');
+        }
+        
+        return Cache::remember($cacheKey, $cacheTtl, function () {
+            Log::info('Cache BDM token expiré ou forcé. Demande d\'un nouveau token.');
+            
+            $credentials = [
                 'userName' => config('services.bdm.username'),
                 'email' => config('services.bdm.email'),
                 'password' => config('services.bdm.password'),
+            ];
+            
+            Log::info('Tentative d\'authentification BDM', [
+                'url' => config('services.bdm.base_url') . '/User/Login',
+                'username' => $credentials['userName'],
+                'email' => $credentials['email']
             ]);
-            $response->throw();
-            if (!$response->json('isSucceed')) {
-                Log::error('L%c3%a0API BDM a refus%c3%a9 la connexion.', ['response' => $response->json()]);
-                throw new \Exception('Authentification API BDM %c3%a9chou%c3%a9e: L%c3%a0API a refus%c3%a9 la connexion.');
+            
+            try {
+                $response = Http::timeout(30)->post(
+                    config('services.bdm.base_url') . '/User/Login', 
+                    $credentials
+                );
+                
+                // Log the raw response for debugging
+                Log::info('Réponse brute BDM', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                
+                // Handle 400/401 errors - credentials might be wrong
+                if ($response->status() === 400 || $response->status() === 401) {
+                    Log::error('BDM API authentication failed', [
+                        'status' => $response->status(),
+                        'body' => $response->body()
+                    ]);
+                    throw new \Exception('Authentification API BDM échouée: Credentials invalides ou API indisponible');
+                }
+                
+                $response->throw();
+                
+                $responseData = $response->json();
+                
+                if (!isset($responseData['isSucceed']) || !$responseData['isSucceed']) {
+                    Log::error('L\'API BDM a refusé la connexion', ['response' => $responseData]);
+                    throw new \Exception('Authentification API BDM échouée: L\'API a refusé la connexion');
+                }
+                
+                $token = $responseData['data']['accessToken'] ?? null;
+                
+                if (!$token) {
+                    Log::error('Impossible de récupérer l\'accessToken depuis la réponse de l\'API BDM', [
+                        'response' => $responseData
+                    ]);
+                    throw new \Exception('Authentification API BDM échouée: token manquant dans la réponse');
+                }
+                
+                Log::info('✅ AUTHENTIFICATION API BDM RÉUSSIE. Token obtenu (valide 5 min).');
+                return $token;
+                
+            } catch (\Illuminate\Http\Client\ConnectionException $e) {
+                Log::error('BDM API connection failed', [
+                    'error' => $e->getMessage(),
+                    'url' => config('services.bdm.base_url')
+                ]);
+                throw new \Exception('API BDM inaccessible: ' . $e->getMessage());
             }
-            $token = $response->json('data.accessToken');
-            if (!$token) {
-                Log::error('Impossible de r%c3%a9cup%c3%a9rer l%c3%a0accessToken depuis la r%c3%a9ponse de l%c3%a0API BDM.', ['response' => $response->json()]);
-                throw new \Exception('Authentification API BDM %c3%a9chou%c3%a9e: token manquant dans la r%c3%a9ponse.');
-            }
-            Log::info('✅ AUTHENTIFICATION API BDM R%c3%a9USSIE. Token obtenu.');
-            Log::info('Nouveau token BDM obtenu et mis en cache.');
-            return $token;
         });
     }
 
@@ -971,7 +1027,30 @@ class PaymentController extends Controller
 
         // STEP 1: Call BDM API to create the definitive order
         try {
-            $token = $this->getBdmToken();
+            // Get BDM token with retry on 400 error
+            $token = null;
+            $retryCount = 0;
+            $maxRetries = 2;
+            
+            while ($retryCount < $maxRetries && !$token) {
+                try {
+                    $token = $this->getBdmToken($retryCount > 0); // Force refresh on retry
+                } catch (\Exception $e) {
+                    $retryCount++;
+                    Log::warning('BDM token attempt failed, retrying...', [
+                        'attempt' => $retryCount,
+                        'error' => $e->getMessage()
+                    ]);
+                    
+                    if ($retryCount >= $maxRetries) {
+                        throw $e;
+                    }
+                    
+                    // Clear cache and retry
+                    Cache::forget('bdm_api_token');
+                }
+            }
+            
             $idPlateforme = $commandeData['idPlateforme'];
 
             $lignesProduits = [];

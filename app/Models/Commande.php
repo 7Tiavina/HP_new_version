@@ -148,6 +148,149 @@ class Commande extends Model
     }
 
     /**
+     * Extract QR code from PDF (base64) and return as PNG base64
+     * QR code position: TOP-CENTER of BDM invoice
+     */
+    public function getQrCodeFromPdf(): ?string
+    {
+        if (!$this->invoice_content) {
+            return null;
+        }
+
+        try {
+            $pdfContent = base64_decode($this->invoice_content);
+            if ($pdfContent === false) {
+                return null;
+            }
+
+            $tempDir = storage_path('app/temp/qr-' . $this->id);
+            if (!file_exists($tempDir)) {
+                mkdir($tempDir, 0777, true);
+            }
+
+            $pdfPath = $tempDir . '/invoice.pdf';
+            $qrPath = $tempDir . '/qr-code.png';
+            
+            file_put_contents($pdfPath, $pdfContent);
+            $qrCodeBase64 = null;
+
+            // Method 1: ImageMagick PHP
+            if (class_exists('Imagick')) {
+                $qrCodeBase64 = $this->extractQrImagick($pdfPath, $qrPath, $tempDir);
+            }
+
+            // Method 2: pdftoppm CLI
+            if (!$qrCodeBase64) {
+                $qrCodeBase64 = $this->extractQrPdftoppm($pdfPath, $qrPath, $tempDir);
+            }
+
+            $this->cleanupTempDir($tempDir);
+            return $qrCodeBase64;
+
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('QR extraction failed', [
+                'commande_id' => $this->id,
+                'error' => $e->getMessage()
+            ]);
+        }
+
+        return null;
+    }
+
+    /**
+     * Extract QR using ImageMagick PHP extension
+     * QR position: TOP-CENTER (30% from left, 2% from top)
+     */
+    private function extractQrImagick(string $pdfPath, string $qrPath, string $tempDir): ?string
+    {
+        try {
+            $imagick = new \Imagick();
+            $imagick->setResolution(150, 150);
+            $imagick->readImage($pdfPath . '[0]');
+            $imagick->setImageFormat('png');
+            
+            $width = $imagick->getImageWidth();
+            $height = $imagick->getImageHeight();
+            
+            // QR code position for BDM invoices (TOP-CENTER)
+            $qrX      = (int) ($width * 0.30);
+            $qrY      = (int) ($height * 0.02);
+            $qrWidth  = (int) ($width * 0.25);
+            $qrHeight = (int) ($height * 0.20);
+            
+            $imagick->cropImage($qrWidth, $qrHeight, $qrX, $qrY);
+            $imagick->writeImage($qrPath);
+            
+            $qrCodeBase64 = base64_encode(file_get_contents($qrPath));
+            $imagick->clear();
+            $imagick->destroy();
+            
+            return $qrCodeBase64;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Extract QR using pdftoppm command
+     * QR position: TOP-CENTER (30% from left, 2% from top)
+     */
+    private function extractQrPdftoppm(string $pdfPath, string $qrPath, string $tempDir): ?string
+    {
+        $command = sprintf('pdftoppm -r 150 -png -f 1 -l 1 %s %s 2>&1', 
+            escapeshellarg($pdfPath), 
+            escapeshellarg($tempDir . '/invoice')
+        );
+        
+        exec($command, $output, $returnCode);
+        
+        $pngPath = $tempDir . '/invoice-1.png';
+        if ($returnCode !== 0 || !file_exists($pngPath)) {
+            return null;
+        }
+
+        $imageInfo = @getimagesize($pngPath);
+        if (!$imageInfo) return null;
+
+        $width = $imageInfo[0];
+        $height = $imageInfo[1];
+        $sourceImage = imagecreatefrompng($pngPath);
+        if (!$sourceImage) return null;
+
+        // QR code position for BDM invoices (TOP-CENTER)
+        $qrX      = (int) ($width * 0.30);
+        $qrY      = (int) ($height * 0.02);
+        $qrWidth  = (int) ($width * 0.25);
+        $qrHeight = (int) ($height * 0.20);
+
+        $qrImage = imagecrop($sourceImage, [
+            'x' => $qrX, 'y' => $qrY,
+            'width' => $qrWidth, 'height' => $qrHeight
+        ]);
+        imagedestroy($sourceImage);
+
+        if (!$qrImage) return null;
+
+        imagepng($qrImage, $qrPath);
+        imagedestroy($qrImage);
+
+        return base64_encode(file_get_contents($qrPath));
+    }
+
+    /**
+     * Clean up temp directory
+     */
+    private function cleanupTempDir(string $dir): void
+    {
+        if (!file_exists($dir)) return;
+        $files = glob($dir . '/*');
+        foreach ($files as $file) {
+            if (is_file($file)) unlink($file);
+        }
+        rmdir($dir);
+    }
+
+    /**
      * Get formatted reference with airport prefix
      */
     public function getFormattedReference(): string
