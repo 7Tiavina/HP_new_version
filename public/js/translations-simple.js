@@ -495,10 +495,11 @@ if (typeof window.translations === 'undefined') {
         btn_complete_profile: "Compléter mon profil (facultatif)",
         phone_hint: "Entrez votre numéro avec le code pays (ex : +33 6 12 34 56 78)",
         why_info_title: "Pourquoi ces informations ?",
-        why_info_text: "Pour finaliser votre réservation et permettre le contrôle de sécurité des bagages par rayons X conformément aux réglementations aéroportuaires.",
+        why_info_text_part1: "Vos coordonnées sont nécessaires pour enregistrer votre commande.",
+        why_info_text_part2: "Elles sont également requises pour des raisons de sécurité, tous les bagages déposés en consigne étant contrôlés par rayon X conformément aux exigences aéroportuaires.",
         
         // Payment Modal - Premium Info
-        premium_info_notice: "ℹ️ Information : Vous avez sélectionné l'option Premium. Veuillez remplir les informations de transport ci-dessous pour permettre à notre équipe de préparer votre service VIP.",
+        premium_info_notice: "<span class='font-bold'>ℹ️ Information :</span> Vous avez choisi l'option Premium, et nous vous en remercions.<br>Les informations à compléter ci-dessous nous permettent d'organiser votre prestation.",
         premium_arrival_title: "Arrivée (Terminal → Agence)",
         premium_departure_title: "Départ (Agence → Terminal)",
         premium_transport_label: "Type de transport",
@@ -518,9 +519,7 @@ if (typeof window.translations === 'undefined') {
         // Payment Section
         your_info: "Vos informations",
         secure_payment: "Paiement sécurisé",
-        payment_missing_premium_title: "⚠️ Informations PREMIUM manquantes",
-        payment_missing_premium_text: "Vous avez sélectionné l'option PREMIUM. Veuillez compléter les informations de transport pour finaliser votre réservation.",
-        payment_complete_premium_btn: "Compléter les infos PREMIUM",
+        payment_missing_premium_text: "Veuillez compléter vos informations pour activer le paiement.",
         agency_hours_pickup_out: "L'horaire de retrait est en dehors des heures d'ouverture.",
         agency_hours_contact: "Pour toutes demandes hors horaire merci de nous contacter au +33 <strong>1 34 38 58 98</strong>.",
         alert_pricing_fetch_error: "Une erreur technique est survenue lors de la récupération des tarifs.",
@@ -677,10 +676,11 @@ if (typeof window.translations === 'undefined') {
         btn_complete_profile: "Complete my profile (optional)",
         phone_hint: "Enter your number with country code (e.g.: +33 6 12 34 56 78)",
         why_info_title: "Why this information?",
-        why_info_text: "To finalize your booking and allow X-ray security screening of luggage in accordance with airport regulations.",
+        why_info_text_part1: "Your contact details are required to register your order.",
+        why_info_text_part2: "They are also required for security reasons, as all luggage deposited in left luggage is screened by X-ray in accordance with airport requirements.",
 
         // Payment Modal - Premium Info
-        premium_info_notice: "ℹ️ Information: You have selected the Premium option. Please fill in the transport information below to allow our team to prepare your VIP service.",
+        premium_info_notice: "<span class='font-bold'>ℹ️ Information:</span> You have chosen the Premium option, and we thank you for it.<br>The information to complete below allows us to organize your service.",
         premium_arrival_title: "Arrival (Terminal → Agency)",
         premium_departure_title: "Departure (Agency → Terminal)",
         premium_transport_label: "Transport type",
@@ -700,9 +700,7 @@ if (typeof window.translations === 'undefined') {
         // Payment Section
         your_info: "Your information",
         secure_payment: "Secure payment",
-        payment_missing_premium_title: "⚠️ PREMIUM information missing",
-        payment_missing_premium_text: "You have selected the PREMIUM option. Please complete the transport information to finalize your booking.",
-        payment_complete_premium_btn: "Complete PREMIUM info",
+        payment_missing_premium_text: "Please complete your information to activate payment.",
         
         // Options & Services Drawer
         drawer_options_title: "Options & Services",

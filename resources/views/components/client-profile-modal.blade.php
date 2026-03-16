@@ -98,8 +98,13 @@
                                         </svg>
                                     </div>
                                     <div>
-                                        <h5 class="font-bold text-blue-900" data-i18n="why_info_title">Pourquoi ces informations ?</h5>
-                                        <p class="text-sm text-blue-700 mt-1" data-i18n="why_info_text">Pour finaliser votre réservation et permettre le contrôle de sécurité des bagages par rayons X conformément aux réglementations aéroportuaires.</p>
+                                        <h5 class="font-bold text-blue-900 mb-2" data-i18n="why_info_title">Pourquoi ces informations ?</h5>
+                                        <p class="text-sm text-blue-800 mb-2" data-i18n="why_info_text_part1">
+                                            Vos coordonnées sont nécessaires pour enregistrer votre commande.
+                                        </p>
+                                        <p class="text-sm text-blue-800" data-i18n="why_info_text_part2">
+                                            Elles sont également requises pour des raisons de sécurité, tous les bagages déposés en consigne étant contrôlés par rayon X conformément aux exigences aéroportuaires.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -111,7 +116,9 @@
                 <div id="step-2-content" class="hidden space-y-6">
                     <div class="mb-6 p-4 bg-purple-50 rounded-xl border border-purple-200">
                         <p class="text-sm text-purple-800" data-i18n="premium_info_notice">
-                            <span class="font-bold">ℹ️ Information :</span> Vous avez sélectionné l'option <span class="font-semibold">Premium</span>. Veuillez remplir les informations de transport ci-dessous pour permettre à notre équipe de préparer votre service VIP.
+                            <span class="font-bold">ℹ️ Information :</span> Vous avez choisi l'option Premium, et nous vous en remercions.
+                            <br>
+                            Les informations à compléter ci-dessous nous permettent d'organiser votre prestation.
                         </p>
                     </div>
 
