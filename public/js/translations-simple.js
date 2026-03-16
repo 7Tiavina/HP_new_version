@@ -278,8 +278,9 @@ if (typeof window.translations === 'undefined') {
         form_choose_luggage: "1. Choisissez vos bagages",
         form_attention: "ATTENTION !",
         form_attention_text: "Les trajets pour la livraison ou la récupération des bagages peuvent inclure les gares : Gare du Nord, Châtelet Les Halles, Gare de Lyon, ou Saint-Michel Notre-Dame.",
-        form_partner_text: "Vous êtes un professionnel du tourisme ? Facilitez le voyage de vos clients !",
-        form_become_partner: "DEVENIR PARTENAIRE →",
+        form_baggage_info_title: "Choisissez la bonne catégorie de bagage",
+        form_baggage_info_message: "Pour préparer votre prise en charge dans les meilleures conditions, veillez à sélectionner le type de bagage adapté à ses dimensions et à son poids.",
+        form_baggage_info_warning: "En cas d'erreur, votre enregistrement devra être ajusté en agence, ce qui peut rallonger le temps de prise en charge.",
         form_total_price: "Tarif TOTAL",
         form_empty_cart: "Votre panier est vide :(",
         form_total: "Total:",
@@ -334,7 +335,7 @@ if (typeof window.translations === 'undefined') {
         luggage_accessoires_desc: "Moins de 3 kg. Petits objets : sac à main, sac d'ordinateur, caméra.",
         luggage_bagage_cabine_desc: "Moins de 9 kg. Dimensions max : 55 x 35 x 25 cm.",
         luggage_bagage_soute_desc: "Moins de 30 kg. Somme des dimensions (L+l+h) inférieure à 158 cm.",
-        luggage_bagage_special_desc: "Plus de 30 kg ou dimensions hors format (L+l+h > 158 cm) : sport, musique, etc.",
+        luggage_bagage_special_desc: "Poids max autorisé pour un bagage spécial = 32 kg unitaire (loi).",
         luggage_vestiaire_desc: "Pour les manteaux, vestes ou autres vêtements sur cintre.",
         
         // Time units
@@ -917,8 +918,9 @@ if (typeof window.translations === 'undefined') {
         form_choose_luggage: "1. Choose your luggage",
         form_attention: "ATTENTION!",
         form_attention_text: "Journeys for delivery or collection of luggage may include the stations: Gare du Nord, Châtelet Les Halles, Gare de Lyon, or Saint-Michel Notre-Dame.",
-        form_partner_text: "Are you a tourism professional? Make your customers' trip easier!",
-        form_become_partner: "BECOME A PARTNER →",
+        form_baggage_info_title: "Choose the correct baggage category",
+        form_baggage_info_message: "To prepare your pickup in the best conditions, make sure to select the type of baggage adapted to its dimensions and weight.",
+        form_baggage_info_warning: "In case of error, your registration will have to be adjusted at the agency, which may lengthen the pickup time.",
         form_total_price: "TOTAL Price",
         form_empty_cart: "Your cart is empty :(",
         form_total: "Total:",
@@ -973,7 +975,7 @@ if (typeof window.translations === 'undefined') {
         luggage_accessoires_desc: "Less than 3 kg. Small items: handbag, computer bag, camera.",
         luggage_bagage_cabine_desc: "Less than 9 kg. Max dimensions: 55 x 35 x 25 cm.",
         luggage_bagage_soute_desc: "Less than 30 kg. Sum of dimensions (L+W+H) less than 158 cm.",
-        luggage_bagage_special_desc: "More than 30 kg or oversized dimensions (L+W+H > 158 cm): sports, music, etc.",
+        luggage_bagage_special_desc: "Max weight allowed for special baggage = 32 kg per item (law).",
         luggage_vestiaire_desc: "For coats, jackets, or other hanging garments.",
         
         // Time units

@@ -41,9 +41,9 @@ const productMapJs = {
         type: 'hold', 
         description: () => t('luggage_bagage_soute_desc', 'Moins de 30 kg. Somme des dimensions (L+l+h) inférieure à 158 cm.') 
     },
-    'Bagage spécial': { 
-        type: 'special', 
-        description: () => t('luggage_bagage_special_desc', 'Plus de 30 kg ou dimensions hors format (L+l+h > 158 cm) : sport, musique, etc.') 
+    'Bagage spécial': {
+        type: 'special',
+        description: () => t('luggage_bagage_special_desc', 'Poids max autorisé pour un bagage spécial = 32 kg unitaire (loi).')
     },
     'Vestiaire': { 
         type: 'cloakroom', 

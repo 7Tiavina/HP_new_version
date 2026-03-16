@@ -49,6 +49,20 @@
             font-weight: 600 !important;
             font-size: 17px !important;
             color: #1a1a1a !important;
+            line-height: 1.4 !important;
+            text-align: center !important;
+            word-break: break-word !important;
+            hyphens: auto !important;
+        }
+
+        /* Specific styles for date labels (deposit and pickup) */
+        #hp-booking-root .date-label {
+            display: block !important;
+            text-align: center !important;
+            min-height: 50px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
 
         /* Enlarge inputs and selects */
@@ -601,7 +615,7 @@
 
                 <div class="grid md:grid-cols-2 gap-6 mt-6">
                     <div class="bg-white border border-gray-200 rounded-lg p-6">
-                        <h3 class="text-sm font-medium text-gray-700 mb-4" data-i18n="form_deposit_date">DATE DE DÉPÔT DES BAGAGES *</h3>
+                        <h3 class="date-label text-sm font-medium text-gray-700 mb-4" data-i18n="form_deposit_date">DATE DE DÉPÔT DES BAGAGES *</h3>
                         <div class="datetime-container">
                             <div class="datetime-field">
                                 <input type="date" id="date-depot" class="input-style w-full">
@@ -635,7 +649,7 @@
                         </div>
                     </div>
                     <div class="bg-white border border-gray-200 rounded-lg p-6">
-                        <h3 class="text-sm font-medium text-gray-700 mb-4" data-i18n="form_pickup_date">DATE DE RÉCUPÉRATION DES BAGAGES *</h3>
+                        <h3 class="date-label text-sm font-medium text-gray-700 mb-4" data-i18n="form_pickup_date">DATE DE RÉCUPÉRATION DES BAGAGES *</h3>
                         <div class="datetime-container">
                             <div class="datetime-field">
                                 <input type="date" id="date-recuperation" class="input-style w-full">
@@ -754,13 +768,25 @@
 
             </div>
 
-            <div class="bg-gray-800 rounded-lg p-4 flex items-center justify-between">
-                <p class="text-white text-sm" data-i18n="form_partner_text">
-                    Vous êtes un professionnel du tourisme ? Facilitez le voyage de vos clients !
-                </p>
-                <button class="bg-transparent border border-white text-white px-4 py-2 rounded-full text-sm hover:bg-white hover:text-gray-800 transition-colors" data-i18n="form_become_partner">
-                    DEVENIR PARTENAIRE →
-                </button>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                <div class="flex items-start space-x-4">
+                    <div class="flex-shrink-0">
+                        <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-gray-900 mb-2" data-i18n="form_baggage_info_title">
+                            Choisissez la bonne catégorie de bagage
+                        </h4>
+                        <p class="text-sm text-gray-700 mb-2" data-i18n="form_baggage_info_message">
+                            Pour préparer votre prise en charge dans les meilleures conditions, veillez à sélectionner le type de bagage adapté à ses dimensions et à son poids.
+                        </p>
+                        <p class="text-sm text-gray-700 font-medium" data-i18n="form_baggage_info_warning">
+                            En cas d'erreur, votre enregistrement devra être ajusté en agence, ce qui peut rallonger le temps de prise en charge.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
 
