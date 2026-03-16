@@ -90,19 +90,19 @@
                             </div>
 
                             <!-- Info box -->
-                            <div class="mt-6 p-6 bg-blue-50 rounded-2xl border border-blue-200">
+                            <div class="mt-6 p-6 bg-green-50 rounded-2xl border border-green-200">
                                 <div class="flex items-start gap-3">
-                                    <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                                        <svg class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                                        <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     </div>
                                     <div>
-                                        <h5 class="font-bold text-blue-900 mb-2" data-i18n="why_info_title">Pourquoi ces informations ?</h5>
-                                        <p class="text-sm text-blue-800 mb-2" data-i18n="why_info_text_part1">
+                                        <h5 class="font-bold text-green-900 mb-2" data-i18n="why_info_title">Pourquoi ces informations ?</h5>
+                                        <p class="text-sm text-green-800 mb-2" data-i18n="why_info_text_part1">
                                             Vos coordonnées sont nécessaires pour enregistrer votre commande.
                                         </p>
-                                        <p class="text-sm text-blue-800" data-i18n="why_info_text_part2">
+                                        <p class="text-sm text-green-800" data-i18n="why_info_text_part2">
                                             Elles sont également requises pour des raisons de sécurité, tous les bagages déposés en consigne étant contrôlés par rayon X conformément aux exigences aéroportuaires.
                                         </p>
                                     </div>
