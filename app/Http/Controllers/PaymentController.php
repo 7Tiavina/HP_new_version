@@ -1533,14 +1533,41 @@ class PaymentController extends Controller
      */
     private function _moneticoCapturePayment(string $transactionId)
     {
+        // Try primary endpoint first: /Charge/{transactionId}/Capture
         $url = config('monetico.base_url') . "/Charge/{$transactionId}/Capture";
-        Log::info('Calling Monetico Capture API.', ['url' => $url]);
+        Log::info('Calling Monetico Capture API (primary endpoint).', ['url' => $url]);
 
-        return Http::withHeaders([
+        $response = Http::withHeaders([
             'Authorization' => 'Basic ' . base64_encode(config('monetico.login') . ':' . config('monetico.secret_key')),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ])->post($url);
+
+        // If the primary endpoint fails with INT_901, try the alternative endpoint
+        if (!$response->successful()) {
+            $responseData = $response->json();
+            if (($responseData['answer']['errorCode'] ?? '') === 'INT_901') {
+                Log::info('Primary Capture endpoint failed (INT_901), trying alternative endpoint...', [
+                    'transaction_id' => $transactionId,
+                ]);
+
+                // Alternative endpoint: /Charge/Capture with transactionId in body
+                $alternativeUrl = config('monetico.base_url') . "/Charge/Capture";
+                Log::info('Calling Monetico Capture API (alternative endpoint).', ['url' => $alternativeUrl]);
+
+                $alternativeResponse = Http::withHeaders([
+                    'Authorization' => 'Basic ' . base64_encode(config('monetico.login') . ':' . config('monetico.secret_key')),
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ])->post($alternativeUrl, [
+                    'transactionId' => $transactionId,
+                ]);
+
+                return $alternativeResponse;
+            }
+        }
+
+        return $response;
     }
 
     /**
