@@ -77,13 +77,13 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0 40px;
+        padding: 0 30px;
         border-radius: 20px;
         margin: 0 auto;
     }
 
     .logo-img {
-        height: 65px;
+        height: 80px;
         width: auto;
     }
 
@@ -91,7 +91,8 @@
     .nav-center-menu {
         display: flex;
         list-style: none;
-        gap: 30px;
+        gap: 20px;
+        margin-left: -10px;
     }
 
     .nav-center-menu li a {
@@ -151,11 +152,11 @@
         background-color: #ffc439;
         color: #1a1a1a;
         text-decoration: none;
-        padding: 16px 45px;
-        border-radius: 50px; /* Plus arrondi */
+        padding: 12px 30px;
+        border-radius: 25px; /* Plus arrondi mais moins excessif */
         font-weight: 700;
         text-transform: uppercase;
-        font-size: 16px;
+        font-size: 14px;
         letter-spacing: 0.5px;
         transition: background 0.2s;
     }
