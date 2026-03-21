@@ -17,13 +17,13 @@
         width: 100%;
     }
 
-    /* --- TOP BAR (98% / 1920px) --- */
+    /* --- TOP BAR (90% / 1400px) --- */
     .contact-info-top {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        max-width: 1920px;
-        width: 98%;
+        max-width: 1400px;
+        width: 90%;
         margin: 0 auto 10px auto;
         padding: 0 40px;
         color: #ffffff;
@@ -71,9 +71,9 @@
     /* --- NAVBAR BLANCHE --- */
     .navbar {
         background-color: #ffffff;
-        max-width: 1920px;
-        width: 98%;
-        height: 100px;
+        max-width: 1400px;
+        width: 90%;
+        height: 130px;
         display: flex;
         align-items: center;
         justify-content: space-between;
