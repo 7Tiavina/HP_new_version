@@ -50,3 +50,6 @@ Route::get('/reservations', [BagageConsigneApiController::class, 'index']);
 
 // New route for getting options quote
 Route::post('/commande/options-quote', [FrontController::class, 'getOptionsQuote']);
+
+// New route for getting contraintes (prestations complémentaires obligatoires)
+Route::post('/api/plateforme/{idPlateforme}/commande/contraintes', [FrontController::class, 'getContraintes'])->name('api.commande.contraintes');

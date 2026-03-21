@@ -333,19 +333,44 @@ function displaySelectedDates() {
  * Helper function to check availability for a single date and time.
  * @param {string} date - The date in YYYY-MM-DD format.
  * @param {string} time - The time in HH:mm format.
- * @returns {Promise<boolean>} - True if available, false otherwise.
+ * @returns {Promise<object>} - Object with available (boolean), estContrainte (boolean), contrainte (object)
  */
 async function checkSingleDateAvailability(date, time) {
     if (!airportId || !date || !time) {
         // This case should be handled by the calling function, but as a safeguard:
         await showCustomAlert(t('alert_missing_data_title'), t('alert_missing_data_message'));
-        return false;
+        return { available: false, estContrainte: false, contrainte: null };
     }
 
     try {
         const dateTime = new Date(`${date}T${time}`);
+        
+        // Vérifier si la date est antérieure à la date actuelle (en tenant compte de l'heure)
+        const now = new Date();
+        // Arrondir l'heure actuelle à la minute pour éviter les problèmes de secondes
+        now.setSeconds(0, 0);
+        
+        if (dateTime < now) {
+            console.log('Date antérieure à maintenant:', { dateTime, now });
+            return { 
+                available: false, 
+                estContrainte: false, 
+                contrainte: null,
+                message: 'Date antérieure'
+            };
+        }
+        
+        // Formater la date pour l'API BDM : yyyyMMddTHHmm (ex: 20260322T0500)
         const pad = (num) => num.toString().padStart(2, '0');
-        const dateToVerify = `${dateTime.getFullYear()}${pad(dateTime.getMonth() + 1)}${pad(dateTime.getDate())}T${pad(dateTime.getHours())}${pad(dateTime.getMinutes())}`;
+        const year = dateTime.getFullYear();
+        const month = pad(dateTime.getMonth() + 1);
+        const day = pad(dateTime.getDate());
+        const hours = pad(dateTime.getHours());
+        const minutes = pad(dateTime.getMinutes());
+        
+        const dateToVerify = `${year}${month}${day}T${hours}${minutes}`;
+        
+        console.log('Date envoyée à l\'API BDM:', dateToVerify);
 
         const response = await fetch(routeUrl('checkAvailability', '/api/check-availability'), {
             method: 'POST',
@@ -354,11 +379,29 @@ async function checkSingleDateAvailability(date, time) {
         });
 
         const result = await response.json();
-        return result.statut === 1 && result.content === true;
+
+        // Nouvelle logique avec contraintes
+        const content = result.content || {};
+        const estOuvert = content.estOuvert ?? (result.statut === 1);
+        const estContrainte = content.estContrainte ?? false;
+        const contrainte = content.Contrainte ?? content.contrainte ?? null;
+        
+        // La plateforme est "disponible" si elle est ouverte OU si elle est contrainte (on peut débloquer)
+        const available = estOuvert || estContrainte;
+        
+        console.log('Check availability result:', { estOuvert, estContrainte, contrainte, available, dateToVerify });
+        
+        return { 
+            available, 
+            estContrainte, 
+            contrainte,
+            statut: result.statut,
+            message: result.message
+        };
     } catch (error) {
         console.error(`Erreur lors de la vérification de disponibilité pour ${date} ${time}:`, error);
         await showCustomAlert(t('error'), t('alert_availability_error'));
-        return false;
+        return { available: false, estContrainte: false, contrainte: null };
     }
 }
 
@@ -409,12 +452,32 @@ async function checkAvailability() {
 
     try {
         // Check both dates in parallel
-        const [depotAvailable, retraitAvailable] = await Promise.all([
+        const [depotResult, retraitResult] = await Promise.all([
             checkSingleDateAvailability(dateDepot, heureDepot),
             checkSingleDateAvailability(dateRetrait, heureRetrait)
         ]);
 
+        const depotAvailable = depotResult.available;
+        const retraitAvailable = retraitResult.available;
+        
+        // Stocker les contraintes pour les utiliser plus tard
+        window.bookingConstraints = {
+            depot: depotResult.estContrainte ? depotResult.contrainte : null,
+            retrait: retraitResult.estContrainte ? retraitResult.contrainte : null
+        };
+        
+        console.log('Booking constraints:', window.bookingConstraints);
+
         if (depotAvailable && retraitAvailable) {
+            // Vérifier s'il y a des contraintes
+            const hasConstraints = window.bookingConstraints.depot || window.bookingConstraints.retrait;
+            
+            if (hasConstraints) {
+                console.log('Plateforme avec contraintes - récupération des détails...');
+                // On récupérera les détails des contraintes au moment du paiement
+                // ou après l'affichage des options
+            }
+            
             return true;
         } else {
             // Provide a more specific error message
@@ -578,6 +641,13 @@ async function handleTotalClick() {
                 await getQuoteAndDisplay();
             }
         }
+
+        // --- NOUVELLE LOGIQUE : Récupérer les contraintes obligatoires ---
+        // Utilise la fonction du fichier contraintes.js
+        if (typeof updateContraintesInCart === 'function') {
+            await updateContraintesInCart(airportId, baggagesForOptionsQuote);
+        }
+        // --- FIN NOUVELLE LOGIQUE CONTRAINTES ---
 
         try {
             var csrfMeta = document.querySelector('meta[name="csrf-token"]');
@@ -839,12 +909,35 @@ function applyDateInputConstraints() {
     dateDepotInput.min = todayFormatted;
     dateDepotInput.max = dateRecuperationInput.value || '';
 
+    // Heures d'ouverture de base
     heureDepotInput.min = '07:01';
     heureDepotInput.max = '21:00';
 
+    // Si la date de dépôt est aujourd'hui, ajuster l'heure minimale à l'heure actuelle + 1 heure
     if (dateDepotInput.value === todayFormatted) {
-        const nextHour = new Date().getHours() + 1;
-        heureDepotInput.min = `${pad(Math.max(7, nextHour))}:00`;
+        const currentHour = today.getHours();
+        const currentMinute = today.getMinutes();
+        // Arrondir à l'heure suivante
+        const nextAvailableHour = currentHour + 1;
+        const nextAvailableMinute = currentMinute; // Garder les minutes actuelles
+        
+        if (nextAvailableHour < 21) {
+            // Formater l'heure minimale avec les minutes actuelles
+            heureDepotInput.min = `${pad(nextAvailableHour)}:${pad(nextAvailableMinute)}`;
+        } else {
+            // Si on est après 20h, on ne peut plus réserver pour aujourd'hui
+            heureDepotInput.min = '23:59'; // Bloquer la sélection
+        }
+        
+        // Si l'heure actuelle de dépôt est dans le passé, la réinitialiser
+        if (heureDepotInput.value) {
+            const [currentHeureDepotHour, currentHeureDepotMinute] = heureDepotInput.value.split(':').map(Number);
+            const selectedDateTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), currentHeureDepotHour, currentHeureDepotMinute);
+            if (selectedDateTime < today) {
+                // Réinitialiser à l'heure suivante disponible
+                heureDepotInput.value = heureDepotInput.min;
+            }
+        }
     }
 
     if (dateDepotInput.value) {

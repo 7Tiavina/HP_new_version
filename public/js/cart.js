@@ -15,7 +15,14 @@ function updateCartDisplay() {
     if (!container) return;
 
     var items = (typeof cartItems !== 'undefined' && Array.isArray(cartItems)) ? cartItems : [];
-    if (items.length === 0) {
+    
+    // Ajouter les contraintes obligatoires si elles existent
+    const contraintesItems = (typeof window.bookingContraintesItems !== 'undefined' && Array.isArray(window.bookingContraintesItems)) ? window.bookingContraintesItems : [];
+    
+    // Fusionner les items du panier avec les contraintes
+    var allItems = [...items, ...contraintesItems];
+    
+    if (allItems.length === 0) {
         if (emptyCart) emptyCart.style.display = 'block';
         if (cartSummary) cartSummary.style.display = 'none';
         if (summaryPrice) summaryPrice.textContent = '0 €';
@@ -85,13 +92,14 @@ function updateCartDisplay() {
     var totalSavings = 0;    /* économies totales */
     var fragments = [];
 
-    items.forEach(function (item, index) {
+    allItems.forEach(function (item, index) {
         var libelle = item.libelle || '';
         var linePrice = 0;
         var lineNormal = 0;
         var unitPriceValue = 0;
         var unitPriceBeforeDiscountValue = null;
         var lineDiscountRate = 0;
+        var isMandatory = item.isMandatory || item.itemCategory === 'contrainte';
 
         if (item.itemCategory === 'baggage') {
             var product = productById(item.productId) || (item.libelle ? productByLibelle(item.libelle) : null);
@@ -117,6 +125,15 @@ function updateCartDisplay() {
             if (unitPriceBeforeDiscountValue > unitPriceValue && unitPriceBeforeDiscountValue > 0) {
                 lineDiscountRate = Math.round(((unitPriceBeforeDiscountValue - unitPriceValue) / unitPriceBeforeDiscountValue) * 100);
             }
+        } else if (item.itemCategory === 'contrainte') {
+            // Contrainte obligatoire - prix déjà défini dans l'item
+            unitPriceValue = (typeof item.prix === 'number' && !isNaN(item.prix)) ? item.prix : 0;
+            unitPriceBeforeDiscountValue = (typeof item.prixUnitaireAvantRemise === 'number' && !isNaN(item.prixUnitaireAvantRemise)) ? item.prixUnitaireAvantRemise : unitPriceValue;
+            linePrice = unitPriceValue;
+            lineNormal = unitPriceBeforeDiscountValue;
+            lineDiscountRate = 0;
+            // Ajouter un indicateur visuel pour les contraintes obligatoires
+            libelle = libelle + ' <span class="text-xs text-orange-600 font-semibold">(obligatoire)</span>';
         }
 
         total += linePrice;
@@ -137,16 +154,19 @@ function updateCartDisplay() {
         }
         libelleHtml += '</div>';
         libelleHtml += '</div>';
-        
+
         // Affichage des prix alignés avec prix barré si remise
         var priceHtml = '<div class="flex items-center gap-3">';
         if (hasDiscount) {
             priceHtml += '<span class="text-xs text-gray-400 line-through">' + formatPrice(lineNormal) + '</span>';
         }
         priceHtml += '<span class="text-sm font-bold text-gray-900 min-w-[60px] text-right">' + formatPrice(linePrice) + '</span>';
-        priceHtml += '<button type="button" class="delete-item-btn text-red-500 hover:text-red-700 p-1" data-index="' + index + '" aria-label="Supprimer">' +
-            '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>' +
-            '</button>';
+        // Bouton de suppression - pas pour les contraintes obligatoires
+        if (!isMandatory) {
+            priceHtml += '<button type="button" class="delete-item-btn text-red-500 hover:text-red-700 p-1" data-index="' + index + '" aria-label="Supprimer">' +
+                '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>' +
+                '</button>';
+        }
         priceHtml += '</div>';
 
         row.innerHTML = libelleHtml + priceHtml;

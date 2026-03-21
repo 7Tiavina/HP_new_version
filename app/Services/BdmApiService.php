@@ -158,13 +158,22 @@ class BdmApiService
             Log::info('Tentative de récupération du token d\'authentification');
             $token = $this->getAuthToken();
             Log::info('Token obtenu avec succès', ['token_length' => strlen($token)]);
+
+            // Le format yyyyMMddTHHmm n'a pas de caractères spéciaux, pas besoin d'encoder
+            Log::info('Appel à l\'API BDM avec le token', [
+                'url' => "{$this->baseUrl}/api/plateforme/{$idPlateforme}/date/{$dateToCheck}",
+                'dateToCheck' => $dateToCheck
+            ]);
             
-            Log::info('Appel à l\'API BDM avec le token');
             $response = Http::withToken($token)
                 ->withHeaders(['Accept' => 'application/json'])
                 ->get("{$this->baseUrl}/api/plateforme/{$idPlateforme}/date/{$dateToCheck}");
-            
-            Log::info('Réponse reçue de l\'API BDM', ['status' => $response->status(), 'body' => $response->json()]);
+
+            Log::info('Réponse reçue de l\'API BDM', [
+                'status' => $response->status(), 
+                'body' => $response->json(),
+                'url_called' => "{$this->baseUrl}/api/plateforme/{$idPlateforme}/date/{$dateToCheck}"
+            ]);
 
             $response->throw(); // Lance une exception pour les erreurs HTTP
 
@@ -256,6 +265,90 @@ class BdmApiService
         }
     }
 
+
+    /**
+     * Récupère la liste des produits de contraintes de prestations complémentaires liées à la commande.
+     *
+     * @param string $idPlateforme L'ID de la plateforme (aéroport).
+     * @param array $commandeLignes Les lignes de commande pour les bagages.
+     * @param array $commandeOptions Les options sélectionnées (ex: Priority, Premium).
+     * @param array $commandeInfos Informations sur la commande (modeTransport, lieu, commentaires).
+     * @param array $client Données du client.
+     * @return array|null La liste des contraintes ou null en cas d'erreur.
+     */
+    public function getCommandeContraintes(
+        string $idPlateforme,
+        array $commandeLignes,
+        array $commandeOptions = [],
+        array $commandeInfos = [],
+        array $client = []
+    ): ?array
+    {
+        $url = "{$this->baseUrl}/api/plateforme/{$idPlateforme}/commande/contraintes";
+
+        // Valeurs par défaut si non fournies
+        if (empty($client)) {
+            $client = [
+                "email" => "temp@hellopassenger.com",
+                "telephone" => "0000000000",
+                "nom" => "Passager",
+                "prenom" => "Temp",
+                "civilite" => "M.",
+                "nomSociete" => "",
+                "adresse" => "Adresse inconnue",
+                "complementAdresse" => "",
+                "ville" => "Ville inconnue",
+                "codePostal" => "00000",
+                "pays" => "FRA"
+            ];
+        }
+
+        if (empty($commandeInfos)) {
+            $commandeInfos = [
+                "modeTransport" => "Inconnu",
+                "lieu" => "Inconnu",
+                "commentaires" => "Demande de contraintes"
+            ];
+        }
+
+        $payload = [
+            "commandeLignes" => $commandeLignes,
+            "commandeOptions" => $commandeOptions,
+            "commandeInfos" => $commandeInfos,
+            "client" => $client
+        ];
+
+        Log::info('BdmApiService::getCommandeContraintes - Payload envoyé', ['payload' => $payload]);
+
+        try {
+            $token = $this->getAuthToken();
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $token,
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ])->post($url, $payload);
+
+            Log::info('BdmApiService::getCommandeContraintes - Réponse de l\'API BDM', [
+                'status' => $response->status(),
+                'body' => $response->json()
+            ]);
+
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                Log::error('Erreur API BDM lors de la récupération des contraintes', [
+                    'status' => $response->status(),
+                    'response' => $response->body()
+                ]);
+                return null;
+            }
+        } catch (\Exception $e) {
+            Log::error('Exception lors de l\'appel API BDM pour les contraintes', [
+                'error' => $e->getMessage()
+            ]);
+            return null;
+        }
+    }
 
     /**
      * Effectue une requête POST à l'API BDM pour obtenir les prix des options.

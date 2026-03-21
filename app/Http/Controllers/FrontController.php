@@ -352,7 +352,7 @@ class FrontController extends Controller
             'idPlateforme' => 'required|string',
             'dateToCheck' => 'required|string',
         ]);
-        
+
         Log::info('Appel à l\'API BDM pour la disponibilité via BdmApiService', ['data' => $validated]);
 
         try {
@@ -362,7 +362,7 @@ class FrontController extends Controller
                 $validated['dateToCheck']
             );
             Log::info('Après appel checkAvailability', ['response' => $response]);
-            
+
             return response()->json($response, 200);
 
         } catch (\Illuminate\Http\Client\RequestException $e) {
@@ -659,6 +659,67 @@ class FrontController extends Controller
             return response()->json([
                 'statut' => 0,
                 'message' => 'Erreur technique lors de la récupération des lieux : ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Récupère la liste des produits de contraintes de prestations complémentaires liées à la commande.
+     *
+     * @param Request $request
+     * @param string $idPlateforme
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getContraintes(Request $request, string $idPlateforme)
+    {
+        $validated = $request->validate([
+            'commandeLignes' => 'required|array',
+            'commandeOptions' => 'nullable|array',
+            'commandeInfos' => 'nullable|array',
+            'client' => 'nullable|array',
+        ]);
+
+        $commandeLignes = $validated['commandeLignes'];
+        $commandeOptions = $validated['commandeOptions'] ?? [];
+        $commandeInfos = $validated['commandeInfos'] ?? [];
+        $client = $validated['client'] ?? [];
+
+        Log::info('FrontController::getContraintes - Données reçues', [
+            'idPlateforme' => $idPlateforme,
+            'commandeLignes' => $commandeLignes,
+            'commandeOptions' => $commandeOptions,
+        ]);
+
+        try {
+            $response = $this->bdmApiService->getCommandeContraintes(
+                $idPlateforme,
+                $commandeLignes,
+                $commandeOptions,
+                $commandeInfos,
+                $client
+            );
+
+            if ($response && ($response['statut'] ?? 0) === 1 && isset($response['content'])) {
+                return response()->json([
+                    'statut' => 1,
+                    'message' => 'Contraintes récupérées avec succès',
+                    'content' => $response['content'] ?? []
+                ]);
+            } else {
+                Log::error('FrontController::getContraintes - Échec de la récupération des contraintes', [
+                    'response' => $response
+                ]);
+                return response()->json([
+                    'statut' => 0,
+                    'message' => $response['message'] ?? 'Impossible de récupérer les contraintes.'
+                ], 500);
+            }
+
+        } catch (\Exception $e) {
+            Log::error('FrontController::getContraintes - Erreur : ' . $e->getMessage());
+            return response()->json([
+                'statut' => 0,
+                'message' => 'Erreur technique lors de la récupération des contraintes.'
             ], 500);
         }
     }
