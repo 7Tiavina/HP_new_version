@@ -89,7 +89,7 @@
     <footer class="custom-footer">
         <div class="footer-grid">
             <div class="footer-col">
-                <img src="{{ asset('HP-Logo.png') }}" alt="Logo" class="footer-logo">
+                <img src="{{ asset('logo footer.webp') }}" alt="Logo" class="footer-logo">
                 <div class="since-text" data-i18n="footer_since">depuis 2001</div>
                 <p data-i18n="footer_credits">© Hello Passenger {{ date('Y') }}. Tous droits réservés.</p>
                 <p style="font-size:12px; opacity:0.6;" data-i18n="footer_created_by">Créé par Agence Blablabla</p>
