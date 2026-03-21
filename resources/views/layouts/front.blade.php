@@ -141,6 +141,7 @@
         (function () {
             var DASHBOARD_URL = @json(route('client.dashboard'));
             var LOGOUT_URL = @json(route('client.logout'));
+            var FORM_URL = @json(route('form-consigne'));
 
             function csrfToken() {
                 var meta = document.querySelector('meta[name="csrf-token"]');
@@ -168,6 +169,15 @@
                 var inject = document.querySelector('.luxe-auth-inject');
                 if (!inject) return;
                 clearInject();
+
+                // Reset Réserver button
+                var btnReserve = document.getElementById('btn-reserve');
+                if (btnReserve) {
+                    btnReserve.href = FORM_URL;
+                    btnReserve.textContent = getTranslation('btn_book', 'Réserver');
+                    btnReserve.style.backgroundColor = '#FAC12E';
+                    btnReserve.style.color = '#000000';
+                }
 
                 var loginText = getTranslation('login_btn', 'Se connecter');
                 var registerText = getTranslation('create_account_short', "S'inscrire");
@@ -209,6 +219,19 @@
                 var inject = document.querySelector('.luxe-auth-inject');
                 if (!inject) return;
                 clearInject();
+
+                // Change Réserver button to Déconnexion (with POST form)
+                var btnReserve = document.getElementById('btn-reserve');
+                if (btnReserve) {
+                    btnReserve.href = 'javascript:void(0)';
+                    btnReserve.textContent = getTranslation('logout_btn', 'Déconnexion');
+                    btnReserve.style.backgroundColor = '#1F1F1F';
+                    btnReserve.style.color = '#FFFFFF';
+                    btnReserve.onclick = function(e) {
+                        e.preventDefault();
+                        performLogout();
+                    };
+                }
 
                 var myAccountText = getTranslation('header_my_dashboard', 'Mon compte');
                 var logoutText = getTranslation('logout_btn', 'Déconnexion');
@@ -256,6 +279,23 @@
                     .then(function (j) { (j && j.authenticated) ? setLoggedIn() : setLoggedOut(); })
                     .catch(function () { setLoggedOut(); });
             }
+
+            function performLogout() {
+                fetch(LOGOUT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken()
+                    }
+                }).then(function(response) {
+                    if (response.ok) {
+                        window.location.reload();
+                    }
+                }).catch(function(err) {
+                    console.error('Logout error:', err);
+                });
+            }
+
             document.addEventListener('DOMContentLoaded', update);
             window.addEventListener('load', update);
             

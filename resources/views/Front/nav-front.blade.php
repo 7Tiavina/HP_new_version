@@ -3,7 +3,7 @@
 @endphp
 
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700&display=swap');
 
     /* --- RESET --- */
     * {
@@ -14,7 +14,7 @@
 
     .hp-nav-container {
         background-color: #000000;
-        font-family: 'Poppins', 'Segoe UI', Arial, sans-serif;
+        font-family: 'Manrope', sans-serif;
         padding: 12px 0;
         width: 100%;
     }
@@ -29,7 +29,8 @@
         margin: 0 auto 10px auto;
         padding: 0 40px;
         color: #ffffff;
-        font-size: 13px;
+        font-size: 14px;
+        font-family: 'Manrope', sans-serif;
     }
 
     .contact-left {
@@ -94,7 +95,6 @@
         height: 80px;
         width: auto;
         display: block;
-        border: 2px solid green;
     }
 
     /* --- MENU --- */
@@ -104,13 +104,11 @@
         gap: 0;
         margin: 0;
         padding: 0;
-        border: 2px solid blue;
     }
 
     .nav-center-menu li {
         margin: 0;
         padding: 0 10px;
-        border: 1px solid red;
     }
 
     .nav-center-menu li a {
@@ -118,7 +116,7 @@
         color: #1a1a1a;
         font-weight: 500;
         font-size: 16px;
-        font-family: "Space Grotesk", sans-serif;
+        font-family: 'Manrope', sans-serif;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -140,12 +138,13 @@
         border: none;
         padding: 0 8px;
         color: #1a1a1a;
-        font-size: 13px;
+        font-size: 16px;
         font-weight: 500;
+        font-family: 'Manrope', sans-serif;
         cursor: pointer;
     }
     .nav-center-menu .lang-selector-item #hp-lang-trigger:hover {
-        color: #ffc439;
+        color: #FAC12E;
     }
     .nav-center-menu .lang-selector-item .hp-lang-current-flag {
         width: 20px;
@@ -211,26 +210,27 @@
     .grid-dots span {
         width: 5px;
         height: 5px;
-        background-color: #ffc439;
+        background-color: #FAC12E;
         border-radius: 1px;
     }
 
     /* BOUTON RÉSERVER */
     .btn-reserve {
-        background-color: #ffc439;
-        color: #1a1a1a;
+        background-color: #FAC12E;
+        color: #000000;
         text-decoration: none;
-        padding: 10px 20px;
+        padding: 12px 24px;
         border-radius: 20px;
         font-weight: 700;
         text-transform: uppercase;
-        font-size: 12px;
+        font-size: 18px;
+        font-family: 'Manrope', sans-serif;
         letter-spacing: 0.5px;
         transition: background 0.2s;
     }
 
     .btn-reserve:hover {
-        background-color: #f0b420;
+        background-color: #e5ad28;
     }
 
     @media (max-width: 1150px) {
@@ -489,8 +489,8 @@
                 <span></span><span></span>
             </div>
 
-            <!-- Bouton Réserver -->
-            <a href="{{ $formUrl }}" class="btn-reserve" data-i18n="btn_book">Réserver</a>
+            <!-- Bouton Réserver / Déconnexion -->
+            <a href="{{ $formUrl }}" class="btn-reserve" id="btn-reserve" data-i18n="btn_book">Réserver</a>
         </div>
     </nav>
 </div>
