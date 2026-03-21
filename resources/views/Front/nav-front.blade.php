@@ -3,6 +3,8 @@
 @endphp
 
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
     /* --- RESET --- */
     * {
         margin: 0;
@@ -107,7 +109,7 @@
 
     .nav-center-menu li {
         margin: 0;
-        padding: 0;
+        padding: 0 10px;
         border: 1px solid red;
     }
 
@@ -115,7 +117,8 @@
         text-decoration: none;
         color: #1a1a1a;
         font-weight: 500;
-        font-size: 13px;
+        font-size: 16px;
+        font-family: "Space Grotesk", sans-serif;
         display: flex;
         align-items: center;
         gap: 8px;
