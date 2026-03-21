@@ -97,15 +97,15 @@
 
             <div class="footer-col">
                 <h3 data-i18n="footer_access">Plan d'accès</h3>
-                <a href="#" class="yellow-text" data-i18n="footer_cdg">Aéroport de Paris CDG</a>
-                <p data-i18n="footer_cdg_address">Terminal 2<br>Gare TGV - Niveau 4<br>Opposition Hôtel Sheraton</p>
+                <a href="#" class="footer-airport-link" data-i18n="footer_cdg">Aéroport de Roissy Charles de Gaulle</a>
+                <p data-i18n="footer_cdg_address">Terminal 2 – Gare TGV<br>Niveau 4</p>
                 <br>
-                <a href="#" class="yellow-text" data-i18n="footer_orly">Aéroport de Paris ORLY</a>
-                <p data-i18n="footer_orly_address">Terminal 3<br>Niveau d'arrivée</p>
+                <a href="#" class="footer-airport-link" data-i18n="footer_orly">Aéroport de Paris Orly</a>
+                <p data-i18n="footer_orly_address">Orly 3<br>Niveau Arrivées<br>Porte 33a</p>
             </div>
 
             <div class="footer-col">
-                <h3 data-i18n="footer_contact">Contactez-nous</h3>
+                <a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" class="footer-contact-link" data-i18n="footer_contact">Contactez-nous</a>
                 <a href="tel:+33134385898" class="yellow-text">+33 (0)1 34 38 58 98</a>
                 <h3 data-i18n="footer_email">Email</h3>
                 <a href="mailto:contact@hellopassenger.com" class="yellow-text">contact@hellopassenger.com</a>
@@ -126,11 +126,13 @@
 
             <div class="footer-col">
                 <h3 data-i18n="footer_links">Liens Rapides</h3>
-                <a href="{{ $formUrl }}" data-i18n="footer_services">Services</a>
                 <a href="https://darkseagreen-mongoose-687346.hostingersite.com/faq/" data-i18n="footer_faq">FAQ</a>
-                <a href="#contact" data-i18n="footer_contact_link">Contact</a>
-                <br><br>
-                <a href="{{ $formUrl }}" class="footer-reserve" data-i18n="footer_book">Réservez maintenant ↗</a>
+                <a href="{{ $formUrl }}" data-i18n="footer_services">Services</a>
+                <a href="https://darkseagreen-mongoose-687346.hostingersite.com/conditions-generales-livraison-bagages/" data-i18n="footer_cdg_delivery_terms">Conditions Générales Livraison De Bagages</a>
+                <a href="https://darkseagreen-mongoose-687346.hostingersite.com/conditions-generales-vente-consigne-bagages/" data-i18n="footer_left_luggage_terms">Conditions Générales De Vente Des Services De Consigne De Bagages</a>
+                <a href="https://darkseagreen-mongoose-687346.hostingersite.com/mentions-legales/" data-i18n="footer_legal">Mentions Légales</a>
+                <br>
+                <a href="{{ $formUrl }}" class="footer-reserve" data-i18n="footer_book">Réservez</a>
             </div>
         </div>
     </footer>
