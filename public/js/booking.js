@@ -593,12 +593,12 @@ async function getQuoteAndDisplay() {
                 return {
                     productId: item.productId,
                     serviceId: sid || serviceId,
-                    dateDebut: `${dateDepot}T${heureDepot}:00Z`,
-                    dateFin: `${dateRecuperation}T${heureRecuperation}:00Z`,
+                    dateDebut: `${dateDepot}T${heureDepot}:00`,
+                    dateFin: `${dateRecuperation}T${heureRecuperation}:00`,
                     quantity: item.quantity
                 };
             });
-            
+
             if (typeof updateContraintesInCart === 'function' && baggagesForConstraints.length > 0) {
                 await updateContraintesInCart(airportId, baggagesForConstraints);
             }
@@ -653,8 +653,8 @@ async function handleTotalClick() {
             return {
                 productId: item.productId,
                 serviceId: sid || serviceId,
-                dateDebut: `${dateDepot}T${heureDepot}:00Z`,
-                dateFin: `${dateRecuperation}T${heureRecuperation}:00Z`,
+                dateDebut: `${dateDepot}T${heureDepot}:00`,
+                dateFin: `${dateRecuperation}T${heureRecuperation}:00`,
                 quantity: item.quantity
             };
         });
@@ -848,24 +848,11 @@ async function handleTotalClick() {
             };
         });
         
-        // Ajouter les contraintes aux options (elles seront traitées comme des options obligatoires)
-        if (window.bookingContraintesItems && Array.isArray(window.bookingContraintesItems)) {
-            window.bookingContraintesItems.forEach(function (c) {
-                options.push({
-                    id: c.id || '',
-                    libelle: c.libelle || '',
-                    prix: c.prix || c.prixUnitaire || 0,
-                    prixUnitaire: c.prixUnitaire || 0,
-                    prixUnitaireAvantRemise: c.prixUnitaireAvantRemise || null,
-                    tauxRemise: c.tauxRemise || 0,
-                    details: null,
-                    referenceInterne: c.referenceInterne || '',
-                    isContrainte: true
-                });
-            });
-        }
+        // Ajouter les options Priority et Premium uniquement (PAS les contraintes)
+        // Les contraintes seront ajoutées automatiquement par l'ERP selon les horaires
+        // Mais on les affiche dans le panier pour information
         
-        console.log('Options envoyées (incluant contraintes):', options);
+        console.log('Options envoyées (hors contraintes - ajoutées auto par ERP):', options);
 
         var airportSelect = document.getElementById('airport-select');
         var airportName = (airportSelect && airportSelect.options && airportSelect.options[airportSelect.selectedIndex]) ? airportSelect.options[airportSelect.selectedIndex].text : '';
@@ -1099,8 +1086,8 @@ function handleQuantityChange(e) {
                 return {
                     productId: item.productId,
                     serviceId: sid || serviceId,
-                    dateDebut: `${dateDepot}T${heureDepot}:00Z`,
-                    dateFin: `${dateRecuperation}T${heureRecuperation}:00Z`,
+                    dateDebut: `${dateDepot}T${heureDepot}:00`,
+                    dateFin: `${dateRecuperation}T${heureRecuperation}:00`,
                     quantity: item.quantity
                 };
             });
