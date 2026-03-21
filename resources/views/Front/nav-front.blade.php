@@ -82,27 +82,87 @@
         margin: 0 auto;
     }
 
+    .nav-left-group {
+        display: flex;
+        align-items: center;
+        gap: 0;
+    }
+
     .logo-img {
         height: 80px;
         width: auto;
+        display: block;
+        border: 2px solid green;
     }
 
     /* --- MENU --- */
     .nav-center-menu {
         display: flex;
         list-style: none;
-        gap: 20px;
-        margin-left: -10px;
+        gap: 0;
+        margin: 0;
+        padding: 0;
+        border: 2px solid blue;
+    }
+
+    .nav-center-menu li {
+        margin: 0;
+        padding: 0;
+        border: 1px solid red;
     }
 
     .nav-center-menu li a {
         text-decoration: none;
         color: #1a1a1a;
         font-weight: 500;
-        font-size: 15px;
+        font-size: 13px;
         display: flex;
         align-items: center;
-        gap: 5px;
+        gap: 8px;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* Translation widget in nav */
+    .nav-center-menu .lang-selector-item {
+        display: inline-flex;
+        align-items: center;
+    }
+    .nav-center-menu .lang-selector-item #hp-lang-widget {
+        display: inline-flex;
+        align-items: center;
+    }
+    .nav-center-menu .lang-selector-item #hp-lang-trigger {
+        background: none;
+        border: none;
+        padding: 0 8px;
+        color: #1a1a1a;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    .nav-center-menu .lang-selector-item #hp-lang-trigger:hover {
+        color: #ffc439;
+    }
+    .nav-center-menu .lang-selector-item .hp-lang-current-flag {
+        width: 20px;
+        height: 14px;
+    }
+    .nav-center-menu .lang-selector-item .hp-lang-chevron {
+        width: 12px;
+        height: 12px;
+    }
+    .nav-center-menu .lang-selector-item .hp-lang-dropdown {
+        background: #ffffff;
+        border: 1px solid #e0e0e0;
+        min-width: 100px;
+    }
+    .nav-center-menu .lang-selector-item .hp-lang-option {
+        color: #1a1a1a;
+        font-size: 13px;
+    }
+    .nav-center-menu .lang-selector-item .hp-lang-option:hover {
+        background: #f5f5f5;
     }
 
     .chevron-down {
@@ -118,7 +178,7 @@
     .nav-right-group {
         display: flex;
         align-items: center;
-        gap: 20px;
+        gap: 15px;
     }
 
     .lang-box {
@@ -126,7 +186,7 @@
         align-items: center;
         gap: 5px;
         font-weight: 600;
-        font-size: 14px;
+        font-size: 13px;
     }
 
     .icon-action {
@@ -135,28 +195,33 @@
         align-items: center;
     }
 
+    .icon-action svg {
+        width: 18px;
+        height: 18px;
+    }
+
     .grid-dots {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 3px;
     }
     .grid-dots span {
-        width: 6px;
-        height: 6px;
+        width: 5px;
+        height: 5px;
         background-color: #ffc439;
         border-radius: 1px;
     }
 
-    /* BOUTON RÉSERVER (Plus arrondi) */
+    /* BOUTON RÉSERVER */
     .btn-reserve {
         background-color: #ffc439;
         color: #1a1a1a;
         text-decoration: none;
-        padding: 12px 30px;
-        border-radius: 25px; /* Plus arrondi mais moins excessif */
+        padding: 10px 20px;
+        border-radius: 20px;
         font-weight: 700;
         text-transform: uppercase;
-        font-size: 14px;
+        font-size: 12px;
         letter-spacing: 0.5px;
         transition: background 0.2s;
     }
@@ -388,23 +453,22 @@
     </div>
 
     <nav class="navbar">
-        <div class="nav-left">
+        <div class="nav-left-group">
             <a href="{{ $formUrl }}">
                 <img src="{{ asset('HP-logo-290x91-1.webp') }}" alt="Hello Passenger" class="logo-img">
             </a>
+            <ul class="nav-center-menu">
+                <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/services/" data-i18n="nav_services">Nos Services Bagages</a></li>
+                <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/a-propos/" data-i18n="nav_about">A Propos</a></li>
+                <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
+                <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" data-i18n="nav_contact">Contact</a></li>
+                <li class="lang-selector-item">
+                    @include('components.translation-widget')
+                </li>
+            </ul>
         </div>
 
-        <ul class="nav-center-menu">
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/services/" data-i18n="nav_services">Nos Services Bagages</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/a-propos/" data-i18n="nav_about">A Propos</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" data-i18n="nav_contact">Contact</a></li>
-        </ul>
-
         <div class="nav-right-group">
-            <!-- Translation Widget -->
-            @include('components.translation-widget')
-
             <!-- User Icon (clickable for login) -->
             <div class="icon-action" id="user-icon-trigger" style="cursor: pointer;">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
