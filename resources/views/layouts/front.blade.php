@@ -91,8 +91,8 @@
             <div class="footer-col">
                 <img src="{{ asset('logo footer.webp') }}" alt="Logo" class="footer-logo">
                 <div class="since-text" data-i18n="footer_since">depuis 1998</div>
-                <p data-i18n="footer_credits">© Hello Passenger {{ date('Y') }}. Tous droits réservés.</p>
-                <p style="font-size:12px; opacity:0.6;" data-i18n="footer_created_by">Créé par Agence Blablabla</p>
+                <p class="footer-copyright" data-i18n="footer_credits"></p>
+                <p class="footer-created-by" data-i18n="footer_created_by"></p>
             </div>
 
             <div class="footer-col">
