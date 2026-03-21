@@ -7,7 +7,7 @@
 window.bookingContraintesItems = [];
 
 /**
- * Récupère les contraintes pour une commande donnée depuis l'API
+ * Récupère les contraintes depuis les résultats de disponibilité déjà stockés
  * @param {string} airportId - ID de la plateforme
  * @param {Array} baggagesForOptionsQuote - Liste des bagages pour la commande
  * @returns {Promise<Array>} - Liste des contraintes
@@ -18,61 +18,57 @@ async function fetchContraintes(airportId, baggagesForOptionsQuote) {
         return [];
     }
 
-    try {
-        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
-        const csrfVal = csrfMeta ? csrfMeta.getAttribute('content') : '';
-        
-        const commandeLignes = baggagesForOptionsQuote.map(bag => ({
-            idProduit: bag.productId,
-            idService: bag.serviceId,
-            dateDebut: bag.dateDebut,
-            dateFin: bag.dateFin,
-            quantite: bag.quantity
-        }));
-        
-        const response = await fetch(`/api/plateforme/${airportId}/commande/contraintes`, {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json', 
-                'X-CSRF-TOKEN': csrfVal 
-            },
-            body: JSON.stringify({
-                commandeLignes: commandeLignes,
-                commandeOptions: []
-            })
-        });
-
-        if (!response.ok) {
-            console.warn('Erreur HTTP lors de la récupération des contraintes:', response.status);
-            return [];
-        }
-
-        const result = await response.json();
-        console.log('Contraintes from API:', result);
-        
-        if (result.statut === 1 && Array.isArray(result.content)) {
-            return result.content.map(contrainte => {
-                const prixUnitaire = parseFloat(contrainte.prixUnitaire ?? contrainte.prix_unitaire ?? contrainte.prix ?? 0) || 0;
-                
-                return {
-                    itemCategory: 'contrainte',
-                    id: contrainte.id ?? contrainte.Id ?? '',
-                    libelle: contrainte.libelle ?? contrainte.Libelle ?? 'Prestation obligatoire',
-                    prix: prixUnitaire,
-                    prixUnitaire: prixUnitaire,
-                    prixUnitaireAvantRemise: contrainte.prixUnitaireAvantRemise ?? null,
-                    tauxRemise: contrainte.tauxRemise ?? null,
-                    referenceInterne: contrainte.referenceInterne ?? null,
-                    isMandatory: true
-                };
-            });
-        }
-        
-        return [];
-    } catch (error) {
-        console.warn('Erreur lors de la récupération des contraintes (non-bloquant):', error);
+    // Utiliser les contraintes déjà récupérées depuis l'API /date
+    const depotContrainte = window.bookingConstraints?.depot;
+    const retraitContrainte = window.bookingConstraints?.retrait;
+    
+    console.log('Contraintes depuis bookingConstraints:', { depotContrainte, retraitContrainte });
+    
+    if (!depotContrainte && !retraitContrainte) {
+        console.log('Aucune contrainte détectée');
         return [];
     }
+
+    const contraintes = [];
+    
+    // Ajouter la contrainte de dépôt si elle existe
+    if (depotContrainte) {
+        const prixUnitaire = parseFloat(depotContrainte.prixUnitaire ?? depotContrainte.prix_unitaire ?? depotContrainte.prix ?? 0) || 0;
+        
+        contraintes.push({
+            itemCategory: 'contrainte',
+            id: depotContrainte.id ?? '',
+            libelle: depotContrainte.libelle ?? depotContrainte.Libelle ?? 'Prestation obligatoire (Dépôt)',
+            prix: prixUnitaire,
+            prixUnitaire: prixUnitaire,
+            prixUnitaireAvantRemise: depotContrainte.prixUnitaireAvantRemise ?? null,
+            tauxRemise: depotContrainte.tauxRemise ?? null,
+            referenceInterne: depotContrainte.referenceInterne ?? null,
+            isMandatory: true,
+            type: 'depot'
+        });
+    }
+    
+    // Ajouter la contrainte de retrait si elle existe et différente de celle de dépôt
+    if (retraitContrainte && retraitContrainte.id !== depotContrainte?.id) {
+        const prixUnitaire = parseFloat(retraitContrainte.prixUnitaire ?? retraitContrainte.prix_unitaire ?? retraitContrainte.prix ?? 0) || 0;
+        
+        contraintes.push({
+            itemCategory: 'contrainte',
+            id: retraitContrainte.id ?? '',
+            libelle: retraitContrainte.libelle ?? retraitContrainte.Libelle ?? 'Prestation obligatoire (Retrait)',
+            prix: prixUnitaire,
+            prixUnitaire: prixUnitaire,
+            prixUnitaireAvantRemise: retraitContrainte.prixUnitaireAvantRemise ?? null,
+            tauxRemise: retraitContrainte.tauxRemise ?? null,
+            referenceInterne: retraitContrainte.referenceInterne ?? null,
+            isMandatory: true,
+            type: 'retrait'
+        });
+    }
+    
+    console.log('Contraintes à ajouter:', contraintes);
+    return contraintes;
 }
 
 /**

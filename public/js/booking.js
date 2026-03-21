@@ -382,9 +382,11 @@ async function checkSingleDateAvailability(date, time) {
 
         // Nouvelle logique avec contraintes
         const content = result.content || {};
+        
+        // L'API retourne: estOuvert, avecContrainte, contrainte
         const estOuvert = content.estOuvert ?? (result.statut === 1);
-        const estContrainte = content.estContrainte ?? false;
-        const contrainte = content.Contrainte ?? content.contrainte ?? null;
+        const estContrainte = content.avecContrainte ?? content.estContrainte ?? false;
+        const contrainte = content.contrainte ?? content.Contrainte ?? null;
         
         // La plateforme est "disponible" si elle est ouverte OU si elle est contrainte (on peut débloquer)
         const available = estOuvert || estContrainte;
@@ -577,6 +579,30 @@ async function getQuoteAndDisplay() {
                 })));
             }
             displayOptions(dureeEnMinutes);
+            
+            // Charger les contraintes obligatoires (prestations complémentaires)
+            const dateDepot = document.getElementById('date-depot').value;
+            const heureDepot = document.getElementById('heure-depot').value;
+            const dateRecuperation = document.getElementById('date-recuperation').value;
+            const heureRecuperation = document.getElementById('heure-recuperation').value;
+            
+            const baggagesForConstraints = cartItems.filter(i => i.itemCategory === 'baggage').map(item => {
+                const pid = item.productId != null ? String(item.productId) : '';
+                const product = (globalProductsData || []).find(p => (p.id != null ? String(p.id) : '') === pid);
+                const sid = product && (product.idService ?? product.id_service);
+                return {
+                    productId: item.productId,
+                    serviceId: sid || serviceId,
+                    dateDebut: `${dateDepot}T${heureDepot}:00Z`,
+                    dateFin: `${dateRecuperation}T${heureRecuperation}:00Z`,
+                    quantity: item.quantity
+                };
+            });
+            
+            if (typeof updateContraintesInCart === 'function' && baggagesForConstraints.length > 0) {
+                await updateContraintesInCart(airportId, baggagesForConstraints);
+            }
+            
             if (typeof updateCartDisplay === 'function') updateCartDisplay();
             if (typeof syncQuantityDisplays === 'function') syncQuantityDisplays();
         } else {
@@ -1020,6 +1046,32 @@ function handleQuantityChange(e) {
     syncQuantityDisplays();
     if (typeof updateCartDisplay === 'function') updateCartDisplay();
     if (typeof saveStateToSession === 'function') saveStateToSession();
+    
+    // Mettre à jour les contraintes quand on change la quantité de bagages
+    if (typeof updateContraintesInCart === 'function' && airportId) {
+        const dateDepot = document.getElementById('date-depot')?.value;
+        const heureDepot = document.getElementById('heure-depot')?.value;
+        const dateRecuperation = document.getElementById('date-recuperation')?.value;
+        const heureRecuperation = document.getElementById('heure-recuperation')?.value;
+        
+        if (dateDepot && heureDepot && dateRecuperation && heureRecuperation) {
+            const baggagesForConstraints = cartItems.filter(i => i.itemCategory === 'baggage').map(item => {
+                const pid = item.productId != null ? String(item.productId) : '';
+                const product = (globalProductsData || []).find(p => (p.id != null ? String(p.id) : '') === pid);
+                const sid = product && (product.idService ?? product.id_service);
+                return {
+                    productId: item.productId,
+                    serviceId: sid || serviceId,
+                    dateDebut: `${dateDepot}T${heureDepot}:00Z`,
+                    dateFin: `${dateRecuperation}T${heureRecuperation}:00Z`,
+                    quantity: item.quantity
+                };
+            });
+            if (baggagesForConstraints.length > 0) {
+                updateContraintesInCart(airportId, baggagesForConstraints);
+            }
+        }
+    }
 }
 
 /**
