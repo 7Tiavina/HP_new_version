@@ -13,7 +13,9 @@ let guestEmail = null;
 // Données statiques ou initiales, rendues globales
 let staticOptions = {
     priority: { id: null, libelle: 'Service Priority', prixUnitaire: 0 }, // Initialisé à 0, sera mis à jour par l'API
-    premium: { id: null, libelle: 'Service Premium', prixUnitaire: 0 }    // Initialisé à 0, sera mis à jour par l'API
+    premium: { id: null, libelle: 'Service Premium', prixUnitaire: 0 },    // Initialisé à 0, sera mis à jour par l'API
+    // Options Access (contraintes horaires) - seront mises à jour par l'API
+    access: []
 };
 
 

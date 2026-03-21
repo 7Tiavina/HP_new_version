@@ -701,7 +701,7 @@ async function handleTotalClick() {
 
             if (optionsQuoteResult.statut === 1 && optionsQuoteResult.content) {
                 console.log('Options from API:', optionsQuoteResult.content);
-                
+
                 // Normaliser les options (API BDM peut renvoyer prix_unitaire, Id, Libelle)
                 var norm = function (o) {
                     if (!o) return null;
@@ -714,14 +714,14 @@ async function handleTotalClick() {
                         referenceInterne: o.referenceInterne ?? o.ReferenceInterne ?? null
                     };
                 };
-                
+
                 // Le backend retourne déjà un objet avec priority et premium
                 var apiPriority = optionsQuoteResult.content.priority;
                 var apiPremium = optionsQuoteResult.content.premium;
-                
+
                 var foundPriority = norm(apiPriority);
                 var foundPremium = norm(apiPremium);
-                
+
                 // Mettre à jour staticOptions seulement si on a trouvé les options
                 if (foundPriority && foundPriority.id) {
                     staticOptions.priority = foundPriority;
@@ -730,11 +730,30 @@ async function handleTotalClick() {
                     staticOptions.premium = foundPremium;
                 }
                 
+                // Récupérer les options Access (contraintes horaires) depuis le contenu
+                // L'API peut retourner d'autres options dans content qui ne sont pas priority/premium
+                var allOptions = optionsQuoteResult.content;
+                if (Array.isArray(allOptions)) {
+                    // Filtrer les options qui ne sont pas Priority ou Premium
+                    staticOptions.access = allOptions
+                        .filter(function(opt) {
+                            var ref = (opt.referenceInterne ?? opt.ReferenceInterne ?? '').toUpperCase();
+                            var lib = (opt.libelle ?? '').toLowerCase();
+                            // Exclure Priority et Premium, garder les options Access
+                            return ref !== 'PRIO' && ref !== 'PREM' && 
+                                   !lib.includes('priority') && 
+                                   !lib.includes('premium') &&
+                                   (lib.includes('access') || lib.includes('night') || lib.includes('evening') || lib.includes('morning'));
+                        })
+                        .map(norm);
+                }
+
                 console.log('Updated staticOptions:', staticOptions);
                 console.log('Priority found:', !!foundPriority?.id, 'Premium found:', !!foundPremium?.id);
+                console.log('Access options found:', staticOptions.access);
 
                 // Déterminer si le drawer doit être affiché
-                if (staticOptions.priority?.id || staticOptions.premium?.id) {
+                if (staticOptions.priority?.id || staticOptions.premium?.id || staticOptions.access.length > 0) {
                     shouldShowOptionsModal = true;
                 }
 
@@ -813,22 +832,40 @@ async function handleTotalClick() {
         var rawOptions = cartItems.filter(i => i.itemCategory === 'option');
         var options = rawOptions.map(function (o) {
             var p = o.prix ?? o.prixUnitaire ?? 0;
-            // Récupérer referenceInterne depuis staticOptions si disponible
             var refInterne = '';
             if (o.key === 'priority' && staticOptions.priority && staticOptions.priority.referenceInterne) {
                 refInterne = staticOptions.priority.referenceInterne;
             } else if (o.key === 'premium' && staticOptions.premium && staticOptions.premium.referenceInterne) {
                 refInterne = staticOptions.premium.referenceInterne;
             }
-            return { 
-                id: o.id || '', 
-                libelle: o.libelle || '', 
-                prix: p, 
-                prixUnitaire: p, 
+            return {
+                id: o.id || '',
+                libelle: o.libelle || '',
+                prix: p,
+                prixUnitaire: p,
                 details: o.details || null,
                 referenceInterne: refInterne
             };
         });
+        
+        // Ajouter les contraintes aux options (elles seront traitées comme des options obligatoires)
+        if (window.bookingContraintesItems && Array.isArray(window.bookingContraintesItems)) {
+            window.bookingContraintesItems.forEach(function (c) {
+                options.push({
+                    id: c.id || '',
+                    libelle: c.libelle || '',
+                    prix: c.prix || c.prixUnitaire || 0,
+                    prixUnitaire: c.prixUnitaire || 0,
+                    prixUnitaireAvantRemise: c.prixUnitaireAvantRemise || null,
+                    tauxRemise: c.tauxRemise || 0,
+                    details: null,
+                    referenceInterne: c.referenceInterne || '',
+                    isContrainte: true
+                });
+            });
+        }
+        
+        console.log('Options envoyées (incluant contraintes):', options);
 
         var airportSelect = document.getElementById('airport-select');
         var airportName = (airportSelect && airportSelect.options && airportSelect.options[airportSelect.selectedIndex]) ? airportSelect.options[airportSelect.selectedIndex].text : '';

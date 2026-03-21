@@ -126,12 +126,13 @@ class PaymentController extends Controller
 
             // 2. Process Options - Fetch fresh prices from BDM API
             if (!empty($validatedData['options'])) {
-                // IMPORTANT: Fetch fresh option prices from BDM API to avoid price mismatch
-                Log::info('[preparePayment] Fetching fresh option prices from BDM API...');
-                
+                Log::info('[preparePayment] Processing options from frontend...', [
+                    'options_count' => count($validatedData['options'])
+                ]);
+
                 $bdmToken = $this->getBdmToken();
                 $idPlateforme = $validatedData['airportId'];
-                
+
                 // Build commandeLignes for API call (with baggages to get correct options prices)
                 $apiCommandeLignes = [];
                 foreach ($commandeLignes as $ligne) {
@@ -149,21 +150,21 @@ class PaymentController extends Controller
 
                 Log::info('[preparePayment] Calling BdmApiService::getCommandeOptionsQuote with baggages...', [
                     'idPlateforme' => $idPlateforme,
-                    'baggages_count' => count($apiCommandeLignes),
+                    'commandeLignes_count' => count($apiCommandeLignes)
                 ]);
 
                 // Pass the baggages to the API so it can calculate options prices correctly
                 $freshOptionsResult = $bdmApiService->getCommandeOptionsQuote(
                     $idPlateforme,
-                    $apiCommandeLignes, // Pass baggages (NOT empty array)
+                    $apiCommandeLignes,
                     $validatedData['guest_email'] ?? ($user->email ?? null),
-                    null // No premium details needed for price fetching
+                    null
                 );
-                
+
                 Log::info('[preparePayment] BdmApiService response', [
                     'result' => $freshOptionsResult,
                 ]);
-                
+
                 $freshOptionsData = [];
                 if ($freshOptionsResult && isset($freshOptionsResult['content']) && is_array($freshOptionsResult['content'])) {
                     foreach ($freshOptionsResult['content'] as $option) {
@@ -173,7 +174,7 @@ class PaymentController extends Controller
                     }
                     Log::info('[preparePayment] Fresh options retrieved', ['count' => count($freshOptionsData)]);
                 }
-                
+
                 foreach ($validatedData['options'] as $selectedOption) {
                     // If this is the premium option, store its details separately
                     if (stripos($selectedOption['libelle'], 'Premium') !== false) {
@@ -194,7 +195,7 @@ class PaymentController extends Controller
                     // Try to get fresh price from BDM API response
                     $optionId = $selectedOption['id'];
                     $freshOption = $freshOptionsData[$optionId] ?? null;
-                    
+
                     if ($freshOption) {
                         // Use fresh price from BDM API
                         $optPrix = (float)($freshOption['prixUnitaire'] ?? 0);
@@ -212,7 +213,7 @@ class PaymentController extends Controller
                     } else {
                         // Fallback to frontend price (should not happen)
                         $optPrix = (float)($selectedOption['prix'] ?? $selectedOption['prixUnitaire'] ?? 0);
-                        
+
                         // Use default 10% discount for known options if API didn't return it
                         $optTauxRemise = (float)($selectedOption['tauxRemise'] ?? $selectedOption['taux_remise'] ?? 10.0);
                         $optPrixAvantRemiseRaw = $selectedOption['prixTTCAvantRemise'] ?? $selectedOption['prix_ttc_avant_remise'] ?? null;
@@ -228,14 +229,14 @@ class PaymentController extends Controller
                             'discount_rate' => $optTauxRemise,
                         ]);
                     }
-                    
+
                     $optionsTotal += $optPrix;
 
                     $commandeLignes[] = [
                         "id" => $selectedOption['id'],
                         "idProduit" => $selectedOption['id'],
                         "reference" => $selectedOption['referenceInterne'] ?? null,
-                        "referenceInterne" => $selectedOption['referenceInterne'] ?? null,  // BDM pourrait avoir besoin des deux formats
+                        "referenceInterne" => $selectedOption['referenceInterne'] ?? null,
                         "idService" => $serviceId,
                         "dateDebut" => $validatedData['dateDepot'] . 'T' . $validatedData['heureDepot'] . ':00.000Z',
                         "dateFin" => $validatedData['dateRecuperation'] . 'T' . $validatedData['heureRecuperation'] . ':00.000Z',

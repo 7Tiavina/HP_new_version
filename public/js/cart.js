@@ -131,8 +131,14 @@ function updateCartDisplay() {
             unitPriceBeforeDiscountValue = (typeof item.prixUnitaireAvantRemise === 'number' && !isNaN(item.prixUnitaireAvantRemise)) ? item.prixUnitaireAvantRemise : unitPriceValue;
             linePrice = unitPriceValue;
             lineNormal = unitPriceBeforeDiscountValue;
-            lineDiscountRate = 0;
+            // Calculer le taux de remise pour les contraintes
+            if (unitPriceBeforeDiscountValue > unitPriceValue && unitPriceBeforeDiscountValue > 0) {
+                lineDiscountRate = Math.round(((unitPriceBeforeDiscountValue - unitPriceValue) / unitPriceBeforeDiscountValue) * 100);
+            } else if (item.tauxRemise) {
+                lineDiscountRate = parseFloat(item.tauxRemise) || 0;
+            }
             // Ajouter un indicateur visuel pour les contraintes obligatoires
+            // Note: libelle contient déjà du HTML, on ne l'échappe pas
             libelle = libelle + ' <span class="text-xs text-orange-600 font-semibold">(obligatoire)</span>';
         }
 
@@ -148,7 +154,12 @@ function updateCartDisplay() {
         // Construction du HTML pour le nom du produit avec badge de remise
         var libelleHtml = '<div class="flex-1">';
         libelleHtml += '<div class="flex items-center gap-2">';
-        libelleHtml += '<span class="text-sm font-medium text-gray-800">' + escapeHtml(libelle) + '</span>';
+        // Pour les contraintes, ne pas échapper le HTML (contient déjà des balises <span>)
+        if (item.itemCategory === 'contrainte') {
+            libelleHtml += '<span class="text-sm font-medium text-gray-800">' + libelle + '</span>';
+        } else {
+            libelleHtml += '<span class="text-sm font-medium text-gray-800">' + escapeHtml(libelle) + '</span>';
+        }
         if (hasDiscount) {
             libelleHtml += '<span class="badge-promo inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-700">-' + lineDiscountRate.toFixed(0) + '%</span>';
         }

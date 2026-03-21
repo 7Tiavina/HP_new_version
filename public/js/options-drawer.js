@@ -166,10 +166,69 @@ function populateDrawerOptions() {
     // Update buttons state
     updateButtonsState();
     
+    // Afficher les options Access (contraintes horaires)
+    displayAccessOptionsInDrawer();
+
     // Apply translations to drawer content
     if (typeof applyLanguage === 'function') {
         setTimeout(() => applyLanguage(), 100);
     }
+}
+
+/**
+ * Afficher les options Access dans le drawer
+ */
+function displayAccessOptionsInDrawer() {
+    const accessContainer = document.getElementById('drawer-access-options');
+    if (!accessContainer) return;
+    
+    accessContainer.innerHTML = '';
+    
+    // Afficher les contraintes depuis window.bookingContraintesItems
+    const contraintesItems = window.bookingContraintesItems || [];
+    
+    if (contraintesItems.length === 0) {
+        return;
+    }
+    
+    // Titre pour la section Access
+    const titleEl = document.createElement('h3');
+    titleEl.className = 'text-sm font-bold text-gray-700 mb-3 mt-4';
+    titleEl.textContent = 'Options Access (contraintes horaires)';
+    accessContainer.appendChild(titleEl);
+    
+    contraintesItems.forEach(function(accessOption) {
+        const card = document.createElement('div');
+        card.className = 'bg-orange-50 rounded-lg p-4 mb-3 border-2 border-orange-200';
+        
+        const unitPrice = accessOption.prix || accessOption.prixUnitaire || 0;
+        const unitPriceBeforeDiscount = accessOption.prixUnitaireAvantRemise || null;
+        const hasDiscount = unitPriceBeforeDiscount != null && unitPriceBeforeDiscount > unitPrice;
+        
+        let priceHtml = '';
+        if (hasDiscount) {
+            priceHtml = `
+                <span class="text-sm text-gray-400 line-through mr-2">${formatPrice(unitPriceBeforeDiscount)} €</span>
+                <span class="text-lg font-bold text-green-600">${formatPrice(unitPrice)} €</span>
+            `;
+        } else {
+            priceHtml = `<span class="text-lg font-bold text-gray-900">${formatPrice(unitPrice)} €</span>`;
+        }
+        
+        card.innerHTML = `
+            <div class="flex justify-between items-start">
+                <div class="flex-1">
+                    <h4 class="font-semibold text-gray-800 text-sm">${escapeHtml(accessOption.libelle)}</h4>
+                    <p class="text-xs text-orange-600 font-semibold mt-1">⚠️ Obligatoire pour cet horaire</p>
+                </div>
+                <div class="text-right">
+                    ${priceHtml}
+                </div>
+            </div>
+        `;
+        
+        accessContainer.appendChild(card);
+    });
 }
 
 /**
@@ -205,10 +264,12 @@ function updateDrawerCart() {
 
     if (!cartItemsContainer || !cartTotalEl) return;
 
-    // Get all items in cart (baggage + options)
-    const allItems = cartItems || [];
+    // Get all items in cart (baggage + options) + contraintes
+    const contraintesItems = window.bookingContraintesItems || [];
+    const allItems = [...(cartItems || []), ...contraintesItems];
 
     console.log('[updateDrawerCart] Cart items:', allItems);
+    console.log('[updateDrawerCart] Contraintes items:', contraintesItems);
 
     if (allItems.length === 0) {
         cartItemsContainer.innerHTML = `
@@ -325,6 +386,21 @@ function updateDrawerCart() {
             itemTotal = unitPriceValue * (item.quantity || 1);
             // Use new icon images for options
             itemIcon = getItemIcon(item, '');
+        } else if (item.itemCategory === 'contrainte') {
+            // Contraintes: use prix from item
+            unitPriceValue = parseFloat(item.prix) || parseFloat(item.prixUnitaire) || 0;
+            const avant = parseFloat(item.prixUnitaireAvantRemise) || 0;
+            const taux = parseFloat(item.tauxRemise) || 0;
+            if (avant > 0) {
+                unitPriceBeforeDiscount = avant;
+            } else if (taux > 0 && unitPriceValue > 0) {
+                unitPriceBeforeDiscount = Math.round((unitPriceValue / (1 - taux / 100)) * 100) / 100;
+            } else {
+                unitPriceBeforeDiscount = unitPriceValue;
+            }
+            itemTotal = unitPriceValue;
+            libelle = libelle + ' (obligatoire)';
+            itemIcon = '⚠️';
         }
 
         const hasDiscount = unitPriceBeforeDiscount > unitPriceValue && unitPriceBeforeDiscount > 0;

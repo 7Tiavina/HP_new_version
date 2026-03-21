@@ -78,12 +78,20 @@ async function fetchContraintes(airportId, baggagesForOptionsQuote) {
  */
 async function updateContraintesInCart(airportId, baggagesForOptionsQuote) {
     const contraintes = await fetchContraintes(airportId, baggagesForOptionsQuote);
+    
+    // NE PAS ajouter aux cartItems - on les stocke juste dans une variable globale
+    // Elles seront envoyées séparément au backend
     window.bookingContraintesItems = contraintes;
-    console.log('Contraintes mises à jour dans le panier:', contraintes);
+    console.log('Contraintes stockées (pas dans cartItems):', contraintes);
     
     // Mettre à jour l'affichage du panier si la fonction existe
     if (typeof updateCartDisplay === 'function') {
         updateCartDisplay();
+    }
+    
+    // Mettre à jour le drawer si la fonction existe
+    if (typeof updateDrawerCart === 'function') {
+        updateDrawerCart();
     }
     
     return contraintes;
