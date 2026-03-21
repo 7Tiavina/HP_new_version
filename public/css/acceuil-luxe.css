@@ -1221,11 +1221,14 @@ body {
 }
 
 .since-text {
-  font-size: 50px;
-  font-weight: 800;
+  font-size: 55px;
+  font-weight: 700;
+  font-family: 'Space Grotesk', sans-serif;
   color: transparent;
-  -webkit-text-stroke: 1px #ffc439;
+  -webkit-text-stroke: 1px #FAC12E;
   margin-bottom: 25px;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .footer-col .credits {
