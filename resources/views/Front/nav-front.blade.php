@@ -146,13 +146,13 @@
         border-radius: 1px;
     }
 
-    /* BOUTON RÉSERVER (Moins arrondi pour coller à la photo) */
+    /* BOUTON RÉSERVER (Plus arrondi) */
     .btn-reserve {
         background-color: #ffc439;
         color: #1a1a1a;
         text-decoration: none;
         padding: 16px 45px;
-        border-radius: 12px; /* Arrondi plus faible, plus "carré" */
+        border-radius: 50px; /* Plus arrondi */
         font-weight: 700;
         text-transform: uppercase;
         font-size: 16px;
@@ -404,16 +404,16 @@
             <!-- Translation Widget -->
             @include('components.translation-widget')
 
-            <!-- User Icon -->
-            <div class="icon-action">
+            <!-- User Icon (clickable for login) -->
+            <div class="icon-action" id="user-icon-trigger" style="cursor: pointer;">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                     <circle cx="12" cy="7" r="4"></circle>
                 </svg>
             </div>
 
-            <!-- Auth Links (Login/Register or Logout) -->
-            <div class="luxe-auth-inject"></div>
+            <!-- Auth Links (hidden by default, shown via modal) -->
+            <div class="luxe-auth-inject" style="display: none;"></div>
 
             <!-- Menu Dots -->
             <div class="icon-action grid-dots">
@@ -464,12 +464,12 @@
     function toggleDrawer() {
         const drawer = document.getElementById('hp-drawer');
         const overlay = document.getElementById('hp-drawer-overlay');
-        
+
         if (!drawer || !overlay) return;
-        
+
         drawer.classList.toggle('open');
         overlay.classList.toggle('open');
-        
+
         // Prevent body scroll when drawer is open
         document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : 'auto';
     }
@@ -481,6 +481,17 @@
             gridDots.addEventListener('click', function(e) {
                 e.stopPropagation();
                 toggleDrawer();
+            });
+        }
+
+        // Add click listener to user icon to open login modal
+        const userIcon = document.getElementById('user-icon-trigger');
+        if (userIcon) {
+            userIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (typeof openLoginModal === 'function') {
+                    openLoginModal();
+                }
             });
         }
     });
