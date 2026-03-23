@@ -64,7 +64,6 @@
         text-decoration: none;
     }
 
-    /* Style spécifique pour les icônes sociales blanches */
     .social-icon {
         width: 18px;
         height: 18px;
@@ -124,7 +123,6 @@
         margin: 0;
     }
 
-    /* Translation widget in nav */
     .nav-center-menu .lang-selector-item {
         display: inline-flex;
         align-items: center;
@@ -261,7 +259,6 @@
         color: #ffc439;
     }
 
-    /* Login/Register links */
     .nav-right-group .login-link,
     .nav-right-group .register-link {
         color: #1a1a1a;
@@ -275,7 +272,46 @@
         color: #ffc439;
     }
 
-    /* --- DRAWER (LEFT SIDE) --- */
+    /* --- HAMBURGER MENU (MOBILE ONLY) --- */
+    .hamburger-menu {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        background: #FAC12E;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+
+    .hamburger-menu:hover {
+        background: #e5ad28;
+    }
+
+    .hamburger-line {
+        width: 20px;
+        height: 2.5px;
+        background: #000000;
+        margin: 2px 0;
+        transition: 0.3s;
+        border-radius: 2px;
+    }
+
+    .hamburger-menu.open .hamburger-line:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .hamburger-menu.open .hamburger-line:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger-menu.open .hamburger-line:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* --- DRAWER (RIGHT SIDE) --- */
     .hp-drawer-overlay {
         position: fixed;
         top: 0;
@@ -293,18 +329,20 @@
     .hp-drawer-wrapper {
         position: fixed;
         top: 0;
-        left: -520px;
-        width: 480px;
-        max-width: 90%;
+        right: -100%;
+        width: 100%;
+        max-width: 400px;
         height: 100%;
         z-index: 9999;
-        transition: 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         display: flex;
-        padding: 15px;
+        flex-direction: column;
+        background: #1a1a1a;
+        box-shadow: -10px 0 50px rgba(0,0,0,0.5);
     }
 
     .hp-drawer-wrapper.open {
-        left: 0;
+        right: 0;
     }
 
     .hp-drawer-overlay.open {
@@ -312,119 +350,157 @@
         opacity: 1;
     }
 
-    .hp-drawer-main {
-        flex: 1;
-        height: 100%;
-        background: #1a1a1a;
-        color: #ffffff;
-        padding: 40px 30px;
-        overflow-y: auto;
-        border-radius: 30px;
-        box-shadow: 15px 0 50px rgba(0,0,0,0.5);
-    }
-
-    .hp-drawer-side-bar {
-        width: 50px;
-        height: 100%;
-        margin-left: 15px;
-        background: url('{{ asset('HP-Drawer-black-fond.jpeg') }}') no-repeat center center;
-        background-size: cover;
-        border-radius: 30px;
+    .hp-drawer-header {
         display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-top: 30px;
-        cursor: pointer;
+        justify-content: flex-end;
+        padding: 20px;
+        background: #000000;
     }
 
     .hp-drawer-close-btn {
         font-size: 35px;
-        color: #888;
+        color: #ffffff;
+        background: none;
+        border: none;
+        cursor: pointer;
         transition: color 0.3s;
-        font-weight: 300;
+        line-height: 1;
     }
 
-    .hp-drawer-side-bar:hover .hp-drawer-close-btn {
-        color: #fff;
+    .hp-drawer-close-btn:hover {
+        color: #FAC12E;
+    }
+
+    .hp-drawer-main {
+        flex: 1;
+        padding: 30px 25px;
+        overflow-y: auto;
+        color: #ffffff;
     }
 
     .drawer-logo {
-        width: 120px;
-        margin-bottom: 40px;
+        width: 150px;
+        margin-bottom: 30px;
+    }
+
+    .drawer-nav-menu {
+        list-style: none;
+        margin-bottom: 30px;
+    }
+
+    .drawer-nav-menu li {
+        margin-bottom: 5px;
+    }
+
+    .drawer-nav-menu a {
+        color: #ffffff;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 600;
+        padding: 15px 10px;
+        display: block;
+        border-radius: 8px;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    .drawer-nav-menu a:hover {
+        background: rgba(250, 193, 46, 0.1);
+        color: #FAC12E;
     }
 
     .drawer-section-title {
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 700;
         text-transform: uppercase;
-        margin: 25px 0 12px 0;
-        border-bottom: 1px solid #333;
-        padding-bottom: 10px;
+        margin: 25px 0 15px 0;
+        color: #888;
+        letter-spacing: 1px;
     }
 
-    .drawer-link {
-        color: #ffc439;
+    .drawer-contact-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 0;
+        color: #ffffff;
+        font-size: 15px;
+    }
+
+    .drawer-contact-item svg {
+        width: 20px;
+        height: 20px;
+        fill: none;
+        stroke: #FAC12E;
+        stroke-width: 2;
+        flex-shrink: 0;
+    }
+
+    .drawer-contact-item a {
+        color: #ffffff;
         text-decoration: none;
-        font-weight: 600;
-        display: block;
-        margin-bottom: 5px;
-        font-size: 14px;
+        transition: color 0.3s;
     }
 
-    .drawer-text {
-        font-size: 12px;
-        color: #aaa;
-        margin-bottom: 12px;
-        line-height: 1.6;
+    .drawer-contact-item a:hover {
+        color: #FAC12E;
     }
 
-    .drawer-map-img {
-        width: 100%;
-        max-width: 280px;
-        border-radius: 15px;
-        margin: 10px 0 15px 0;
-        border: 1px solid #333;
+    .drawer-footer {
+        padding: 20px 25px;
+        background: #000000;
+        border-top: 1px solid #333;
     }
 
     .drawer-footer-btn {
-        margin-top: 35px;
         display: flex;
         align-items: center;
-        background: #252525;
-        border: 1px solid #333;
+        justify-content: center;
+        background: #FAC12E;
+        color: #000000;
+        text-decoration: none;
+        padding: 16px 24px;
         border-radius: 12px;
-        overflow: hidden;
-        cursor: pointer;
-    }
-
-    .drawer-footer-btn .text {
-        padding: 16px;
-        flex: 1;
-        text-transform: uppercase;
         font-weight: 700;
-        font-size: 13px;
-        color: #fff;
+        text-transform: uppercase;
+        font-size: 16px;
+        letter-spacing: 0.5px;
+        transition: background 0.3s;
     }
 
-    .drawer-footer-btn .icon {
-        background: #8bb3e6;
-        padding: 16px 20px;
-        color: #1a1a1a;
-        font-weight: bold;
-        font-size: 18px;
+    .drawer-footer-btn:hover {
+        background: #e5ad28;
     }
 
-    .grid-dots {
-        cursor: pointer;
+    /* --- RESPONSIVE --- */
+    @media (max-width: 1150px) {
+        .nav-right-group .btn-reserve {
+            display: none;
+        }
     }
 
     @media (max-width: 768px) {
-        .hp-drawer-wrapper {
-            width: 100%;
-            left: -100%;
+        .navbar {
+            height: 70px;
+            padding: 0 20px;
         }
-        .hp-drawer-main {
-            padding: 30px 20px;
+        
+        .logo-img {
+            height: 50px;
+        }
+        
+        .nav-center-menu, 
+        .nav-right-group .icon-action,
+        .nav-right-group .luxe-auth-inject,
+        .nav-right-group .btn-reserve {
+            display: none;
+        }
+        
+        .nav-right-group {
+            display: flex;
+        }
+        
+        .hamburger-menu {
+            display: flex;
         }
     }
 </style>
@@ -472,7 +548,6 @@
         </div>
 
         <div class="nav-right-group">
-            <!-- User Icon (clickable for login) -->
             <div class="icon-action" id="user-icon-trigger" style="cursor: pointer;">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -480,17 +555,20 @@
                 </svg>
             </div>
 
-            <!-- Auth Links (hidden by default, shown via modal) -->
             <div class="luxe-auth-inject" style="display: none;"></div>
 
-            <!-- Menu Dots -->
             <div class="icon-action grid-dots">
                 <span></span><span></span>
                 <span></span><span></span>
             </div>
 
-            <!-- Bouton Réserver / Déconnexion -->
             <a href="{{ $formUrl }}" class="btn-reserve" id="btn-reserve" data-i18n="btn_book">Réserver</a>
+
+            <div class="hamburger-menu" id="hamburger-menu" onclick="toggleDrawer()">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </div>
         </div>
     </nav>
 </div>
@@ -498,33 +576,38 @@
 <!-- Drawer Overlay & Wrapper -->
 <div class="hp-drawer-overlay" id="hp-drawer-overlay" onclick="toggleDrawer()"></div>
 <div class="hp-drawer-wrapper" id="hp-drawer">
-    <div class="hp-drawer-main">
-        <img src="{{ asset('HP-Logo-White.png') }}" class="drawer-logo" alt="Logo White">
-        
-        <h3 class="drawer-section-title" data-i18n="drawer_access_plan">Plan d'accès</h3>
-        
-        <a href="#" class="drawer-link" data-i18n="drawer_cdg">Aéroport de Paris CDG</a>
-        <p class="drawer-text" data-i18n="drawer_cdg_address">Terminal 2 / Gare TGV - Niveau 4<br>Opposition Hôtel Sheraton</p>
-        <img src="{{ asset('PA_CDG_FR_JAN_2026_9446a22942.jpeg') }}" class="drawer-map-img">
+    <div class="hp-drawer-header">
+        <button class="hp-drawer-close-btn" onclick="toggleDrawer()">&times;</button>
+    </div>
 
-        <a href="#" class="drawer-link" data-i18n="drawer_orly">Aéroport de Paris ORLY</a>
-        <p class="drawer-text" data-i18n="drawer_orly_address">Terminal 3 / Niveau d'arrivée</p>
-        <img src="{{ asset('PA_ORY_FR_JUN_2025_9ac2300e1c-1020x1020.jpeg') }}" class="drawer-map-img">
+    <div class="hp-drawer-main">
+        <img src="{{ asset('HP-Logo-White.png') }}" class="drawer-logo" alt="Hello Passenger">
+
+        <ul class="drawer-nav-menu">
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/services/" data-i18n="nav_services">Nos Services Bagages</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/a-propos/" data-i18n="nav_about">A Propos</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" data-i18n="nav_contact">Contact</a></li>
+            <li><a href="{{ $formUrl }}" data-i18n="btn_book">Réserver</a></li>
+        </ul>
 
         <h3 class="drawer-section-title" data-i18n="drawer_contact">Contact</h3>
-        <p class="drawer-link">+33 (0)1 34 38 58 98</p>
-        <p class="drawer-text" style="text-decoration: underline;">contact@hellopassenger.com</p>
-        
-        <a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" class="drawer-link" data-i18n="drawer_become_partner" style="margin-top: 20px; display: block;">Become A Partner</a>
-        
-        <div class="drawer-footer-btn" onclick="window.location.href='{{ $formUrl }}'">
-            <div class="text" data-i18n="drawer_book">Réserver</div>
-            <div class="icon">↗</div>
+
+        <div class="drawer-contact-item">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.81 12.81 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path></svg>
+            <a href="tel:+33134385898">+33 (0)1 34 38 58 98</a>
+        </div>
+
+        <div class="drawer-contact-item">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <a href="mailto:contact@hellopassenger.com">contact@hellopassenger.com</a>
         </div>
     </div>
-    
-    <div class="hp-drawer-side-bar" onclick="toggleDrawer()">
-        <div class="hp-drawer-close-btn">&times;</div>
+
+    <div class="drawer-footer">
+        <a href="{{ $formUrl }}" class="drawer-footer-btn" data-i18n="drawer_book">
+            Contactez-nous
+        </a>
     </div>
 </div>
 
@@ -532,17 +615,20 @@
     function toggleDrawer() {
         const drawer = document.getElementById('hp-drawer');
         const overlay = document.getElementById('hp-drawer-overlay');
+        const hamburger = document.getElementById('hamburger-menu');
 
         if (!drawer || !overlay) return;
 
         drawer.classList.toggle('open');
         overlay.classList.toggle('open');
 
-        // Prevent body scroll when drawer is open
+        if (hamburger) {
+            hamburger.classList.toggle('open');
+        }
+
         document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : 'auto';
     }
 
-    // Add click listener to grid-dots
     document.addEventListener('DOMContentLoaded', function() {
         const gridDots = document.querySelector('.grid-dots');
         if (gridDots) {
@@ -552,7 +638,6 @@
             });
         }
 
-        // Add click listener to user icon to open login modal
         const userIcon = document.getElementById('user-icon-trigger');
         if (userIcon) {
             userIcon.addEventListener('click', function(e) {
@@ -562,5 +647,12 @@
                 }
             });
         }
+
+        const drawerLinks = document.querySelectorAll('.drawer-nav-menu a, .drawer-footer-btn');
+        drawerLinks.forEach(function(link) {
+            link.addEventListener('click', function() {
+                toggleDrawer();
+            });
+        });
     });
 </script>
