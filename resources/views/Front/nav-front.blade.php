@@ -19,15 +19,15 @@
         width: 100%;
     }
 
-    /* --- TOP BAR (90% / 1400px) --- */
+    /* --- TOP BAR (97% width) --- */
     .contact-info-top {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        max-width: 1400px;
-        width: 90%;
+        width: 97%;
+        max-width: 1600px;
         margin: 0 auto 10px auto;
-        padding: 0 40px;
+        padding: 0 15px;
         color: #ffffff;
         font-size: 14px;
         font-family: 'Manrope', sans-serif;
@@ -74,14 +74,14 @@
     /* --- NAVBAR BLANCHE --- */
     .navbar {
         background-color: #ffffff;
-        max-width: 1400px;
-        width: 90%;
+        width: 97%;
+        max-width: 1600px;
         height: 130px;
         display: flex;
         align-items: center;
         justify-content: space-between;
         padding: 0 30px;
-        border-radius: 20px;
+        border-radius: 15px;
         margin: 0 auto;
     }
 
