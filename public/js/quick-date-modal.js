@@ -10,26 +10,37 @@ if (typeof t === 'undefined') {
 }
 
 function openQuickDateModal() {
-    // Copier les valeurs actuelles dans les inputs de la modale
+    // Copier les valeurs actuelles depuis le formulaire principal
     const depotDate = document.getElementById('date-depot').value;
     const depotHeure = document.getElementById('heure-depot').value;
     const retraitDate = document.getElementById('date-recuperation').value;
     const retraitHeure = document.getElementById('heure-recuperation').value;
 
-    document.getElementById('qdm-date-depot').value = depotDate;
-    document.getElementById('qdm-date-recuperation').value = retraitDate;
+    // Définir les valeurs dans les inputs de la modale
+    document.getElementById('qdm-date-depot').value = depotDate || '';
+    document.getElementById('qdm-date-recuperation').value = retraitDate || '';
+    document.getElementById('heure-qdm-depot').value = depotHeure || '';
+    document.getElementById('heure-qdm-recuperation').value = retraitHeure || '';
 
-    // Initialiser les timepickers avec les valeurs actuelles
+    // Mettre à jour l'affichage des heures dans les timepickers
     if (depotHeure) {
         const [h, m] = depotHeure.split(':');
-        document.getElementById('h-val-qdm-depot').textContent = h;
-        document.getElementById('m-val-qdm-depot').textContent = m;
+        document.getElementById('h-val-qdm-depot').textContent = h || '09';
+        document.getElementById('m-val-qdm-depot').textContent = m || '00';
+    } else {
+        // Valeurs par défaut si vide
+        document.getElementById('h-val-qdm-depot').textContent = '09';
+        document.getElementById('m-val-qdm-depot').textContent = '00';
     }
     
     if (retraitHeure) {
         const [h, m] = retraitHeure.split(':');
-        document.getElementById('h-val-qdm-recuperation').textContent = h;
-        document.getElementById('m-val-qdm-recuperation').textContent = m;
+        document.getElementById('h-val-qdm-recuperation').textContent = h || '18';
+        document.getElementById('m-val-qdm-recuperation').textContent = m || '00';
+    } else {
+        // Valeurs par défaut si vide
+        document.getElementById('h-val-qdm-recuperation').textContent = '18';
+        document.getElementById('m-val-qdm-recuperation').textContent = '00';
     }
 
     // Appliquer les mêmes contraintes que le formulaire principal

@@ -229,15 +229,50 @@ function setupGlobalModalListeners() {
 
 function displayOptions(dureeEnMinutes) {
     // Premium : on l'affiche seulement si l'API le retourne avec un id et un prix
-    // Les 72h et les lieux sont juste des recommandations, pas des conditions d'affichage
+    // ET si la date de dépôt est à plus de 72h de la date actuelle (heure France)
     const hasPremiumFromApi = staticOptions.premium && staticOptions.premium.id && staticOptions.premium.prixUnitaire > 0;
     const hasPriorityFromApi = staticOptions.priority && staticOptions.priority.id && staticOptions.priority.prixUnitaire > 0;
     
-    isPremiumAvailable = hasPremiumFromApi;
+    // Vérifier la condition des 72h pour Premium
+    let isPremiumTimeValid = false;
+    try {
+        const dateDepotStr = document.getElementById('date-depot')?.value;
+        const heureDepotStr = document.getElementById('heure-depot')?.value;
+        
+        if (dateDepotStr && heureDepotStr) {
+            // Créer la date de dépôt
+            const dateDepot = new Date(`${dateDepotStr}T${heureDepotStr}`);
+            
+            // Obtenir la date actuelle en heure France (UTC+1 ou UTC+2 selon DST)
+            const nowFrance = new Date(new Date().toLocaleString('en-US', {timeZone: 'Europe/Paris'}));
+            
+            // Calculer la différence en heures
+            const diffInMs = dateDepot.getTime() - nowFrance.getTime();
+            const diffInHours = diffInMs / (1000 * 60 * 60);
+            
+            // Premium disponible seulement si > 72h
+            isPremiumTimeValid = diffInHours > 72;
+            
+            console.log('[displayOptions] Premium 72h check:', {
+                dateDepot: dateDepot.toISOString(),
+                nowFrance: nowFrance.toISOString(),
+                diffInHours: diffInHours.toFixed(2),
+                isPremiumTimeValid: isPremiumTimeValid
+            });
+        }
+    } catch (error) {
+        console.error('[displayOptions] Error checking 72h condition:', error);
+        // En cas d'erreur, on considère que c'est valide pour ne pas bloquer
+        isPremiumTimeValid = true;
+    }
     
+    // Premium n'est affiché que si API OK ET condition des 72h remplie
+    isPremiumAvailable = hasPremiumFromApi && isPremiumTimeValid;
+
     console.log('[displayOptions] staticOptions.premium:', staticOptions.premium);
     console.log('[displayOptions] hasPremiumFromApi:', hasPremiumFromApi);
-    console.log('[displayOptions] hasPriorityFromApi:', hasPriorityFromApi);
+    console.log('[displayOptions] isPremiumTimeValid (>72h):', isPremiumTimeValid);
+    console.log('[displayOptions] isPremiumAvailable (final):', isPremiumAvailable);
 }
 
 function updateAdvertModalButtons() {

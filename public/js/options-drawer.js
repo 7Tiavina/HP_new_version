@@ -93,12 +93,48 @@ function closeOptionsDrawer() {
 function populateDrawerOptions() {
     const hasPremiumFromApi = staticOptions.premium && staticOptions.premium.id && staticOptions.premium.prixUnitaire > 0;
     const hasPriorityFromApi = staticOptions.priority && staticOptions.priority.id && staticOptions.priority.prixUnitaire > 0;
-
-    isPremiumAvailable = hasPremiumFromApi;
+    
+    // Vérifier la condition des 72h pour Premium
+    let isPremiumTimeValid = false;
+    try {
+        const dateDepotStr = document.getElementById('date-depot')?.value;
+        const heureDepotStr = document.getElementById('heure-depot')?.value;
+        
+        if (dateDepotStr && heureDepotStr) {
+            // Créer la date de dépôt
+            const dateDepot = new Date(`${dateDepotStr}T${heureDepotStr}`);
+            
+            // Obtenir la date actuelle en heure France (UTC+1 ou UTC+2 selon DST)
+            const nowFrance = new Date(new Date().toLocaleString('en-US', {timeZone: 'Europe/Paris'}));
+            
+            // Calculer la différence en heures
+            const diffInMs = dateDepot.getTime() - nowFrance.getTime();
+            const diffInHours = diffInMs / (1000 * 60 * 60);
+            
+            // Premium disponible seulement si > 72h
+            isPremiumTimeValid = diffInHours > 72;
+            
+            console.log('[populateDrawerOptions] Premium 72h check:', {
+                dateDepot: dateDepot.toISOString(),
+                nowFrance: nowFrance.toISOString(),
+                diffInHours: diffInHours.toFixed(2),
+                isPremiumTimeValid: isPremiumTimeValid
+            });
+        }
+    } catch (error) {
+        console.error('[populateDrawerOptions] Error checking 72h condition:', error);
+        // En cas d'erreur, on considère que c'est valide pour ne pas bloquer
+        isPremiumTimeValid = true;
+    }
+    
+    // Premium n'est affiché que si API OK ET condition des 72h remplie
+    isPremiumAvailable = hasPremiumFromApi && isPremiumTimeValid;
 
     console.log('[populateDrawerOptions] staticOptions:', staticOptions);
     console.log('[populateDrawerOptions] Priority:', staticOptions.priority);
     console.log('[populateDrawerOptions] Premium:', staticOptions.premium);
+    console.log('[populateDrawerOptions] isPremiumTimeValid (>72h):', isPremiumTimeValid);
+    console.log('[populateDrawerOptions] isPremiumAvailable (final):', isPremiumAvailable);
 
     // Priority Option
     const priorityCard = document.getElementById('drawer-option-priority');
@@ -136,7 +172,8 @@ function populateDrawerOptions() {
     const premiumUnavailableMsg = document.getElementById('premium-drawer-unavailable-message');
 
     if (premiumCard) {
-        if (hasPremiumFromApi) {
+        if (isPremiumAvailable) {
+            // Premium disponible (API OK + 72h OK)
             premiumCard.classList.remove('hidden');
             if (premiumUnavailableMsg) {
                 premiumUnavailableMsg.classList.add('hidden');
@@ -163,9 +200,20 @@ function populateDrawerOptions() {
                 }
             }
         } else {
+            // Premium non disponible (soit API, soit 72h, soit les deux)
             if (premiumUnavailableMsg) {
                 premiumUnavailableMsg.classList.remove('hidden');
+                // Message personnalisé selon la raison
+                const msgContent = premiumUnavailableMsg.querySelector('p');
+                if (msgContent) {
+                    if (!hasPremiumFromApi) {
+                        msgContent.textContent = 'Service Premium non disponible pour cet aéroport.';
+                    } else if (!isPremiumTimeValid) {
+                        msgContent.textContent = 'Service Premium disponible uniquement pour les dépôts à plus de 72h.';
+                    }
+                }
             }
+            premiumCard.classList.add('hidden');
         }
     }
 
