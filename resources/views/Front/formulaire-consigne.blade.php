@@ -481,69 +481,83 @@
 
         <!-- Modal Body -->
         <div class="p-6 space-y-6">
-            <!-- Date Blocks -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Depot Block -->
-                <div id="quick-depot-block" class="border border-gray-300 rounded-lg p-4 text-center cursor-pointer">
-                    <p class="font-semibold text-gray-700">DÉPÔT</p>
-                    <p id="quick-depot-date-display" class="text-2xl font-bold text-gray-900 mt-2">--</p>
-                    <p id="quick-depot-time-display" class="text-lg text-gray-600">--:--</p>
-                </div>
-                <!-- Retrait Block -->
-                <div id="quick-retrait-block" class="border border-gray-200 rounded-lg p-4 text-center cursor-pointer">
-                    <p class="font-semibold text-gray-700">RETRAIT</p>
-                    <p id="quick-retrait-date-display" class="text-2xl font-bold text-gray-900 mt-2">--</p>
-                    <p id="quick-retrait-time-display" class="text-lg text-gray-600">--:--</p>
-                </div>
-            </div>
-
-            <!-- Date Selection Mode -->
-            <div class="text-center hidden">
-                <div class="inline-flex rounded-md shadow-sm" role="group">
-                    <button type="button" id="qdm-btn-depot" class="py-2 px-4 text-sm font-medium text-gray-900 bg-white rounded-l-lg border border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-2 focus:ring-yellow-custom">
-                        Modifier Dépôt
-                    </button>
-                    <button type="button" id="qdm-btn-retrait" class="py-2 px-4 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-2 focus:ring-yellow-custom">
-                        Modifier Retrait
-                    </button>
-                </div>
-            </div>
-
-            <!-- Quick Select Buttons -->
-            <div id="qdm-quick-select-container" class="p-4 bg-gray-50 rounded-lg">
-                <p id="qdm-editing-label" class="text-center font-semibold mb-4">Modification de la date de Dépôt</p>
-                <div class="flex justify-center space-x-4">
-                    <button data-day="today" class="qdm-day-btn py-2 px-6 bg-gray-200 rounded-full">Auj.</button>
-                    <button data-day="tomorrow" class="qdm-day-btn py-2 px-6 bg-gray-200 rounded-full">Demain</button>
-                    <button data-day="custom" class="qdm-day-btn py-2 px-6 bg-gray-200 rounded-full">Personnalisé</button>
-                </div>
-                <!-- Custom Date Input -->
-                <div id="qdm-custom-date-container" class="hidden mt-4 text-center">
-                    <input type="date" id="qdm-custom-date-input" class="input-style mx-auto">
-                </div>
-            </div>
-
-            <!-- Hour Selection -->
-            <div id="qdm-hour-container" class="p-4 bg-gray-50 rounded-lg">
-                 <p class="text-center font-semibold mb-4">Heure</p>
-                 <div id="qdm-hour-grid" class="grid grid-cols-4 sm:grid-cols-6 gap-2">
-                    <!-- Hour buttons will be injected here -->
-                 </div>
-                 <div id="qdm-custom-hour-container" class="hidden mt-4 text-center">
-                    <div class="relative inline-block">
-                        <input type="time" id="qdm-custom-time-input" class="input-style mx-auto pr-10 pl-4">
-                        <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
+            <!-- Date de Dépôt -->
+            <div>
+                <h3 class="date-label text-sm font-medium text-gray-700 mb-4" data-i18n="form_deposit_date">DATE DE DÉPÔT DES BAGAGES *</h3>
+                <div class="datetime-container">
+                    <div class="datetime-field">
+                        <input type="date" id="qdm-date-depot" class="input-style w-full">
                     </div>
-                 </div>
+                    <div class="datetime-field">
+                        <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_deposit_time">HEURE DE DÉPÔT *</label>
+                        <div class="time-field-wrapper">
+                            <input type="text" id="heure-qdm-depot" class="time-field" readonly>
+                            <svg class="time-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+
+                            <!-- Popover Timepicker -->
+                            <div class="picker-popover" id="qdm-popover-depot">
+                                <div class="selectors">
+                                    <div class="column">
+                                        <button class="arrow" onclick="changeVal('H', 1, 'qdm-depot')">▲</button>
+                                        <div id="h-val-qdm-depot" class="val-display">09</div>
+                                        <button class="arrow" onclick="changeVal('H', -1, 'qdm-depot')">▼</button>
+                                    </div>
+                                    <div class="separator">:</div>
+                                    <div class="column">
+                                        <button class="arrow" onclick="changeVal('M', 5, 'qdm-depot')">▲</button>
+                                        <div id="m-val-qdm-depot" class="val-display">00</div>
+                                        <button class="arrow" onclick="changeVal('M', -5, 'qdm-depot')">▼</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Date de Retrait -->
+            <div>
+                <h3 class="date-label text-sm font-medium text-gray-700 mb-4" data-i18n="form_pickup_date">DATE DE RÉCUPÉRATION DES BAGAGES *</h3>
+                <div class="datetime-container">
+                    <div class="datetime-field">
+                        <input type="date" id="qdm-date-recuperation" class="input-style w-full">
+                    </div>
+                    <div class="datetime-field">
+                        <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_pickup_time">HEURE DE RÉCUPÉRATION *</label>
+                        <div class="time-field-wrapper">
+                            <input type="text" id="heure-qdm-recuperation" class="time-field" readonly>
+                            <svg class="time-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+
+                            <!-- Popover Timepicker -->
+                            <div class="picker-popover" id="qdm-popover-recuperation">
+                                <div class="selectors">
+                                    <div class="column">
+                                        <button class="arrow" onclick="changeVal('H', 1, 'qdm-recuperation')">▲</button>
+                                        <div id="h-val-qdm-recuperation" class="val-display">18</div>
+                                        <button class="arrow" onclick="changeVal('H', -1, 'qdm-recuperation')">▼</button>
+                                    </div>
+                                    <div class="separator">:</div>
+                                    <div class="column">
+                                        <button class="arrow" onclick="changeVal('M', 5, 'qdm-recuperation')">▲</button>
+                                        <div id="m-val-qdm-recuperation" class="val-display">00</div>
+                                        <button class="arrow" onclick="changeVal('M', -5, 'qdm-recuperation')">▼</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- Modal Footer -->
         <div class="flex justify-center p-6 border-t border-gray-200">
-            <button id="qdm-validate-btn" class="bg-yellow-custom text-gray-dark font-bold py-2 px-6 rounded-full btn-hover w-full">
-                Valider
+            <button id="qdm-validate-btn" class="bg-yellow-custom text-gray-dark font-bold py-3 px-8 rounded-full btn-hover w-full md:w-auto">
+                Valider les dates
             </button>
         </div>
     </div>
@@ -942,13 +956,38 @@
         // Initialisation pour heure-recuperation
         const recupInput = document.getElementById('heure-recuperation');
         const recupPopover = document.getElementById('popover-recuperation');
-        
+
         if (recupInput && recupPopover) {
             recupInput.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const parent = e.target.parentElement;
                 parent.appendChild(recupPopover);
                 recupPopover.classList.add('active');
+            });
+        }
+        
+        // Initialisation pour les timepickers de la modale QDM
+        const qdmDepotInput = document.getElementById('heure-qdm-depot');
+        const qdmDepotPopover = document.getElementById('qdm-popover-depot');
+        
+        if (qdmDepotInput && qdmDepotPopover) {
+            qdmDepotInput.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const parent = e.target.parentElement;
+                parent.appendChild(qdmDepotPopover);
+                qdmDepotPopover.classList.add('active');
+            });
+        }
+        
+        const qdmRecupInput = document.getElementById('heure-qdm-recuperation');
+        const qdmRecupPopover = document.getElementById('qdm-popover-recuperation');
+        
+        if (qdmRecupInput && qdmRecupPopover) {
+            qdmRecupInput.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const parent = e.target.parentElement;
+                parent.appendChild(qdmRecupPopover);
+                qdmRecupPopover.classList.add('active');
             });
         }
 

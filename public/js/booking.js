@@ -1157,6 +1157,14 @@ document.addEventListener('DOMContentLoaded', function () {
     
     // InitContraintes sera appelé par loadStateFromSession si des contraintes sont en cache
     // ou lors du checkAvailability si nécessaire
+    
+    // Ajouter un écouteur click sur dates-display pour ouvrir la modale de modification
+    const datesDisplay = document.getElementById('dates-display');
+    if (datesDisplay && typeof openQuickDateModal === 'function') {
+        datesDisplay.addEventListener('click', function() {
+            openQuickDateModal();
+        });
+    }
 
     // --- ÉCOUTEURS D'ÉVÉNEMENTS ---
 
