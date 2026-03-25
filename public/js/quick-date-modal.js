@@ -80,26 +80,32 @@ function applyQdmDateConstraints() {
 
 // Fonction pour valider et appliquer les nouvelles dates
 async function validateQdmDates() {
+    // Vérifier que airportId est défini
+    if (typeof airportId === 'undefined' || !airportId) {
+        await showCustomAlert(t('alert_missing_data_title'), 'Aéroport non sélectionné. Veuillez sélectionner un aéroport d\'abord.');
+        return;
+    }
+
     const newDepotDate = document.getElementById('qdm-date-depot').value;
     const newDepotHeure = document.getElementById('heure-qdm-depot').value;
     const newRetraitDate = document.getElementById('qdm-date-recuperation').value;
     const newRetraitHeure = document.getElementById('heure-qdm-recuperation').value;
-    
+
     // Validation des champs requis
     if (!newDepotDate || !newDepotHeure || !newRetraitDate || !newRetraitHeure) {
         await showCustomAlert(t('alert_missing_data_title'), t('alert_missing_data_message'));
         return;
     }
-    
+
     // Validation : date de retrait > date de dépôt
     const qdm_temp_depot_date = new Date(`${newDepotDate}T${newDepotHeure}`);
     const qdm_temp_retrait_date = new Date(`${newRetraitDate}T${newRetraitHeure}`);
-    
+
     if (qdm_temp_retrait_date <= qdm_temp_depot_date) {
         await showCustomAlert(t('date_invalid_title'), t('date_invalid_after_dropoff'));
         return;
     }
-    
+
     // Validation : minimum 3h entre dépôt et retrait
     if (qdm_temp_depot_date.toDateString() === qdm_temp_retrait_date.toDateString()) {
         const diffInMs = qdm_temp_retrait_date - qdm_temp_depot_date;
@@ -109,39 +115,39 @@ async function validateQdmDates() {
             return;
         }
     }
-    
+
     // Appliquer les nouvelles valeurs au formulaire principal
     const pad = (num) => num.toString().padStart(2, '0');
     document.getElementById('date-depot').value = newDepotDate;
     document.getElementById('heure-depot').value = newDepotHeure;
     document.getElementById('date-recuperation').value = newRetraitDate;
     document.getElementById('heure-recuperation').value = newRetraitHeure;
-    
+
     // Mettre à jour l'affichage des dates sélectionnées
     if (typeof displaySelectedDates === 'function') {
         displaySelectedDates();
     }
-    
+
     // Réinitialiser les contraintes avant de recalculer
     if (typeof resetContraintes === 'function') {
         resetContraintes();
     }
-    
-    // Vérifier la disponibilité
+
+    // Fermer la modale d'abord
+    document.getElementById('quick-date-modal').classList.add('hidden');
+    if (typeof qdmEscapeHandler === 'function') {
+        document.removeEventListener('keydown', qdmEscapeHandler);
+    }
+
+    // Maintenant vérifier la disponibilité (avec les nouvelles valeurs déjà appliquées)
     const isAvailable = await checkAvailability();
-    
+
     if (isAvailable) {
-        // Fermer la modale
-        document.getElementById('quick-date-modal').classList.add('hidden');
-        if (typeof qdmEscapeHandler === 'function') {
-            document.removeEventListener('keydown', qdmEscapeHandler);
-        }
-        
         // Recalculer les tarifs
         if (typeof getQuoteAndDisplay === 'function') {
             await getQuoteAndDisplay();
         }
-        
+
         // Sauvegarder l'état
         if (typeof saveStateToSession === 'function') {
             saveStateToSession();

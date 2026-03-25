@@ -278,16 +278,16 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        width: 40px;
-        height: 40px;
-        background: #FAC12E;
+        width: 48px;
+        height: 48px;
+        background: #e5e5e5;
         border-radius: 8px;
         cursor: pointer;
         transition: background 0.3s;
     }
 
     .hamburger-menu:hover {
-        background: #e5ad28;
+        background: #d4d4d4;
     }
 
     .hamburger-line {
@@ -480,10 +480,10 @@
 
     @media (max-width: 768px) {
         .navbar {
-            height: 70px;
+            height: 80px;
             padding: 0 20px;
         }
-        
+
         .logo-img {
             height: 50px;
         }

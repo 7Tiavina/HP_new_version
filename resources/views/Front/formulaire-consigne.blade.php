@@ -472,8 +472,13 @@
 <div id="quick-date-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-[10001] flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all max-h-[90vh] overflow-y-auto">
         <!-- Modal Header -->
-        <div class="flex justify-center items-center p-6 border-b border-gray-200">
+        <div class="flex justify-between items-center p-6 border-b border-gray-200">
             <h3 class="text-xl font-bold text-gray-800" data-i18n="modal_edit_dates">Modifier les dates</h3>
+            <button id="close-quick-date-modal" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
         </div>
 
         <!-- Modal Body -->
@@ -550,6 +555,16 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            
+            <!-- Info message -->
+            <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p class="text-sm text-blue-800 flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span>Les mêmes contraintes s'appliquent : minimum 3h entre dépôt et retrait.</span>
+                </p>
             </div>
         </div>
 
