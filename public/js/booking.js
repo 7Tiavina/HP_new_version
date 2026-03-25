@@ -310,6 +310,52 @@ function resetValidationStates() {
 
 
 /**
+ * Affiche une modale d'information quand des contraintes (options Access) sont détectées
+ * @param {Array} contraintes - Liste des contraintes détectées
+ */
+async function showContraintesInfoModal(contraintes) {
+    // Calculer le total des contraintes
+    const totalContraintes = contraintes.reduce((sum, c) => sum + (c.prix || 0), 0);
+    
+    // Construire le message selon le nombre de contraintes
+    let messageDetail = '';
+    if (contraintes.length === 1) {
+        const type = contraintes[0].type === 'depot' ? 'dépôt' : 'retrait';
+        messageDetail = `Une prestation obligatoire pour le ${type} sera ajoutée à votre commande.`;
+    } else {
+        messageDetail = 'Des prestations obligatoires pour le dépôt et le retrait seront ajoutées à votre commande.';
+    }
+    
+    const message = `
+        <div class="text-left space-y-3">
+            <p class="font-medium">${messageDetail}</p>
+            <div class="bg-orange-50 border border-orange-200 rounded-lg p-3">
+                <p class="text-sm text-orange-800">
+                    <strong>Horaires sélectionnés :</strong><br>
+                    • Dépôt : ${document.getElementById('date-depot').value} à ${document.getElementById('heure-depot').value}<br>
+                    • Retrait : ${document.getElementById('date-recuperation').value} à ${document.getElementById('heure-recuperation').value}
+                </p>
+            </div>
+            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                <p class="text-sm text-yellow-800">
+                    <strong>Supplément horaire :</strong><br>
+                    Ces horaires sont en dehors des heures d'ouverture standards.
+                    Un supplément de <span class="font-bold text-yellow-900">${totalContraintes.toFixed(2)} €</span> sera automatiquement ajouté à votre panier.
+                </p>
+            </div>
+            <p class="text-sm text-gray-600 italic">
+                ℹ️ Ce supplément est obligatoire et sera facturé automatiquement lors du paiement.
+            </p>
+        </div>
+    `;
+    
+    await showCustomAlert(
+        '⚠️ Horaires inhabituels - Supplément obligatoire',
+        message
+    );
+}
+
+/**
  * Affiche les dates sélectionnées dans la section de résumé.
  */
 function displaySelectedDates() {
@@ -461,19 +507,45 @@ async function checkAvailability() {
 
         const depotAvailable = depotResult.available;
         const retraitAvailable = retraitResult.available;
-        
+
         // Stocker les contraintes pour les utiliser plus tard
         window.bookingConstraints = {
             depot: depotResult.estContrainte ? depotResult.contrainte : null,
             retrait: retraitResult.estContrainte ? retraitResult.contrainte : null
         };
-        
+
         console.log('Booking constraints:', window.bookingConstraints);
 
         if (depotAvailable && retraitAvailable) {
-            // Récupérer les contraintes depuis l'API (toujours, pas seulement si détectées)
-            // Seulement si on a des baggages dans le panier
-            if (cartItems && cartItems.length > 0) {
+            // Vérifier s'il y a des contraintes détectées depuis l'API /date
+            const hasConstraints = window.bookingConstraints.depot || window.bookingConstraints.retrait;
+
+            if (hasConstraints) {
+                // Afficher immédiatement la modale d'information
+                const contraintes = [];
+                
+                if (window.bookingConstraints.depot) {
+                    const c = window.bookingConstraints.depot;
+                    contraintes.push({
+                        type: 'depot',
+                        libelle: c.libelle || c.Libelle || 'Prestation obligatoire (Dépôt)',
+                        prix: parseFloat(c.prixUnitaire ?? c.prix_unitaire ?? c.prix ?? 0) || 0
+                    });
+                }
+                
+                if (window.bookingConstraints.retrait && window.bookingConstraints.retrait.id !== window.bookingConstraints.depot?.id) {
+                    const c = window.bookingConstraints.retrait;
+                    contraintes.push({
+                        type: 'retrait',
+                        libelle: c.libelle || c.Libelle || 'Prestation obligatoire (Retrait)',
+                        prix: parseFloat(c.prixUnitaire ?? c.prix_unitaire ?? c.prix ?? 0) || 0
+                    });
+                }
+                
+                // Afficher la modale d'information IMMÉDIATEMENT
+                await showContraintesInfoModal(contraintes);
+                
+                // Ensuite, récupérer les détails complets des contraintes
                 const baggagesForOptionsQuote = cartItems.filter(i => i.itemCategory === 'baggage').map(item => {
                     const pid = item.productId != null ? String(item.productId) : '';
                     const product = (globalProductsData || []).find(p => (p.id != null ? String(p.id) : '') === pid);

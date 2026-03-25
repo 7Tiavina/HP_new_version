@@ -163,6 +163,12 @@ async function validateQdmDates() {
         if (typeof saveStateToSession === 'function') {
             saveStateToSession();
         }
+    } else {
+        // Si pas disponible, afficher un message
+        await showCustomAlert(
+            t('alert_agency_closed_title', 'Horaires non disponibles'),
+            'Les horaires sélectionnés ne sont pas disponibles. Veuillez choisir d\'autres horaires.'
+        );
     }
 }
 
