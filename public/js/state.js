@@ -106,4 +106,9 @@ function loadStateFromSession() {
     if(typeof updateCartDisplay !== 'undefined') {
         updateCartDisplay();
     }
+    
+    // Initialiser les contraintes depuis le sessionStorage si disponibles
+    if (typeof initContraintes === 'function' && airportId) {
+        initContraintes(airportId);
+    }
 }

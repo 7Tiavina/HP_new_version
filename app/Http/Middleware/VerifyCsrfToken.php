@@ -14,5 +14,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         '/api/check-availability',
         '/api/get-quote',
+        '/api/plateforme/*/commande/contraintes',
     ];
 }

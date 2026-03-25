@@ -71,6 +71,14 @@ class PaymentController extends Controller
                 'options.*.details.restitution_location_departure' => 'nullable|string',
                 'options.*.details.restitution_time_departure' => 'nullable|date_format:H:i',
                 'options.*.details.instructions_departure' => 'nullable|string',
+
+                // Contraintes (prestations complémentaires obligatoires) - pour calcul du total uniquement
+                'contraintes' => 'nullable|array',
+                'contraintes.*.id' => 'nullable|string',
+                'contraintes.*.libelle' => 'nullable|string',
+                'contraintes.*.prix' => 'nullable|numeric',
+                'contraintes.*.prixUnitaire' => 'nullable|numeric',
+                'contraintes.*.isMandatory' => 'nullable|boolean',
             ]);
 
             // Store language in session
@@ -331,8 +339,39 @@ class PaymentController extends Controller
 
             $optionsTotal = round($optionsTotal, 2);
 
+            // Calculer le total de base (baggages + options)
             $totalToPay = round(array_reduce($commandeLignes, fn($sum, $item) => $sum + ((float)($item['prixTTC'] ?? 0)), 0), 2);
             $totalNormalPrice = round(array_reduce($commandeLignes, fn($sum, $item) => $sum + ((float)($item['prixTTCAvantRemise'] ?? $item['prixTTC'] ?? 0)), 0), 2);
+            
+            // Ajouter les contraintes au total (prestations complémentaires obligatoires)
+            // Les contraintes ne seront PAS envoyées à BDM mais le total payé doit les inclure
+            $contraintes = $validatedData['contraintes'] ?? [];
+            $contraintesTotal = 0;
+            if (!empty($contraintes)) {
+                foreach ($contraintes as $contrainte) {
+                    // Nettoyer les données de contrainte pour éviter les problèmes de sérialisation
+                    $cleanContrainte = [
+                        'id' => $contrainte['id'] ?? '',
+                        'libelle' => $contrainte['libelle'] ?? '',
+                        'prix' => (float)($contrainte['prix'] ?? $contrainte['prixUnitaire'] ?? 0),
+                        'prixUnitaire' => (float)($contrainte['prix'] ?? $contrainte['prixUnitaire'] ?? 0),
+                        'isMandatory' => true
+                    ];
+                    $contraintesTotal += $cleanContrainte['prix'];
+                }
+                $contraintesTotal = round($contraintesTotal, 2);
+                $totalToPay += $contraintesTotal;
+                $totalNormalPrice += $contraintesTotal;
+                
+                Log::info('[preparePayment] Contraintes ajoutées au total', [
+                    'contraintes_count' => count($contraintes),
+                    'contraintes_total' => $contraintesTotal,
+                ]);
+            }
+            
+            $totalToPay = round($totalToPay, 2);
+            $totalNormalPrice = round($totalNormalPrice, 2);
+            
             $discountAmount = round(max(0, $totalNormalPrice - $totalToPay), 2);
             $firstTauxRemise = 0;
             foreach ($commandeLignes as $ligne) {
@@ -350,6 +389,8 @@ class PaymentController extends Controller
                 'commandeLignes' => $commandeLignes,
                 'commandeInfos' => $commandeInfos,
                 'client' => $clientData,
+                'contraintes' => $contraintes, // Stocker les contraintes pour référence
+                'contraintes_total' => $contraintesTotal,
                 'total_normal_price' => $totalNormalPrice,
                 'discount_percent' => $discountPercent,
                 'discount_amount' => $discountAmount,
@@ -1367,6 +1408,13 @@ class PaymentController extends Controller
                     'id_plateforme' => $idPlateforme, 'total_prix_ttc' => $commandeData['total_prix_ttc'], 'statut' => 'completed',
                     'details_commande_lignes' => json_encode($commandeData['commandeLignes']),
                     'invoice_content' => $apiResult['content'] ?? null,
+                ]);
+
+                Log::info('[paymentSuccess] Commande créée avec succès', [
+                    'commande_id' => $commande->id,
+                    'total_prix_ttc' => $commandeData['total_prix_ttc'],
+                    'contraintes_total' => $commandeData['contraintes_total'] ?? 0,
+                    'commande_lignes_count' => count($commandeData['commandeLignes']),
                 ]);
 
                 PaymentClient::create([

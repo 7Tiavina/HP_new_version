@@ -44,6 +44,20 @@ function openOptionsDrawer() {
             }
         }, 10);
 
+        // Recharger les contraintes depuis sessionStorage avant d'afficher le drawer
+        // pour s'assurer qu'elles sont à jour
+        if (typeof loadContraintesFromSession !== 'undefined') {
+            const cachedContraintes = loadContraintesFromSession();
+            if (cachedContraintes && cachedContraintes.length > 0) {
+                window.bookingContraintesItems = cachedContraintes;
+                console.log('[openOptionsDrawer] Contraintes rechargées depuis sessionStorage:', cachedContraintes);
+            } else {
+                console.log('[openOptionsDrawer] Pas de contraintes dans sessionStorage');
+            }
+        } else {
+            console.warn('[openOptionsDrawer] loadContraintesFromSession non disponible');
+        }
+
         // Populate drawer with current options
         populateDrawerOptions();
         updateDrawerCart();
@@ -181,16 +195,22 @@ function populateDrawerOptions() {
 function displayAccessOptionsInDrawer() {
     const accessContainer = document.getElementById('drawer-access-options');
     if (!accessContainer) return;
-    
+
     accessContainer.innerHTML = '';
-    
+
     // Afficher les contraintes depuis window.bookingContraintesItems
     const contraintesItems = window.bookingContraintesItems || [];
-    
+
+    console.log('[displayAccessOptionsInDrawer] window.bookingContraintesItems:', contraintesItems);
+    console.log('[displayAccessOptionsInDrawer] sessionStorage:', sessionStorage.getItem('hp_booking_contraintes'));
+
     if (contraintesItems.length === 0) {
+        console.log('[displayAccessOptionsInDrawer] Aucune contrainte à afficher');
         return;
     }
-    
+
+    console.log('[displayAccessOptionsInDrawer] Affichage de', contraintesItems.length, 'contrainte(s)');
+
     // Titre pour la section Access
     const titleEl = document.createElement('h3');
     titleEl.className = 'text-sm font-bold text-gray-700 mb-3 mt-4';

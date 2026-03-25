@@ -473,13 +473,28 @@ async function checkAvailability() {
         if (depotAvailable && retraitAvailable) {
             // Vérifier s'il y a des contraintes
             const hasConstraints = window.bookingConstraints.depot || window.bookingConstraints.retrait;
-            
+
             if (hasConstraints) {
                 console.log('Plateforme avec contraintes - récupération des détails...');
-                // On récupérera les détails des contraintes au moment du paiement
-                // ou après l'affichage des options
+                // Récupérer les contraintes depuis l'API avec forceRefresh
+                const baggagesForOptionsQuote = cartItems.filter(i => i.itemCategory === 'baggage').map(item => {
+                    const pid = item.productId != null ? String(item.productId) : '';
+                    const product = (globalProductsData || []).find(p => (p.id != null ? String(p.id) : '') === pid);
+                    const sid = product && (product.idService ?? product.id_service);
+                    return {
+                        productId: item.productId,
+                        serviceId: sid || serviceId,
+                        dateDebut: `${dateDepot}T${heureDepot}:00`,
+                        dateFin: `${dateRetrait}T${heureRetrait}:00`,
+                        quantity: item.quantity
+                    };
+                });
+                
+                if (typeof updateContraintesInCart === 'function') {
+                    await updateContraintesInCart(airportId, baggagesForOptionsQuote, true);
+                }
             }
-            
+
             return true;
         } else {
             // Provide a more specific error message
@@ -847,12 +862,24 @@ async function handleTotalClick() {
                 referenceInterne: refInterne
             };
         });
-        
-        // Ajouter les options Priority et Premium uniquement (PAS les contraintes)
-        // Les contraintes seront ajoutées automatiquement par l'ERP selon les horaires
-        // Mais on les affiche dans le panier pour information
-        
+
+        // Récupérer les contraintes (pour calcul du total uniquement)
+        // Les contraintes ne sont PAS envoyées à BDM, elles seront ajoutées automatiquement par l'ERP
+        var contraintes = [];
+        if (typeof window.bookingContraintesItems !== 'undefined' && Array.isArray(window.bookingContraintesItems)) {
+            contraintes = window.bookingContraintesItems.map(function (c) {
+                return {
+                    id: c.id || '',
+                    libelle: c.libelle || '',
+                    prix: c.prix || 0,
+                    prixUnitaire: c.prixUnitaire || c.prix || 0,
+                    isMandatory: true
+                };
+            });
+        }
+
         console.log('Options envoyées (hors contraintes - ajoutées auto par ERP):', options);
+        console.log('Contraintes (pour calcul du total uniquement):', contraintes);
 
         var airportSelect = document.getElementById('airport-select');
         var airportName = (airportSelect && airportSelect.options && airportSelect.options[airportSelect.selectedIndex]) ? airportSelect.options[airportSelect.selectedIndex].text : '';
@@ -867,6 +894,7 @@ async function handleTotalClick() {
             baggages: baggages,
             products: globalProductsData,
             options: options,
+            contraintes: contraintes, // Pour calcul du total uniquement (ne sera pas envoyé à BDM)
             guest_email: guestEmail,
             lang: currentLang
         };
@@ -1126,6 +1154,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Initialisation des contraintes de date
     applyDateInputConstraints();
+    
+    // InitContraintes sera appelé par loadStateFromSession si des contraintes sont en cache
+    // ou lors du checkAvailability si nécessaire
 
     // --- ÉCOUTEURS D'ÉVÉNEMENTS ---
 

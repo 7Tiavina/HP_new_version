@@ -371,6 +371,12 @@ function setupQdmListeners() {
             document.getElementById('heure-recuperation').value = `${pad(qdm_temp_retrait_date.getHours())}:${pad(qdm_temp_retrait_date.getMinutes())}`;
 
             displaySelectedDates();
+            
+            // Réinitialiser les contraintes avant de recalculer
+            if (typeof resetContraintes === 'function') {
+                resetContraintes();
+            }
+            
             const isAvailable = await checkAvailability();
 
             if (isAvailable) {
