@@ -89,8 +89,10 @@ function haveContraintesDatesChanged(dateDepot, heureDepot, dateRetrait, heureRe
  * @returns {Promise<Array>} - Liste des contraintes
  */
 async function fetchContraintes(airportId, baggagesForOptionsQuote) {
+    console.log('[fetchContraintes] Called with:', { airportId, baggagesCount: baggagesForOptionsQuote?.length });
+    
     if (!airportId || !baggagesForOptionsQuote || baggagesForOptionsQuote.length === 0) {
-        console.log('Pas de contraintes à récupérer (données insuffisantes)');
+        console.log('[fetchContraintes] Pas de contraintes à récupérer (données insuffisantes)');
         return [];
     }
 

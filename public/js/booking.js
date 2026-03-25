@@ -471,12 +471,9 @@ async function checkAvailability() {
         console.log('Booking constraints:', window.bookingConstraints);
 
         if (depotAvailable && retraitAvailable) {
-            // Vérifier s'il y a des contraintes
-            const hasConstraints = window.bookingConstraints.depot || window.bookingConstraints.retrait;
-
-            if (hasConstraints) {
-                console.log('Plateforme avec contraintes - récupération des détails...');
-                // Récupérer les contraintes depuis l'API avec forceRefresh
+            // Récupérer les contraintes depuis l'API (toujours, pas seulement si détectées)
+            // Seulement si on a des baggages dans le panier
+            if (cartItems && cartItems.length > 0) {
                 const baggagesForOptionsQuote = cartItems.filter(i => i.itemCategory === 'baggage').map(item => {
                     const pid = item.productId != null ? String(item.productId) : '';
                     const product = (globalProductsData || []).find(p => (p.id != null ? String(p.id) : '') === pid);
@@ -489,8 +486,8 @@ async function checkAvailability() {
                         quantity: item.quantity
                     };
                 });
-                
-                if (typeof updateContraintesInCart === 'function') {
+
+                if (typeof updateContraintesInCart === 'function' && baggagesForOptionsQuote.length > 0) {
                     await updateContraintesInCart(airportId, baggagesForOptionsQuote, true);
                 }
             }
