@@ -472,79 +472,78 @@
 <div id="quick-date-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-[10001] flex items-center justify-center p-4">
     <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all max-h-[90vh] overflow-y-auto">
         <!-- Modal Header -->
-        <div class="flex justify-between items-center p-6 border-b border-gray-200">
+        <div class="flex justify-center items-center p-6 border-b border-gray-200">
             <h3 class="text-xl font-bold text-gray-800" data-i18n="modal_edit_dates">Modifier les dates</h3>
-            <button id="close-quick-date-modal" class="text-gray-400 hover:text-gray-600">
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
         </div>
 
         <!-- Modal Body -->
-        <div class="p-6 space-y-6">
-            <!-- Date de Dépôt -->
-            <div>
-                <h3 class="date-label text-sm font-medium text-gray-700 mb-4" data-i18n="form_deposit_date">DATE DE DÉPÔT DES BAGAGES *</h3>
-                <div class="datetime-container">
-                    <div class="datetime-field">
-                        <input type="date" id="qdm-date-depot" class="input-style w-full">
-                    </div>
-                    <div class="datetime-field">
-                        <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_deposit_time">HEURE DE DÉPÔT *</label>
-                        <div class="time-field-wrapper">
-                            <input type="text" id="heure-qdm-depot" class="time-field" readonly>
-                            <svg class="time-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
+        <div class="p-6">
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Date de Dépôt -->
+                <div>
+                    <h3 class="date-label text-sm font-medium text-gray-700 mb-4" data-i18n="form_deposit_date">DATE DE DÉPÔT DES BAGAGES *</h3>
+                    <div class="datetime-container">
+                        <div class="datetime-field">
+                            <input type="date" id="qdm-date-depot" class="input-style w-full">
+                        </div>
+                        <div class="datetime-field">
+                            <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_deposit_time">HEURE DE DÉPÔT *</label>
+                            <div class="time-field-wrapper">
+                                <input type="text" id="heure-qdm-depot" class="time-field" readonly>
+                                <svg class="time-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
 
-                            <!-- Popover Timepicker -->
-                            <div class="picker-popover" id="qdm-popover-depot">
-                                <div class="selectors">
-                                    <div class="column">
-                                        <button class="arrow" onclick="changeVal('H', 1, 'qdm-depot')">▲</button>
-                                        <div id="h-val-qdm-depot" class="val-display">09</div>
-                                        <button class="arrow" onclick="changeVal('H', -1, 'qdm-depot')">▼</button>
-                                    </div>
-                                    <div class="separator">:</div>
-                                    <div class="column">
-                                        <button class="arrow" onclick="changeVal('M', 5, 'qdm-depot')">▲</button>
-                                        <div id="m-val-qdm-depot" class="val-display">00</div>
-                                        <button class="arrow" onclick="changeVal('M', -5, 'qdm-depot')">▼</button>
+                                <!-- Popover Timepicker -->
+                                <div class="picker-popover" id="qdm-popover-depot">
+                                    <div class="selectors">
+                                        <div class="column">
+                                            <button class="arrow" onclick="changeVal('H', 1, 'qdm-depot')">▲</button>
+                                            <div id="h-val-qdm-depot" class="val-display">09</div>
+                                            <button class="arrow" onclick="changeVal('H', -1, 'qdm-depot')">▼</button>
+                                        </div>
+                                        <div class="separator">:</div>
+                                        <div class="column">
+                                            <button class="arrow" onclick="changeVal('M', 5, 'qdm-depot')">▲</button>
+                                            <div id="m-val-qdm-depot" class="val-display">00</div>
+                                            <button class="arrow" onclick="changeVal('M', -5, 'qdm-depot')">▼</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Date de Retrait -->
-            <div>
-                <h3 class="date-label text-sm font-medium text-gray-700 mb-4" data-i18n="form_pickup_date">DATE DE RÉCUPÉRATION DES BAGAGES *</h3>
-                <div class="datetime-container">
-                    <div class="datetime-field">
-                        <input type="date" id="qdm-date-recuperation" class="input-style w-full">
-                    </div>
-                    <div class="datetime-field">
-                        <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_pickup_time">HEURE DE RÉCUPÉRATION *</label>
-                        <div class="time-field-wrapper">
-                            <input type="text" id="heure-qdm-recuperation" class="time-field" readonly>
-                            <svg class="time-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
+                <!-- Date de Retrait -->
+                <div>
+                    <h3 class="date-label text-sm font-medium text-gray-700 mb-4" data-i18n="form_pickup_date">DATE DE RÉCUPÉRATION DES BAGAGES *</h3>
+                    <div class="datetime-container">
+                        <div class="datetime-field">
+                            <input type="date" id="qdm-date-recuperation" class="input-style w-full">
+                        </div>
+                        <div class="datetime-field">
+                            <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_pickup_time">HEURE DE RÉCUPÉRATION *</label>
+                            <div class="time-field-wrapper">
+                                <input type="text" id="heure-qdm-recuperation" class="time-field" readonly>
+                                <svg class="time-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
 
-                            <!-- Popover Timepicker -->
-                            <div class="picker-popover" id="qdm-popover-recuperation">
-                                <div class="selectors">
-                                    <div class="column">
-                                        <button class="arrow" onclick="changeVal('H', 1, 'qdm-recuperation')">▲</button>
-                                        <div id="h-val-qdm-recuperation" class="val-display">18</div>
-                                        <button class="arrow" onclick="changeVal('H', -1, 'qdm-recuperation')">▼</button>
-                                    </div>
-                                    <div class="separator">:</div>
-                                    <div class="column">
-                                        <button class="arrow" onclick="changeVal('M', 5, 'qdm-recuperation')">▲</button>
-                                        <div id="m-val-qdm-recuperation" class="val-display">00</div>
-                                        <button class="arrow" onclick="changeVal('M', -5, 'qdm-recuperation')">▼</button>
+                                <!-- Popover Timepicker -->
+                                <div class="picker-popover" id="qdm-popover-recuperation">
+                                    <div class="selectors">
+                                        <div class="column">
+                                            <button class="arrow" onclick="changeVal('H', 1, 'qdm-recuperation')">▲</button>
+                                            <div id="h-val-qdm-recuperation" class="val-display">18</div>
+                                            <button class="arrow" onclick="changeVal('H', -1, 'qdm-recuperation')">▼</button>
+                                        </div>
+                                        <div class="separator">:</div>
+                                        <div class="column">
+                                            <button class="arrow" onclick="changeVal('M', 5, 'qdm-recuperation')">▲</button>
+                                            <div id="m-val-qdm-recuperation" class="val-display">00</div>
+                                            <button class="arrow" onclick="changeVal('M', -5, 'qdm-recuperation')">▼</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
