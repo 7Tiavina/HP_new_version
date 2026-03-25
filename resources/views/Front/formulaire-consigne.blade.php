@@ -878,15 +878,28 @@
 
     // Initialiser les timepickers avec l'heure actuelle
     function initializeTimepickers() {
+        // Ne PAS initialiser si des valeurs existent déjà (chargées depuis la session)
+        const depotInput = document.getElementById('heure-depot');
+        const recupInput = document.getElementById('heure-recuperation');
+        
+        // Si les inputs ont déjà des valeurs (depuis la session), ne pas les écraser
+        if (depotInput && depotInput.value) {
+            console.log('[initializeTimepickers] heure-depot déjà définie, skip:', depotInput.value);
+            return;
+        }
+        if (recupInput && recupInput.value) {
+            console.log('[initializeTimepickers] heure-recuperation déjà définie, skip:', recupInput.value);
+            return;
+        }
+        
         const now = new Date();
         const currentHour = formatTime(now.getHours());
         const currentMinute = formatTime(Math.floor(now.getMinutes() / 5) * 5); // Arrondi à 5 minutes
-        
+
         // Initialiser heure-depot
-        const depotInput = document.getElementById('heure-depot');
         const depotHDisplay = document.getElementById('h-val-depot');
         const depotMDisplay = document.getElementById('m-val-depot');
-        
+
         if (depotInput && depotHDisplay && depotMDisplay) {
             depotHDisplay.innerText = currentHour;
             depotMDisplay.innerText = currentMinute;
@@ -894,15 +907,14 @@
         }
 
         // Initialiser heure-recuperation (1 heure après l'heure de dépôt par défaut)
-        const recupInput = document.getElementById('heure-recuperation');
         const recupHDisplay = document.getElementById('h-val-recuperation');
         const recupMDisplay = document.getElementById('m-val-recuperation');
-        
+
         if (recupInput && recupHDisplay && recupMDisplay) {
             let defaultHour = parseInt(currentHour) + 1;
             if (defaultHour > 23) defaultHour = 0;
             defaultHour = formatTime(defaultHour);
-            
+
             recupHDisplay.innerText = defaultHour;
             recupMDisplay.innerText = currentMinute;
             recupInput.value = `${defaultHour}:${currentMinute}`;
