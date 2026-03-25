@@ -107,8 +107,6 @@ function loadStateFromSession() {
         updateCartDisplay();
     }
     
-    // Initialiser les contraintes depuis le sessionStorage si disponibles
-    if (typeof initContraintes === 'function' && airportId) {
-        initContraintes(airportId);
-    }
+    // Les contraintes seront recalculées lors du checkAvailability
+    // Ne pas les restaurer depuis sessionStorage car elles dépendent des dates/heures
 }

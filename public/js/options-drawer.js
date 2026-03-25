@@ -44,19 +44,11 @@ function openOptionsDrawer() {
             }
         }, 10);
 
-        // Recharger les contraintes depuis sessionStorage avant d'afficher le drawer
-        // pour s'assurer qu'elles sont à jour
-        if (typeof loadContraintesFromSession !== 'undefined') {
-            const cachedContraintes = loadContraintesFromSession();
-            if (cachedContraintes && cachedContraintes.length > 0) {
-                window.bookingContraintesItems = cachedContraintes;
-                console.log('[openOptionsDrawer] Contraintes rechargées depuis sessionStorage:', cachedContraintes);
-            } else {
-                console.log('[openOptionsDrawer] Pas de contraintes dans sessionStorage');
-            }
-        } else {
-            console.warn('[openOptionsDrawer] loadContraintesFromSession non disponible');
-        }
+        // Les contraintes sont déjà dans window.bookingContraintesItems
+        // Elles ont été calculées lors du checkAvailability ou updateContraintesInCart
+        // On ne recharge PAS depuis sessionStorage pour éviter d'afficher d'anciennes contraintes
+        
+        console.log('[openOptionsDrawer] window.bookingContraintesItems:', window.bookingContraintesItems);
 
         // Populate drawer with current options
         populateDrawerOptions();

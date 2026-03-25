@@ -214,8 +214,13 @@ async function updateContraintesInCart(airportId, baggagesForOptionsQuote, force
     const dateRetrait = document.getElementById('date-recuperation')?.value;
     const heureRetrait = document.getElementById('heure-recuperation')?.value;
     
-    // Charger depuis sessionStorage si pas de forceRefresh et dates identiques
-    if (!forceRefresh && !haveContraintesDatesChanged(dateDepot, heureDepot, dateRetrait, heureRetrait)) {
+    // Si forceRefresh ou si les dates ont changé, on doit appeler l'API
+    const datesChanged = haveContraintesDatesChanged(dateDepot, heureDepot, dateRetrait, heureRetrait);
+    
+    console.log('[updateContraintesInCart] Dates changed:', datesChanged);
+    
+    // Seulement utiliser le cache si pas de forceRefresh et dates identiques
+    if (!forceRefresh && !datesChanged) {
         const cachedContraintes = loadContraintesFromSession();
         if (cachedContraintes && cachedContraintes.length > 0) {
             window.bookingContraintesItems = cachedContraintes;
@@ -233,42 +238,25 @@ async function updateContraintesInCart(airportId, baggagesForOptionsQuote, force
     }
     
     // Si on arrive ici, c'est qu'on doit appeler l'API
-    console.log('[updateContraintesInCart] Appel API nécessaire');
+    console.log('[updateContraintesInCart] Appel API nécessaire (forceRefresh ou dates changées)');
     
-    // Si les contraintes sont déjà dans la variable globale mais pas dans sessionStorage,
-    // on les utilise directement sans appel API
-    if (!forceRefresh && window.bookingContraintesItems && window.bookingContraintesItems.length > 0) {
-        console.log('[updateContraintesInCart] Utilisation des contraintes en mémoire:', window.bookingContraintesItems);
-        
-        // Sauvegarder dans sessionStorage
-        saveContraintesToSession();
-        if (dateDepot && heureDepot && dateRetrait && heureRetrait) {
-            saveContraintesDatesToSession(dateDepot, heureDepot, dateRetrait, heureRetrait);
-        }
-        
-        // Mettre à jour l'affichage
-        if (typeof updateCartDisplay === 'function') {
-            updateCartDisplay();
-        }
-        if (typeof updateDrawerCart === 'function') {
-            updateDrawerCart();
-        }
-        
-        return window.bookingContraintesItems;
-    }
-    
-    // Sinon, appeler l'API
+    // Appeler l'API pour obtenir les contraintes à jour
     const contraintes = await fetchContraintes(airportId, baggagesForOptionsQuote);
     
     // Stocker dans la variable globale
     window.bookingContraintesItems = contraintes;
     
-    // Sauvegarder dans le sessionStorage
+    // Sauvegarder dans le sessionStorage SEULEMENT s'il y a des contraintes
     if (contraintes.length > 0) {
         saveContraintesToSession();
         if (dateDepot && heureDepot && dateRetrait && heureRetrait) {
             saveContraintesDatesToSession(dateDepot, heureDepot, dateRetrait, heureRetrait);
         }
+    } else {
+        // Si pas de contraintes, on nettoie le sessionStorage
+        console.log('[updateContraintesInCart] Pas de contraintes, nettoyage sessionStorage');
+        sessionStorage.removeItem(CONTRAINTES_STORAGE_KEY);
+        sessionStorage.removeItem(CONTRAINTES_DATES_KEY);
     }
     
     console.log('[updateContraintesInCart] Contraintes stockées:', contraintes);
@@ -329,24 +317,10 @@ async function initContraintes(airportId) {
         return false;
     }
     
-    // Essayer de charger depuis sessionStorage
-    const cachedContraintes = loadContraintesFromSession();
-    if (cachedContraintes && cachedContraintes.length > 0) {
-        window.bookingContraintesItems = cachedContraintes;
-        console.log('[initContraintes] Contraintes initialisées depuis sessionStorage:', cachedContraintes);
-        
-        // Mettre à jour l'affichage
-        if (typeof updateCartDisplay === 'function') {
-            updateCartDisplay();
-        }
-        if (typeof updateDrawerCart === 'function') {
-            updateDrawerCart();
-        }
-        return true;
-    }
-    
-    // Si pas de contraintes en cache, on ne fait rien ici
+    // NE PAS restaurer les contraintes depuis sessionStorage au chargement
+    // Les contraintes doivent être recalculées en fonction des dates/heures actuelles
     // Elles seront calculées lors du checkAvailability ou updateContraintesInCart
-    console.log('[initContraintes] Aucune contrainte en cache, sera calculé lors du check availability');
+    
+    console.log('[initContraintes] Skip restoration, will be calculated on checkAvailability');
     return false;
 }
