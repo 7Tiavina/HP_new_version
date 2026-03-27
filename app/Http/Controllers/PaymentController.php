@@ -894,7 +894,8 @@ class PaymentController extends Controller
         
         if (!$commandeData || !isset($commandeData['client'])) {
             Log::error('[showPaymentPage] CRITICAL: Commande data or client info NOT FOUND in session. Aborting.');
-            return redirect()->route('payment')->with('error', 'Votre session a expiré ou vos informations sont invalides. Veuillez recommencer votre commande depuis le début.');
+            // FIX: Redirect to form-consigne instead of payment to avoid infinite loop
+            return redirect()->route('form-consigne')->with('error', 'Votre session a expiré ou vos informations sont invalides. Veuillez recommencer votre commande depuis le début.');
         }
 
         $clientDataFromSession = $commandeData['client'];
