@@ -471,34 +471,34 @@ function updateDrawerCart() {
                              (item.key === 'premium' ? 'from-purple-50 to-indigo-50 border-purple-200' : 'from-gray-50 to-white border-gray-200');
 
         html += `
-            <div class="flex items-center gap-3 p-4 bg-gradient-to-r ${gradientClass} rounded-xl border transition-all hover:shadow-md">
-                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-xl shadow-sm flex-shrink-0 overflow-hidden">
-                    ${itemIcon}
-                </div>
-                <div class="flex-1 min-w-0">
-                    <div class="flex items-center gap-2">
-                        <p class="text-sm font-bold text-gray-900 truncate">${libelle}</p>
-                        ${hasDiscount ?
-                            `<span class="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-bold bg-green-100 text-green-700">-${discountRate}%</span>` :
-                            ''}
-                    </div>
-                    <div class="flex items-center gap-2 mt-1">
-                        ${hasDiscount ?
-                            `<span class="text-xs text-gray-400 line-through">${formatPrice(unitPriceBeforeDiscount)} €</span>` :
-                            ''}
-                        <span class="text-xs font-semibold text-gray-700">${formatPrice(unitPriceValue)} € x ${item.quantity || 1}</span>
+            <div class="cart-item flex justify-between items-start p-4 bg-gradient-to-r ${gradientClass} rounded-xl border transition-all hover:shadow-md">
+                <div class="flex-1 pr-3 min-w-0">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center text-xl shadow-sm flex-shrink-0 overflow-hidden">
+                            ${itemIcon}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <p class="text-sm font-bold text-gray-900 break-words" style="font-size: 0.9rem; line-height: 1.5;">${libelle}</p>
+                        </div>
                     </div>
                 </div>
-                <div class="text-right flex-shrink-0">
-                    <div class="flex flex-col items-end gap-1">
-                        ${hasDiscount ?
-                            `<span class="text-xs text-gray-400 line-through">${formatPrice(unitPriceBeforeDiscount * (item.quantity || 1))} €</span>` :
-                            ''}
-                        <p class="text-sm font-bold text-gray-900">${formatPrice(itemTotal)} €</p>
+                <div class="price-wrapper flex flex-col items-end gap-1 flex-shrink-0">
+                    ${hasDiscount ? `
+                        <div class="flex items-center gap-2 justify-end">
+                            <span class="badge-promo inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-700 flex-shrink-0" style="min-width: 42px; justify-content: center; font-size: 11px;">-${discountRate}%</span>
+                            <span class="old-price text-xs text-gray-400 line-through flex-shrink-0">${formatPrice(unitPriceBeforeDiscount * (item.quantity || 1))} €</span>
+                        </div>
+                    ` : ''}
+                    <div class="flex items-center gap-1 justify-end">
+                        <span class="current-price text-sm font-bold text-gray-900 flex-shrink-0" style="min-width: 70px; text-align: right;">${formatPrice(itemTotal)} €</span>
+                        ${isOption ? `
+                            <button onclick="removeOptionFromDrawer('${item.key}')" class="delete-item-btn text-red-500 hover:text-red-700 p-1 flex-shrink-0" aria-label="Retirer">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        ` : ''}
                     </div>
-                    ${isOption ?
-                        `<button onclick="removeOptionFromDrawer('${item.key}')" class="text-xs text-red-500 hover:text-red-700 font-medium mt-1 transition-colors">Retirer</button>` :
-                        ''}
                 </div>
             </div>
         `;
