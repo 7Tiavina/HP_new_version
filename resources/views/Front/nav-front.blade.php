@@ -1,5 +1,7 @@
 @php
     $formUrl = route('form-consigne');
+    $clientGuard = Auth::guard('client');
+    $isClientLoggedIn = $clientGuard->check();
 @endphp
 
 <style>
@@ -318,7 +320,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.8);
+        background: rgba(0,0,0,0.5);
         visibility: hidden;
         opacity: 0;
         transition: 0.4s;
@@ -337,8 +339,8 @@
         transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         display: flex;
         flex-direction: column;
-        background: #1a1a1a;
-        box-shadow: -10px 0 50px rgba(0,0,0,0.5);
+        background: #ffffff;
+        box-shadow: -10px 0 50px rgba(0,0,0,0.3);
     }
 
     .hp-drawer-wrapper.open {
@@ -354,12 +356,13 @@
         display: flex;
         justify-content: flex-end;
         padding: 20px;
-        background: #000000;
+        background: #ffffff;
+        border-bottom: 2px solid #FAC12E;
     }
 
     .hp-drawer-close-btn {
         font-size: 35px;
-        color: #ffffff;
+        color: #111827;
         background: none;
         border: none;
         cursor: pointer;
@@ -375,7 +378,7 @@
         flex: 1;
         padding: 30px 25px;
         overflow-y: auto;
-        color: #ffffff;
+        color: #111827;
     }
 
     .drawer-logo {
@@ -386,6 +389,7 @@
     .drawer-nav-menu {
         list-style: none;
         margin-bottom: 30px;
+        padding: 0;
     }
 
     .drawer-nav-menu li {
@@ -393,7 +397,7 @@
     }
 
     .drawer-nav-menu a {
-        color: #ffffff;
+        color: #111827;
         text-decoration: none;
         font-size: 18px;
         font-weight: 600;
@@ -404,7 +408,7 @@
     }
 
     .drawer-nav-menu a:hover {
-        background: rgba(250, 193, 46, 0.1);
+        background: rgba(250, 193, 46, 0.15);
         color: #FAC12E;
     }
 
@@ -413,7 +417,7 @@
         font-weight: 700;
         text-transform: uppercase;
         margin: 25px 0 15px 0;
-        color: #888;
+        color: #6B7280;
         letter-spacing: 1px;
     }
 
@@ -422,7 +426,7 @@
         align-items: center;
         gap: 12px;
         padding: 12px 0;
-        color: #ffffff;
+        color: #111827;
         font-size: 15px;
     }
 
@@ -436,7 +440,7 @@
     }
 
     .drawer-contact-item a {
-        color: #ffffff;
+        color: #111827;
         text-decoration: none;
         transition: color 0.3s;
     }
@@ -447,28 +451,31 @@
 
     .drawer-footer {
         padding: 20px 25px;
-        background: #000000;
-        border-top: 1px solid #333;
+        background: linear-gradient(135deg, rgba(250, 193, 46, 0.1), rgba(249, 168, 37, 0.05));
+        border-top: 2px solid #FAC12E;
     }
 
     .drawer-footer-btn {
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #FAC12E;
+        background: linear-gradient(135deg, #FAC12E, #F9A825);
         color: #000000;
         text-decoration: none;
         padding: 16px 24px;
-        border-radius: 12px;
+        border-radius: 30px;
         font-weight: 700;
         text-transform: uppercase;
         font-size: 16px;
         letter-spacing: 0.5px;
-        transition: background 0.3s;
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px rgba(250, 193, 46, 0.3);
     }
 
     .drawer-footer-btn:hover {
-        background: #e5ad28;
+        background: linear-gradient(135deg, #fdd835, #FAC12E);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(250, 193, 46, 0.4);
     }
 
     /* --- RESPONSIVE --- */
@@ -581,14 +588,18 @@
     </div>
 
     <div class="hp-drawer-main">
-        <img src="{{ asset('HP-Logo-White.png') }}" class="drawer-logo" alt="Hello Passenger">
+        <img src="{{ asset('images/HP-logo-290x91.png') }}" class="drawer-logo" alt="Hello Passenger">
 
         <ul class="drawer-nav-menu">
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/services/" data-i18n="nav_services">Nos Services Bagages</a></li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/a-propos/" data-i18n="nav_about">A Propos</a></li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" data-i18n="nav_contact">Contact</a></li>
-            <li><a href="{{ $formUrl }}" data-i18n="btn_book">Réserver</a></li>
+            @if($isClientLoggedIn)
+                <li><a href="{{ route('client.logout') }}" onclick="toggleDrawer(); return false;" class="text-red-600 hover:text-red-700">Déconnecter</a></li>
+            @else
+                <li><a href="{{ $formUrl }}" data-i18n="btn_book">Réserver</a></li>
+            @endif
         </ul>
 
         <h3 class="drawer-section-title" data-i18n="drawer_contact">Contact</h3>
@@ -601,6 +612,34 @@
         <div class="drawer-contact-item">
             <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
             <a href="mailto:contact@hellopassenger.com">contact@hellopassenger.com</a>
+        </div>
+
+        <!-- User account section -->
+        <div class="mt-6 pt-6 border-t border-gray-200">
+            @if($isClientLoggedIn)
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-gray-900">{{ $clientGuard->user()->email ?? 'Client' }}</p>
+                            <a href="{{ route('client.dashboard') }}" onclick="toggleDrawer(); return false;" class="text-xs text-yellow-600 hover:text-yellow-700">Mon compte</a>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <button type="button" onclick="toggleDrawer(); window.openLoginModal?.();" class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <span class="text-sm font-bold text-gray-900">Se connecter</span>
+                </button>
+            @endif
         </div>
     </div>
 
@@ -619,6 +658,8 @@
 
         if (!drawer || !overlay) return;
 
+        const isOpen = drawer.classList.contains('open');
+
         drawer.classList.toggle('open');
         overlay.classList.toggle('open');
 
@@ -626,7 +667,14 @@
             hamburger.classList.toggle('open');
         }
 
-        document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : 'auto';
+        // Hide chatbot when drawer is open (same as options drawer)
+        if (!isOpen) {
+            document.body.classList.add('drawer-chatbot-hidden');
+        } else {
+            document.body.classList.remove('drawer-chatbot-hidden');
+        }
+
+        document.body.style.overflow = !isOpen ? 'hidden' : 'auto';
     }
 
     document.addEventListener('DOMContentLoaded', function() {
