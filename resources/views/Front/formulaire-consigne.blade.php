@@ -338,12 +338,17 @@
 <!-- Options Side Drawer (New UX) -->
 <div id="options-drawer-overlay" class="hidden fixed inset-0 bg-white bg-opacity-90 z-[10003] transition-opacity opacity-0" style="backdrop-filter: blur(4px);"></div>
 <div id="options-drawer" class="hidden fixed top-0 right-0 h-full w-full max-w-2xl bg-white shadow-2xl z-[10004] transform translate-x-full transition-transform duration-400 ease-out flex flex-col">
-    <!-- Drawer Header - Simple with just close button -->
-    <div class="bg-white border-b border-gray-200 p-4 relative flex-shrink-0">
+    <!-- Drawer Header - Gold accent header with close button -->
+    <div class="hp-drawer-header-accent bg-gradient-to-r from-yellow-50 to-amber-50 border-b-2 border-yellow-400 p-4 relative flex-shrink-0">
         <div class="flex items-center justify-between">
-            <h2 class="text-lg font-bold text-gray-900" data-i18n="drawer_options_title">Options & Services</h2>
-            <!-- Close button -->
-            <button id="close-options-drawer" class="text-gray-400 hover:text-gray-600 transition-colors z-10">
+            <h2 class="text-lg font-bold text-gray-900 flex items-center gap-2" data-i18n="drawer_options_title">
+                <svg class="w-6 h-6 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"/>
+                </svg>
+                <span>Options & Services</span>
+            </h2>
+            <!-- Close button with gold hover -->
+            <button id="close-options-drawer" class="text-gray-400 hover:text-yellow-600 hover:bg-yellow-100 rounded-lg p-1.5 transition-all duration-200 z-10">
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
                 </svg>
@@ -443,31 +448,37 @@
             <!-- Access Options Section (contraintes horaires) -->
             <div id="drawer-access-options" class="mb-4"></div>
             
-            <h3 class="text-base font-bold text-gray-900 mb-3 flex items-center gap-2">
-                <svg class="w-5 h-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+            <h3 class="text-base font-bold text-gray-900 mb-3 flex items-center gap-2 section-title" data-i18n="drawer_cart_title">
+                <svg class="w-5 h-5 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                <span data-i18n="drawer_cart_title">Votre panier</span>
+                <span>Votre panier</span>
             </h3>
             <div id="drawer-cart-items" class="space-y-2 mb-3">
                 <!-- Cart items will be injected here -->
             </div>
-            <div class="mt-4 pt-4 border-t-2 border-gray-300 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl p-4">
+            <div class="mt-4 pt-4 border-t-2 border-yellow-300 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-xl p-4 cart-total-section">
                 <div class="flex items-center justify-between">
-                    <span class="text-sm font-bold text-gray-700" data-i18n="drawer_total">Total à payer</span>
-                    <span id="drawer-cart-total" class="text-2xl font-bold text-gray-900">0,00 €</span>
+                    <span class="text-sm font-bold text-gray-700 flex items-center gap-2" data-i18n="drawer_total">
+                        <svg class="w-4 h-4 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M8.433 7.418c.155-.103.346-.196.567-.267v1.698a2.305 2.305 0 01-.567-.267C8.07 8.34 8 8.114 8 8c0-.114.07-.34.433-.582zM11 12.849v-1.698c.22.071.412.164.567.267.364.243.433.468.433.582 0 .114-.07.34-.433.582a2.305 2.305 0 01-.567.267z"/>
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-13a1 1 0 10-2 0v.092a4.535 4.535 0 00-1.676.662C6.602 6.234 6 7.009 6 8c0 .99.602 1.765 1.324 2.246.48.32 1.054.545 1.676.662v1.941c-.391-.127-.68-.317-.843-.504a1 1 0 10-1.51 1.31c.562.649 1.413 1.076 2.353 1.253V15a1 1 0 102 0v-.092a4.535 4.535 0 001.676-.662C13.398 13.766 14 12.991 14 12c0-.99-.602-1.765-1.324-2.246A4.535 4.535 0 0011 9.092V7.151c.391.127.68.317.843.504a1 1 0 101.511-1.31c-.563-.649-1.413-1.076-2.354-1.253V5z" clip-rule="evenodd"/>
+                        </svg>
+                        Total à payer
+                    </span>
+                    <span id="drawer-cart-total" class="text-2xl font-bold text-gray-900 bg-gradient-to-r from-yellow-400 to-yellow-600 bg-clip-text text-transparent">0,00 €</span>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <!-- Drawer Footer - Fixed at bottom -->
-    <div class="border-t border-gray-200 p-4 bg-gradient-to-r from-gray-50 to-white flex-shrink-0 flex justify-end">
-        <button id="confirm-options-drawer" class="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-3 px-8 rounded-full transition-all shadow-lg hover:shadow-xl hover:shadow-yellow-200 transform hover:-translate-y-0.5 duration-200 text-base flex items-center gap-2" data-i18n="drawer_confirm">
+    <!-- Drawer Footer - Fixed at bottom with gold gradient -->
+    <div class="border-t-2 border-yellow-400 p-4 bg-gradient-to-r from-yellow-50 to-amber-50 flex-shrink-0 flex justify-end">
+        <button id="confirm-options-drawer" class="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-3.5 px-10 rounded-full transition-all shadow-lg hover:shadow-xl hover:shadow-yellow-300 transform hover:-translate-y-1 hover:scale-105 duration-300 text-base flex items-center gap-2.5 group" data-i18n="drawer_confirm">
             <span>Continuer</span>
-            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
         </button>
     </div>

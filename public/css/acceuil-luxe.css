@@ -1089,7 +1089,11 @@ body {
 
 /* Options Drawer - Luxe Theme */
 #hp-booking-root #options-drawer-overlay { background: rgba(0,0,0,0.85) !important; }
-#hp-booking-root #options-drawer { background: var(--luxe-card) !important; border-left: 1px solid var(--luxe-border); }
+#hp-booking-root #options-drawer { 
+    background: var(--luxe-card) !important; 
+    border-left: 1px solid var(--luxe-border);
+    box-shadow: -8px 0 32px rgba(249, 197, 45, 0.15) !important;
+}
 #hp-booking-root #options-drawer .text-gray-900,
 #hp-booking-root #options-drawer .text-gray-800 { color: var(--luxe-cream) !important; }
 #hp-booking-root #options-drawer .text-gray-700,
@@ -1098,18 +1102,44 @@ body {
 #hp-booking-root #options-drawer .border-gray-200,
 #hp-booking-root #options-drawer .border-gray-300 { border-color: var(--luxe-border) !important; }
 #hp-booking-root #options-drawer .bg-gray-50 { background: rgba(201, 169, 98, 0.08) !important; }
+
+/* Drawer Header - Gold accent */
+#hp-booking-root #options-drawer .hp-drawer-header-accent {
+    background: linear-gradient(135deg, rgba(249, 197, 45, 0.1) 0%, rgba(253, 216, 53, 0.05) 100%) !important;
+    border-bottom: 2px solid var(--luxe-gold) !important;
+}
+
+/* Drawer Footer - Gold gradient */
+#hp-booking-root #options-drawer > div:last-child {
+    background: linear-gradient(135deg, rgba(249, 197, 45, 0.08) 0%, rgba(253, 216, 53, 0.02) 100%) !important;
+    border-top: 2px solid var(--luxe-gold) !important;
+}
+
+/* Form elements with gold focus */
 #hp-booking-root #options-drawer input,
 #hp-booking-root #options-drawer select,
 #hp-booking-root #options-drawer textarea { 
-    background: var(--luxe-surface) !important; 
-    border-color: var(--luxe-border) !important; 
-    color: var(--luxe-cream) !important; 
+    background: var(--luxe-surface) !important;
+    border-color: var(--luxe-border) !important;
+    color: var(--luxe-cream) !important;
 }
 #hp-booking-root #options-drawer input:focus,
 #hp-booking-root #options-drawer select:focus,
 #hp-booking-root #options-drawer textarea:focus { 
-    border-color: var(--luxe-gold) !important; 
-    box-shadow: 0 0 0 2px rgba(201, 169, 98, 0.2) !important; 
+    border-color: var(--luxe-gold) !important;
+    box-shadow: 0 0 0 3px rgba(249, 197, 45, 0.25) !important;
+}
+
+/* Cart total section - Premium gold highlight */
+#hp-booking-root #options-drawer .cart-total-section {
+    background: linear-gradient(135deg, rgba(249, 197, 45, 0.15) 0%, rgba(253, 216, 53, 0.08) 100%) !important;
+    border: 2px solid var(--luxe-gold) !important;
+    box-shadow: 0 4px 12px rgba(249, 197, 45, 0.2) !important;
+}
+
+/* Section titles with gold icon */
+#hp-booking-root #options-drawer .section-title svg {
+    filter: drop-shadow(0 2px 4px rgba(249, 197, 45, 0.3)) !important;
 }
 
 /* Aéroport + dates display (step 2) — visible + luxe */
