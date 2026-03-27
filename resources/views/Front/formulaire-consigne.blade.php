@@ -1305,25 +1305,45 @@
 /* Styles pour le panier amélioré */
 #hp-booking-root .cart-item {
   border-bottom: 1px solid #f3f4f6 !important;
+  align-items: flex-start !important;
 }
 #hp-booking-root .cart-item:last-child {
   border-bottom: 0 !important;
+}
+#hp-booking-root .cart-item .text-sm.font-medium {
+  font-size: 0.9rem !important;
+  line-height: 1.5 !important;
+  word-break: break-word !important;
 }
 #hp-booking-root .badge-promo {
   background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
   color: #166534 !important;
   font-weight: 700 !important;
   box-shadow: 0 1px 2px rgba(22, 101, 52, 0.1) !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
 }
 #hp-booking-root .old-price {
   color: #9ca3af !important;
   text-decoration: line-through !important;
   font-size: 0.75rem !important;
+  white-space: nowrap !important;
 }
 #hp-booking-root .current-price {
   color: #111827 !important;
   font-weight: 700 !important;
-  font-size: 0.875rem !important;
+  font-size: 0.9rem !important;
+  white-space: nowrap !important;
+}
+#hp-booking-root .price-wrapper {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-end !important;
+  gap: 0.25rem !important;
+}
+#hp-booking-root .delete-item-btn {
+  flex-shrink: 0 !important;
+  margin-left: 0.25rem !important;
 }
 </style>
 

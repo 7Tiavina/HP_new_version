@@ -149,38 +149,42 @@ function updateCartDisplay() {
         var hasDiscount = unitPriceBeforeDiscountValue != null && unitPriceBeforeDiscountValue > unitPriceValue && lineDiscountRate > 0;
 
         var row = document.createElement('div');
-        row.className = 'cart-item flex justify-between items-center py-3 border-b border-gray-150 last:border-0';
+        row.className = 'cart-item flex justify-between items-start py-3 border-b border-gray-150 last:border-0';
 
-        // Construction du HTML pour le nom du produit avec badge de remise
-        var libelleHtml = '<div class="flex-1">';
-        libelleHtml += '<div class="flex items-center gap-2">';
+        // Partie gauche : nom du produit uniquement (plus lisible)
+        var leftHtml = '<div class="flex-1 pr-3 min-w-0">';
+        leftHtml += '<div class="flex items-center gap-2">';
         // Pour les contraintes, ne pas échapper le HTML (contient déjà des balises <span>)
         if (item.itemCategory === 'contrainte') {
-            libelleHtml += '<span class="text-sm font-medium text-gray-800">' + libelle + '</span>';
+            leftHtml += '<span class="text-sm font-medium text-gray-800 break-words">' + libelle + '</span>';
         } else {
-            libelleHtml += '<span class="text-sm font-medium text-gray-800">' + escapeHtml(libelle) + '</span>';
+            leftHtml += '<span class="text-sm font-medium text-gray-800 break-words">' + escapeHtml(libelle) + '</span>';
         }
-        if (hasDiscount) {
-            libelleHtml += '<span class="badge-promo inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-700">-' + lineDiscountRate.toFixed(0) + '%</span>';
-        }
-        libelleHtml += '</div>';
-        libelleHtml += '</div>';
+        leftHtml += '</div>';
+        leftHtml += '</div>';
 
-        // Affichage des prix alignés avec prix barré si remise
-        var priceHtml = '<div class="flex items-center gap-3">';
+        // Partie droite : badge remise + prix + bouton supprimer (tous alignés à droite)
+        var rightHtml = '<div class="price-wrapper flex flex-col items-end gap-1 flex-shrink-0">';
+        // Première ligne : badge remise (si applicable)
         if (hasDiscount) {
-            priceHtml += '<span class="text-xs text-gray-400 line-through">' + formatPrice(lineNormal) + '</span>';
+            rightHtml += '<div class="flex items-center gap-2 justify-end">';
+            rightHtml += '<span class="badge-promo inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-700 flex-shrink-0" style="min-width: 42px; justify-content: center; font-size: 11px;">-' + lineDiscountRate.toFixed(0) + '%</span>';
+            rightHtml += '<span class="old-price text-xs text-gray-400 line-through flex-shrink-0">' + formatPrice(lineNormal) + '</span>';
+            rightHtml += '</div>';
         }
-        priceHtml += '<span class="text-sm font-bold text-gray-900 min-w-[60px] text-right">' + formatPrice(linePrice) + '</span>';
+        // Deuxième ligne : prix actuel + bouton supprimer
+        rightHtml += '<div class="flex items-center gap-1 justify-end">';
+        rightHtml += '<span class="current-price text-sm font-bold text-gray-900 flex-shrink-0" style="min-width: 70px; text-align: right;">' + formatPrice(linePrice) + '</span>';
         // Bouton de suppression - pas pour les contraintes obligatoires
         if (!isMandatory) {
-            priceHtml += '<button type="button" class="delete-item-btn text-red-500 hover:text-red-700 p-1" data-index="' + index + '" aria-label="Supprimer">' +
+            rightHtml += '<button type="button" class="delete-item-btn text-red-500 hover:text-red-700 p-1 flex-shrink-0" data-index="' + index + '" aria-label="Supprimer">' +
                 '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>' +
                 '</button>';
         }
-        priceHtml += '</div>';
+        rightHtml += '</div>';
+        rightHtml += '</div>';
 
-        row.innerHTML = libelleHtml + priceHtml;
+        row.innerHTML = leftHtml + rightHtml;
         fragments.push(row);
     });
 
