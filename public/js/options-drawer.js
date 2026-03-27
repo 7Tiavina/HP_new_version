@@ -22,11 +22,8 @@ function openOptionsDrawer() {
         optionsDrawerResolve = resolve;
 
         // Hide chatbot when drawer is open
-        const chatbotWidget = document.getElementById('chatbot-widget');
-        if (chatbotWidget) {
-            chatbotWidget.style.display = 'none';
-            console.log('[openOptionsDrawer] Chatbot hidden');
-        }
+        document.body.classList.add('drawer-chatbot-hidden');
+        console.log('[openOptionsDrawer] Chatbot hidden');
 
         // Show elements
         overlay.classList.remove('hidden');
@@ -79,11 +76,8 @@ function closeOptionsDrawer() {
         overlay.classList.remove('opacity-0');
 
         // Show chatbot again when drawer is closed
-        const chatbotWidget = document.getElementById('chatbot-widget');
-        if (chatbotWidget) {
-            chatbotWidget.style.display = 'block';
-            console.log('[closeOptionsDrawer] Chatbot shown');
-        }
+        document.body.classList.remove('drawer-chatbot-hidden');
+        console.log('[closeOptionsDrawer] Chatbot shown');
     }, 300); // Match transition duration
 }
 

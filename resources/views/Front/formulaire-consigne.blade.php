@@ -332,17 +332,72 @@
     </div>
 </div>
 
+<!-- Login/Register Modals -->
+@include('Front.auth-modals')
+
 <!-- Options Side Drawer (New UX) -->
-<div id="options-drawer-overlay" class="hidden fixed inset-0 bg-gray-900 bg-opacity-60 z-[10003] transition-opacity opacity-0" style="backdrop-filter: blur(4px);"></div>
+<div id="options-drawer-overlay" class="hidden fixed inset-0 bg-white bg-opacity-90 z-[10003] transition-opacity opacity-0" style="backdrop-filter: blur(4px);"></div>
 <div id="options-drawer" class="hidden fixed top-0 right-0 h-full w-full max-w-2xl bg-white shadow-2xl z-[10004] transform translate-x-full transition-transform duration-400 ease-out flex flex-col">
-    <!-- Drawer Header - Reduced -->
-    <div class="bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 p-5 text-center relative overflow-hidden flex-shrink-0">
-        <button id="close-options-drawer" class="absolute top-3 right-3 text-white hover:text-yellow-100 transition-colors z-10">
-            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-        </button>
-        <h2 class="text-2xl font-bold text-gray-900" data-i18n="drawer_options_title">Options & Services</h2>
+    <!-- Drawer Header - With Logo and Login -->
+    <div class="bg-white border-b border-gray-200 p-4 relative flex-shrink-0">
+        <div class="flex items-center justify-between">
+            <!-- Logo -->
+            <a href="{{ route('form-consigne') }}" class="flex items-center gap-2">
+                <img src="{{ asset('images/HP-logo-290x91.png') }}" alt="Hello Passenger" class="h-16 w-auto">
+            </a>
+            
+            <!-- Close button -->
+            <button id="close-options-drawer" class="text-gray-400 hover:text-gray-600 transition-colors z-10">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        
+        <!-- Login/Account section -->
+        <div class="mt-4 flex items-center justify-between border-t border-gray-200 pt-4">
+            @if(Auth::guard('client')->check())
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-gray-900">{{ Auth::guard('client')->user()->email ?? 'Client' }}</p>
+                        <a href="{{ route('client.dashboard') }}" class="text-xs text-yellow-600 hover:text-yellow-700 font-medium">Mon compte</a>
+                    </div>
+                </div>
+                <a href="{{ route('client.dashboard') }}" class="bg-yellow-custom text-gray-dark font-bold py-2 px-4 rounded-full btn-hover text-sm">
+                    Tableau de bord
+                </a>
+            @else
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-sm font-bold text-gray-900">Connectez-vous</p>
+                        <p class="text-xs text-gray-500">Accédez à vos réservations</p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button type="button" onclick="window.openLoginModal?.()" class="bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded-full btn-hover text-sm">
+                        Se connecter
+                    </button>
+                    <button type="button" onclick="window.openRegisterModal?.()" class="bg-yellow-custom text-gray-dark font-bold py-2 px-4 rounded-full btn-hover text-sm">
+                        S'inscrire
+                    </button>
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Drawer Title -->
+    <div class="bg-gradient-to-br from-yellow-300 via-yellow-400 to-yellow-500 p-4 text-center relative overflow-hidden flex-shrink-0">
+        <h2 class="text-xl font-bold text-gray-900" data-i18n="drawer_options_title">Options & Services</h2>
         <p class="mt-1 text-gray-800 text-xs font-medium" data-i18n="drawer_options_subtitle">Personnalisez votre expérience de voyage</p>
     </div>
 
@@ -558,7 +613,7 @@
             </div>
             
             <!-- Info message -->
-            <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div class="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4 hidden">
                 <p class="text-sm text-blue-800 flex items-center gap-2">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
@@ -1309,5 +1364,15 @@
   font-weight: 700 !important;
   font-size: 0.875rem !important;
 }
+</style>
+
+<!-- Styles pour masquer le chatbot quand le drawer ou modal est ouvert -->
+<style>
+    body.drawer-chatbot-hidden #chatbot-widget {
+        display: none !important;
+    }
+    body.modal-chatbot-hidden #chatbot-widget {
+        display: none !important;
+    }
 </style>
 @endpush
