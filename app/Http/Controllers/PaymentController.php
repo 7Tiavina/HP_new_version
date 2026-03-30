@@ -20,6 +20,20 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class PaymentController extends Controller
 {
     /**
+     * Convertit une date et heure du fuseau France vers UTC au format ISO8601.
+     *
+     * @param string $date Date au format YYYY-MM-DD
+     * @param string $heure Heure au format HH:MM
+     * @return string Date au format ISO8601 UTC (ex: 2026-03-28T10:00:00.000Z)
+     */
+    private function convertFranceDateToUtc(string $date, string $heure): string
+    {
+        $carbon = Carbon::createFromFormat('Y-m-d H:i', "{$date} {$heure}", 'Europe/Paris');
+        $carbon->setTimezone('UTC');
+        return $carbon->format('Y-m-d\TH:i:s.000\Z');
+    }
+
+    /**
      * Prépare les données de la commande et les stocke en session avant la redirection vers la page de paiement.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -122,8 +136,8 @@ class PaymentController extends Controller
 
                 $commandeLignes[] = [
                     "idProduit" => $productDetails['id'], "idService" => $serviceId,
-                    "dateDebut" => $validatedData['dateDepot'] . 'T' . $validatedData['heureDepot'] . ':00.000Z',
-                    "dateFin" => $validatedData['dateRecuperation'] . 'T' . $validatedData['heureRecuperation'] . ':00.000Z',
+                    "dateDebut" => $this->convertFranceDateToUtc($validatedData['dateDepot'], $validatedData['heureDepot']),
+                    "dateFin" => $this->convertFranceDateToUtc($validatedData['dateRecuperation'], $validatedData['heureRecuperation']),
                     "prixTTC" => $prixTTC,
                     "prixTTCAvantRemise" => $prixTTCAvantRemise,
                     "tauxRemise" => $tauxRemise,
@@ -246,8 +260,8 @@ class PaymentController extends Controller
                         "reference" => $selectedOption['referenceInterne'] ?? null,
                         "referenceInterne" => $selectedOption['referenceInterne'] ?? null,
                         "idService" => $serviceId,
-                        "dateDebut" => $validatedData['dateDepot'] . 'T' . $validatedData['heureDepot'] . ':00.000Z',
-                        "dateFin" => $validatedData['dateRecuperation'] . 'T' . $validatedData['heureRecuperation'] . ':00.000Z',
+                        "dateDebut" => $this->convertFranceDateToUtc($validatedData['dateDepot'], $validatedData['heureDepot']),
+                        "dateFin" => $this->convertFranceDateToUtc($validatedData['dateRecuperation'], $validatedData['heureRecuperation']),
                         "prixTTC" => $optPrix,
                         "prixTTCAvantRemise" => round($optPrixAvantRemise, 2),
                         "tauxRemise" => $optTauxRemise,

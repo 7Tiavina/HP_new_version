@@ -24,6 +24,20 @@ class FrontController extends Controller
         $this->bdmApiService = $bdmApiService;
     }
 
+    /**
+     * Convertit une date et heure du fuseau France vers UTC au format ISO8601.
+     *
+     * @param string $date Date au format YYYY-MM-DD
+     * @param string $heure Heure au format HH:MM
+     * @return string Date au format ISO8601 UTC (ex: 2026-03-28T10:00:00.000Z)
+     */
+    private function convertFranceDateToUtc(string $date, string $heure): string
+    {
+        $carbon = \Carbon\Carbon::createFromFormat('Y-m-d H:i', "{$date} {$heure}", 'Europe/Paris');
+        $carbon->setTimezone('UTC');
+        return $carbon->format('Y-m-d\TH:i:s.000\Z');
+    }
+
     public function redirectForm(Request $request)
     {
         try {
@@ -471,8 +485,8 @@ class FrontController extends Controller
                 $baggages[] = [
                     'productId' => $productInGlobal['id'],
                     'serviceId' => $consigneServiceId,
-                    'dateDebut' => "{$dateDepot}T{$heureDepot}:00Z",
-                    'dateFin' => "{$dateRecuperation}T{$heureRecuperation}:00Z",
+                    'dateDebut' => $this->convertFranceDateToUtc($dateDepot, $heureDepot),
+                    'dateFin' => $this->convertFranceDateToUtc($dateRecuperation, $heureRecuperation),
                     'quantity' => $item['quantity'],
                 ];
             }
