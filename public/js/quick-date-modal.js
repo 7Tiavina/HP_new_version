@@ -164,11 +164,13 @@ async function validateQdmDates() {
             saveStateToSession();
         }
     } else {
-        // Si pas disponible, afficher un message
+        // Si pas disponible, afficher un message puis rouvrir la modale
         await showCustomAlert(
             t('alert_agency_closed_title', 'Horaires non disponibles'),
             t('alert_hours_not_available', 'Les horaires sélectionnés ne sont pas disponibles. Veuillez choisir d\'autres horaires.')
         );
+        // Rouvrir la modale pour permettre de choisir d'autres horaires
+        openQuickDateModal();
     }
 }
 
