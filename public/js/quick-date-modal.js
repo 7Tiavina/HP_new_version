@@ -22,25 +22,19 @@ function openQuickDateModal() {
     document.getElementById('heure-qdm-depot').value = depotHeure || '';
     document.getElementById('heure-qdm-recuperation').value = retraitHeure || '';
 
-    // Mettre à jour l'affichage des heures dans les timepickers
+    // Mettre à jour les scroll wheels si elles existent
     if (depotHeure) {
         const [h, m] = depotHeure.split(':');
-        document.getElementById('h-val-qdm-depot').textContent = h || '09';
-        document.getElementById('m-val-qdm-depot').textContent = m || '00';
+        setScrollWheelValue('qdm-depot', h, m);
     } else {
-        // Valeurs par défaut si vide
-        document.getElementById('h-val-qdm-depot').textContent = '09';
-        document.getElementById('m-val-qdm-depot').textContent = '00';
+        setScrollWheelValue('qdm-depot', '09', '00');
     }
-    
+
     if (retraitHeure) {
         const [h, m] = retraitHeure.split(':');
-        document.getElementById('h-val-qdm-recuperation').textContent = h || '18';
-        document.getElementById('m-val-qdm-recuperation').textContent = m || '00';
+        setScrollWheelValue('qdm-recuperation', h, m);
     } else {
-        // Valeurs par défaut si vide
-        document.getElementById('h-val-qdm-recuperation').textContent = '18';
-        document.getElementById('m-val-qdm-recuperation').textContent = '00';
+        setScrollWheelValue('qdm-recuperation', '18', '00');
     }
 
     // Appliquer les mêmes contraintes que le formulaire principal
@@ -48,6 +42,13 @@ function openQuickDateModal() {
 
     // Afficher la modale
     document.getElementById('quick-date-modal').classList.remove('hidden');
+
+    // Initialiser les scroll wheels après l'affichage
+    setTimeout(() => {
+        if (typeof initScrollWheelsIfNeeded === 'function') {
+            initScrollWheelsIfNeeded();
+        }
+    }, 100);
 
     // Fermer avec Escape
     const qdmModal = document.getElementById('quick-date-modal');
@@ -61,6 +62,31 @@ function openQuickDateModal() {
         }
     };
     document.addEventListener('keydown', qdmEscapeHandler);
+}
+
+function setScrollWheelValue(suffix, hour, minute) {
+    // Set value on hours wheel (cycle 1 = middle cycle)
+    const hWheel = document.getElementById(`scroll-h-${suffix}`);
+    if (hWheel) {
+        const hItem = hWheel.querySelector(`[data-value="${hour}"]`);
+        if (hItem) {
+            // Use the item from cycle 1 (middle)
+            const allHItems = hWheel.querySelectorAll(`[data-value="${hour}"]`);
+            const targetItem = allHItems[1] || hItem; // cycle 1
+            targetItem.parentElement.scrollTop = targetItem.offsetTop - 40;
+        }
+    }
+    
+    // Set value on minutes wheel (cycle 1 = middle cycle)
+    const mWheel = document.getElementById(`scroll-m-${suffix}`);
+    if (mWheel) {
+        const mItem = mWheel.querySelector(`[data-value="${minute}"]`);
+        if (mItem) {
+            const allMItems = mWheel.querySelectorAll(`[data-value="${minute}"]`);
+            const targetItem = allMItems[1] || mItem; // cycle 1
+            targetItem.parentElement.scrollTop = targetItem.offsetTop - 40;
+        }
+    }
 }
 
 function applyQdmDateConstraints() {

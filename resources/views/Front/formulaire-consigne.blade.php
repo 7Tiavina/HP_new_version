@@ -215,24 +215,112 @@
             border-bottom: 5px solid white;
         }
 
-        .selectors { 
-            display: flex; 
-            align-items: center; 
+        .selectors {
+            display: flex;
+            align-items: center;
             justify-content: center;
             gap: 6px;
         }
-        
-        .column { 
-            display: flex; 
-            flex-direction: column; 
+
+        .column {
+            display: flex;
+            flex-direction: column;
             align-items: center;
             gap: 2px;
         }
-        
-        .val-display { 
-            font-size: 20px; 
-            font-weight: 700; 
-            color: var(--text); 
+
+        /* iOS-style Scroll Wheel */
+        .scroll-wheel {
+            width: 56px;
+            height: 120px;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            position: relative;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .scroll-wheel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .scroll-wheel-inner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        .scroll-wheel-item {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            scroll-snap-align: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            user-select: none;
+            min-width: 40px;
+            text-align: center;
+            position: relative;
+            z-index: 20;
+        }
+
+        .scroll-wheel-item:hover {
+            color: var(--primary);
+        }
+
+        .scroll-wheel-item.selected {
+            color: var(--primary);
+            font-size: 22px;
+        }
+
+        /* Highlight bar in the center */
+        .scroll-wheel::before {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: rgba(249, 197, 45, 0.1);
+            border-top: 1px solid rgba(249, 197, 45, 0.3);
+            border-bottom: 1px solid rgba(249, 197, 45, 0.3);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* Fade gradients at top and bottom */
+        .scroll-wheel::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, 
+                rgba(255,255,255,0.95) 0%, 
+                rgba(255,255,255,0.7) 15%, 
+                transparent 33%, 
+                transparent 67%, 
+                rgba(255,255,255,0.7) 85%, 
+                rgba(255,255,255,0.95) 100%);
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .val-display {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
             padding: 2px 4px;
             min-width: 40px;
             text-align: center;
@@ -486,7 +574,7 @@
 
 <!-- Quick Date Edit Modal -->
 <div id="quick-date-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-[10001] flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all" style="max-height: calc(90vh - 140px);">
         <!-- Modal Header -->
         <div class="flex justify-between items-center p-6 border-b border-gray-200">
             <h3 class="text-xl font-bold text-gray-800" data-i18n="modal_edit_dates">Modifier les dates</h3>
@@ -498,7 +586,7 @@
         </div>
 
         <!-- Modal Body -->
-        <div class="p-6">
+        <div class="p-6 overflow-visible">
             <div class="grid md:grid-cols-2 gap-6">
                 <!-- Date de Dépôt -->
                 <div>
@@ -519,15 +607,17 @@
                                 <div class="picker-popover" id="qdm-popover-depot">
                                     <div class="selectors">
                                         <div class="column">
-                                            <button class="arrow" onclick="changeVal('H', 1, 'qdm-depot')">▲</button>
-                                            <div id="h-val-qdm-depot" class="val-display">09</div>
-                                            <button class="arrow" onclick="changeVal('H', -1, 'qdm-depot')">▼</button>
+                                            <div class="scroll-wheel" data-type="H" data-suffix="qdm-depot">
+                                                <div class="scroll-wheel-inner" id="scroll-h-qdm-depot">
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="separator">:</div>
                                         <div class="column">
-                                            <button class="arrow" onclick="changeVal('M', 5, 'qdm-depot')">▲</button>
-                                            <div id="m-val-qdm-depot" class="val-display">00</div>
-                                            <button class="arrow" onclick="changeVal('M', -5, 'qdm-depot')">▼</button>
+                                            <div class="scroll-wheel" data-type="M" data-suffix="qdm-depot">
+                                                <div class="scroll-wheel-inner" id="scroll-m-qdm-depot">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -555,15 +645,17 @@
                                 <div class="picker-popover" id="qdm-popover-recuperation">
                                     <div class="selectors">
                                         <div class="column">
-                                            <button class="arrow" onclick="changeVal('H', 1, 'qdm-recuperation')">▲</button>
-                                            <div id="h-val-qdm-recuperation" class="val-display">18</div>
-                                            <button class="arrow" onclick="changeVal('H', -1, 'qdm-recuperation')">▼</button>
+                                            <div class="scroll-wheel" data-type="H" data-suffix="qdm-recuperation">
+                                                <div class="scroll-wheel-inner" id="scroll-h-qdm-recuperation">
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="separator">:</div>
                                         <div class="column">
-                                            <button class="arrow" onclick="changeVal('M', 5, 'qdm-recuperation')">▲</button>
-                                            <div id="m-val-qdm-recuperation" class="val-display">00</div>
-                                            <button class="arrow" onclick="changeVal('M', -5, 'qdm-recuperation')">▼</button>
+                                            <div class="scroll-wheel" data-type="M" data-suffix="qdm-recuperation">
+                                                <div class="scroll-wheel-inner" id="scroll-m-qdm-recuperation">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -679,15 +771,17 @@
                                     <div class="picker-popover" id="popover-depot">
                                         <div class="selectors">
                                             <div class="column">
-                                                <button class="arrow" onclick="changeVal('H', 1, 'depot')">▲</button>
-                                                <div id="h-val-depot" class="val-display">09</div>
-                                                <button class="arrow" onclick="changeVal('H', -1, 'depot')">▼</button>
+                                                <div class="scroll-wheel" data-type="H" data-suffix="depot">
+                                                    <div class="scroll-wheel-inner" id="scroll-h-depot">
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="separator">:</div>
                                             <div class="column">
-                                                <button class="arrow" onclick="changeVal('M', 5, 'depot')">▲</button>
-                                                <div id="m-val-depot" class="val-display">00</div>
-                                                <button class="arrow" onclick="changeVal('M', -5, 'depot')">▼</button>
+                                                <div class="scroll-wheel" data-type="M" data-suffix="depot">
+                                                    <div class="scroll-wheel-inner" id="scroll-m-depot">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -713,15 +807,17 @@
                                     <div class="picker-popover" id="popover-recuperation">
                                         <div class="selectors">
                                             <div class="column">
-                                                <button class="arrow" onclick="changeVal('H', 1, 'recuperation')">▲</button>
-                                                <div id="h-val-recuperation" class="val-display">18</div>
-                                                <button class="arrow" onclick="changeVal('H', -1, 'recuperation')">▼</button>
+                                                <div class="scroll-wheel" data-type="H" data-suffix="recuperation">
+                                                    <div class="scroll-wheel-inner" id="scroll-h-recuperation">
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div class="separator">:</div>
                                             <div class="column">
-                                                <button class="arrow" onclick="changeVal('M', 5, 'recuperation')">▲</button>
-                                                <div id="m-val-recuperation" class="val-display">00</div>
-                                                <button class="arrow" onclick="changeVal('M', -5, 'recuperation')">▼</button>
+                                                <div class="scroll-wheel" data-type="M" data-suffix="recuperation">
+                                                    <div class="scroll-wheel-inner" id="scroll-m-recuperation">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -967,19 +1063,29 @@
 
     // Gestion des timepickers discrets
     document.addEventListener('DOMContentLoaded', function () {
+        // Initialiser les scroll wheels au chargement
+        setTimeout(() => {
+            if (typeof initScrollWheelsIfNeeded === 'function') {
+                console.log('[DOMContentLoaded] Initializing scroll wheels...');
+                initScrollWheelsIfNeeded();
+            }
+        }, 200);
+
         // Initialiser avec l'heure actuelle
         initializeTimepickers();
-        
+
         // Initialisation pour heure-depot
         const depotInput = document.getElementById('heure-depot');
         const depotPopover = document.getElementById('popover-depot');
-        
+
         if (depotInput && depotPopover) {
             depotInput.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const parent = e.target.parentElement;
                 parent.appendChild(depotPopover);
                 depotPopover.classList.add('active');
+                console.log('[depot click] Opening popover, init wheels');
+                initScrollWheelsIfNeeded();
             });
         }
 
@@ -993,6 +1099,8 @@
                 const parent = e.target.parentElement;
                 parent.appendChild(recupPopover);
                 recupPopover.classList.add('active');
+                console.log('[recup click] Opening popover, init wheels');
+                initScrollWheelsIfNeeded();
             });
         }
         
@@ -1006,18 +1114,20 @@
                 const parent = e.target.parentElement;
                 parent.appendChild(qdmDepotPopover);
                 qdmDepotPopover.classList.add('active');
+                initScrollWheelsIfNeeded();
             });
         }
-        
+
         const qdmRecupInput = document.getElementById('heure-qdm-recuperation');
         const qdmRecupPopover = document.getElementById('qdm-popover-recuperation');
-        
+
         if (qdmRecupInput && qdmRecupPopover) {
             qdmRecupInput.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const parent = e.target.parentElement;
                 parent.appendChild(qdmRecupPopover);
                 qdmRecupPopover.classList.add('active');
+                initScrollWheelsIfNeeded();
             });
         }
 
@@ -1036,7 +1146,7 @@
     function changeVal(type, step, suffix) {
         const hDisplay = document.getElementById(`h-val-${suffix}`);
         const mDisplay = document.getElementById(`m-val-${suffix}`);
-        
+
         if (type === 'H') {
             let h = parseInt(hDisplay.innerText) + step;
             if (h > 23) h = 0;
@@ -1049,6 +1159,175 @@
             mDisplay.innerText = m.toString().padStart(2, '0');
         }
         updateInput(suffix);
+    }
+
+    // iOS-style scroll wheel initialization
+    function initScrollWheel(suffix) {
+        console.log('[initScrollWheel] Initializing for:', suffix);
+        const hoursWheel = document.getElementById(`scroll-h-${suffix}`);
+        const minutesWheel = document.getElementById(`scroll-m-${suffix}`);
+
+        if (hoursWheel && hoursWheel.children.length === 0) {
+            hoursWheel.innerHTML = '';
+            // Créer 3 cycles complets pour permettre le scroll infini
+            const hours = [];
+            for (let cycle = 0; cycle < 3; cycle++) {
+                for (let h = 0; h < 24; h++) {
+                    hours.push(h.toString().padStart(2, '0'));
+                }
+            }
+            hours.forEach((val, index) => {
+                const item = document.createElement('div');
+                item.className = 'scroll-wheel-item';
+                item.textContent = val;
+                item.dataset.value = val;
+                item.dataset.index = index;
+                item.addEventListener('click', function() {
+                    scrollToItem(hoursWheel, item);
+                });
+                hoursWheel.appendChild(item);
+            });
+            // Positionner au milieu du cycle (cycle 1, heure 09)
+            setTimeout(() => {
+                const targetIndex = 24 + 9; // cycle 1, heure 09
+                const targetItem = hoursWheel.querySelector(`[data-index="${targetIndex}"]`);
+                if (targetItem) {
+                    hoursWheel.parentElement.scrollTop = targetItem.offsetTop - 40;
+                }
+            }, 10);
+            console.log('[initScrollWheel] Hours wheel populated:', suffix, 'items:', hoursWheel.children.length);
+        }
+
+        if (minutesWheel && minutesWheel.children.length === 0) {
+            minutesWheel.innerHTML = '';
+            // Créer 3 cycles complets pour permettre le scroll infini
+            const minutes = [];
+            for (let cycle = 0; cycle < 3; cycle++) {
+                for (let m = 0; m < 60; m += 5) {
+                    minutes.push(m.toString().padStart(2, '0'));
+                }
+            }
+            minutes.forEach((val, index) => {
+                const item = document.createElement('div');
+                item.className = 'scroll-wheel-item';
+                item.textContent = val;
+                item.dataset.value = val;
+                item.dataset.index = index;
+                item.addEventListener('click', function() {
+                    scrollToItem(minutesWheel, item);
+                });
+                minutesWheel.appendChild(item);
+            });
+            // Positionner au milieu du cycle (cycle 1, minute 00)
+            setTimeout(() => {
+                const targetIndex = 12 + 0; // cycle 1, minute 00
+                const targetItem = minutesWheel.querySelector(`[data-index="${targetIndex}"]`);
+                if (targetItem) {
+                    minutesWheel.parentElement.scrollTop = targetItem.offsetTop - 40;
+                }
+            }, 10);
+            console.log('[initScrollWheel] Minutes wheel populated:', suffix, 'items:', minutesWheel.children.length);
+        }
+
+        // Add scroll event listeners with wrap-around
+        if (hoursWheel?.parentElement) {
+            hoursWheel.parentElement.addEventListener('scroll', function() {
+                handleWheelScrollWithWrap(this, suffix, 'H');
+            });
+        }
+        if (minutesWheel?.parentElement) {
+            minutesWheel.parentElement.addEventListener('scroll', function() {
+                handleWheelScrollWithWrap(this, suffix, 'M');
+            });
+        }
+    }
+
+    function scrollToItem(container, item, animate = true) {
+        const itemHeight = 40;
+        const containerHeight = 120;
+        const targetScroll = item.offsetTop - (containerHeight / 2) + (itemHeight / 2);
+        container.scrollTo({
+            top: targetScroll,
+            behavior: animate ? 'smooth' : 'instant'
+        });
+    }
+
+    function handleWheelScrollWithWrap(container, suffix, type) {
+        const itemHeight = 40;
+        const items = container.querySelectorAll('.scroll-wheel-item');
+        const totalItems = items.length;
+        const cycleSize = type === 'H' ? 24 : 12; // 12 minutes (0-55 step 5)
+        
+        const scrollTop = container.scrollTop;
+        const centerIndex = Math.round(scrollTop / itemHeight);
+
+        // Wrap-around: si on est dans le cycle 0 ou 2, repositionner au cycle 1
+        if (centerIndex < cycleSize) {
+            // Scrollé trop haut, repositionner au cycle 1
+            const equivalentIndex = centerIndex + cycleSize;
+            const newItem = container.querySelector(`[data-index="${equivalentIndex}"]`);
+            if (newItem && !container._isRepositioning) {
+                container._isRepositioning = true;
+                container.scrollTop = newItem.offsetTop - 40;
+                setTimeout(() => { container._isRepositioning = false; }, 50);
+            }
+        } else if (centerIndex >= cycleSize * 2) {
+            // Scrollé trop bas, repositionner au cycle 1
+            const equivalentIndex = centerIndex - cycleSize;
+            const newItem = container.querySelector(`[data-index="${equivalentIndex}"]`);
+            if (newItem && !container._isRepositioning) {
+                container._isRepositioning = true;
+                container.scrollTop = newItem.offsetTop - 40;
+                setTimeout(() => { container._isRepositioning = false; }, 50);
+            }
+        }
+
+        // Mettre à jour la sélection et l'input
+        const actualCenterIndex = centerIndex % cycleSize;
+        const itemsInCycle = container.querySelectorAll(`[data-value]`);
+        
+        items.forEach(item => item.classList.remove('selected'));
+
+        if (items[centerIndex]) {
+            items[centerIndex].classList.add('selected');
+            updateInputFromWheel(suffix, type, items[centerIndex].dataset.value);
+        }
+    }
+
+    function updateInputFromWheel(suffix, type, value) {
+        const input = document.getElementById(`heure-${suffix}`);
+        if (!input) return;
+
+        const currentParts = input.value.split(':');
+        let hours = currentParts[0] || '09';
+        let minutes = currentParts[1] || '00';
+
+        if (type === 'H') {
+            hours = value;
+        } else {
+            minutes = value;
+        }
+
+        input.value = `${hours}:${minutes}`;
+
+        // Also update the hidden val-display elements if they exist (for legacy compatibility)
+        const hDisplay = document.getElementById(`h-val-${suffix}`);
+        const mDisplay = document.getElementById(`m-val-${suffix}`);
+        if (hDisplay) hDisplay.textContent = hours;
+        if (mDisplay) mDisplay.textContent = minutes;
+    }
+
+    // Initialize scroll wheels when popover opens
+    function initScrollWheelsIfNeeded() {
+        console.log('[initScrollWheelsIfNeeded] Called');
+        ['depot', 'recuperation', 'qdm-depot', 'qdm-recuperation'].forEach(suffix => {
+            const wheel = document.getElementById(`scroll-h-${suffix}`);
+            console.log('[initScrollWheelsIfNeeded] Checking', suffix, 'wheel exists:', !!wheel, 'children:', wheel?.children.length);
+            if (wheel && wheel.children.length === 0) {
+                console.log('[initScrollWheelsIfNeeded] Initializing wheel for:', suffix);
+                initScrollWheel(suffix);
+            }
+        });
     }
 
     function updateInput(suffix) {
@@ -1122,6 +1401,15 @@
 
 @push('styles')
 <style>
+/* Quick date modal - allow popover to overflow */
+#quick-date-modal .time-field-wrapper {
+    overflow: visible !important;
+}
+
+#quick-date-modal .picker-popover {
+    z-index: 10002 !important;
+}
+
 /* Luxe theme overrides — loaded last so they win over Tailwind */
 #hp-booking-root.hp-booking-page { background: var(--luxe-bg) !important; }
 #hp-booking-root .bg-white { background: var(--luxe-card) !important; }
