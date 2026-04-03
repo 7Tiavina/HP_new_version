@@ -586,7 +586,7 @@
 
         <!-- Modal Footer -->
         <div class="flex justify-center p-6 border-t border-gray-200">
-            <button id="qdm-validate-btn" class="bg-yellow-custom text-gray-dark font-bold py-3 px-8 rounded-full btn-hover w-full md:w-auto">
+            <button id="qdm-validate-btn" class="bg-yellow-custom text-gray-dark font-bold py-3 px-8 rounded-full btn-hover w-full md:w-auto" data-i18n="modal_validate_dates">
                 Valider les dates
             </button>
         </div>

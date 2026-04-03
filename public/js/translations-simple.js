@@ -322,6 +322,8 @@ if (typeof window.translations === 'undefined') {
         modal_remove_cart: "Enlever du panier",
         modal_validate_continue: "Valider et continuer →",
         modal_edit_dates: "Modifier les dates",
+        modal_validate_dates: "Valider les dates",
+        alert_hours_not_available: "Les horaires sélectionnés ne sont pas disponibles. Veuillez choisir d'autres horaires.",
 
         // Payment Page Details
         payment_order_summary: "Récapitulatif de votre commande",
@@ -962,6 +964,8 @@ if (typeof window.translations === 'undefined') {
         modal_remove_cart: "Remove from cart",
         modal_validate_continue: "Validate and continue →",
         modal_edit_dates: "Edit dates",
+        modal_validate_dates: "Validate dates",
+        alert_hours_not_available: "The selected times are not available. Please choose other times.",
 
         // Payment Page Details
         payment_order_summary: "Your order summary",

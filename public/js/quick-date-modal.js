@@ -167,7 +167,7 @@ async function validateQdmDates() {
         // Si pas disponible, afficher un message
         await showCustomAlert(
             t('alert_agency_closed_title', 'Horaires non disponibles'),
-            'Les horaires sélectionnés ne sont pas disponibles. Veuillez choisir d\'autres horaires.'
+            t('alert_hours_not_available', 'Les horaires sélectionnés ne sont pas disponibles. Veuillez choisir d\'autres horaires.')
         );
     }
 }
