@@ -104,11 +104,11 @@ body {
 #registerModal button[type=submit],
 #forgotPasswordModal button[type=submit] {
   background: #f9c52d !important;
-  color: #0f0f0f !important;
+  color: #ffffff !important;
 }
 #loginModal button[type=submit]:hover,
 #registerModal button[type=submit]:hover,
-#forgotPasswordModal button[type=submit]:hover { background: #fdd835 !important; }
+#forgotPasswordModal button[type=submit]:hover { background: #fdd835 !important; color: #ffffff !important; }
 #loginModal .bg-gray-700,
 #registerModal .bg-gray-700 { background: #2a2a2a !important; border-color: #444444 !important; color: #f8f5ef !important; }
 #loginModal .bg-gray-700:hover,

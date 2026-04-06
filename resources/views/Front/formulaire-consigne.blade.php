@@ -423,6 +423,25 @@
 <!-- Login/Register Modals -->
 @include('Front.auth-modals')
 
+<!-- Auto-open login modal if ?login=1 or #login in URL -->
+<script>
+(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hash = window.location.hash;
+    
+    if (urlParams.get('login') === '1' || hash === '#login') {
+        // Attendre que le modal soit prêt
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                if (window.openLoginModal) {
+                    window.openLoginModal();
+                }
+            }, 500);
+        });
+    }
+})();
+</script>
+
 <!-- Options Side Drawer (New UX) -->
 <div id="options-drawer-overlay" class="hidden fixed inset-0 bg-white bg-opacity-90 z-[10003] transition-opacity opacity-0" style="backdrop-filter: blur(4px);"></div>
 <div id="options-drawer" class="hidden fixed top-0 right-0 h-full w-full max-w-2xl bg-white shadow-2xl z-[10004] transform translate-x-full transition-transform duration-400 ease-out flex flex-col">

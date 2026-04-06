@@ -39,6 +39,23 @@
             }
             document.addEventListener('click', onClick, true);
         })();
+
+        // Ouvrir le modal de connexion automatiquement si ?login=1 ou #login dans l'URL
+        (function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hash = window.location.hash;
+            
+            if (urlParams.get('login') === '1' || hash === '#login') {
+                // Attendre que le modal soit prêt
+                window.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(function() {
+                        if (window.openLoginModal) {
+                            window.openLoginModal();
+                        }
+                    }, 500);
+                });
+            }
+        })();
     </script>
 
     <link rel="stylesheet" href="{{ asset('css/acceuil-luxe.css') }}?v={{ file_exists(public_path('css/acceuil-luxe.css')) ? filemtime(public_path('css/acceuil-luxe.css')) : '1' }}">

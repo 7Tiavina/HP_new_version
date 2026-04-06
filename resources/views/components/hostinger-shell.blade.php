@@ -233,6 +233,24 @@
 <script src="{{ asset('js/hublot-theme.js') }}"></script>
 @include('Front.auth-modals')
 
+<!-- Auto-open login modal if ?login=1 or #login in URL -->
+<script>
+(function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hash = window.location.hash;
+    
+    if (urlParams.get('login') === '1' || hash === '#login') {
+        window.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                if (window.openLoginModal) {
+                    window.openLoginModal();
+                }
+            }, 500);
+        });
+    }
+})();
+</script>
+
 <script>
     // Toggle Hostinger header auth links based on Laravel client auth state.
     (function () {
