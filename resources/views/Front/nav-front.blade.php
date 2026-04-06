@@ -539,44 +539,49 @@
     }
 
     .left-photo-drawer-reserve-btn {
-        display: flex;
+        display: inline-flex;
         align-items: center;
-        background: transparent;
-        border: 2px solid #FAC12E;
-        color: #ffffff;
-        padding: 0;
+        background-color: #1a1a1a;
+        border: 1px solid #FAC12E;
         border-radius: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 15px;
-        letter-spacing: 0.5px;
         text-decoration: none;
-        transition: all 0.3s;
-        margin-top: 30px;
+        padding: 0;
         overflow: hidden;
+        transition: all 0.3s ease;
+        margin-top: 30px;
     }
 
-    .left-photo-drawer-reserve-btn:hover {
-        background: rgba(250, 193, 46, 0.1);
-        transform: translateY(-2px);
-    }
-
-    .left-photo-drawer-reserve-btn span:first-child {
-        padding: 16px 24px;
-        flex: 1;
-        text-align: center;
+    .left-photo-drawer-reserve-text {
+        color: #ffffff;
+        font-family: 'Manrope', sans-serif;
+        font-weight: bold;
+        font-size: 14px;
+        padding: 12px 20px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
     }
 
     .left-photo-drawer-reserve-btn .arrow-icon {
-        background: #FAC12E;
-        color: #000000;
-        width: 50px;
-        height: 50px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 20px;
+        background-color: #FAC12E;
+        color: #1a1a1a;
+        width: 50px;
+        height: 100%;
+        min-height: 44px;
+        border-radius: 0;
         flex-shrink: 0;
+    }
+
+    .left-photo-drawer-reserve-btn .arrow-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .left-photo-drawer-reserve-btn:hover {
+        background-color: #333333;
+        transform: translateY(-2px);
     }
 
     .hp-drawer-header {
@@ -869,8 +874,12 @@
 
             <!-- Reserve Button -->
             <a href="{{ $formUrl }}" class="left-photo-drawer-reserve-btn" onclick="toggleLeftPhotoDrawer()">
-                <span>Réserver</span>
-                <span class="arrow-icon">↗</span>
+                <span class="left-photo-drawer-reserve-text">Réserver</span>
+                <span class="arrow-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </span>
             </a>
         </div>
     </div>
