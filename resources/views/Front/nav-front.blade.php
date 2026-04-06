@@ -374,11 +374,11 @@
 
     .left-photo-drawer {
         position: fixed;
-        top: 20px;
-        left: calc(-100% - 20px);
+        top: 10px;
+        left: calc(-100% - 10px);
         width: 100%;
-        max-width: 480px;
-        height: calc(100% - 40px);
+        max-width: 340px;
+        height: calc(100% - 20px);
         z-index: 9999;
         transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         display: flex;
@@ -388,7 +388,7 @@
     }
 
     .left-photo-drawer.open {
-        left: 20px;
+        left: 10px;
     }
 
     /* Main content area (black) */
@@ -402,10 +402,10 @@
     /* Yellow close bar - separate from drawer with small gap */
     .left-photo-drawer-close-bar {
         position: fixed;
-        top: 20px;
-        left: 520px;
+        top: 10px;
+        left: 360px;
         width: 60px;
-        height: calc(100% - 40px);
+        height: calc(100% - 20px);
         background: #FAC12E;
         z-index: 9999;
         transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
@@ -419,7 +419,7 @@
     }
 
     .left-photo-drawer.open ~ .left-photo-drawer-close-bar {
-        left: 520px;
+        left: 360px;
         opacity: 1;
         visibility: visible;
     }
@@ -815,7 +815,7 @@
         <div class="left-photo-drawer-content">
             <!-- Logo -->
             <div class="left-photo-drawer-logo">
-                <img src="{{ asset('images/HP-logo-290x91.png') }}" alt="Hello Passenger">
+                <img src="{{ asset('HP-Logo-White.png') }}" alt="Hello Passenger">
             </div>
 
             <!-- Plan d'accès Section -->
@@ -825,7 +825,7 @@
                 <!-- CDG Airport -->
                 <div class="left-photo-drawer-location">
                     <div class="left-photo-drawer-location-title">
-                        <a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/">Aéroport de Paris CDG</a><br>
+                        <a href="https://maps.app.goo.gl/anetBhzUhfwiorGG6" target="_blank" rel="noopener noreferrer">Aéroport de Paris CDG</a><br>
                         Terminal 2<br>
                         Gare TGV – Niveau 4<br>
                         Opposition Hôtel Sheraton,<br>
@@ -839,7 +839,7 @@
                 <!-- Orly Airport -->
                 <div class="left-photo-drawer-location">
                     <div class="left-photo-drawer-location-title">
-                        <a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/">Aéroport de Paris ORLY</a><br>
+                        <a href="https://maps.app.goo.gl/anetBhzUhfwiorGG6" target="_blank" rel="noopener noreferrer">Aéroport de Paris ORLY</a><br>
                         Terminal 3<br>
                         Niveau d'arrivée
                     </div>
