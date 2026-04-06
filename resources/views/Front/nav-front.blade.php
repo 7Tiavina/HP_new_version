@@ -226,6 +226,46 @@
         color: #FAC12E;
     }
 
+    /* Desktop user email link */
+    .nav-user-email {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: rgba(250, 193, 46, 0.1);
+        border: 1px solid rgba(250, 193, 46, 0.3);
+        border-radius: 20px;
+        text-decoration: none;
+        color: #1a1a1a;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.3s;
+        max-width: 200px;
+    }
+
+    .nav-user-email:hover {
+        background: rgba(250, 193, 46, 0.2);
+        border-color: #FAC12E;
+        color: #FAC12E;
+    }
+
+    .nav-user-icon {
+        flex-shrink: 0;
+        color: #FAC12E;
+    }
+
+    .nav-user-email-text {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    @media (max-width: 1150px) {
+        .nav-user-email {
+            display: none;
+        }
+    }
+
     .icon-action svg {
         width: 18px;
         height: 18px;
@@ -852,12 +892,22 @@
         </ul>
 
         <div class="nav-right-group">
-            <div class="icon-action" id="user-icon-trigger" style="cursor: pointer;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                    <circle cx="12" cy="7" r="4"></circle>
-                </svg>
-            </div>
+            @if($isClientLoggedIn)
+                <a href="{{ route('client.dashboard') }}" class="nav-user-email" title="Mon compte">
+                    <svg class="nav-user-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span class="nav-user-email-text">{{ $clientGuard->user()->email ?? 'Client' }}</span>
+                </a>
+            @else
+                <div class="icon-action" id="user-icon-trigger" style="cursor: pointer;" title="Se connecter">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+            @endif
 
             <div class="luxe-auth-inject" style="display: none;"></div>
 
