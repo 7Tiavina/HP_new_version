@@ -24,13 +24,14 @@ class PaymentController extends Controller
      *
      * @param string $date Date au format YYYY-MM-DD
      * @param string $heure Heure au format HH:MM
-     * @return string Date au format ISO8601 UTC (ex: 2026-03-28T10:00:00.000Z)
+     * @return string Date au format local Europe/Paris (ex: 2026-03-28T12:00:00)
      */
     private function convertFranceDateToUtc(string $date, string $heure): string
     {
+        // IMPORTANT: Ne PAS convertir en UTC, garder l'heure locale Europe/Paris
+        // L'API BDM attend les dates en heure locale, pas en UTC
         $carbon = Carbon::createFromFormat('Y-m-d H:i', "{$date} {$heure}", 'Europe/Paris');
-        $carbon->setTimezone('UTC');
-        return $carbon->format('Y-m-d\TH:i:s.000\Z');
+        return $carbon->format('Y-m-d\TH:i:s');
     }
 
     /**

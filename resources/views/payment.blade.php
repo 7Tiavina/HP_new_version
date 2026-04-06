@@ -201,8 +201,9 @@
                             $dateFin = null;
                             if ($firstLigne) {
                                 try {
-                                    $dateDebut = \Carbon\Carbon::parse($firstLigne['dateDebut']);
-                                    $dateFin = \Carbon\Carbon::parse($firstLigne['dateFin']);
+                                    // IMPORTANT: Forcer le fuseau horaire Europe/Paris pour éviter le décalage UTC
+                                    $dateDebut = \Carbon\Carbon::parse($firstLigne['dateDebut'], 'Europe/Paris');
+                                    $dateFin = \Carbon\Carbon::parse($firstLigne['dateFin'], 'Europe/Paris');
                                 } catch (\Exception $e) {
                                     // In case of parsing error
                                 }

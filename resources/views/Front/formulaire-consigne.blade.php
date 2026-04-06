@@ -1032,6 +1032,14 @@
 
         if (!depotInput || !recupInput) return;
 
+        // NE PAS écraser si des valeurs valides existent déjà (format HH:MM)
+        const isValidTime = (val) => val && val.includes(':') && val.split(':').length === 2;
+        
+        if (isValidTime(depotInput.value) && isValidTime(recupInput.value)) {
+            console.log('[initializeTimepickers] Valeurs valides existantes, skip:', depotInput.value, recupInput.value);
+            return;
+        }
+
         const now = new Date();
         const currentHour = formatTime(now.getHours());
         const currentMinute = formatTime(Math.floor(now.getMinutes() / 5) * 5);
