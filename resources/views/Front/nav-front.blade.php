@@ -352,6 +352,231 @@
         opacity: 1;
     }
 
+    /* --- LEFT PHOTO DRAWER (GRID DOTS - DESKTOP) --- */
+    .left-photo-drawer-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6);
+        visibility: hidden;
+        opacity: 0;
+        transition: 0.4s;
+        z-index: 9998;
+        backdrop-filter: blur(4px);
+    }
+
+    .left-photo-drawer-overlay.open {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    .left-photo-drawer {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        max-width: 480px;
+        height: 100%;
+        z-index: 9999;
+        transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        display: flex;
+        flex-direction: column;
+        box-shadow: 10px 0 50px rgba(0,0,0,0.5);
+    }
+
+    .left-photo-drawer.open {
+        left: 0;
+    }
+
+    /* Main content area (black) */
+    .left-photo-drawer-main {
+        flex: 1;
+        background: #1a1a1a;
+        overflow-y: auto;
+    }
+
+    /* Yellow close bar - separate from drawer with small gap */
+    .left-photo-drawer-close-bar {
+        position: fixed;
+        top: 0;
+        left: 500px;
+        width: 60px;
+        height: 100%;
+        background: #FAC12E;
+        z-index: 9999;
+        transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 25px;
+        border-radius: 30px 0 0 30px;
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .left-photo-drawer.open ~ .left-photo-drawer-close-bar {
+        left: 500px;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .left-photo-drawer-close-btn {
+        font-size: 36px;
+        color: #000000;
+        background: none;
+        width: 40px;
+        height: 40px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        font-weight: 300;
+    }
+
+    .left-photo-drawer-close-btn:hover {
+        transform: rotate(90deg);
+    }
+
+    .left-photo-drawer-content {
+        flex: 1;
+        padding: 30px 30px 40px 30px;
+        overflow-y: auto;
+        color: #ffffff;
+    }
+
+    .left-photo-drawer-logo {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-top: 10px;
+    }
+
+    .left-photo-drawer-logo img {
+        height: 60px;
+        width: auto;
+    }
+
+    .left-photo-drawer-section {
+        margin-bottom: 35px;
+    }
+
+    .left-photo-drawer-section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 15px;
+    }
+
+    .left-photo-drawer-location {
+        margin-bottom: 30px;
+    }
+
+    .left-photo-drawer-location-title {
+        color: #FAC12E;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        line-height: 1.5;
+    }
+
+    .left-photo-drawer-location-title a {
+        color: #FAC12E;
+        text-decoration: underline;
+        transition: opacity 0.3s;
+    }
+
+    .left-photo-drawer-location-title a:hover {
+        opacity: 0.8;
+    }
+
+    .left-photo-drawer-map {
+        width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 15px;
+        background: #ffffff;
+        padding: 10px;
+    }
+
+    .left-photo-drawer-map img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .left-photo-drawer-contact {
+        margin-bottom: 20px;
+    }
+
+    .left-photo-drawer-contact-label {
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+    .left-photo-drawer-contact-value {
+        color: #FAC12E;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: underline;
+    }
+
+    .left-photo-drawer-contact-value a {
+        color: #FAC12E;
+        text-decoration: underline;
+        transition: opacity 0.3s;
+    }
+
+    .left-photo-drawer-contact-value a:hover {
+        opacity: 0.8;
+    }
+
+    .left-photo-drawer-reserve-btn {
+        display: flex;
+        align-items: center;
+        background: transparent;
+        border: 2px solid #FAC12E;
+        color: #ffffff;
+        padding: 0;
+        border-radius: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 15px;
+        letter-spacing: 0.5px;
+        text-decoration: none;
+        transition: all 0.3s;
+        margin-top: 30px;
+        overflow: hidden;
+    }
+
+    .left-photo-drawer-reserve-btn:hover {
+        background: rgba(250, 193, 46, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .left-photo-drawer-reserve-btn span:first-child {
+        padding: 16px 24px;
+        flex: 1;
+        text-align: center;
+    }
+
+    .left-photo-drawer-reserve-btn .arrow-icon {
+        background: #FAC12E;
+        color: #000000;
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+
     .hp-drawer-header {
         display: flex;
         justify-content: flex-end;
@@ -580,7 +805,81 @@
     </nav>
 </div>
 
-<!-- Drawer Overlay & Wrapper -->
+<!-- LEFT PHOTO DRAWER (Grid Dots Button - Desktop) -->
+<div class="left-photo-drawer-overlay" id="left-photo-drawer-overlay" onclick="toggleLeftPhotoDrawer()"></div>
+<div class="left-photo-drawer" id="left-photo-drawer">
+    <!-- Main content (black background) -->
+    <div class="left-photo-drawer-main">
+        <div class="left-photo-drawer-content">
+            <!-- Logo -->
+            <div class="left-photo-drawer-logo">
+                <img src="{{ asset('images/HP-logo-290x91.png') }}" alt="Hello Passenger">
+            </div>
+
+            <!-- Plan d'accès Section -->
+            <div class="left-photo-drawer-section">
+                <h2 class="left-photo-drawer-section-title">Plan d'accès</h2>
+
+                <!-- CDG Airport -->
+                <div class="left-photo-drawer-location">
+                    <div class="left-photo-drawer-location-title">
+                        <a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/">Aéroport de Paris CDG</a><br>
+                        Terminal 2<br>
+                        Gare TGV – Niveau 4<br>
+                        Opposition Hôtel Sheraton,<br>
+                        entre les terminaux 2C et 2E
+                    </div>
+                    <div class="left-photo-drawer-map">
+                        <img src="{{ asset('PA_CDG_FR_JAN_2026_9446a22942.jpeg') }}" alt="CDG Airport Map">
+                    </div>
+                </div>
+
+                <!-- Orly Airport -->
+                <div class="left-photo-drawer-location">
+                    <div class="left-photo-drawer-location-title">
+                        <a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/">Aéroport de Paris ORLY</a><br>
+                        Terminal 3<br>
+                        Niveau d'arrivée
+                    </div>
+                    <div class="left-photo-drawer-map">
+                        <img src="{{ asset('PA_ORY_FR_JUN_2025_9ac2300e1c-1020x1020.jpeg') }}" alt="Orly Airport Map">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Section -->
+            <div class="left-photo-drawer-section">
+                <h2 class="left-photo-drawer-section-title">Contact</h2>
+
+                <div class="left-photo-drawer-contact">
+                    <div class="left-photo-drawer-contact-value">
+                        <a href="tel:+33134385898">+33 (0)1 34 38 58 98</a>
+                    </div>
+                </div>
+
+                <div class="left-photo-drawer-contact">
+                    <div class="left-photo-drawer-contact-label">Email</div>
+                    <div class="left-photo-drawer-contact-value">
+                        <a href="mailto:contact@hellopassenger.com">contact@hellopassenger.com</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reserve Button -->
+            <a href="{{ $formUrl }}" class="left-photo-drawer-reserve-btn" onclick="toggleLeftPhotoDrawer()">
+                <span>Réserver</span>
+                <span class="arrow-icon">↗</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Yellow close bar (separate from drawer) -->
+<div class="left-photo-drawer-close-bar">
+    <button class="left-photo-drawer-close-btn" onclick="toggleLeftPhotoDrawer()">&times;</button>
+</div>
+
+<!-- RIGHT DRAWER (Mobile - Gray Hamburger) -->
 <div class="hp-drawer-overlay" id="hp-drawer-overlay" onclick="toggleDrawer()"></div>
 <div class="hp-drawer-wrapper" id="hp-drawer">
     <div class="hp-drawer-header">
@@ -651,6 +950,29 @@
 </div>
 
 <script>
+    // Toggle LEFT photo drawer (desktop - grid dots button)
+    function toggleLeftPhotoDrawer() {
+        const drawer = document.getElementById('left-photo-drawer');
+        const overlay = document.getElementById('left-photo-drawer-overlay');
+
+        if (!drawer || !overlay) return;
+
+        const isOpen = drawer.classList.contains('open');
+
+        drawer.classList.toggle('open');
+        overlay.classList.toggle('open');
+
+        // Hide chatbot when drawer is open
+        if (!isOpen) {
+            document.body.classList.add('drawer-chatbot-hidden');
+        } else {
+            document.body.classList.remove('drawer-chatbot-hidden');
+        }
+
+        document.body.style.overflow = !isOpen ? 'hidden' : 'auto';
+    }
+
+    // Toggle RIGHT drawer (mobile - gray hamburger)
     function toggleDrawer() {
         const drawer = document.getElementById('hp-drawer');
         const overlay = document.getElementById('hp-drawer-overlay');
@@ -678,11 +1000,12 @@
     }
 
     document.addEventListener('DOMContentLoaded', function() {
+        // Grid dots opens LEFT photo drawer (desktop)
         const gridDots = document.querySelector('.grid-dots');
         if (gridDots) {
             gridDots.addEventListener('click', function(e) {
                 e.stopPropagation();
-                toggleDrawer();
+                toggleLeftPhotoDrawer();
             });
         }
 
