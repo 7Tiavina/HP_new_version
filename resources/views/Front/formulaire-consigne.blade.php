@@ -959,13 +959,13 @@
                     
                     <!-- Ligne de remise (affichée seulement si remise) -->
                     <div id="cart-discount" class="py-3 flex justify-between items-center border-t border-gray-200 mt-3" style="display: none;">
-                        <span class="discount-text text-sm text-green-600 font-semibold flex items-center gap-1">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <span class="discount-text text-sm text-yellow-600 font-semibold flex items-center gap-1">
+                            <svg class="w-4 h-4 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
                             </svg>
                             <span data-i18n="cart_discount_online">Offre réservation en ligne</span>
                         </span>
-                        <span class="discount-amount text-sm text-green-600 font-semibold"></span>
+                        <span class="discount-amount text-sm text-yellow-600 font-semibold"></span>
                     </div>
                     
                     <div class="bg-yellow-custom rounded p-3 mt-4 flex justify-center items-center summary-total-container cursor-pointer hover:opacity-90 transition-opacity" role="button" tabindex="0" id="btn-proceed-payment" aria-label="Procéder au paiement">

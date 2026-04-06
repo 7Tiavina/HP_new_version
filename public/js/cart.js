@@ -128,18 +128,37 @@ function updateCartDisplay() {
         } else if (item.itemCategory === 'contrainte') {
             // Contrainte obligatoire - prix déjà défini dans l'item
             unitPriceValue = (typeof item.prix === 'number' && !isNaN(item.prix)) ? item.prix : 0;
-            unitPriceBeforeDiscountValue = (typeof item.prixUnitaireAvantRemise === 'number' && !isNaN(item.prixUnitaireAvantRemise)) ? item.prixUnitaireAvantRemise : unitPriceValue;
+            
+            // Calculer le prix avant remise
+            var avantRemise = item.prixUnitaireAvantRemise ?? item.prix_ttc_avant_remise;
+            if (avantRemise != null && avantRemise !== '') {
+                unitPriceBeforeDiscountValue = typeof avantRemise === 'number' ? avantRemise : parseFloat(String(avantRemise).replace(',', '.'));
+            } else {
+                // Calculer à partir du taux de remise si disponible
+                var taux = item.tauxRemise ?? item.taux_remise;
+                if (taux != null && taux !== '') {
+                    var t = typeof taux === 'number' ? taux : parseFloat(String(taux).replace(',', '.'));
+                    if (!isNaN(t) && t > 0 && t < 100 && unitPriceValue > 0) {
+                        unitPriceBeforeDiscountValue = Math.round((unitPriceValue / (1 - t / 100)) * 100) / 100;
+                    } else {
+                        unitPriceBeforeDiscountValue = unitPriceValue;
+                    }
+                } else {
+                    unitPriceBeforeDiscountValue = unitPriceValue;
+                }
+            }
+            
             linePrice = unitPriceValue;
             lineNormal = unitPriceBeforeDiscountValue;
+            
             // Calculer le taux de remise pour les contraintes
             if (unitPriceBeforeDiscountValue > unitPriceValue && unitPriceBeforeDiscountValue > 0) {
                 lineDiscountRate = Math.round(((unitPriceBeforeDiscountValue - unitPriceValue) / unitPriceBeforeDiscountValue) * 100);
-            } else if (item.tauxRemise) {
-                lineDiscountRate = parseFloat(item.tauxRemise) || 0;
             }
+            
             // Ajouter un indicateur visuel pour les contraintes obligatoires
-            // Note: libelle contient déjà du HTML, on ne l'échappe pas
-            libelle = libelle + ' <span class="text-xs text-orange-600 font-semibold">(obligatoire)</span>';
+            var mandatoryText = typeof t === 'function' ? t('cart_mandatory_badge', '(obligatoire)') : '(obligatoire)';
+            libelle = libelle + ' <span class="text-xs text-orange-600 font-semibold">' + mandatoryText + '</span>';
         }
 
         total += linePrice;
@@ -164,17 +183,17 @@ function updateCartDisplay() {
         leftHtml += '</div>';
 
         // Partie droite : badge remise + prix + bouton supprimer (tous alignés à droite)
-        var rightHtml = '<div class="price-wrapper flex flex-col items-end gap-1 flex-shrink-0">';
+        var rightHtml = '<div class="price-wrapper flex flex-col items-end gap-1 flex-shrink-0" style="min-width: 120px;">';
         // Première ligne : badge remise (si applicable)
         if (hasDiscount) {
             rightHtml += '<div class="flex items-center gap-2 justify-end">';
             rightHtml += '<span class="badge-promo inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-700 flex-shrink-0" style="min-width: 42px; justify-content: center; font-size: 11px;">-' + lineDiscountRate.toFixed(0) + '%</span>';
-            rightHtml += '<span class="old-price text-xs text-gray-400 line-through flex-shrink-0">' + formatPrice(lineNormal) + '</span>';
+            rightHtml += '<span class="old-price text-xs text-gray-400 line-through flex-shrink-0 text-right" style="min-width: 65px;">' + formatPrice(lineNormal) + '</span>';
             rightHtml += '</div>';
         }
         // Deuxième ligne : prix actuel + bouton supprimer
         rightHtml += '<div class="flex items-center gap-1 justify-end">';
-        rightHtml += '<span class="current-price text-sm font-bold text-gray-900 flex-shrink-0" style="min-width: 70px; text-align: right;">' + formatPrice(linePrice) + '</span>';
+        rightHtml += '<span class="current-price text-sm font-bold text-gray-900 flex-shrink-0 text-right" style="min-width: 65px;">' + formatPrice(linePrice) + '</span>';
         // Bouton de suppression - pas pour les contraintes obligatoires
         if (!isMandatory) {
             rightHtml += '<button type="button" class="delete-item-btn text-red-500 hover:text-red-700 p-1 flex-shrink-0" data-index="' + index + '" aria-label="Supprimer">' +
