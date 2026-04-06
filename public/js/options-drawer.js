@@ -150,7 +150,7 @@ function populateDrawerOptions() {
                     // Show discounted price with strikethrough original price
                     priceEl.innerHTML = `
                         <span class="text-lg text-gray-400 line-through font-normal mr-2">${formatPrice(unitPriceBeforeDiscount)} €</span>
-                        <span class="text-green-600">+${formatPrice(unitPrice)} €</span>
+                        <span class="text-black">+${formatPrice(unitPrice)} €</span>
                     `;
                 } else {
                     priceEl.textContent = '+' + formatPrice(unitPrice) + ' €';
@@ -187,7 +187,7 @@ function populateDrawerOptions() {
                     // Show discounted price with strikethrough original price
                     priceEl.innerHTML = `
                         <span class="text-lg text-gray-400 line-through font-normal mr-2">${formatPrice(unitPriceBeforeDiscount)} €</span>
-                        <span class="text-purple-600">+${formatPrice(unitPrice)} €</span>
+                        <span class="text-black">+${formatPrice(unitPrice)} €</span>
                     `;
                 } else {
                     priceEl.textContent = '+' + formatPrice(unitPrice) + ' €';
@@ -264,10 +264,10 @@ function displayAccessOptionsInDrawer() {
         if (hasDiscount) {
             priceHtml = `
                 <span class="text-sm text-gray-400 line-through mr-2">${formatPrice(unitPriceBeforeDiscount)} €</span>
-                <span class="text-lg font-bold text-green-600">${formatPrice(unitPrice)} €</span>
+                <span class="text-lg font-bold text-black">${formatPrice(unitPrice)} €</span>
             `;
         } else {
-            priceHtml = `<span class="text-lg font-bold text-gray-900">${formatPrice(unitPrice)} €</span>`;
+            priceHtml = `<span class="text-lg font-bold text-black">${formatPrice(unitPrice)} €</span>`;
         }
 
         const mandatoryText = typeof window.t === 'function' ? window.t('drawer_access_mandatory_for_schedule', '⚠️ Obligatoire pour cet horaire') : '⚠️ Obligatoire pour cet horaire';
@@ -489,7 +489,7 @@ function updateDrawerCart() {
                 <div class="price-wrapper flex flex-col items-end gap-1 flex-shrink-0">
                     ${hasDiscount ? `
                         <div class="flex items-center gap-2 justify-end">
-                            <span class="badge-promo inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-green-100 text-green-700 flex-shrink-0" style="min-width: 42px; justify-content: center; font-size: 11px;">-${discountRate}%</span>
+                            <span class="badge-promo inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-black text-white flex-shrink-0" style="min-width: 42px; justify-content: center; font-size: 11px;">-${discountRate}%</span>
                             <span class="old-price text-xs text-gray-400 line-through flex-shrink-0">${formatPrice(unitPriceBeforeDiscount * (item.quantity || 1))} €</span>
                         </div>
                     ` : ''}
