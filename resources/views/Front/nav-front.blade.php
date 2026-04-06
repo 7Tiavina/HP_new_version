@@ -371,6 +371,7 @@
         border-radius: 8px;
         cursor: pointer;
         transition: background 0.3s;
+        margin-left: auto;
     }
 
     .hamburger-menu:hover {
@@ -824,26 +825,32 @@
     @media (max-width: 768px) {
         .navbar {
             height: 80px;
-            padding: 0 20px;
+            padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .logo-img {
             height: 50px;
         }
-        
-        .nav-center-menu, 
+
+        .nav-center-menu,
         .nav-right-group .icon-action,
         .nav-right-group .luxe-auth-inject,
         .nav-right-group .btn-reserve {
             display: none;
         }
-        
+
         .nav-right-group {
             display: flex;
+            align-items: center;
+            margin-left: auto;
         }
-        
+
         .hamburger-menu {
             display: flex;
+            margin-left: 10px;
         }
     }
 </style>
