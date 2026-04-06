@@ -44,6 +44,15 @@
     <link rel="stylesheet" href="{{ asset('css/acceuil-luxe.css') }}?v={{ file_exists(public_path('css/acceuil-luxe.css')) ? filemtime(public_path('css/acceuil-luxe.css')) : '1' }}">
     <link rel="stylesheet" href="{{ asset('css/animations.css') }}?v={{ file_exists(public_path('css/animations.css')) ? filemtime(public_path('css/animations.css')) : '1' }}">
     <script>
+        // Synchronize Laravel session language with localStorage
+        (function() {
+            var sessionLang = '{{ session("app_language", "fr") }}';
+            if (sessionLang && sessionLang !== localStorage.getItem('app_language')) {
+                localStorage.setItem('app_language', sessionLang);
+            }
+        })();
+    </script>
+    <script>
         (function() {
             function hpHideLoader() {
                 var loader = document.getElementById('loader');

@@ -999,6 +999,15 @@
         return file_exists($full) ? filemtime($full) : '1';
     };
 @endphp
+<!-- Synchronize Laravel session language with localStorage -->
+<script>
+    (function() {
+        var sessionLang = '{{ session("app_language", "fr") }}';
+        if (sessionLang && sessionLang !== localStorage.getItem('app_language')) {
+            localStorage.setItem('app_language', sessionLang);
+        }
+    })();
+</script>
 <!-- Scripts JS externalisés (versionnés pour éviter cache navigateur) -->
 <script src="{{ asset('js/translations-simple.js') }}?v={{ $jsVersion('js/translations-simple.js') }}"></script>
 <script src="{{ asset('js/state.js') }}?v={{ $jsVersion('js/state.js') }}"></script>

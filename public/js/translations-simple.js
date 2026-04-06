@@ -537,6 +537,18 @@ if (typeof window.translations === 'undefined') {
         date_invalid_after_dropoff: "La date de retrait doit être postérieure à la date de dépôt.",
         date_invalid_same_day_min: "Pour une réservation le même jour, un délai minimum de 3 heures est requis entre le dépôt et le retrait.",
         date_update_error: "Une erreur est survenue lors de la mise à jour des dates.",
+        
+        // Contraintes/Unusual Hours Modal
+        contraintes_modal_title: "⚠️ Horaires inhabituels - Supplément obligatoire",
+        contraintes_single_service_detail: "Une prestation obligatoire pour le {type} sera ajoutée à votre commande.",
+        contraintes_multiple_service_detail: "Des prestations obligatoires pour le dépôt et le retrait seront ajoutées à votre commande.",
+        contraintes_selected_hours_title: "Horaires sélectionnés :",
+        contraintes_deposit: "Dépôt",
+        contraintes_pickup: "Retrait",
+        contraintes_supplement_title: "Supplément horaire :",
+        contraintes_supplement_text: "Ces horaires sont en dehors des heures d'ouverture standards. Un supplément de <strong>{amount} €</strong> sera automatiquement ajouté à votre panier.",
+        contraintes_supplement_info: "ℹ️ Ce supplément est obligatoire et sera facturé automatiquement lors du paiement.",
+        
         modal_ok: "OK",
         modal_cancel: "Annuler",
         modal_confirm: "Confirmer",
@@ -1178,6 +1190,17 @@ if (typeof window.translations === 'undefined') {
         phone_too_long: "Number too long",
         phone_invalid_format: "Invalid format",
         phone_country_code_hint: "⚠️ Please enter your number with the country code (e.g., +33 for France, +230 for Mauritius)",
+        
+        // Contraintes/Unusual Hours Modal
+        contraintes_modal_title: "⚠️ Unusual Hours - Mandatory Supplement",
+        contraintes_single_service_detail: "A mandatory service for {type} will be added to your order.",
+        contraintes_multiple_service_detail: "Mandatory services for drop-off and pick-up will be added to your order.",
+        contraintes_selected_hours_title: "Selected hours:",
+        contraintes_deposit: "Drop-off",
+        contraintes_pickup: "Pick-up",
+        contraintes_supplement_title: "Hourly supplement:",
+        contraintes_supplement_text: "These hours are outside standard opening hours. A supplement of <strong>{amount} €</strong> will be automatically added to your cart.",
+        contraintes_supplement_info: "ℹ️ This supplement is mandatory and will be charged automatically during payment.",
     }
 };
 }  // Close the if (typeof window.translations === 'undefined')

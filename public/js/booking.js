@@ -316,41 +316,51 @@ function resetValidationStates() {
 async function showContraintesInfoModal(contraintes) {
     // Calculer le total des contraintes
     const totalContraintes = contraintes.reduce((sum, c) => sum + (c.prix || 0), 0);
-    
+
     // Construire le message selon le nombre de contraintes
     let messageDetail = '';
     if (contraintes.length === 1) {
-        const type = contraintes[0].type === 'depot' ? 'dépôt' : 'retrait';
-        messageDetail = `Une prestation obligatoire pour le ${type} sera ajoutée à votre commande.`;
+        const typeKey = contraintes[0].type === 'depot' ? 'contraintes_deposit' : 'contraintes_pickup';
+        const type = t(typeKey, contraintes[0].type === 'depot' ? 'dépôt' : 'retrait');
+        messageDetail = t('contraintes_single_service_detail', 'Une prestation obligatoire pour le {type} sera ajoutée à votre commande.')
+            .replace('{type}', type);
     } else {
-        messageDetail = 'Des prestations obligatoires pour le dépôt et le retrait seront ajoutées à votre commande.';
+        messageDetail = t('contraintes_multiple_service_detail', 'Des prestations obligatoires pour le dépôt et le retrait seront ajoutées à votre commande.');
     }
-    
+
+    const selectedHoursTitle = t('contraintes_selected_hours_title', 'Horaires sélectionnés :');
+    const depositLabel = t('contraintes_deposit', 'Dépôt');
+    const pickupLabel = t('contraintes_pickup', 'Retrait');
+    const supplementTitle = t('contraintes_supplement_title', 'Supplément horaire :');
+    const supplementText = t('contraintes_supplement_text', 'Ces horaires sont en dehors des heures d\'ouverture standards. Un supplément de <strong>{amount} €</strong> sera automatiquement ajouté à votre panier.')
+        .replace('{amount}', totalContraintes.toFixed(2));
+    const supplementInfo = t('contraintes_supplement_info', 'ℹ️ Ce supplément est obligatoire et sera facturé automatiquement lors du paiement.');
+    const modalTitle = t('contraintes_modal_title', '⚠️ Horaires inhabituels - Supplément obligatoire');
+
     const message = `
         <div class="text-left space-y-3">
             <p class="font-medium">${messageDetail}</p>
             <div class="bg-orange-50 border border-orange-200 rounded-lg p-3">
                 <p class="text-sm text-orange-800">
-                    <strong>Horaires sélectionnés :</strong><br>
-                    • Dépôt : ${document.getElementById('date-depot').value} à ${document.getElementById('heure-depot').value}<br>
-                    • Retrait : ${document.getElementById('date-recuperation').value} à ${document.getElementById('heure-recuperation').value}
+                    <strong>${selectedHoursTitle}</strong><br>
+                    • ${depositLabel} : ${document.getElementById('date-depot').value} à ${document.getElementById('heure-depot').value}<br>
+                    • ${pickupLabel} : ${document.getElementById('date-recuperation').value} à ${document.getElementById('heure-recuperation').value}
                 </p>
             </div>
             <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                 <p class="text-sm text-yellow-800">
-                    <strong>Supplément horaire :</strong><br>
-                    Ces horaires sont en dehors des heures d'ouverture standards.
-                    Un supplément de <span class="font-bold text-yellow-900">${totalContraintes.toFixed(2)} €</span> sera automatiquement ajouté à votre panier.
+                    <strong>${supplementTitle}</strong><br>
+                    ${supplementText}
                 </p>
             </div>
             <p class="text-sm text-gray-600 italic">
-                ℹ️ Ce supplément est obligatoire et sera facturé automatiquement lors du paiement.
+                ${supplementInfo}
             </p>
         </div>
     `;
-    
+
     await showCustomAlert(
-        '⚠️ Horaires inhabituels - Supplément obligatoire',
+        modalTitle,
         message
     );
 }

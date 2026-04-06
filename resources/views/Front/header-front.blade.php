@@ -5,6 +5,15 @@
 
 <!-- Translation system (FR/EN buttons use this) -->
 <script src="{{ asset('js/translations-simple.js') }}"></script>
+<script>
+    // Synchronize Laravel session language with localStorage
+    (function() {
+        var sessionLang = '{{ session("app_language", "fr") }}';
+        if (sessionLang && sessionLang !== localStorage.getItem('app_language')) {
+            localStorage.setItem('app_language', sessionLang);
+        }
+    })();
+</script>
 
 <!-- Alpine.js for dropdown/menu -->
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>

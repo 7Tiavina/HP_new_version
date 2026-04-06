@@ -3,10 +3,10 @@
     $otherLang = $currentLang === 'fr' ? 'en' : 'fr';
     $flagUrl = $currentLang === 'fr' 
         ? 'https://flagcdn.com/w40/fr.png' 
-        : 'https://flagcdn.com/w40/gb.png';
+        : 'https://flagcdn.com/w40/us.png';
     $otherFlagUrl = $otherLang === 'fr' 
         ? 'https://flagcdn.com/w40/fr.png' 
-        : 'https://flagcdn.com/w40/gb.png';
+        : 'https://flagcdn.com/w40/us.png';
 @endphp
 
 <a href="{{ route('set-language', ['lang' => $otherLang]) }}" 

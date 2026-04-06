@@ -18,6 +18,15 @@
     <link rel="stylesheet" href="https://api.gateway.monetico-retail.com/static/js/krypton-client/V4.0/ext/neon-reset.min.css">
     <script src="https://api.gateway.monetico-retail.com/static/js/krypton-client/V4.0/ext/neon.js"></script>
     <script src="{{ asset('js/translations-simple.js') }}"></script>
+    <script>
+        // Synchronize Laravel session language with localStorage
+        (function() {
+            var sessionLang = '{{ session("app_language", "fr") }}';
+            if (sessionLang && sessionLang !== localStorage.getItem('app_language')) {
+                localStorage.setItem('app_language', sessionLang);
+            }
+        })();
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
 @endpush
