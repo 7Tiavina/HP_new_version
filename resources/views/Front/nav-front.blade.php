@@ -214,13 +214,28 @@
     .grid-dots {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 3px;
+        gap: 4px;
+        cursor: pointer;
+        padding: 6px;
+        border-radius: 8px;
+        transition: background 0.3s;
     }
+
+    .grid-dots:hover {
+        background: rgba(250, 193, 46, 0.1);
+    }
+
     .grid-dots span {
-        width: 5px;
-        height: 5px;
+        width: 8px;
+        height: 8px;
+        background-color: transparent;
+        border: 2px solid #FAC12E;
+        border-radius: 2px;
+        transition: all 0.3s;
+    }
+
+    .grid-dots:hover span {
         background-color: #FAC12E;
-        border-radius: 1px;
     }
 
     /* BOUTON RÉSERVER */
