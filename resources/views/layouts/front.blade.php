@@ -42,10 +42,16 @@
 
         // Ouvrir le modal de connexion automatiquement si ?login=1 ou #login dans l'URL
         (function() {
+            // Vérifier si on vient d'ouvrir le modal (flag dans sessionStorage)
+            const alreadyOpened = sessionStorage.getItem('hp_login_modal_opened');
+            
             const urlParams = new URLSearchParams(window.location.search);
             const hash = window.location.hash;
             
-            if (urlParams.get('login') === '1' || hash === '#login') {
+            if (!alreadyOpened && (urlParams.get('login') === '1' || hash === '#login')) {
+                // Marquer comme ouvert pour éviter de rouvrir au changement de langue
+                sessionStorage.setItem('hp_login_modal_opened', '1');
+                
                 // Attendre que le modal soit prêt
                 window.addEventListener('DOMContentLoaded', function() {
                     setTimeout(function() {
@@ -54,6 +60,13 @@
                         }
                     }, 500);
                 });
+                
+                // Supprimer les paramètres login de l'URL sans recharger la page
+                if (urlParams.get('login') === '1') {
+                    urlParams.delete('login');
+                    const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '') + window.location.hash;
+                    window.history.replaceState({}, '', newUrl);
+                }
             }
         })();
     </script>
