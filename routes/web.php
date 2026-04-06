@@ -162,6 +162,15 @@ Route::post('/api/chatbot/detect-phone-country', [ChatbotController::class, 'det
 
 Route::get('/link-form', [FrontController::class, 'redirectForm'])->name('form-consigne');
 
+// Route pour changer la langue
+Route::get('/set-language', function () {
+    $lang = request('lang');
+    if (in_array($lang, ['fr', 'en'])) {
+        session(['app_language' => $lang]);
+    }
+    return redirect(url()->previous() ?: route('form-consigne'));
+})->name('set-language');
+
 Route::get('/check-auth-status', function () {
     return response()->json(['authenticated' => Auth::guard('client')->check()]);
 });

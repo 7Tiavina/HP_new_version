@@ -132,6 +132,11 @@
         gap: 8px;
         padding: 0;
         margin: 0;
+        transition: color 0.3s;
+    }
+
+    .nav-center-menu li a:hover {
+        color: #FAC12E;
     }
 
     .nav-center-menu .lang-selector-item {
@@ -204,6 +209,11 @@
         color: #333;
         display: flex;
         align-items: center;
+        transition: color 0.3s;
+    }
+
+    .icon-action:hover {
+        color: #FAC12E;
     }
 
     .icon-action svg {
@@ -218,11 +228,11 @@
         cursor: pointer;
         padding: 6px;
         border-radius: 8px;
-        transition: background 0.3s;
+        transition: all 0.3s;
     }
 
     .grid-dots:hover {
-        background: rgba(250, 193, 46, 0.1);
+        background: transparent;
     }
 
     .grid-dots span {
@@ -254,7 +264,8 @@
     }
 
     .btn-reserve:hover {
-        background-color: #e5ad28;
+        background-color: #FAC12E;
+        color: #000000;
     }
 
     @media (max-width: 1150px) {
@@ -282,7 +293,7 @@
     }
     .nav-right-group .luxe-auth-inject a:hover,
     .nav-right-group .luxe-auth-inject button:hover {
-        color: #ffc439;
+        color: #FAC12E;
     }
 
     .nav-right-group .login-link,
@@ -295,7 +306,7 @@
     }
     .nav-right-group .login-link:hover,
     .nav-right-group .register-link:hover {
-        color: #ffc439;
+        color: #FAC12E;
     }
 
     /* --- HAMBURGER MENU (MOBILE ONLY) --- */
