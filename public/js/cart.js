@@ -157,7 +157,7 @@ function updateCartDisplay() {
             }
             
             // Ajouter un indicateur visuel pour les contraintes obligatoires
-            var mandatoryText = typeof t === 'function' ? t('cart_mandatory_badge', '(obligatoire)') : '(obligatoire)';
+            var mandatoryText = typeof window.t === 'function' ? window.t('cart_mandatory_badge', '(obligatoire)') : '(obligatoire)';
             libelle = libelle + ' <span class="text-xs text-orange-600 font-semibold">' + mandatoryText + '</span>';
         }
 

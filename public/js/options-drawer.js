@@ -248,17 +248,18 @@ function displayAccessOptionsInDrawer() {
     // Titre pour la section Access
     const titleEl = document.createElement('h3');
     titleEl.className = 'text-sm font-bold text-gray-700 mb-3 mt-4';
-    titleEl.textContent = 'Options Access (contraintes horaires)';
+    const accessTitle = typeof window.t === 'function' ? window.t('drawer_access_options_title', 'Options Access (contraintes horaires)') : 'Options Access (contraintes horaires)';
+    titleEl.textContent = accessTitle;
     accessContainer.appendChild(titleEl);
-    
+
     contraintesItems.forEach(function(accessOption) {
         const card = document.createElement('div');
         card.className = 'bg-orange-50 rounded-lg p-4 mb-3 border-2 border-orange-200';
-        
+
         const unitPrice = accessOption.prix || accessOption.prixUnitaire || 0;
         const unitPriceBeforeDiscount = accessOption.prixUnitaireAvantRemise || null;
         const hasDiscount = unitPriceBeforeDiscount != null && unitPriceBeforeDiscount > unitPrice;
-        
+
         let priceHtml = '';
         if (hasDiscount) {
             priceHtml = `
@@ -268,19 +269,21 @@ function displayAccessOptionsInDrawer() {
         } else {
             priceHtml = `<span class="text-lg font-bold text-gray-900">${formatPrice(unitPrice)} €</span>`;
         }
-        
+
+        const mandatoryText = typeof window.t === 'function' ? window.t('drawer_access_mandatory_for_schedule', '⚠️ Obligatoire pour cet horaire') : '⚠️ Obligatoire pour cet horaire';
+
         card.innerHTML = `
             <div class="flex justify-between items-start">
                 <div class="flex-1">
                     <h4 class="font-semibold text-gray-800 text-sm">${escapeHtml(accessOption.libelle)}</h4>
-                    <p class="text-xs text-orange-600 font-semibold mt-1">⚠️ Obligatoire pour cet horaire</p>
+                    <p class="text-xs text-orange-600 font-semibold mt-1">${mandatoryText}</p>
                 </div>
                 <div class="text-right">
                     ${priceHtml}
                 </div>
             </div>
         `;
-        
+
         accessContainer.appendChild(card);
     });
 }
@@ -453,7 +456,8 @@ function updateDrawerCart() {
                 unitPriceBeforeDiscount = unitPriceValue;
             }
             itemTotal = unitPriceValue;
-            libelle = libelle + ' (obligatoire)';
+            const mandatoryText = typeof window.t === 'function' ? window.t('drawer_mandatory_badge', '(obligatoire)') : '(obligatoire)';
+            libelle = libelle + ' ' + mandatoryText;
             itemIcon = '⚠️';
         }
 

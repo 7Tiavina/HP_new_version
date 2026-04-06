@@ -419,6 +419,9 @@ if (typeof window.translations === 'undefined') {
 
         // Drawer
         drawer_access_plan: "Plan d'accès",
+        drawer_access_options_title: "Options Access (contraintes horaires)",
+        drawer_access_mandatory_for_schedule: "⚠️ Obligatoire pour cet horaire",
+        drawer_mandatory_badge: "(obligatoire)",
         drawer_cdg: "Aéroport de Paris CDG",
         drawer_cdg_address: "Terminal 2 / Gare TGV - Niveau 4<br>Opposition Hôtel Sheraton",
         drawer_orly: "Aéroport de Paris ORLY",
@@ -548,7 +551,8 @@ if (typeof window.translations === 'undefined') {
         contraintes_supplement_title: "Supplément horaire :",
         contraintes_supplement_text: "Ces horaires sont en dehors des heures d'ouverture standards. Un supplément de <strong>{amount} €</strong> sera automatiquement ajouté à votre panier.",
         contraintes_supplement_info: "ℹ️ Ce supplément est obligatoire et sera facturé automatiquement lors du paiement.",
-        
+        cart_mandatory_badge: "(obligatoire)",
+
         modal_ok: "OK",
         modal_cancel: "Annuler",
         modal_confirm: "Confirmer",
@@ -1073,6 +1077,9 @@ if (typeof window.translations === 'undefined') {
 
         // Drawer
         drawer_access_plan: "Access Plan",
+        drawer_access_options_title: "Access Options (schedule constraints)",
+        drawer_access_mandatory_for_schedule: "⚠️ Mandatory for this schedule",
+        drawer_mandatory_badge: "(mandatory)",
         drawer_cdg: "Paris CDG Airport",
         drawer_cdg_address: "Terminal 2 / TGV Station - Level 4<br>Opposite Sheraton Hotel",
         drawer_orly: "Paris ORLY Airport",
@@ -1201,6 +1208,7 @@ if (typeof window.translations === 'undefined') {
         contraintes_supplement_title: "Hourly supplement:",
         contraintes_supplement_text: "These hours are outside standard opening hours. A supplement of <strong>{amount} €</strong> will be automatically added to your cart.",
         contraintes_supplement_info: "ℹ️ This supplement is mandatory and will be charged automatically during payment.",
+        cart_mandatory_badge: "(mandatory)",
     }
 };
 }  // Close the if (typeof window.translations === 'undefined')
