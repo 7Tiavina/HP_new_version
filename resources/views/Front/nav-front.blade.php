@@ -1019,13 +1019,6 @@
         drawer.classList.toggle('open');
         overlay.classList.toggle('open');
 
-        // Hide chatbot when drawer is open
-        if (!isOpen) {
-            document.body.classList.add('drawer-chatbot-hidden');
-        } else {
-            document.body.classList.remove('drawer-chatbot-hidden');
-        }
-
         document.body.style.overflow = !isOpen ? 'hidden' : 'auto';
     }
 
@@ -1044,13 +1037,6 @@
 
         if (hamburger) {
             hamburger.classList.toggle('open');
-        }
-
-        // Hide chatbot when drawer is open (same as options drawer)
-        if (!isOpen) {
-            document.body.classList.add('drawer-chatbot-hidden');
-        } else {
-            document.body.classList.remove('drawer-chatbot-hidden');
         }
 
         document.body.style.overflow = !isOpen ? 'hidden' : 'auto';

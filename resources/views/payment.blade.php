@@ -1207,80 +1207,29 @@
 
                 // Variable pour le debounce
                 let detectionTimeout = null;
-                
-                // Pays prioritaires (bonus de score)
-                const preferredCountries = ['FR', 'BE', 'CH', 'CA', 'MU'];
 
-                // Fonction pour détecter le pays avec l'IA 1min.ai
-                async function detectCountryWithAI(phoneNumber) {
-                    try {
-                        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || 
-                                         document.querySelector('input[name="_token"]')?.value;
-                        
-                        console.log('🤖 Appel API IA pour:', phoneNumber);
-                        
-                        const response = await fetch('/api/chatbot/detect-phone-country', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': csrfToken,
-                                'Accept': 'application/json'
-                            },
-                            body: JSON.stringify({ phone_number: phoneNumber })
-                        });
-                        
-                        if (!response.ok) {
-                            console.error('❌ Erreur HTTP:', response.status, response.statusText);
-                            return null;
-                        }
-                        
-                        const data = await response.json();
-                        console.log('📥 Réponse IA reçue:', data);
-                        
-                        if (data.success && data.country) {
-                            console.log('✅ Pays détecté par IA 1min.ai:', data.country, '(réponse brute:', data.ai_response + ')');
-                            return data.country;
-                        } else {
-                            console.warn('⚠️ IA n\'a pas détecté le pays. Réponse:', data.ai_response, 'Détecté:', data.detected_country);
-                            return null;
-                        }
-                    } catch (error) {
-                        console.error('❌ Erreur lors de la détection IA:', error);
-                        return null;
-                    }
-                }
-
-                // Détection automatique avec IA 1min.ai uniquement
+                // Détection automatique basée sur les règles locales
                 phoneInput.addEventListener('input', function(e) {
                     let value = phoneInput.value.trim();
-                    
+
                     // Nettoyer les caractères non valides
                     value = value.replace(/[^\d+\s\-\(\)]/g, '');
                     if (phoneInput.value !== value) {
                         phoneInput.value = value;
                     }
-                    
+
                     if (detectionTimeout) {
                         clearTimeout(detectionTimeout);
                     }
-                    
+
                     // Détecter seulement si le numéro a une longueur suffisante
                     const cleanDigits = value.replace(/\D/g, '');
                     if (cleanDigits.length >= 6) {
-                        detectionTimeout = setTimeout(async function() {
-                            console.log('🤖 Détection IA pour:', value);
-                            const detectedCountry = await detectCountryWithAI(value);
-                            
-                            // Appliquer le pays détecté par l'IA
-                            if (detectedCountry) {
-                                const currentCountry = itiInstance.getSelectedCountryData();
-                                const detectedIso2 = String(detectedCountry).toLowerCase();
-                                if (currentCountry.iso2 !== detectedIso2) {
-                                    itiInstance.setCountry(detectedIso2);
-                                    console.log(`🔄 Pays changé par IA: ${currentCountry.iso2} → ${detectedIso2}`);
-                                }
-                            } else {
-                                console.log('⚠️ IA n\'a pas pu détecter le pays pour:', value);
+                        detectionTimeout = setTimeout(function() {
+                            // Utiliser la détection native d'intl-tel-input
+                            if (typeof itiInstance !== 'undefined' && itiInstance.isValidNumber()) {
+                                const detectedCountryData = itiInstance.getSelectedCountryData();
+                                console.log('📱 Pays détecté:', detectedCountryData.iso2);
                             }
                         }, 800);
                     }
@@ -1290,33 +1239,16 @@
                     if (detectionTimeout) {
                         clearTimeout(detectionTimeout);
                     }
-                    
+
                     const value = phoneInput.value.trim();
-                    
+
                     if (!value) {
                         phoneInput.classList.remove('input-error');
                         const errorMsg = phoneInput.parentElement.querySelector('.phone-error-msg');
                         if (errorMsg) errorMsg.remove();
                         return;
                     }
-                    
-                    // Détection avec IA uniquement au blur
-                    if (value.length >= 6) {
-                        console.log('🤖 Détection IA au blur pour:', value);
-                        detectCountryWithAI(value).then(country => {
-                            if (country) {
-                                const currentCountry = itiInstance.getSelectedCountryData();
-                                const detectedIso2 = String(country).toLowerCase();
-                                if (currentCountry.iso2 !== detectedIso2) {
-                                    itiInstance.setCountry(detectedIso2);
-                                    console.log(`🔄 Pays changé au blur par IA: ${currentCountry.iso2} → ${detectedIso2}`);
-                                }
-                            } else {
-                                console.log('⚠️ IA n\'a pas pu détecter le pays au blur pour:', value);
-                            }
-                        });
-                    }
-                    
+
                     // Validation du numéro
                     console.log('🔍 Validation du numéro...');
                     

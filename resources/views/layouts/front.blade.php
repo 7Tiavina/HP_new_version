@@ -71,7 +71,6 @@
             });
         })();
     </script>
-    <link rel="stylesheet" href="{{ asset('css/chatbot.css') }}?v={{ file_exists(public_path('css/chatbot.css')) ? filemtime(public_path('css/chatbot.css')) : '1' }}">
     <script src="{{ asset('js/translations-simple.js') }}?v={{ file_exists(public_path('js/translations-simple.js')) ? filemtime(public_path('js/translations-simple.js')) : '1' }}"></script>
     <style>
         /* Override body padding for new nav */
@@ -84,9 +83,6 @@
     @stack('head_scripts')
 </head>
 <body class="luxe-home">
-
-    {{-- Widget flottant Chatbot --}}
-    @include('components.chatbot')
 
     {{-- Nouvelle Navigation Style Hello Passenger --}}
     @include('Front.nav-front')
@@ -365,11 +361,9 @@
             var h = (window.visualViewport && window.visualViewport.height) || window.innerHeight;
             var top = Math.max(50, h - OFFSET);
             var book = document.getElementById('hp-book-widget-btn');
-            var chat = document.getElementById('chatbot-widget');
             var isMobile = window.innerWidth < 768;
             var pad = isMobile ? '12px' : '24px';
             if (book) { book.style.top = top + 'px'; book.style.bottom = 'auto'; book.style.left = pad; }
-            if (chat) { chat.style.top = top + 'px'; chat.style.bottom = 'auto'; chat.style.right = (window.innerWidth < 768 ? '12px' : '20px'); }
         }
         window.hpPositionWidgets = position;
         if (window.visualViewport) {

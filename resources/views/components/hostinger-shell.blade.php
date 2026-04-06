@@ -176,7 +176,7 @@
     <link rel="stylesheet" href="{{ asset('css/hublot-theme.css') }}?v={{ file_exists(public_path('css/hublot-theme.css')) ? filemtime(public_path('css/hublot-theme.css')) : '1' }}">
 
     @if($includeChatbot)
-        @include('components.chatbot')
+        @* Chatbot removed *@
     @endif
 
     <style>

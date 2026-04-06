@@ -1687,13 +1687,4 @@
 }
 </style>
 
-<!-- Styles pour masquer le chatbot quand le drawer ou modal est ouvert -->
-<style>
-    body.drawer-chatbot-hidden #chatbot-widget {
-        display: none !important;
-    }
-    body.modal-chatbot-hidden #chatbot-widget {
-        display: none !important;
-    }
-</style>
 @endpush

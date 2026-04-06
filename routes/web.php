@@ -10,7 +10,6 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CommandeController;
 use App\Http\Controllers\ClientController; // Add this import
 use App\Http\Controllers\AdminAccountController;
-use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\AgentController;
 
 // Servir les assets Hostinger (JS, CSS, images) avec le bon MIME type (évite les erreurs "invalid JavaScript MIME type")
@@ -143,23 +142,7 @@ Route::get('/api/plateforme/{idPlateforme}/lieux', [FrontController::class, 'get
 // Test : vérifier si l'API BDM renvoie des remises sur les produits
 Route::get('/api/test-remises', [FrontController::class, 'testApiRemises'])->name('api.test-remises');
 
-// Routes pour le chatbot
-Route::post('/api/chatbot/message', [ChatbotController::class, 'sendMessage'])->name('api.chatbot.message');
-Route::post('/api/chatbot/reset', [ChatbotController::class, 'resetHistory'])->name('api.chatbot.reset');
-Route::post('/api/chatbot/detect-phone-country', [ChatbotController::class, 'detectPhoneCountry'])->name('api.chatbot.detect-phone-country');
-
-
-
-
-
-
-
-
-
-
-
-
-
+// Routes pour le paiement
 Route::get('/link-form', [FrontController::class, 'redirectForm'])->name('form-consigne');
 
 // Route pour changer la langue

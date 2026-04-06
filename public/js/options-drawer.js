@@ -21,10 +21,6 @@ function openOptionsDrawer() {
 
         optionsDrawerResolve = resolve;
 
-        // Hide chatbot when drawer is open
-        document.body.classList.add('drawer-chatbot-hidden');
-        console.log('[openOptionsDrawer] Chatbot hidden');
-
         // Show elements
         overlay.classList.remove('hidden');
         drawer.classList.remove('hidden');
@@ -74,10 +70,6 @@ function closeOptionsDrawer() {
         drawer.classList.add('hidden');
         overlay.classList.add('hidden');
         overlay.classList.remove('opacity-0');
-
-        // Show chatbot again when drawer is closed
-        document.body.classList.remove('drawer-chatbot-hidden');
-        console.log('[closeOptionsDrawer] Chatbot shown');
     }, 300); // Match transition duration
 }
 
