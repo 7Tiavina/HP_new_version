@@ -374,20 +374,21 @@
 
     .left-photo-drawer {
         position: fixed;
-        top: 0;
-        left: -100%;
+        top: 20px;
+        left: calc(-100% - 20px);
         width: 100%;
         max-width: 480px;
-        height: 100%;
+        height: calc(100% - 40px);
         z-index: 9999;
         transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         display: flex;
         flex-direction: column;
         box-shadow: 10px 0 50px rgba(0,0,0,0.5);
+        border-radius: 20px 0 0 20px;
     }
 
     .left-photo-drawer.open {
-        left: 0;
+        left: 20px;
     }
 
     /* Main content area (black) */
@@ -395,15 +396,16 @@
         flex: 1;
         background: #1a1a1a;
         overflow-y: auto;
+        border-radius: 20px 0 0 20px;
     }
 
     /* Yellow close bar - separate from drawer with small gap */
     .left-photo-drawer-close-bar {
         position: fixed;
-        top: 0;
-        left: 500px;
+        top: 20px;
+        left: 520px;
         width: 60px;
-        height: 100%;
+        height: calc(100% - 40px);
         background: #FAC12E;
         z-index: 9999;
         transition: 0.4s cubic-bezier(0.25, 1, 0.5, 1);
@@ -411,13 +413,13 @@
         align-items: flex-start;
         justify-content: center;
         padding-top: 25px;
-        border-radius: 30px 0 0 30px;
+        border-radius: 30px;
         opacity: 0;
         visibility: hidden;
     }
 
     .left-photo-drawer.open ~ .left-photo-drawer-close-bar {
-        left: 500px;
+        left: 520px;
         opacity: 1;
         visibility: visible;
     }
