@@ -1027,51 +1027,41 @@
 
     // Initialiser les timepickers avec l'heure actuelle
     function initializeTimepickers() {
-        // Ne PAS initialiser si des valeurs existent déjà (chargées depuis la session)
         const depotInput = document.getElementById('heure-depot');
         const recupInput = document.getElementById('heure-recuperation');
-        
-        // Si les inputs ont déjà des valeurs (depuis la session), ne pas les écraser
-        if (depotInput && depotInput.value) {
-            console.log('[initializeTimepickers] heure-depot déjà définie, skip:', depotInput.value);
-            return;
-        }
-        if (recupInput && recupInput.value) {
-            console.log('[initializeTimepickers] heure-recuperation déjà définie, skip:', recupInput.value);
-            return;
-        }
-        
+
+        if (!depotInput || !recupInput) return;
+
         const now = new Date();
         const currentHour = formatTime(now.getHours());
-        const currentMinute = formatTime(Math.floor(now.getMinutes() / 5) * 5); // Arrondi à 5 minutes
+        const currentMinute = formatTime(Math.floor(now.getMinutes() / 5) * 5);
 
-        // Initialiser heure-depot
+        // Heure de dépôt = heure actuelle
+        depotInput.value = `${currentHour}:${currentMinute}`;
         const depotHDisplay = document.getElementById('h-val-depot');
         const depotMDisplay = document.getElementById('m-val-depot');
+        if (depotHDisplay) depotHDisplay.innerText = currentHour;
+        if (depotMDisplay) depotMDisplay.innerText = currentMinute;
 
-        if (depotInput && depotHDisplay && depotMDisplay) {
-            depotHDisplay.innerText = currentHour;
-            depotMDisplay.innerText = currentMinute;
-            depotInput.value = `${currentHour}:${currentMinute}`;
-        }
+        // Heure de récupération = heure actuelle + 1h
+        let defaultHour = parseInt(currentHour) + 1;
+        if (defaultHour > 23) defaultHour = 0;
+        defaultHour = formatTime(defaultHour);
 
-        // Initialiser heure-recuperation (1 heure après l'heure de dépôt par défaut)
+        recupInput.value = `${defaultHour}:${currentMinute}`;
         const recupHDisplay = document.getElementById('h-val-recuperation');
         const recupMDisplay = document.getElementById('m-val-recuperation');
+        if (recupHDisplay) recupHDisplay.innerText = defaultHour;
+        if (recupMDisplay) recupMDisplay.innerText = currentMinute;
 
-        if (recupInput && recupHDisplay && recupMDisplay) {
-            let defaultHour = parseInt(currentHour) + 1;
-            if (defaultHour > 23) defaultHour = 0;
-            defaultHour = formatTime(defaultHour);
-
-            recupHDisplay.innerText = defaultHour;
-            recupMDisplay.innerText = currentMinute;
-            recupInput.value = `${defaultHour}:${currentMinute}`;
-        }
+        console.log('[initializeTimepickers] ✅', depotInput.value, '→', recupInput.value);
     }
 
     // Gestion des timepickers discrets
     document.addEventListener('DOMContentLoaded', function () {
+        // Initialiser avec l'heure actuelle (forcé, même si session existe)
+        initializeTimepickers();
+
         // Initialiser les scroll wheels au chargement
         setTimeout(() => {
             if (typeof initScrollWheelsIfNeeded === 'function') {

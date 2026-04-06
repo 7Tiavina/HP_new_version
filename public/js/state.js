@@ -52,12 +52,21 @@ function loadStateFromSession() {
     const dateRecupInput = document.getElementById('date-recuperation');
     const heureRecupInput = document.getElementById('heure-recuperation');
 
-    airportSelect.value = state.airportId;
-    airportId = state.airportId;
-    dateDepotInput.value = state.dateDepot;
-    heureDepotInput.value = state.heureDepot;
-    dateRecupInput.value = state.dateRecuperation;
-    heureRecupInput.value = state.heureRecuperation;
+    airportSelect.value = state.airportId || airportSelect.value;
+    airportId = state.airportId || airportId;
+    
+    // Ne charger les dates que si elles existent ET ne sont pas vides
+    if (state.dateDepot && state.dateDepot.trim() !== '') dateDepotInput.value = state.dateDepot;
+    if (state.dateRecuperation && state.dateRecuperation.trim() !== '') dateRecupInput.value = state.dateRecuperation;
+    
+    // IMPORTANT: Ne PAS toucher aux heures ici - elles seront initialisées par initializeTimepickers()
+    // On ne charge depuis la session que si les valeurs existent et ne sont pas vides
+    if (state.heureDepot && state.heureDepot.trim() !== '' && state.heureDepot.includes(':')) {
+        heureDepotInput.value = state.heureDepot;
+    }
+    if (state.heureRecuperation && state.heureRecuperation.trim() !== '' && state.heureRecuperation.includes(':')) {
+        heureRecupInput.value = state.heureRecuperation;
+    }
 
     // Apply validation states based on loaded values
     if (typeof validateField !== 'undefined') {
