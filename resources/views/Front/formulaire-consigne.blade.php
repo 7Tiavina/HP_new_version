@@ -1166,8 +1166,53 @@
         const hoursWheel = document.getElementById(`scroll-h-${suffix}`);
         const minutesWheel = document.getElementById(`scroll-m-${suffix}`);
 
+        // Keyboard navigation handler
+        function handleWheelKeydown(e, wheelContainer, type, cycleSize) {
+            if (!['ArrowUp', 'ArrowDown', 'Enter', ' '].includes(e.key)) return;
+            e.preventDefault();
+            
+            const itemHeight = 40;
+            const currentScroll = wheelContainer.parentElement.scrollTop;
+            const currentIndex = Math.round(currentScroll / itemHeight);
+            let newIndex = currentIndex;
+
+            if (e.key === 'ArrowUp') {
+                newIndex = currentIndex - 1;
+            } else if (e.key === 'ArrowDown') {
+                newIndex = currentIndex + 1;
+            }
+
+            // Wrap around
+            if (newIndex < 0) newIndex = cycleSize - 1;
+            if (newIndex >= cycleSize * 3) newIndex = cycleSize;
+
+            // Reposition to cycle 1 if needed
+            if (newIndex < cycleSize) newIndex += cycleSize;
+            if (newIndex >= cycleSize * 2) newIndex -= cycleSize;
+
+            const targetItem = wheelContainer.querySelector(`[data-index="${newIndex}"]`);
+            if (targetItem) {
+                scrollToItem(wheelContainer.parentElement, targetItem, true);
+            }
+        }
+
         if (hoursWheel && hoursWheel.children.length === 0) {
             hoursWheel.innerHTML = '';
+            // Rendre le container focusable pour la navigation clavier
+            hoursWheel.parentElement.setAttribute('tabindex', '0');
+            hoursWheel.parentElement.setAttribute('role', 'listbox');
+            hoursWheel.parentElement.setAttribute('aria-label', 'Heures');
+            hoursWheel.parentElement.style.outline = 'none';
+            hoursWheel.parentElement.style.cursor = 'pointer';
+            
+            // Highlight au focus
+            hoursWheel.parentElement.addEventListener('focus', function() {
+                this.style.boxShadow = 'inset 0 0 0 2px #FAC12E';
+            });
+            hoursWheel.parentElement.addEventListener('blur', function() {
+                this.style.boxShadow = 'none';
+            });
+            
             // Créer 3 cycles complets pour permettre le scroll infini
             const hours = [];
             for (let cycle = 0; cycle < 3; cycle++) {
@@ -1181,11 +1226,18 @@
                 item.textContent = val;
                 item.dataset.value = val;
                 item.dataset.index = index;
+                item.setAttribute('role', 'option');
                 item.addEventListener('click', function() {
-                    scrollToItem(hoursWheel, item);
+                    scrollToItem(hoursWheel.parentElement, item);
                 });
                 hoursWheel.appendChild(item);
             });
+            
+            // Navigation clavier sur le container
+            hoursWheel.parentElement.addEventListener('keydown', function(e) {
+                handleWheelKeydown(e, hoursWheel, 'H', 24);
+            });
+            
             // Positionner au milieu du cycle (cycle 1, heure 09)
             setTimeout(() => {
                 const targetIndex = 24 + 9; // cycle 1, heure 09
@@ -1199,6 +1251,21 @@
 
         if (minutesWheel && minutesWheel.children.length === 0) {
             minutesWheel.innerHTML = '';
+            // Rendre le container focusable pour la navigation clavier
+            minutesWheel.parentElement.setAttribute('tabindex', '0');
+            minutesWheel.parentElement.setAttribute('role', 'listbox');
+            minutesWheel.parentElement.setAttribute('aria-label', 'Minutes');
+            minutesWheel.parentElement.style.outline = 'none';
+            minutesWheel.parentElement.style.cursor = 'pointer';
+            
+            // Highlight au focus
+            minutesWheel.parentElement.addEventListener('focus', function() {
+                this.style.boxShadow = 'inset 0 0 0 2px #FAC12E';
+            });
+            minutesWheel.parentElement.addEventListener('blur', function() {
+                this.style.boxShadow = 'none';
+            });
+            
             // Créer 3 cycles complets pour permettre le scroll infini
             const minutes = [];
             for (let cycle = 0; cycle < 3; cycle++) {
@@ -1212,11 +1279,18 @@
                 item.textContent = val;
                 item.dataset.value = val;
                 item.dataset.index = index;
+                item.setAttribute('role', 'option');
                 item.addEventListener('click', function() {
-                    scrollToItem(minutesWheel, item);
+                    scrollToItem(minutesWheel.parentElement, item);
                 });
                 minutesWheel.appendChild(item);
             });
+            
+            // Navigation clavier sur le container
+            minutesWheel.parentElement.addEventListener('keydown', function(e) {
+                handleWheelKeydown(e, minutesWheel, 'M', 12);
+            });
+            
             // Positionner au milieu du cycle (cycle 1, minute 00)
             setTimeout(() => {
                 const targetIndex = 12 + 0; // cycle 1, minute 00
