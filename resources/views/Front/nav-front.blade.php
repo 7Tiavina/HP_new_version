@@ -78,9 +78,9 @@
         width: 97%;
         max-width: 1600px;
         height: 130px;
-        display: flex;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
         align-items: center;
-        justify-content: space-between;
         padding: 0 30px;
         border-radius: 15px;
         margin: 0 auto;
@@ -90,6 +90,11 @@
         display: flex;
         align-items: center;
         gap: 0;
+        justify-self: start;
+    }
+
+    .nav-right-group {
+        justify-self: end;
     }
 
     .logo-img {
@@ -105,11 +110,15 @@
         gap: 0;
         margin: 0;
         padding: 0;
+        align-items: center;
+        justify-content: center;
     }
 
     .nav-center-menu li {
         margin: 0;
-        padding: 0 10px;
+        padding: 0 12px;
+        display: flex;
+        align-items: center;
     }
 
     .nav-center-menu li a {
@@ -775,16 +784,17 @@
             <a href="{{ $formUrl }}">
                 <img src="{{ asset('HP-logo-290x91-1.webp') }}" alt="Hello Passenger" class="logo-img">
             </a>
-            <ul class="nav-center-menu">
-                <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/services/" data-i18n="nav_services">Nos Services Bagages</a></li>
-                <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/a-propos/" data-i18n="nav_about">A Propos</a></li>
-                <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
-                <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" data-i18n="nav_contact">Contact</a></li>
-                <li class="lang-selector-item">
-                    @include('components.translation-widget')
-                </li>
-            </ul>
         </div>
+
+        <ul class="nav-center-menu">
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/services/" data-i18n="nav_services">Nos Services Bagages</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/a-propos/" data-i18n="nav_about">A Propos</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" data-i18n="nav_contact">Contact</a></li>
+            <li class="lang-selector-item">
+                @include('components.translation-widget')
+            </li>
+        </ul>
 
         <div class="nav-right-group">
             <div class="icon-action" id="user-icon-trigger" style="cursor: pointer;">
