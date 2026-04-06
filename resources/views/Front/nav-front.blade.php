@@ -732,27 +732,46 @@
         border-top: 2px solid #FAC12E;
     }
 
-    .drawer-footer-btn {
+    .drawer-lang-selector {
         display: flex;
         align-items: center;
         justify-content: center;
-        background: linear-gradient(135deg, #FAC12E, #F9A825);
-        color: #000000;
+        gap: 12px;
+    }
+
+    .drawer-lang-btn {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        background: #ffffff;
+        border-radius: 8px;
         text-decoration: none;
-        padding: 16px 24px;
-        border-radius: 30px;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 16px;
-        letter-spacing: 0.5px;
+        color: #1a1a1a;
+        font-size: 14px;
+        font-weight: 600;
         transition: all 0.3s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .drawer-lang-btn:hover {
+        background: #FAC12E;
+        color: #000000;
+        transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(250, 193, 46, 0.3);
     }
 
-    .drawer-footer-btn:hover {
-        background: linear-gradient(135deg, #fdd835, #FAC12E);
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(250, 193, 46, 0.4);
+    .drawer-lang-flag {
+        width: 24px;
+        height: 18px;
+        border-radius: 2px;
+        object-fit: cover;
+    }
+
+    .drawer-lang-divider {
+        color: #9CA3AF;
+        font-size: 18px;
+        font-weight: 300;
     }
 
     /* --- RESPONSIVE --- */
@@ -1000,9 +1019,17 @@
     </div>
 
     <div class="drawer-footer">
-        <a href="{{ $formUrl }}" class="drawer-footer-btn" data-i18n="drawer_book">
-            Contactez-nous
-        </a>
+        <div class="drawer-lang-selector">
+            <a href="{{ route('set-language', ['lang' => 'en']) }}" class="drawer-lang-btn">
+                <img src="https://flagcdn.com/w40/us.png" alt="EN" class="drawer-lang-flag">
+                <span>English</span>
+            </a>
+            <span class="drawer-lang-divider">|</span>
+            <a href="{{ route('set-language', ['lang' => 'fr']) }}" class="drawer-lang-btn">
+                <img src="https://flagcdn.com/w40/fr.png" alt="FR" class="drawer-lang-flag">
+                <span>Français</span>
+            </a>
+        </div>
     </div>
 </div>
 
@@ -1062,7 +1089,7 @@
             });
         }
 
-        const drawerLinks = document.querySelectorAll('.drawer-nav-menu a, .drawer-footer-btn');
+        const drawerLinks = document.querySelectorAll('.drawer-nav-menu a, .drawer-lang-btn');
         drawerLinks.forEach(function(link) {
             link.addEventListener('click', function() {
                 toggleDrawer();
