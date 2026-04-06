@@ -992,22 +992,20 @@
         <!-- User account section -->
         <div class="mt-6 pt-6 border-t border-gray-200">
             @if($isClientLoggedIn)
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-gray-900">{{ $clientGuard->user()->email ?? 'Client' }}</p>
-                            <a href="{{ route('client.dashboard') }}" onclick="toggleDrawer(); return false;" class="text-xs text-yellow-600 hover:text-yellow-700">Mon compte</a>
-                        </div>
+                <a href="{{ route('client.dashboard') }}" onclick="setTimeout(function() { toggleDrawer(); }, 100);" class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                        </svg>
                     </div>
-                </div>
+                    <div class="min-w-0">
+                        <p class="text-sm font-bold text-gray-900 truncate">{{ $clientGuard->user()->email ?? 'Client' }}</p>
+                        <p class="text-xs text-yellow-600 hover:text-yellow-700">Mon compte →</p>
+                    </div>
+                </a>
             @else
                 <button type="button" onclick="toggleDrawer(); window.openLoginModal?.();" class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
                         <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
                         </svg>
