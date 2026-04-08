@@ -323,7 +323,13 @@ function toggleOptionFromModal(optionKey) {
         // Item exists, so remove it
         cartItems.splice(itemIndex, 1);
     } else {
-        // Item does not exist, so add it
+        // Item does not exist, so add it - check if the other option is already in cart
+        const otherOptionKey = optionKey === 'premium' ? 'priority' : 'premium';
+        if (cartItems.some(item => item.key === otherOptionKey)) {
+            console.log(`[toggleOptionFromModal] Cannot add ${optionKey} because ${otherOptionKey} is already in cart`);
+            return;
+        }
+        
         const option = staticOptions[optionKey];
         let premiumDetails = {};
 

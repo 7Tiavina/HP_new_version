@@ -284,18 +284,24 @@ function displayAccessOptionsInDrawer() {
  * Update add/remove buttons state based on cart
  */
 function updateButtonsState() {
+    const hasPremium = cartItems.some(item => item.key === 'premium');
+    const hasPriority = cartItems.some(item => item.key === 'priority');
+
     ['priority', 'premium'].forEach(optionKey => {
         const isInCart = cartItems.some(item => item.key === optionKey);
-        
+        const otherIsInCart = optionKey === 'premium' ? hasPriority : hasPremium;
+
         const addBtn = document.getElementById(`add-${optionKey}-btn`);
         const removeBtn = document.getElementById(`remove-${optionKey}-btn`);
-        
+
         if (addBtn) {
-            addBtn.disabled = isInCart;
-            addBtn.classList.toggle('opacity-50', isInCart);
-            addBtn.classList.toggle('cursor-not-allowed', isInCart);
+            // Disable if already in cart OR if the other option is in cart
+            const shouldDisable = isInCart || otherIsInCart;
+            addBtn.disabled = shouldDisable;
+            addBtn.classList.toggle('opacity-50', shouldDisable);
+            addBtn.classList.toggle('cursor-not-allowed', shouldDisable);
         }
-        
+
         if (removeBtn) {
             removeBtn.disabled = !isInCart;
             removeBtn.classList.toggle('opacity-50', !isInCart);
@@ -566,6 +572,13 @@ function addOptionToCart(optionKey) {
 
     // Check if already in cart
     if (cartItems.some(item => item.key === optionKey)) return;
+
+    // Check if the other option (premium/priority) is already in cart - they are mutually exclusive
+    const otherOptionKey = optionKey === 'premium' ? 'priority' : 'premium';
+    if (cartItems.some(item => item.key === otherOptionKey)) {
+        console.log(`[addOptionToCart] Cannot add ${optionKey} because ${otherOptionKey} is already in cart`);
+        return;
+    }
 
     cartItems.push({
         itemCategory: 'option',
