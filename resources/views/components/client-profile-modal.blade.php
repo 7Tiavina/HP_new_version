@@ -15,9 +15,9 @@
                 <div class="w-6 sm:w-12 h-1 bg-white bg-opacity-50"></div>
                 <div id="step-2-indicator" class="w-6 h-6 sm:w-8 sm:h-8 bg-white bg-opacity-30 text-white rounded-full flex items-center justify-center font-bold text-xs">2</div>
             </div>
-            <h3 class="text-base sm:text-xl font-bold text-gray-900" data-i18n="modal_title">Complétez vos informations</h3>
-            <p id="step-1-title" class="text-gray-800 text-xs sm:text-sm mt-0.5">Informations client</p>
-            <p id="step-2-title" class="text-gray-800 text-xs sm:text-sm mt-0.5 hidden">Informations PREMIUM</p>
+            <h3 class="text-base sm:text-xl font-bold text-gray-900" style="font-family: 'Space Grotesk', sans-serif;" data-i18n="modal_title">Complétez vos informations</h3>
+            <p id="step-1-title" class="text-gray-800 text-xs sm:text-sm mt-0.5" style="font-family: 'Space Grotesk', sans-serif;">Informations client</p>
+            <p id="step-2-title" class="text-gray-800 text-xs sm:text-sm mt-0.5 hidden" style="font-family: 'Space Grotesk', sans-serif;">Informations PREMIUM</p>
         </div>
 
         <!-- Modal Body - Scrollable -->
