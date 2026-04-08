@@ -596,6 +596,16 @@
         display: block;
     }
 
+    .left-photo-drawer-map a {
+        cursor: pointer;
+        display: block;
+        transition: opacity 0.3s ease;
+    }
+
+    .left-photo-drawer-map a:hover {
+        opacity: 0.8;
+    }
+
     .left-photo-drawer-contact {
         margin-bottom: 20px;
     }
@@ -947,38 +957,42 @@
 
             <!-- Plan d'accès Section -->
             <div class="left-photo-drawer-section">
-                <h2 class="left-photo-drawer-section-title">Plan d'accès</h2>
+                <h2 class="left-photo-drawer-section-title" data-i18n="drawer_access_plan">Plan d'accès</h2>
 
                 <!-- CDG Airport -->
                 <div class="left-photo-drawer-location">
                     <div class="left-photo-drawer-location-title">
-                        <a href="https://maps.app.goo.gl/anetBhzUhfwiorGG6" target="_blank" rel="noopener noreferrer">Aéroport de Paris CDG</a><br>
-                        Terminal 2<br>
+                        <a href="https://maps.app.goo.gl/anetBhzUhfwiorGG6" target="_blank" rel="noopener noreferrer" data-i18n="drawer_cdg">Aéroport de Paris CDG</a><br>
+                        <span data-i18n="drawer_cdg_address">Terminal 2<br>
                         Gare TGV – Niveau 4<br>
                         Opposition Hôtel Sheraton,<br>
-                        entre les terminaux 2C et 2E
+                        entre les terminaux 2C et 2E</span>
                     </div>
                     <div class="left-photo-drawer-map">
-                        <img src="{{ asset('PA_CDG_FR_JAN_2026_9446a22942.jpeg') }}" alt="CDG Airport Map">
+                        <a href="{{ asset('PA_CDG_FR_JAN_2026_9446a22942.jpg') }}" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('PA_CDG_FR_JAN_2026_9446a22942.jpg') }}" alt="CDG Airport Map">
+                        </a>
                     </div>
                 </div>
 
                 <!-- Orly Airport -->
                 <div class="left-photo-drawer-location">
                     <div class="left-photo-drawer-location-title">
-                        <a href="https://maps.app.goo.gl/anetBhzUhfwiorGG6" target="_blank" rel="noopener noreferrer">Aéroport de Paris ORLY</a><br>
-                        Terminal 3<br>
-                        Niveau d'arrivée
+                        <a href="https://maps.app.goo.gl/anetBhzUhfwiorGG6" target="_blank" rel="noopener noreferrer" data-i18n="drawer_orly">Aéroport de Paris ORLY</a><br>
+                        <span data-i18n="drawer_orly_address">Terminal 3<br>
+                        Niveau d'arrivée</span>
                     </div>
                     <div class="left-photo-drawer-map">
-                        <img src="{{ asset('PA_ORY_FR_JUN_2025_9ac2300e1c-1020x1020.jpeg') }}" alt="Orly Airport Map">
+                        <a href="{{ asset('PA_ORY_FR_JUN_2025_9ac2300e1c-1020x1020.jpg') }}" target="_blank" rel="noopener noreferrer">
+                            <img src="{{ asset('PA_ORY_FR_JUN_2025_9ac2300e1c-1020x1020.jpg') }}" alt="Orly Airport Map">
+                        </a>
                     </div>
                 </div>
             </div>
 
             <!-- Contact Section -->
             <div class="left-photo-drawer-section">
-                <h2 class="left-photo-drawer-section-title">Contact</h2>
+                <h2 class="left-photo-drawer-section-title" data-i18n="drawer_contact">Contact</h2>
 
                 <div class="left-photo-drawer-contact">
                     <div class="left-photo-drawer-contact-value">
@@ -987,7 +1001,7 @@
                 </div>
 
                 <div class="left-photo-drawer-contact">
-                    <div class="left-photo-drawer-contact-label">Email</div>
+                    <div class="left-photo-drawer-contact-label" data-i18n="header_email_label">Email</div>
                     <div class="left-photo-drawer-contact-value">
                         <a href="mailto:contact@hellopassenger.com">contact@hellopassenger.com</a>
                     </div>
@@ -996,7 +1010,7 @@
 
             <!-- Reserve Button -->
             <a href="{{ $formUrl }}" class="left-photo-drawer-reserve-btn" onclick="toggleLeftPhotoDrawer()">
-                <span class="left-photo-drawer-reserve-text">Réserver</span>
+                <span class="left-photo-drawer-reserve-text" data-i18n="drawer_book">Réserver</span>
                 <span class="arrow-icon">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M7 17L17 7M17 7H7M17 7V17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
