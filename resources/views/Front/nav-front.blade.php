@@ -1028,7 +1028,7 @@
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" data-i18n="nav_contact">Contact</a></li>
             @if($isClientLoggedIn)
-                <li><a href="{{ route('client.logout') }}" onclick="toggleDrawer(); return false;" class="text-red-600 hover:text-red-700">Déconnecter</a></li>
+                <li><a href="{{ route('client.logout') }}" onclick="toggleDrawer(); return false;" class="text-red-600 hover:text-red-700" data-i18n="logout_btn">Déconnecter</a></li>
             @else
                 <li><a href="{{ $formUrl }}" data-i18n="btn_book">Réserver</a></li>
             @endif
