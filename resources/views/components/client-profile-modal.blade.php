@@ -1,5 +1,5 @@
-<div id="clientProfileModal" class="fixed inset-0 overflow-y-auto h-full w-full hidden z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-gray-900 bg-opacity-75 backdrop-blur-sm">
-    <div class="relative mx-auto w-full sm:max-w-3xl shadow-2xl bg-white overflow-hidden transform transition-all sm:my-8 flex flex-col sm:rounded-2xl h-full sm:h-auto" style="max-height: 100vh;">
+<div id="clientProfileModal" class="fixed inset-0 overflow-y-auto h-full w-full hidden z-50 flex items-center justify-center p-0 sm:p-4 bg-gray-900 bg-opacity-75 backdrop-blur-sm">
+    <div class="relative mx-auto w-full sm:max-w-3xl shadow-2xl bg-white overflow-hidden transform transition-all sm:my-8 flex flex-col sm:rounded-2xl sm:h-auto h-[90vh]" style="max-height: 90vh;">
 
     <!-- Styles pour masquer le chatbot quand le modal est ouvert -->
     <style>
@@ -21,7 +21,7 @@
         </div>
 
         <!-- Modal Body - Scrollable -->
-        <div class="flex-1 overflow-y-auto p-4 sm:p-6">
+        <div class="flex-1 overflow-y-auto p-3 sm:p-5 pb-4 sm:pb-6">
             <form id="clientProfileForm" class="max-w-4xl mx-auto">
                 @csrf
 
@@ -256,16 +256,16 @@
         </div>
 
         <!-- Modal Footer - Fixed -->
-        <div class="border-t-2 border-gray-200 p-2 sm:p-6 bg-gray-50 flex-shrink-0">
-            <div class="max-w-4xl mx-auto flex flex-col gap-2 sm:gap-4 items-center justify-between">
-                <button id="closeClientProfileModalBtn" type="button" class="w-full px-4 sm:px-8 py-2.5 sm:py-3 text-gray-600 font-bold hover:text-gray-800 transition-all border-2 border-gray-300 rounded-xl hover:border-gray-400 hover:bg-gray-100 text-sm sm:text-base" data-i18n="btn_cancel">
+        <div class="border-t-2 border-gray-200 p-2 sm:p-3 bg-gray-50 flex-shrink-0">
+            <div class="max-w-4xl mx-auto flex flex-col gap-1.5 sm:gap-3 items-center justify-between">
+                <button id="closeClientProfileModalBtn" type="button" class="w-full px-4 sm:px-8 py-2 sm:py-2.5 text-gray-600 font-bold hover:text-gray-800 transition-all border-2 border-gray-300 rounded-xl hover:border-gray-400 hover:bg-gray-100 text-sm sm:text-base" data-i18n="btn_cancel">
                     Annuler
                 </button>
-                <div class="flex gap-2 sm:gap-4 w-full">
-                    <button id="backToStep1Btn" type="button" class="hidden w-full px-4 sm:px-8 py-2.5 sm:py-3 text-gray-600 font-bold hover:text-gray-800 transition-all border-2 border-gray-300 rounded-xl hover:border-gray-400 hover:bg-gray-100 text-sm sm:text-base" data-i18n="btn_back">
+                <div class="flex gap-1.5 sm:gap-3 w-full">
+                    <button id="backToStep1Btn" type="button" class="hidden w-full px-3 sm:px-6 py-2 sm:py-2.5 text-gray-600 font-bold hover:text-gray-800 transition-all border-2 border-gray-300 rounded-xl hover:border-gray-400 hover:bg-gray-100 text-xs sm:text-sm sm:text-base" data-i18n="btn_back">
                         ← Retour
                     </button>
-                    <button id="saveClientProfileBtn" type="button" class="w-full px-6 sm:px-12 py-2.5 sm:py-4 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all flex items-center justify-center text-sm sm:text-lg">
+                    <button id="saveClientProfileBtn" type="button" class="w-full px-4 sm:px-10 py-2 sm:py-3 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all flex items-center justify-center text-sm sm:text-lg">
                         <span id="btn-continue-text" data-i18n="btn_continue">Continuer</span>
                         <span id="btn-confirm-text" class="hidden" data-i18n="btn_confirm_pay">Confirmer et payer</span>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

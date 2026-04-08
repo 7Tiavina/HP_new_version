@@ -19,6 +19,60 @@
     <script src="https://api.gateway.monetico-retail.com/static/js/krypton-client/V4.0/ext/neon.js"></script>
     <script src="{{ asset('js/translations-simple.js') }}"></script>
     <script>
+        // Configuration Krypton pour masquer la toolbar
+        window.KRConfig = window.KRConfig || {};
+        window.KRConfig.toolbarVisibility = false;
+
+        // Injecter du CSS dans le Shadow DOM de Monetico pour masquer la toolbar
+        (function injectMoneticoStyle() {
+            const injectStyle = function() {
+                // Chercher tous les formulaires Krypton
+                document.querySelectorAll('.kr-smart-form').forEach(function(krForm) {
+                    // Vérifier si shadowRoot existe et est accessible
+                    if (krForm.shadowRoot) {
+                        const existing = krForm.shadowRoot.querySelector('#hp-hide-toolbar');
+                        if (!existing) {
+                            const newStyle = document.createElement('style');
+                            newStyle.id = 'hp-hide-toolbar';
+                            newStyle.textContent = `
+                                [role="toolbar"],
+                                [data-testid="toolbar"],
+                                .toolbar,
+                                .toolbar-wrapper,
+                                header[data-testid],
+                                .header-toolbar,
+                                div[class*="toolbar"],
+                                div[class*="Toolbar"],
+                                .kr-toolbar {
+                                    display: none !important;
+                                    height: 0 !important;
+                                    overflow: hidden !important;
+                                }
+                            `;
+                            krForm.shadowRoot.appendChild(newStyle);
+                            console.log('✅ CSS injecté dans Shadow DOM Monetico - toolbar masquée');
+                        }
+                    } else {
+                        // Shadow DOM peut-être fermé - essayer d'attacher un style via l'élément
+                        console.log('⚠️ Shadow DOM non accessible pour .kr-smart-form');
+                    }
+                });
+
+                // Aussi essayer de cibler directement depuis le document principal
+                // Au cas où la toolbar serait en dehors du Shadow DOM
+                document.querySelectorAll('[role="toolbar"], [data-testid="toolbar"]').forEach(function(el) {
+                    el.style.display = 'none';
+                    console.log('✅ Toolbar masquée depuis le DOM principal');
+                });
+            };
+            // Injecter à intervalles réguliers
+            setTimeout(injectStyle, 500);
+            setTimeout(injectStyle, 1000);
+            setTimeout(injectStyle, 2000);
+            setTimeout(injectStyle, 4000);
+            setInterval(injectStyle, 1500);
+        })();
+
         // Synchronize Laravel session language with localStorage
         (function() {
             var sessionLang = '{{ session("app_language", "fr") }}';
@@ -81,6 +135,10 @@
 #clientProfileModal .iti__country-list { z-index: 9999; }
 #clientProfileModal .iti__selected-flag { background: transparent; border-radius: 1rem 0 0 1rem; }
 #clientProfileModal .iti__flag-container { padding-left: 0.5rem; }
+        /* Masquer la toolbar Monetico (Informations & Méthodes de test) */
+        [role="toolbar"][data-testid="toolbar"] {
+            display: none !important;
+        }
     </style>
 @endpush
 
@@ -345,7 +403,7 @@
                         
                         @if($paymentUnlocked)
                             <!-- Formulaire Monetico -->
-                            <div id="monetico-form-wrapper" class="mx-auto" style="min-height: 300px;">
+                            <div id="monetico-form-wrapper" class="mx-auto overflow-hidden" style="min-height: 300px; max-height: 100vh;">
                                 @if($formToken)
                                     <div class="kr-smart-form" kr-form-token="{{ $formToken }}"></div>
 
@@ -2823,6 +2881,31 @@
                     }
                 }, 2000);
             });
+
+            // === MASQUER LA TOOLBAR MONETICO (Informations & Méthodes de test) ===
+            function hideMoneticoToolbar() {
+                const toolbar = document.querySelector('[role="toolbar"][data-testid="toolbar"]');
+                if (toolbar) {
+                    toolbar.style.display = 'none !important';
+                    console.log('✅ Toolbar Monetico masquée');
+                }
+            }
+
+            // Masquer immédiatement si présente
+            hideMoneticoToolbar();
+
+            // Observer les changements du DOM pour masquer la toolbar dès qu'elle apparaît
+            const observer = new MutationObserver(function(mutations) {
+                hideMoneticoToolbar();
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+
+            // Vérifier régulièrement
+            setInterval(hideMoneticoToolbar, 500);
         });
     </script>
 </div> {{-- End hp-payment-root --}}

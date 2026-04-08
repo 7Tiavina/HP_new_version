@@ -806,17 +806,20 @@ class PaymentController extends Controller
         ]);
 
         $payload = [
-            'shopId' => config('monetico.login'), 
-            'amount' => (int)($commandeData['total_prix_ttc'] * 100), 
+            'shopId' => config('monetico.login'),
+            'amount' => (int)($commandeData['total_prix_ttc'] * 100),
             'currency' => 'EUR',
             'orderId' => $orderId,
             'paymentAction' => 'Authorization', // Demander une pré-autorisation au lieu d'un paiement direct
             'customer' => ['email' => $customerEmail, 'firstName' => $customerFirstName, 'lastName' => $customerLastName],
             'paymentMethod' => $paymentMethod,
+            'paymentFormConfig' => [
+                'toolbarVisibility' => false,
+            ],
             'urls' => [
-                'success' => route('payment.success'), 
+                'success' => route('payment.success'),
                 'error' => route('payment.error'),
-                'cancel' => route('payment.cancel'), 
+                'cancel' => route('payment.cancel'),
                 'return' => route('payment.return'),
             ],
         ];
