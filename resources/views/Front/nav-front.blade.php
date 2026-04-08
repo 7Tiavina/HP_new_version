@@ -962,7 +962,7 @@
                 <!-- CDG Airport -->
                 <div class="left-photo-drawer-location">
                     <div class="left-photo-drawer-location-title">
-                        <a href="https://maps.app.goo.gl/anetBhzUhfwiorGG6" target="_blank" rel="noopener noreferrer" data-i18n="drawer_cdg">Aéroport de Paris CDG</a><br>
+                        <a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="drawer_cdg">Aéroport de Paris CDG</a><br>
                         <span data-i18n="drawer_cdg_address">Terminal 2<br>
                         Gare TGV – Niveau 4<br>
                         Opposition Hôtel Sheraton,<br>
@@ -978,7 +978,7 @@
                 <!-- Orly Airport -->
                 <div class="left-photo-drawer-location">
                     <div class="left-photo-drawer-location-title">
-                        <a href="https://maps.app.goo.gl/anetBhzUhfwiorGG6" target="_blank" rel="noopener noreferrer" data-i18n="drawer_orly">Aéroport de Paris ORLY</a><br>
+                        <a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="drawer_orly">Aéroport de Paris ORLY</a><br>
                         <span data-i18n="drawer_orly_address">Terminal 3<br>
                         Niveau d'arrivée</span>
                     </div>

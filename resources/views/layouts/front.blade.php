@@ -137,7 +137,9 @@
     <footer class="custom-footer">
         <div class="footer-grid">
             <div class="footer-col">
-                <img src="{{ asset('logo footer.webp') }}" alt="Logo" class="footer-logo">
+                <a href="https://darkseagreen-mongoose-687346.hostingersite.com" class="footer-logo-link">
+                    <img src="{{ asset('logo footer.webp') }}" alt="Logo" class="footer-logo">
+                </a>
                 <div class="since-text" data-i18n="footer_since">depuis 1998</div>
                 <p class="footer-copyright" data-i18n="footer_credits"></p>
                 <p class="footer-created-by" data-i18n="footer_created_by"></p>
@@ -145,10 +147,10 @@
 
             <div class="footer-col">
                 <h3 data-i18n="footer_access">Plan d'accès</h3>
-                <a href="#" class="footer-airport-link" data-i18n="footer_cdg">Aéroport de Roissy Charles de Gaulle</a>
+                <a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" class="footer-airport-link" data-i18n="footer_cdg">Aéroport de Roissy Charles de Gaulle</a>
                 <p data-i18n="footer_cdg_address">Terminal 2 – Gare TGV<br>Niveau 4</p>
                 <br>
-                <a href="#" class="footer-airport-link" data-i18n="footer_orly">Aéroport de Paris Orly</a>
+                <a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" class="footer-airport-link" data-i18n="footer_orly">Aéroport de Paris Orly</a>
                 <p data-i18n="footer_orly_address">Orly 3<br>Niveau Arrivées<br>Porte 33a</p>
             </div>
 

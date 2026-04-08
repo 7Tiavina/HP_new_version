@@ -1251,6 +1251,17 @@ body {
   margin-bottom: 25px;
 }
 
+.footer-col a.footer-logo-link {
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.footer-col a.footer-logo-link:hover {
+  opacity: 0.8;
+}
+
 .since-text {
   font-size: 55px;
   font-weight: 700;
