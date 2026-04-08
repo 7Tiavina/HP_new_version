@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Trust proxies (Hostinger/reverse proxy) — prevents HTTPS redirect loop
         $middleware->trustProxies(at: '*');
+        
         $middleware->validateCsrfTokens(except: [
             'payment/*', // Exclure toutes les routes de retour de paiement
             'payment/ipn',

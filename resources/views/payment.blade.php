@@ -8,6 +8,24 @@
 @section('title', 'Finaliser le Paiement — Hello Passenger')
 
 @push('head_scripts')
+    <script>
+        // Detect device language on first visit, then always sync from server session
+        (function() {
+            var sessionLang = '{{ session("app_language", "fr") }}';
+            var savedLang = localStorage.getItem('app_language');
+            
+            if (!savedLang) {
+                var deviceLang = navigator.language || navigator.userLanguage || '';
+                var langCode = (deviceLang || '').toLowerCase().split('-')[0];
+                var detected = (langCode === 'en') ? 'en' : 'fr';
+                localStorage.setItem('app_language', detected);
+                console.log('[LangDetect] First visit - device:', deviceLang, '=>', detected);
+            } else if (sessionLang && sessionLang !== savedLang) {
+                localStorage.setItem('app_language', sessionLang);
+                console.log('[LangDetect] Synced from server:', sessionLang);
+            }
+        })();
+    </script>
     <script
         src="https://api.gateway.monetico-retail.com/static/js/krypton-client/V4.0/stable/kr-payment-form.min.js"
         kr-public-key="43559169:testpublickey_TpUnzWl3wta3iKfuUeeYylRCWZ99SwdFKQktpbbxaOdxz"
@@ -71,14 +89,6 @@
             setTimeout(injectStyle, 2000);
             setTimeout(injectStyle, 4000);
             setInterval(injectStyle, 1500);
-        })();
-
-        // Synchronize Laravel session language with localStorage
-        (function() {
-            var sessionLang = '{{ session("app_language", "fr") }}';
-            if (sessionLang && sessionLang !== localStorage.getItem('app_language')) {
-                localStorage.setItem('app_language', sessionLang);
-            }
         })();
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>

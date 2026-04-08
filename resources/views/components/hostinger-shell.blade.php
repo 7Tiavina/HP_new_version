@@ -162,16 +162,25 @@
         };
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="{{ asset('js/translations-simple.js') }}"></script>
     <script>
-        // Synchronize Laravel session language with localStorage
+        // Detect device language on first visit, then always sync from server session
         (function() {
             var sessionLang = '{{ session("app_language", "fr") }}';
-            if (sessionLang && sessionLang !== localStorage.getItem('app_language')) {
+            var savedLang = localStorage.getItem('app_language');
+            
+            if (!savedLang) {
+                var deviceLang = navigator.language || navigator.userLanguage || '';
+                var langCode = (deviceLang || '').toLowerCase().split('-')[0];
+                var detected = (langCode === 'en') ? 'en' : 'fr';
+                localStorage.setItem('app_language', detected);
+                console.log('[LangDetect] First visit - device:', deviceLang, '=>', detected);
+            } else if (sessionLang && sessionLang !== savedLang) {
                 localStorage.setItem('app_language', sessionLang);
+                console.log('[LangDetect] Synced from server:', sessionLang);
             }
         })();
     </script>
+    <script src="{{ asset('js/translations-simple.js') }}"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/hublot-theme.css') }}?v={{ file_exists(public_path('css/hublot-theme.css')) ? filemtime(public_path('css/hublot-theme.css')) : '1' }}">
 

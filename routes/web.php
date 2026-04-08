@@ -8,7 +8,7 @@ use App\Http\Controllers\BagageConsigneController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CommandeController;
-use App\Http\Controllers\ClientController; // Add this import
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\AdminAccountController;
 use App\Http\Controllers\AgentController;
 

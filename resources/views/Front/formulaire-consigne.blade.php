@@ -1032,10 +1032,20 @@
 @endphp
 <!-- Synchronize Laravel session language with localStorage -->
 <script>
+    // Detect device language on first visit, then always sync from server session
     (function() {
         var sessionLang = '{{ session("app_language", "fr") }}';
-        if (sessionLang && sessionLang !== localStorage.getItem('app_language')) {
+        var savedLang = localStorage.getItem('app_language');
+        
+        if (!savedLang) {
+            var deviceLang = navigator.language || navigator.userLanguage || '';
+            var langCode = (deviceLang || '').toLowerCase().split('-')[0];
+            var detected = (langCode === 'en') ? 'en' : 'fr';
+            localStorage.setItem('app_language', detected);
+            console.log('[LangDetect] First visit - device:', deviceLang, '=>', detected);
+        } else if (sessionLang && sessionLang !== savedLang) {
             localStorage.setItem('app_language', sessionLang);
+            console.log('[LangDetect] Synced from server:', sessionLang);
         }
     })();
 </script>

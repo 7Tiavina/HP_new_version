@@ -74,11 +74,24 @@
     <link rel="stylesheet" href="{{ asset('css/acceuil-luxe.css') }}?v={{ file_exists(public_path('css/acceuil-luxe.css')) ? filemtime(public_path('css/acceuil-luxe.css')) : '1' }}">
     <link rel="stylesheet" href="{{ asset('css/animations.css') }}?v={{ file_exists(public_path('css/animations.css')) ? filemtime(public_path('css/animations.css')) : '1' }}">
     <script>
-        // Synchronize Laravel session language with localStorage
+        // Detect device language on first visit, then always sync from server session
         (function() {
             var sessionLang = '{{ session("app_language", "fr") }}';
-            if (sessionLang && sessionLang !== localStorage.getItem('app_language')) {
+            var savedLang = localStorage.getItem('app_language');
+            
+            if (!savedLang) {
+                // First visit: detect from device
+                var deviceLang = navigator.language || navigator.userLanguage || '';
+                var langCode = (deviceLang || '').toLowerCase().split('-')[0];
+                var detected = (langCode === 'en') ? 'en' : 'fr';
+                localStorage.setItem('app_language', detected);
+                console.log('[LangDetect] First visit - device:', deviceLang, '=>', detected);
+            } else if (sessionLang && sessionLang !== savedLang) {
+                // Server session changed (user clicked language switcher): sync localStorage
                 localStorage.setItem('app_language', sessionLang);
+                console.log('[LangDetect] Synced from server session:', sessionLang);
+            } else {
+                console.log('[LangDetect] Already set:', savedLang);
             }
         })();
     </script>
