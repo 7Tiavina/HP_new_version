@@ -892,7 +892,7 @@
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/services/" data-i18n="nav_services">Nos Services Bagages</a></li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/a-propos/" data-i18n="nav_about">A Propos</a></li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" data-i18n="nav_contact">Contact</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" data-i18n="nav_contact">Nous contacter</a></li>
             <li class="lang-selector-item">
                 @include('components.translation-widget')
             </li>
@@ -1026,9 +1026,14 @@
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/services/" data-i18n="nav_services">Nos Services Bagages</a></li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/a-propos/" data-i18n="nav_about">A Propos</a></li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" data-i18n="nav_contact">Contact</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" data-i18n="nav_contact">Nous contacter</a></li>
             @if($isClientLoggedIn)
-                <li><a href="{{ route('client.logout') }}" onclick="toggleDrawer(); return false;" class="text-red-600 hover:text-red-700" data-i18n="logout_btn">Déconnecter</a></li>
+                <li>
+                    <form method="POST" action="{{ route('client.logout') }}" class="inline">
+                        @csrf
+                        <button type="submit" onclick="toggleDrawer();" class="text-red-600 hover:text-red-700 w-full text-left" data-i18n="logout_btn">Déconnecter</button>
+                    </form>
+                </li>
             @else
                 <li><a href="{{ $formUrl }}" data-i18n="btn_book">Réserver</a></li>
             @endif

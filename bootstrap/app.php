@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Trust proxies (Hostinger/reverse proxy) — prevents HTTPS redirect loop
         $middleware->trustProxies(at: '*');
-        
+
         $middleware->validateCsrfTokens(except: [
             'payment/*', // Exclure toutes les routes de retour de paiement
             'payment/ipn',
@@ -22,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'api/get-quote',
             'api/commande/options-quote'
         ]);
+
+        // Redirect unauthenticated users to /link-form instead of /login
+        $middleware->redirectGuestsTo('/link-form');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

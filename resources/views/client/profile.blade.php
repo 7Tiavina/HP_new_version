@@ -69,10 +69,6 @@
                             <input type="text" id="complementAdresse" name="complementAdresse" value="{{ old('complementAdresse', $client->complementAdresse) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
                         </div>
                         <div>
-                            <label for="codePostal" class="block text-sm font-medium text-gray-700 mb-2" data-i18n="label_code_postal">Code postal</label>
-                            <input type="text" id="codePostal" name="codePostal" value="{{ old('codePostal', $client->codePostal) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
-                        </div>
-                        <div>
                             <label for="ville" class="block text-sm font-medium text-gray-700 mb-2" data-i18n="label_ville">Ville</label>
                             <input type="text" id="ville" name="ville" value="{{ old('ville', $client->ville) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
                         </div>

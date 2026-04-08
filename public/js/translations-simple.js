@@ -418,7 +418,7 @@ if (typeof window.translations === 'undefined') {
         nav_services: "Nos Services Bagages",
         nav_about: "A Propos",
         nav_locate: "Nous Localiser",
-        nav_contact: "Contact",
+        nav_contact: "Nous contacter",
         btn_book: "Réserver",
 
         // Drawer
@@ -1080,7 +1080,7 @@ if (typeof window.translations === 'undefined') {
         nav_services: "Luggage Services",
         nav_about: "About Us",
         nav_locate: "Find Us",
-        nav_contact: "Contact",
+        nav_contact: "Contact Us",
         btn_book: "Book Now",
 
         // Drawer
