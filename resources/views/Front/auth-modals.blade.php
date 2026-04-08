@@ -71,7 +71,7 @@
 
         <div class="text-center mb-6">
             <img src="{{ asset('HP-Logo-White.png') }}" alt="HelloPassenger" class="luxe-logo-img w-auto mx-auto mb-4">
-            <h2 id="loginModalTitle" class="text-3xl font-bold text-white mb-2" data-i18n="login_title">Se connecter</h2>
+            <h2 id="loginModalTitle" class="text-3xl font-bold mb-2" style="color: #ffffff !important;" data-i18n="login_title">Se connecter</h2>
             <p class="text-gray-400" data-i18n="login_subtitle">Accédez à votre compte</p>
         </div>
 
@@ -129,7 +129,7 @@
                 </label>
             </div>
 
-            <button type="submit" class="w-full bg-[#f9c52d] text-[#212121] py-4 rounded-full font-bold hover:bg-[#f9c52d] transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg" data-i18n="login_btn">
+            <button type="submit" class="w-full bg-[#f9c52d] text-white py-4 rounded-full font-bold hover:bg-[#f9c52d] transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg" data-i18n="login_btn">
                 SE CONNECTER
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
