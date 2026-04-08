@@ -1233,8 +1233,9 @@ body {
   display: grid;
   grid-template-columns: 1.5fr 1fr 1fr 1fr;
   gap: 50px;
-  border-top: 1px solid #333;
-  padding-top: 50px;
+  border-top: 1.8px solid #ffffff;
+  padding-top: 90px;
+  margin-top: 15px;
 }
 
 /* Colonne 1 : Logo & Depuis */
@@ -1244,7 +1245,7 @@ body {
 }
 
 .footer-col .footer-logo {
-  height: 160px;
+  height: 150px;
   width: auto;
   object-fit: contain;
   margin-bottom: 25px;
@@ -1270,17 +1271,18 @@ body {
 .footer-col p.footer-copyright,
 .footer-col p.footer-created-by {
   font-size: 14px !important;
-  line-height: 1.6 !important;
+  line-height: 1.4 !important;
   color: #A3A3A3 !important;
   text-decoration: none !important;
   display: block !important;
-  margin-bottom: 12px !important;
+  margin-top: 10px !important;
+  margin-bottom: 5px !important;
 }
 
 .footer-col p.footer-copyright a,
 .footer-col p.footer-created-by a {
   color: #FAC12E !important;
-  text-decoration: underline !important;
+  text-decoration: none !important;
   font-weight: 600 !important;
   display: inline !important;
   margin-bottom: 0 !important;
@@ -1288,32 +1290,27 @@ body {
   line-height: 1.6 !important;
 }
 
-/* Airport links in footer */
 .footer-col a.footer-airport-link {
   color: #FAC12E !important;
-  text-decoration: underline !important;
+  text-decoration: none !important;
   font-weight: 400 !important;
   font-size: 15px !important;
   display: block !important;
-  margin-bottom: 12px !important;
+  margin-bottom: 10px !important;
 }
 
-.footer-col a.footer-airport-link:hover {
-  color: #ffffff !important;
-}
-
-/* Airport address paragraphs */
 .footer-col p[data-i18n="footer_cdg_address"],
 .footer-col p[data-i18n="footer_orly_address"] {
   color: #ffffff !important;
   font-size: 15px !important;
   line-height: 1.8 !important;
+  margin-bottom: 10px !important;
 }
 
 /* Contact link in footer */
 .footer-col a.footer-contact-link {
   color: #FAC12E !important;
-  text-decoration: underline !important;
+  text-decoration: none !important;
   font-weight: 400 !important;
   font-size: 20px !important;
   display: block !important;
@@ -1332,18 +1329,18 @@ body {
 /* Styles colonnes */
 .footer-col h3 {
   font-size: 20px;
-  margin-bottom: 25px;
+  margin-bottom: 8px;
   font-weight: 600;
   color: #ffffff;
 }
 
 .footer-col p, .footer-col a {
   font-size: 15px;
-  line-height: 1.8;
+  line-height: 1.6;
   color: #bbb;
   text-decoration: none;
   display: block;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .footer-col a:hover {
@@ -1357,13 +1354,29 @@ body {
 
 /* Bouton footer spécifique */
 .footer-reserve {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   color: #ffc439 !important;
-  border-bottom: 1px solid #ffc439;
-  padding-bottom: 5px;
   text-transform: uppercase;
   font-weight: 700;
   text-decoration: none;
+  position: relative;
+}
+
+.footer-reserve .reserve-text {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+}
+
+.footer-reserve::after {
+  content: '↗';
+  font-size: 16px;
+  line-height: 1;
+  color: #ffc439;
+  text-decoration: none;
+  vertical-align: super;
 }
 
 /* Réseaux Sociaux */

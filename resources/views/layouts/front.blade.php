@@ -180,7 +180,7 @@
                 <a href="https://darkseagreen-mongoose-687346.hostingersite.com/conditions-generales-de-vente-des-services-de-consigne-de-bagages/" data-i18n="footer_left_luggage_terms">Conditions Générales De Vente Des Services De Consigne De Bagages</a>
                 <a href="https://darkseagreen-mongoose-687346.hostingersite.com/mentions-legales/" data-i18n="footer_legal">Mentions Légales</a>
                 <br>
-                <a href="{{ $formUrl }}" class="footer-reserve" data-i18n="footer_book">Réservez</a>
+                <a href="{{ $formUrl }}" class="footer-reserve"><span class="reserve-text" data-i18n="footer_book">Réservez</span></a>
             </div>
         </div>
     </footer>
