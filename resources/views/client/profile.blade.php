@@ -10,9 +10,17 @@
 @section('content')
 <div id="client-page-root" class="min-h-screen bg-gray-50">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900" data-i18n="profile_title">Mon Profil</h1>
-            <p class="text-gray-600 mt-2" data-i18n="profile_subtitle">Gérez vos informations personnelles</p>
+        <div class="mb-8 flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900" data-i18n="profile_title">Mon Profil</h1>
+                <p class="text-gray-600 mt-2" data-i18n="profile_subtitle">Gérez vos informations personnelles</p>
+            </div>
+            <a href="{{ route('client.dashboard') }}" class="flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors" data-i18n="btn_back">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Retour
+            </a>
         </div>
 
         @if (session('success'))
@@ -79,8 +87,7 @@
                     </div>
                 </div>
 
-                <div class="flex justify-end space-x-4 pt-4 border-t border-gray-200">
-                    <a href="{{ route('client.dashboard') }}" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors" data-i18n="btn_back">Retour</a>
+                <div class="flex justify-end pt-4 border-t border-gray-200">
                     <button type="submit" class="px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold transition-colors" data-i18n="btn_save">Enregistrer</button>
                 </div>
             </form>

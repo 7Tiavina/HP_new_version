@@ -11,8 +11,18 @@
 @section('content')
 <div id="client-page-root" class="min-h-screen bg-gray-100 py-8">
     <div class="max-w-4xl mx-auto px-4">
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <h1 class="text-2xl font-bold mb-6" data-i18n="reservations_title">Mes Réservations</h1>
+        <div class="mb-6 flex items-center justify-between">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900" data-i18n="reservations_title">Mes Réservations</h1>
+                <p class="text-gray-600 mt-2" data-i18n="reservations_history">Consultez l'historique de vos réservations</p>
+            </div>
+            <a href="{{ route('client.dashboard') }}" class="flex items-center px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors" data-i18n="btn_back">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Retour
+            </a>
+        </div>
 
             @if (session('success'))
                 <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
@@ -21,6 +31,7 @@
                 </div>
             @endif
 
+            <div class="bg-white p-6 rounded-lg shadow-md">
             @if ($commandes->isEmpty())
                 <p class="text-gray-600" data-i18n="reservations_empty">Vous n'avez pas encore de commandes.</p>
             @else
@@ -99,8 +110,14 @@
                 <div class="mt-6">
                     {{ $commandes->links('vendor.pagination.custom') }}
                 </div>
+            @endif
+            </div>
+        </div>
+    </div>
+</div>
 
-                <div id="photosModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center" style="display: none;">
+{{-- Photos Modal - Outside main container --}}
+<div id="photosModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center" style="display: none;">
                     <div class="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
                         <div class="flex justify-between items-center mb-4">
                             <h2 class="text-2xl font-bold">Photos des Bagages</h2>
@@ -109,10 +126,6 @@
                         <div id="photosContent" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                     </div>
                 </div>
-            @endif
-        </div>
-    </div>
-</div>
 @endsection
 
 @push('scripts')

@@ -301,6 +301,7 @@ if (typeof window.translations === 'undefined') {
         
         // Reservations
         reservations_title: "Mes Réservations",
+        reservations_history: "Consultez l'historique de vos réservations",
         reservations_success: "Succès!",
         reservations_empty: "Vous n'avez pas encore de commandes.",
         reservations_order_id: "ID Commande",
@@ -981,6 +982,7 @@ if (typeof window.translations === 'undefined') {
         
         // Reservations
         reservations_title: "My Reservations",
+        reservations_history: "View your reservations history",
         reservations_success: "Success!",
         reservations_empty: "You don't have any orders yet.",
         reservations_order_id: "Order ID",
