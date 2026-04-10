@@ -95,6 +95,11 @@
                     </table>
                 </div>
 
+                {{-- Pagination --}}
+                <div class="mt-6">
+                    {{ $commandes->links('vendor.pagination.custom') }}
+                </div>
+
                 <div id="photosModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center" style="display: none;">
                     <div class="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 max-h-[90vh] overflow-y-auto">
                         <div class="flex justify-between items-center mb-4">

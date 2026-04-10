@@ -309,6 +309,12 @@ if (typeof window.translations === 'undefined') {
         reservations_status: "Statut",
         reservations_date: "Date",
         reservations_details: "Détails",
+        pagination_showing: "Affichage de",
+        pagination_to: "à",
+        pagination_of: "sur",
+        pagination_reservations: "réservations",
+        pagination_previous: "Précédent",
+        pagination_next: "Suivant",
         
         // Modals
         modal_optimize_title: "Optimisez votre expérience !",
@@ -983,6 +989,12 @@ if (typeof window.translations === 'undefined') {
         reservations_status: "Status",
         reservations_date: "Date",
         reservations_details: "Details",
+        pagination_showing: "Showing",
+        pagination_to: "to",
+        pagination_of: "of",
+        pagination_reservations: "reservations",
+        pagination_previous: "Previous",
+        pagination_next: "Next",
         
         // Modals
         modal_optimize_title: "Optimize your experience!",

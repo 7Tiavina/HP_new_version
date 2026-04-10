@@ -15,7 +15,7 @@ class CommandeController extends Controller
         $commandes = Commande::with('photos.agent')
             ->where('client_id', $client->id)
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('mes-reservations', compact('commandes'));
     }
