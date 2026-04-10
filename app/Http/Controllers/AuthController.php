@@ -227,7 +227,14 @@ class AuthController extends Controller
             'prenom' => 'required|string|max:100',
             'telephone' => 'nullable|string|max:30',
             'password' => 'required|string|min:6|confirmed',
-            'adresse' => 'nullable|string|max:255',
+        ], [
+            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
+            'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
+            'password.required' => 'Le mot de passe est obligatoire.',
+            'email.required' => 'L\'adresse email est obligatoire.',
+            'email.email' => 'L\'adresse email n\'est pas valide.',
+            'nom.required' => 'Le nom est obligatoire.',
+            'prenom.required' => 'Le prénom est obligatoire.',
         ]);
 
         if ($validator->fails()) {
@@ -245,11 +252,8 @@ class AuthController extends Controller
             if ($request->telephone) {
                 $existingClient->telephone = $request->telephone;
             }
-            if ($request->adresse) {
-                $existingClient->adresse = $request->adresse;
-            }
             $existingClient->save();
-            $client = $existingClient->refresh();
+            $client = $existingClient;
 
             // Transférer les commandes invitées vers ce client
             $this->transferGuestOrdersToClient($client);
@@ -261,28 +265,14 @@ class AuthController extends Controller
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
                 'telephone' => $request->telephone,
-                'adresse' => $request->adresse,
             ]);
-
-            Log::info('New client created', [
-                'client_id' => $client->id,
-                'email' => $client->email,
-                'adresse' => $client->adresse,
-            ]);
-
-            // Re-fetch client from database to ensure all attributes are loaded
-            $client = Client::find($client->id);
         }
 
         Auth::guard('client')->login($client);
         $request->session()->regenerate();
 
-        Log::info('Client logged in after registration', [
-            'client_id' => $client->id,
-            'adresse_in_session' => $client->adresse,
-        ]);
-
-        return redirect()->route('client.dashboard')->with('success', 'Compte créé avec succès !');
+        // Redirect to profile so user can fill in their address
+        return redirect()->route('client.profile')->with('success', 'Compte créé avec succès ! Complétez votre profil.');
     }
 
     /**

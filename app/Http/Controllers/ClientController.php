@@ -304,18 +304,6 @@ class ClientController extends Controller
     public function showProfile()
     {
         $client = auth()->guard('client')->user();
-        
-        // Re-fetch client from database to ensure we have the latest data
-        if ($client) {
-            $client = \App\Models\Client::find($client->id);
-        }
-        
-        \Illuminate\Support\Facades\Log::info('showProfile - Client data', [
-            'client_id' => $client?->id,
-            'email' => $client?->email,
-            'adresse' => $client?->adresse,
-        ]);
-        
         return view('client.profile', compact('client'));
     }
 

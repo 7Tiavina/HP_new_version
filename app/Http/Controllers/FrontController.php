@@ -354,6 +354,14 @@ class FrontController extends Controller
             'prenom' => 'required|string|max:100',
             'telephone' => 'nullable|string|max:30',
             'password' => 'required|string|min:6|confirmed',
+        ], [
+            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
+            'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
+            'password.required' => 'Le mot de passe est obligatoire.',
+            'email.required' => 'L\'adresse email est obligatoire.',
+            'email.email' => 'L\'adresse email n\'est pas valide.',
+            'nom.required' => 'Le nom est obligatoire.',
+            'prenom.required' => 'Le prénom est obligatoire.',
         ]);
 
         if ($validator->fails()) {
@@ -390,7 +398,8 @@ class FrontController extends Controller
         Auth::guard('client')->login($client);
         $request->session()->regenerate();
 
-        return redirect()->route('client.dashboard');
+        // Redirect to profile so user can fill in their address
+        return redirect()->route('client.profile')->with('success', 'Compte créé avec succès ! Complétez votre profil.');
     }
 
     /**

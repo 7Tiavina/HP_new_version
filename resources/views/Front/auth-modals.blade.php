@@ -213,18 +213,6 @@
             </div>
 
             <div>
-                <label for="registerAdresse" class="block text-sm font-bold text-gray-300 mb-2" data-i18n="label_adresse">ADRESSE :</label>
-                <div class="relative">
-                    <input type="text" id="registerAdresse" name="adresse" value="{{ old('adresse') }}" placeholder="Commencez à taper votre adresse..."
-                           class="w-full px-4 py-3 pr-10 border-2 border-gray-600 bg-gray-800 text-white rounded-lg focus:border-[#f9c52d] focus:ring-2 focus:ring-[#f9c52d] focus:outline-none transition-all" />
-                    <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-                    </svg>
-                </div>
-                <p class="text-xs text-gray-400 mt-1">💡 Utilisez l'autocomplétion Google</p>
-            </div>
-
-            <div>
                 <label for="registerPassword" class="block text-sm font-bold text-gray-300 mb-2" data-i18n="password">MOT DE PASSE : <span class="text-red-500">*</span></label>
                 <div class="relative">
                     <input id="registerPassword" name="password" type="password"
@@ -448,20 +436,10 @@
                     show(registerModal, 'flex');
                     const first = registerModal?.querySelector('input');
                     if (first) first.focus();
-                    
-                    // Initialize Google Places for register modal
-                    if (typeof initRegisterAddressAutocomplete === 'function') {
-                        setTimeout(initRegisterAddressAutocomplete, 200);
-                    }
                 }, 120);
             }).catch(function() {
                 if (loader) hide(loader);
                 show(registerModal, 'flex');
-                
-                // Initialize Google Places for register modal
-                if (typeof initRegisterAddressAutocomplete === 'function') {
-                    setTimeout(initRegisterAddressAutocomplete, 300);
-                }
             });
         }
 
@@ -639,147 +617,6 @@
                 separateDialCode: false
             });
         }
-
-        // ========================================================================
-        // GOOGLE PLACES API - ADDRESS AUTOCOMPLETE FOR REGISTER MODAL
-        // ========================================================================
-        
-        const googleApiVersion = '{{ config('app.version', '1.0.0') }}';
-        const googlePlacesApiKey = '{{ config('services.google.places_api_key') }}';
-
-        function loadGoogleMapsAPIForRegister(callback) {
-            if (window.google && window.google.maps && window.google.maps.places) {
-                if (callback) callback();
-                return;
-            }
-
-            const script = document.createElement('script');
-            script.src = `https://maps.googleapis.com/maps/api/js?key=${googlePlacesApiKey}&libraries=places&language=fr&v=3.52`;
-            script.async = true;
-            script.defer = true;
-
-            script.onload = function() {
-                console.log('Google Places API loaded for register');
-                if (callback) callback();
-            };
-
-            script.onerror = function() {
-                console.error('Failed to load Google Places API for register');
-            };
-
-            document.head.appendChild(script);
-        }
-
-        function initRegisterAddressAutocomplete() {
-            const addressInput = document.getElementById('registerAdresse');
-            
-            if (!addressInput) {
-                console.error('Register address input not found');
-                return;
-            }
-
-            if (!window.google || !window.google.maps || !window.google.maps.places) {
-                console.error('Google Maps API not available for register');
-                return;
-            }
-
-            try {
-                const autocomplete = new google.maps.places.Autocomplete(addressInput, {
-                    types: ['address'],
-                    componentRestrictions: { country: [] },
-                    fields: ['address_components', 'geometry', 'name', 'formatted_address']
-                });
-
-                autocomplete.addListener('place_changed', function() {
-                    const place = autocomplete.getPlace();
-
-                    if (!place.geometry) {
-                        console.log("No geometry found for the selected place");
-                        return;
-                    }
-
-                    let street_number = '';
-                    let route = '';
-                    let city = '';
-                    let postal_code = '';
-                    let administrative_area = '';
-                    let country = '';
-
-                    for (let i = 0; i < place.address_components.length; i++) {
-                        const component = place.address_components[i];
-                        const addressType = component.types[0];
-
-                        if (addressType === 'street_number') {
-                            street_number = component.long_name;
-                        } else if (addressType === 'route') {
-                            route = component.long_name;
-                        } else if (
-                            addressType === 'locality' ||
-                            addressType === 'postal_town' ||
-                            addressType === 'administrative_area_level_2' ||
-                            addressType === 'administrative_area_level_3' ||
-                            addressType === 'sublocality_level_1' ||
-                            addressType === 'sublocality'
-                        ) {
-                            if (!city) {
-                                city = component.long_name;
-                            }
-                        } else if (addressType === 'postal_code') {
-                            postal_code = component.long_name;
-                        } else if (addressType === 'administrative_area_level_1') {
-                            administrative_area = component.long_name;
-                        } else if (addressType === 'country') {
-                            country = component.long_name;
-                        }
-                    }
-
-                    if (!city && administrative_area) {
-                        city = administrative_area;
-                    }
-
-                    // Build complete address
-                    let addressParts = [];
-
-                    if (street_number && route) {
-                        addressParts.push(street_number + ' ' + route);
-                    } else if (route) {
-                        addressParts.push(route);
-                    }
-
-                    if (postal_code && city) {
-                        addressParts.push(postal_code + ' ' + city);
-                    } else if (city) {
-                        addressParts.push(city);
-                    }
-
-                    if (administrative_area && administrative_area !== city) {
-                        addressParts.push(administrative_area);
-                    }
-
-                    if (country) {
-                        addressParts.push(country);
-                    }
-
-                    let fullAddress = addressParts.join(', ');
-
-                    addressInput.value = fullAddress.trim();
-
-                    console.log('Register address filled:', fullAddress);
-                });
-
-                console.log('Google Places Autocomplete initialized for register');
-            } catch (error) {
-                console.error('Error initializing Google Places Autocomplete for register:', error);
-            }
-        }
-
-        // Load API and initialize
-        if (googlePlacesApiKey) {
-            loadGoogleMapsAPIForRegister(initRegisterAddressAutocomplete);
-        }
-        
-        // Expose to global for openRegisterModal
-        window.initRegisterAddressAutocomplete = initRegisterAddressAutocomplete;
     })();
 </script>
 
