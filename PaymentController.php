@@ -833,12 +833,42 @@ class PaymentController extends Controller
 
     public function clearGuestSession(Request $request)
     {
-        // Use flush() to completely clear the session. This is a more robust way to "reset"
-        // as it removes all data, including 'commande_en_cours', 'guest_customer_details', etc.
-        // This will also log out an authenticated user, which is the expected behavior for a full reset.
-        $request->session()->flush();
+        // Store authenticated user data before resetting
+        $authGuard = Auth::guard('client');
+        $isAuthenticated = $authGuard->check();
+        $authenticatedUserId = $isAuthenticated ? $authGuard->id() : null;
+        $authenticatedUserData = null;
         
-        Log::info('Full session flushed for reset.');
+        if ($isAuthenticated && $authenticatedUserId) {
+            $authenticatedUser = $authGuard->user();
+            $authenticatedUserData = [
+                'id' => $authenticatedUser->id,
+                'email' => $authenticatedUser->email,
+            ];
+        }
+        
+        // Only clear booking-related session data, NOT authentication
+        $keysToClear = [
+            'formState',
+            'booking_data',
+            'guest_session',
+            'commande_en_cours',
+            'guest_customer_details',
+            'airport_id',
+            'service_id',
+            'cart_items',
+            'global_products_data',
+            'global_lieux_data',
+            'date_depot',
+            'heure_depot',
+            'date_recuperation',
+            'heure_recuperation',
+        ];
+        
+        $request->session()->forget($keysToClear);
+        
+        Log::info('Booking session data cleared for reset. Auth preserved: ' . ($isAuthenticated ? 'YES (user ID: ' . $authenticatedUserId . ')' : 'NO (guest)'));
+        
         return response()->json(['success' => true, 'message' => 'Session reset successfully.']);
     }
 
