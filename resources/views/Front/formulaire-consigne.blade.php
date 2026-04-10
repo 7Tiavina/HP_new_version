@@ -753,6 +753,30 @@
         </button>
     </div>
 
+    <!-- Baggage info notice -->
+    <div class="mb-6" style="max-width: 66.666667%;">
+        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+            <div class="flex items-start space-x-4">
+                <div class="flex-shrink-0">
+                    <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="font-bold text-gray-900 mb-2" data-i18n="form_baggage_info_title">
+                        Choisissez la bonne catégorie de bagage
+                    </h4>
+                    <p class="text-sm text-gray-700 mb-2" data-i18n="form_baggage_info_message">
+                        Pour préparer votre prise en charge dans les meilleures conditions, veillez à sélectionner le type de bagage adapté à ses dimensions et à son poids.
+                    </p>
+                    <p class="text-sm text-gray-700 font-medium" data-i18n="form_baggage_info_warning">
+                        En cas d'erreur, votre enregistrement devra être ajusté en agence, ce qui peut rallonger le temps de prise en charge.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Form content with increased spacing -->
     <div class="grid lg:grid-cols-3 gap-8" style="margin-top: 40px;">
         <div class="lg:col-span-2 space-y-6">
@@ -942,26 +966,6 @@
 
             </div>
 
-            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-                <div class="flex items-start space-x-4">
-                    <div class="flex-shrink-0">
-                        <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-gray-900 mb-2" data-i18n="form_baggage_info_title">
-                            Choisissez la bonne catégorie de bagage
-                        </h4>
-                        <p class="text-sm text-gray-700 mb-2" data-i18n="form_baggage_info_message">
-                            Pour préparer votre prise en charge dans les meilleures conditions, veillez à sélectionner le type de bagage adapté à ses dimensions et à son poids.
-                        </p>
-                        <p class="text-sm text-gray-700 font-medium" data-i18n="form_baggage_info_warning">
-                            En cas d'erreur, votre enregistrement devra être ajusté en agence, ce qui peut rallonger le temps de prise en charge.
-                        </p>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="w-full lg:w-full relative" id="sticky-wrapper" style="display: none;">
