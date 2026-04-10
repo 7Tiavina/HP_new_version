@@ -286,15 +286,50 @@ function validateStep1() {
         document.getElementById('heure-depot'),
         document.getElementById('heure-recuperation')
     ];
-    
+
     let isValid = true;
-    
+
     fields.forEach(field => {
         if (!validateField(field)) {
             isValid = false;
         }
     });
-    
+
+    // Validate dates are not empty
+    const dateDepot = document.getElementById('date-depot').value;
+    const heureDepot = document.getElementById('heure-depot').value;
+    const dateRecuperation = document.getElementById('date-recuperation').value;
+    const heureRecuperation = document.getElementById('heure-recuperation').value;
+
+    if (!dateDepot || !heureDepot || !dateRecuperation || !heureRecuperation) {
+        return false;
+    }
+
+    // Validation: pickup date must be after deposit date
+    const depotDate = new Date(`${dateDepot}T${heureDepot}`);
+    const recupDate = new Date(`${dateRecuperation}T${heureRecuperation}`);
+
+    if (recupDate <= depotDate) {
+        showCustomAlert(
+            t('date_invalid_title', 'Date invalide'),
+            t('date_invalid_after_dropoff', 'La date de retrait doit être postérieure à la date de dépôt.')
+        );
+        return false;
+    }
+
+    // Validation: minimum 3 hours between depot and retrait on same day
+    if (depotDate.toDateString() === recupDate.toDateString()) {
+        const diffInMs = recupDate - depotDate;
+        const diffInHours = diffInMs / (1000 * 60 * 60);
+        if (diffInHours < 3) {
+            showCustomAlert(
+                t('date_invalid_title', 'Date invalide'),
+                t('date_invalid_same_day_min', 'Pour une réservation le même jour, un délai minimum de 3 heures est requis entre le dépôt et le retrait.')
+            );
+            return false;
+        }
+    }
+
     return isValid;
 }
 
