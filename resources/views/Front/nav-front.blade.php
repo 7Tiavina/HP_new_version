@@ -91,7 +91,7 @@
         display: grid;
         grid-template-columns: 1fr auto 1fr;
         align-items: center;
-        padding: 0 30px;
+        padding: 0 15px;
         border-radius: 15px;
         margin: 0 auto;
     }
