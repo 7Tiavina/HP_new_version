@@ -196,16 +196,32 @@
 
             <div>
                 <label for="registerPassword" class="block text-sm font-bold text-gray-300 mb-2" data-i18n="password">MOT DE PASSE : <span class="text-red-500">*</span></label>
-                <input id="registerPassword" name="password" type="password"
-                       class="w-full px-4 py-3 border-2 border-gray-600 bg-gray-800 text-white rounded-lg focus:border-[#f9c52d] focus:ring-2 focus:ring-[#f9c52d] focus:outline-none transition-all"
-                       required autocomplete="new-password" />
+                <div class="relative">
+                    <input id="registerPassword" name="password" type="password"
+                           class="w-full px-4 py-3 pr-12 border-2 border-gray-600 bg-gray-800 text-white rounded-lg focus:border-[#f9c52d] focus:ring-2 focus:ring-[#f9c52d] focus:outline-none transition-all"
+                           required autocomplete="new-password" />
+                    <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#f9c52d] transition-colors" onclick="togglePasswordVisibility('registerPassword', this)" aria-label="Voir le mot de passe">
+                        <svg class="w-5 h-5 eye-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <div>
                 <label for="registerPasswordConfirm" class="block text-sm font-bold text-gray-300 mb-2" data-i18n="confirm_password">CONFIRMER MOT DE PASSE : <span class="text-red-500">*</span></label>
-                <input id="registerPasswordConfirm" name="password_confirmation" type="password"
-                       class="w-full px-4 py-3 border-2 border-gray-600 bg-gray-800 text-white rounded-lg focus:border-[#f9c52d] focus:ring-2 focus:ring-[#f9c52d] focus:outline-none transition-all"
-                       required />
+                <div class="relative">
+                    <input id="registerPasswordConfirm" name="password_confirmation" type="password"
+                           class="w-full px-4 py-3 pr-12 border-2 border-gray-600 bg-gray-800 text-white rounded-lg focus:border-[#f9c52d] focus:ring-2 focus:ring-[#f9c52d] focus:outline-none transition-all"
+                           required />
+                    <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-[#f9c52d] transition-colors" onclick="togglePasswordVisibility('registerPasswordConfirm', this)" aria-label="Voir le mot de passe">
+                        <svg class="w-5 h-5 eye-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
             <button type="submit" class="w-full bg-[#f9c52d] text-[#212121] py-4 rounded-full font-bold hover:bg-[#f9c52d] transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 text-lg mt-6" data-i18n="create_my_account">
