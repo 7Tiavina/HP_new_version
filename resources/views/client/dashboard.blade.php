@@ -37,7 +37,7 @@
                     <div class="ml-4">
                         <p class="text-sm font-medium text-gray-600" data-i18n="dashboard_total_spent">Total dépensé</p>
                         <p class="text-2xl font-bold text-gray-900">{{ number_format($totalDepense, 0, ',', ' ') }} €</p>
-                        <p class="text-xs text-gray-500 mt-1">{{ number_format($depenseAujourdhui, 0, ',', ' ') }} € aujourd'hui</p>
+                        <p class="text-xs text-gray-500 mt-1">{{ number_format($depenseAujourdhui, 0, ',', ' ') }} € <span data-i18n="dashboard_today_label">aujourd'hui</span></p>
                     </div>
                 </div>
             </div>
@@ -47,9 +47,9 @@
                         <i class="fas fa-check-circle text-blue-600 text-2xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Complétées</p>
+                        <p class="text-sm font-medium text-gray-600" data-i18n="dashboard_completed">Complétées</p>
                         <p class="text-2xl font-bold text-gray-900">{{ $commandesCompleted }}</p>
-                        <p class="text-xs text-gray-500 mt-1">{{ $commandesPending }} en attente</p>
+                        <p class="text-xs text-gray-500 mt-1">{{ $commandesPending }} <span data-i18n="dashboard_pending_label">en attente</span></p>
                     </div>
                 </div>
             </div>
@@ -59,9 +59,9 @@
                         <i class="fas fa-camera text-purple-600 text-2xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600">Photos</p>
+                        <p class="text-sm font-medium text-gray-600" data-i18n="dashboard_photos">Photos</p>
                         <p class="text-2xl font-bold text-gray-900">{{ $totalPhotos }}</p>
-                        <p class="text-xs text-gray-500 mt-1">de mes bagages</p>
+                        <p class="text-xs text-gray-500 mt-1" data-i18n="dashboard_my_bags">de mes bagages</p>
                     </div>
                 </div>
             </div>
@@ -71,7 +71,7 @@
             <div class="bg-white rounded-lg shadow p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-gray-600">Aujourd'hui</p>
+                        <p class="text-sm font-medium text-gray-600" data-i18n="dashboard_today">Aujourd'hui</p>
                         <p class="text-2xl font-bold text-green-600">{{ $commandesAujourdhui }}</p>
                     </div>
                     <i class="fas fa-calendar-day text-3xl text-green-500"></i>
@@ -80,7 +80,7 @@
             <div class="bg-white rounded-lg shadow p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-gray-600">Cette semaine</p>
+                        <p class="text-sm font-medium text-gray-600" data-i18n="dashboard_this_week">Cette semaine</p>
                         <p class="text-2xl font-bold text-blue-600">{{ $commandesSemaine }}</p>
                     </div>
                     <i class="fas fa-calendar-week text-3xl text-blue-500"></i>
@@ -89,7 +89,7 @@
             <div class="bg-white rounded-lg shadow p-6">
                 <div class="flex items-center justify-between">
                     <div>
-                        <p class="text-sm font-medium text-gray-600">Taux de complétion</p>
+                        <p class="text-sm font-medium text-gray-600" data-i18n="dashboard_completion_rate">Taux de complétion</p>
                         <p class="text-2xl font-bold text-yellow-600">{{ $totalCommandes > 0 ? number_format(($commandesCompleted / $totalCommandes) * 100, 1) : 0 }}%</p>
                     </div>
                     <i class="fas fa-chart-pie text-3xl text-yellow-500"></i>
@@ -137,7 +137,7 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="dashboard_order_ref">Référence</th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produits</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="dashboard_products">Produits</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="dashboard_amount">Montant</th>
                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" data-i18n="dashboard_status">Statut</th>
