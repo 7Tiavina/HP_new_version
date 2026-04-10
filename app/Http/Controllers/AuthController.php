@@ -227,6 +227,7 @@ class AuthController extends Controller
             'prenom' => 'required|string|max:100',
             'telephone' => 'nullable|string|max:30',
             'password' => 'required|string|min:6|confirmed',
+            'adresse' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -244,9 +245,12 @@ class AuthController extends Controller
             if ($request->telephone) {
                 $existingClient->telephone = $request->telephone;
             }
+            if ($request->adresse) {
+                $existingClient->adresse = $request->adresse;
+            }
             $existingClient->save();
-            $client = $existingClient;
-            
+            $client = $existingClient->refresh();
+
             // Transférer les commandes invitées vers ce client
             $this->transferGuestOrdersToClient($client);
         } else {
@@ -257,11 +261,26 @@ class AuthController extends Controller
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
                 'telephone' => $request->telephone,
+                'adresse' => $request->adresse,
             ]);
+
+            Log::info('New client created', [
+                'client_id' => $client->id,
+                'email' => $client->email,
+                'adresse' => $client->adresse,
+            ]);
+
+            // Re-fetch client from database to ensure all attributes are loaded
+            $client = Client::find($client->id);
         }
 
         Auth::guard('client')->login($client);
         $request->session()->regenerate();
+
+        Log::info('Client logged in after registration', [
+            'client_id' => $client->id,
+            'adresse_in_session' => $client->adresse,
+        ]);
 
         return redirect()->route('client.dashboard')->with('success', 'Compte créé avec succès !');
     }
