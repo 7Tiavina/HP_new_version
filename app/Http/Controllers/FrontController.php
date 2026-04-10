@@ -40,6 +40,18 @@ class FrontController extends Controller
 
     public function redirectForm(Request $request)
     {
+        // Handle language preference from URL parameter (?lang=en or ?lang=fr)
+        $langParam = $request->query('lang');
+        if ($langParam) {
+            $langParam = strtolower($langParam);
+            if (in_array($langParam, ['fr', 'en'])) {
+                // Set language in session
+                $request->session()->put('app_language', $langParam);
+                app()->setLocale($langParam);
+                Log::info('Language set from URL parameter', ['lang' => $langParam]);
+            }
+        }
+
         // Reset form session for new reservation
         // Clear ALL booking-related data and force return to step 1
         // Preserve authentication if user is logged in
