@@ -41,9 +41,70 @@ class FrontController extends Controller
     public function redirectForm(Request $request)
     {
         // Reset form session for new reservation
-        // Clear both client form state and any server-side booking data
-        $request->session()->forget(['formState', 'booking_data', 'guest_session']);
+        // Clear ALL booking-related data and force return to step 1
+        // Preserve authentication if user is logged in
+        $authGuard = Auth::guard('client');
+        $isAuthenticated = $authGuard->check();
+        $authUserId = $isAuthenticated ? $authGuard->id() : null;
+        $authUserData = null;
         
+        if ($isAuthenticated && $authUserId) {
+            $authUser = $authGuard->user();
+            $authUserData = [
+                'id' => $authUser->id,
+                'email' => $authUser->email,
+            ];
+        }
+        
+        // Comprehensive list of all booking/session keys to clear
+        $keysToClear = [
+            // Form state
+            'formState',
+            'booking_data',
+            'guest_session',
+            
+            // Order data
+            'commande_en_cours',
+            'order_id',
+            'commande_id',
+            'last_order',
+            'order_completed',
+            'payment_completed',
+            
+            // Client details
+            'guest_customer_details',
+            'customer_details',
+            'client_details',
+            
+            // Selection data
+            'airport_id',
+            'service_id',
+            'cart_items',
+            'global_products_data',
+            'global_lieux_data',
+            
+            // Dates/times
+            'date_depot',
+            'heure_depot',
+            'date_recuperation',
+            'heure_recuperation',
+            
+            // Options/constraints
+            'options_data',
+            'constraints_data',
+            'selected_options',
+            
+            // Any other booking-related keys
+            'step_completed',
+            'current_step',
+            'payment_intent',
+            'session_token',
+        ];
+        
+        $request->session()->forget($keysToClear);
+        
+        Log::info('Form reset on redirect to /link-form. Auth preserved: ' . ($isAuthenticated ? 'YES (user ID: ' . $authUserId . ')' : 'NO (guest)'));
+
         try {
             $responsePlateformes = $this->bdmApiService->getPlateformes();
 

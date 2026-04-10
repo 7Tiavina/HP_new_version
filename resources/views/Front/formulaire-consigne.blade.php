@@ -1472,46 +1472,52 @@
     if(typeof setupQdmListeners !== 'undefined') setupQdmListeners();
 
     // Check if this is a new reservation from dashboard (?new=1 parameter)
+    // OR if user is returning after successful payment (always reset)
     const urlParams = new URLSearchParams(window.location.search);
     const isNewReservation = urlParams.get('new') === '1';
     
-    if (isNewReservation) {
-        // Force reset all form data for new reservation
-        console.log('[New Reservation] Resetting all form data...');
-        sessionStorage.removeItem('formState');
-        
-        // Clear any form inputs
-        const airportSelect = document.getElementById('airport-select');
-        const dateDepot = document.getElementById('date-depot');
-        const heureDepot = document.getElementById('heure-depot');
-        const dateRecup = document.getElementById('date-recuperation');
-        const heureRecup = document.getElementById('heure-recuperation');
-        
-        if (airportSelect) airportSelect.value = '';
-        if (dateDepot) dateDepot.value = '';
-        if (heureDepot) heureDepot.value = '';
-        if (dateRecup) dateRecup.value = '';
-        if (heureRecup) heureRecup.value = '';
-        
-        // Reset form to step 1
-        const step1 = document.getElementById('step-1');
-        const baggageStep = document.getElementById('baggage-selection-step');
-        const stickyWrapper = document.getElementById('sticky-wrapper');
-        const backBtn = document.getElementById('back-to-step-1-btn');
-        
-        if (step1) step1.style.display = 'block';
-        if (baggageStep) baggageStep.style.display = 'none';
-        if (stickyWrapper) stickyWrapper.style.display = 'none';
-        if (backBtn) backBtn.classList.add('hidden');
-        
-        // Clean URL
-        window.history.replaceState({}, document.title, window.location.pathname);
+    // ALWAYS reset form when accessing /link-form directly
+    // This ensures users start fresh after successful payment
+    console.log('[Form Reset] Resetting all form data on page load...');
+    sessionStorage.removeItem('formState');
+    
+    // Clear any form inputs
+    const airportSelect = document.getElementById('airport-select');
+    const dateDepot = document.getElementById('date-depot');
+    const heureDepot = document.getElementById('heure-depot');
+    const dateRecup = document.getElementById('date-recuperation');
+    const heureRecup = document.getElementById('heure-recuperation');
+
+    if (airportSelect) airportSelect.value = '';
+    if (dateDepot) dateDepot.value = '';
+    if (heureDepot) heureDepot.value = '';
+    if (dateRecup) dateRecup.value = '';
+    if (heureRecup) heureRecup.value = '';
+
+    // Reset form to step 1
+    const step1 = document.getElementById('step-1');
+    const baggageStep = document.getElementById('baggage-selection-step');
+    const stickyWrapper = document.getElementById('sticky-wrapper');
+    const backBtn = document.getElementById('back-to-step-1-btn');
+
+    if (step1) {
+        step1.style.display = 'block';
+        step1.classList.add('hp-step-active');
+    }
+    if (baggageStep) baggageStep.style.display = 'none';
+    if (stickyWrapper) stickyWrapper.style.display = 'none';
+    if (backBtn) backBtn.classList.add('hidden');
+
+    // Initialize timepickers with default values
+    if (typeof initializeTimepickers === 'function') {
+        setTimeout(initializeTimepickers, 100);
     }
     
-    // Appeler loadStateFromSession au chargement de la page pour restaurer l'état
-    if(typeof loadStateFromSession !== 'undefined') {
-        loadStateFromSession();
-    }
+    // Clean URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+    
+    // Skip loadStateFromSession since we want a fresh start
+    console.log('[Form Reset] Form reset complete. Starting fresh at step 1.');
 
     // Le setup des listeners de la modale custom est déjà dans modal.js
     // Le setup des listeners du booking est dans booking.js
