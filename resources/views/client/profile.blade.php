@@ -70,7 +70,13 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="md:col-span-2">
                             <label for="adresse" class="block text-sm font-medium text-gray-700 mb-2" data-i18n="label_adresse">Adresse</label>
-                            <input type="text" id="adresse" name="adresse" value="{{ old('adresse', $client->adresse) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
+                            <div class="relative">
+                                <input type="text" id="adresse" name="adresse" value="{{ old('adresse', $client->adresse) }}" placeholder="Commencez à taper votre adresse..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
+                                <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                                </svg>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">💡 Utilisez l'autocomplétion Google pour remplir automatiquement votre adresse</p>
                         </div>
                         <div>
                             <label for="complementAdresse" class="block text-sm font-medium text-gray-700 mb-2" data-i18n="label_complement_adresse">Complément d'adresse</label>
@@ -95,3 +101,196 @@
     </div>
 </div>
 @endsection
+
+@php
+    $googlePlacesApiKey = config('services.google.places_api_key');
+@endphp
+
+@if($googlePlacesApiKey)
+@push('scripts')
+<script>
+    // ========================================================================
+    // GOOGLE PLACES API - ADDRESS AUTOCOMPLETE (Same as /payment modal)
+    // ========================================================================
+    
+    const googleApiVersion = '{{ config('app.version', '1.0.0') }}';
+    const googlePlacesApiKey = '{{ $googlePlacesApiKey }}';
+
+    // Fonction pour charger Google Maps API avec rappel
+    function loadGoogleMapsAPI(callback) {
+        // Vérifier si l'API est déjà chargée
+        if (window.google && window.google.maps && window.google.maps.places) {
+            if (callback) callback();
+            return;
+        }
+
+        // Créer l'élément script
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${googlePlacesApiKey}&libraries=places&language=fr&callback=initGooglePlacesProfile&v=3.52&_=${googleApiVersion}`;
+        script.async = true;
+        script.defer = true;
+
+        // Définir la fonction de rappel globale
+        window.initGooglePlacesProfile = function() {
+            console.log('Google Places API loaded successfully');
+            if (callback) callback();
+        };
+
+        // Gérer les erreurs de chargement
+        script.onerror = function() {
+            console.error('Failed to load Google Places API');
+            const fallbackScript = document.createElement('script');
+            fallbackScript.src = `https://maps.googleapis.com/maps/api/js?key=${googlePlacesApiKey}&libraries=places&language=fr&v=3.52`;
+            fallbackScript.async = true;
+            fallbackScript.defer = true;
+            document.head.appendChild(fallbackScript);
+
+            const checkGoogleAPI = setInterval(function() {
+                if (window.google && window.google.maps && window.google.maps.places) {
+                    clearInterval(checkGoogleAPI);
+                    if (callback) callback();
+                }
+            }, 500);
+        };
+
+        document.head.appendChild(script);
+    }
+
+    // Initialiser l'autocomplétion une fois l'API chargée
+    function initProfileAutocomplete() {
+        const addressInput = document.getElementById('adresse');
+
+        if (!addressInput) {
+            console.error('Address input not found');
+            return;
+        }
+
+        if (!window.google || !window.google.maps || !window.google.maps.places) {
+            console.error('Google Maps API not available');
+            return;
+        }
+
+        try {
+            const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+                types: ['address'],
+                componentRestrictions: { country: [] },
+                fields: ['address_components', 'geometry', 'name', 'formatted_address']
+            });
+
+            autocomplete.addListener('place_changed', function() {
+                const place = autocomplete.getPlace();
+
+                if (!place.geometry) {
+                    console.log("No geometry found for the selected place");
+                    return;
+                }
+
+                let street_number = '';
+                let route = '';
+                let city = '';
+                let postal_code = '';
+                let administrative_area = '';
+                let country = '';
+
+                for (let i = 0; i < place.address_components.length; i++) {
+                    const component = place.address_components[i];
+                    const addressType = component.types[0];
+
+                    if (addressType === 'street_number') {
+                        street_number = component.long_name;
+                    } else if (addressType === 'route') {
+                        route = component.long_name;
+                    } else if (
+                        addressType === 'locality' ||
+                        addressType === 'postal_town' ||
+                        addressType === 'administrative_area_level_2' ||
+                        addressType === 'administrative_area_level_3' ||
+                        addressType === 'sublocality_level_1' ||
+                        addressType === 'sublocality'
+                    ) {
+                        if (!city) {
+                            city = component.long_name;
+                        }
+                    } else if (addressType === 'postal_code') {
+                        postal_code = component.long_name;
+                    } else if (addressType === 'administrative_area_level_1') {
+                        administrative_area = component.long_name;
+                    } else if (addressType === 'country') {
+                        country = component.long_name;
+                    }
+                }
+
+                if (!city && administrative_area) {
+                    city = administrative_area;
+                }
+
+                // Build complete address with all components
+                let addressParts = [];
+
+                // Street address
+                if (street_number && route) {
+                    addressParts.push(street_number + ' ' + route);
+                } else if (route) {
+                    addressParts.push(route);
+                }
+
+                // Postal code and city
+                if (postal_code && city) {
+                    addressParts.push(postal_code + ' ' + city);
+                } else if (city) {
+                    addressParts.push(city);
+                }
+
+                // State/Province
+                if (administrative_area && administrative_area !== city) {
+                    addressParts.push(administrative_area);
+                }
+
+                // Country
+                if (country) {
+                    addressParts.push(country);
+                }
+
+                let fullAddress = addressParts.join(', ');
+
+                addressInput.value = fullAddress.trim();
+                
+                // Auto-fill city and country fields
+                const villeInput = document.getElementById('ville');
+                const paysInput = document.getElementById('pays');
+                
+                if (city && villeInput) {
+                    villeInput.value = city;
+                }
+                if (country && paysInput) {
+                    paysInput.value = country;
+                }
+
+                console.log('Complete address filled:', fullAddress);
+                console.log('Address components:', {
+                    street_number,
+                    route,
+                    postal_code,
+                    city,
+                    administrative_area,
+                    country
+                });
+            });
+
+            console.log('Google Places Autocomplete initialized for profile');
+        } catch (error) {
+            console.error('Error initializing Google Places Autocomplete:', error);
+        }
+    }
+
+    // Charger l'API et initialiser au chargement du DOM
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!window.google || !window.google.maps || !window.google.maps.places) {
+            loadGoogleMapsAPI(initProfileAutocomplete);
+        } else {
+            setTimeout(initProfileAutocomplete, 100);
+        }
+    });
+</script>
+@endpush
+@endif
