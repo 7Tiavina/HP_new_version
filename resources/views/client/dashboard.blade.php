@@ -98,7 +98,7 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <a href="{{ route('form-consigne') }}" class="bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg shadow-lg p-6 text-center transform transition-all hover:scale-105">
+            <a href="{{ route('form-consigne') }}?new=1" class="bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg shadow-lg p-6 text-center transform transition-all hover:scale-105">
                 <i class="fas fa-plus-circle text-4xl mb-3"></i>
                 <h3 class="font-bold text-lg" data-i18n="dashboard_new_reservation">Nouvelle réservation</h3>
                 <p class="text-sm mt-2 opacity-90" data-i18n="dashboard_book_now">Réserver maintenant</p>
@@ -129,7 +129,7 @@
                     <div class="text-center py-12">
                         <i class="fas fa-inbox text-gray-400 text-6xl mb-4"></i>
                         <p class="text-gray-600" data-i18n="dashboard_no_reservations">Vous n'avez pas encore de réservations</p>
-                        <a href="{{ route('form-consigne') }}" class="mt-4 inline-block bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-bold transition-all" data-i18n="dashboard_create_first">Créer ma première réservation</a>
+                        <a href="{{ route('form-consigne') }}?new=1" class="mt-4 inline-block bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-bold transition-all" data-i18n="dashboard_create_first">Créer ma première réservation</a>
                     </div>
                 @else
                     <div class="overflow-x-auto">

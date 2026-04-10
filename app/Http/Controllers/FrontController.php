@@ -40,6 +40,10 @@ class FrontController extends Controller
 
     public function redirectForm(Request $request)
     {
+        // Reset form session for new reservation
+        // Clear both client form state and any server-side booking data
+        $request->session()->forget(['formState', 'booking_data', 'guest_session']);
+        
         try {
             $responsePlateformes = $this->bdmApiService->getPlateformes();
 
