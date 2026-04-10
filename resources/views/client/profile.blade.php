@@ -5,6 +5,27 @@
 @push('styles')
     <script>window.tailwind=window.tailwind||{};window.tailwind.config={corePlugins:{preflight:false},important:'#client-page-root'};</script>
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- intl-tel-input CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css"/>
+    
+    <!-- intl-tel-input dark theme -->
+    <style>
+        .iti__country-list {
+            background-color: #1f2937 !important;
+            border-color: #374151 !important;
+            color: #ffffff !important;
+        }
+        .iti__country {
+            color: #ffffff !important;
+        }
+        .iti__country:hover {
+            background-color: #374151 !important;
+        }
+        .iti__highlight {
+            background-color: #f9c52d !important;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -60,8 +81,7 @@
                     </div>
                     <div>
                         <label for="telephone" class="block text-sm font-medium text-gray-700 mb-2" data-i18n="label_telephone">Téléphone mobile</label>
-                        <input type="tel" id="telephone" name="telephone" value="{{ old('telephone', $client->telephone) }}" placeholder="+33 6 12 34 56 78 (avec code pays)" data-i18n-placeholder="placeholder_telephone" autocomplete="off" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
-                        <p class="text-xs text-gray-500 mt-1" data-i18n="phone_country_code_hint">⚠️ Veuillez renseigner votre numéro avec le code pays (ex: +33 pour la France, +230 pour Maurice)</p>
+                        <input type="tel" id="telephone" name="telephone" value="{{ old('telephone', $client->telephone) }}" placeholder="" autocomplete="off" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
                     </div>
                 </div>
 
@@ -78,18 +98,6 @@
                             </div>
                             <p class="text-xs text-gray-500 mt-1">💡 Utilisez l'autocomplétion Google pour remplir automatiquement votre adresse</p>
                         </div>
-                        <div>
-                            <label for="complementAdresse" class="block text-sm font-medium text-gray-700 mb-2" data-i18n="label_complement_adresse">Complément d'adresse</label>
-                            <input type="text" id="complementAdresse" name="complementAdresse" value="{{ old('complementAdresse', $client->complementAdresse) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
-                        </div>
-                        <div>
-                            <label for="ville" class="block text-sm font-medium text-gray-700 mb-2" data-i18n="label_ville">Ville</label>
-                            <input type="text" id="ville" name="ville" value="{{ old('ville', $client->ville) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
-                        </div>
-                        <div>
-                            <label for="pays" class="block text-sm font-medium text-gray-700 mb-2" data-i18n="label_pays">Pays</label>
-                            <input type="text" id="pays" name="pays" value="{{ old('pays', $client->pays) }}" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500">
-                        </div>
                     </div>
                 </div>
 
@@ -101,6 +109,31 @@
     </div>
 </div>
 @endsection
+
+<!-- intl-tel-input JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const phoneInput = document.getElementById('telephone');
+        if (phoneInput && window.intlTelInput) {
+            const iti = window.intlTelInput(phoneInput, {
+                initialCountry: 'auto',
+                geoIpLookup: function(callback) {
+                    fetch('https://ipapi.co/json')
+                        .then(function(res) { return res.json(); })
+                        .then(function(data) { callback(data.country_code); })
+                        .catch(function() { callback('fr'); });
+                },
+                utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js',
+                preferredCountries: ['fr', 'mu', 'be', 'ch', 'ca'],
+                autoPlaceholder: 'aggressive',
+                separateDialCode: false
+            });
+        }
+    });
+</script>
 
 @php
     $googlePlacesApiKey = config('services.google.places_api_key');
