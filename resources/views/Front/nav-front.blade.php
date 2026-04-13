@@ -152,70 +152,92 @@
         color: #FAC12E;
     }
 
-    /* Services Dropdown */
-    .nav-dropdown {
+    /* Services Dropdown - Hover to show */
+    #servicesItem {
         position: relative;
     }
-    .nav-dropdown-trigger {
+    #servicesTrigger {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a1a1a;
+        padding: 0;
+        font-family: inherit;
+        transition: color 0.2s ease;
+        line-height: 1;
     }
-    .nav-dropdown-trigger::after {
-        content: '';
+    #servicesItem:hover #servicesTrigger,
+    #servicesTrigger.open {
+        color: #FAC12E;
+    }
+    #servicesTrigger .chevron {
         flex-shrink: 0;
-        width: 0;
-        height: 0;
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-        border-top: 5px solid currentColor;
         transition: transform 0.2s ease;
+        width: 12px;
+        height: 12px;
     }
-    .nav-dropdown:hover .nav-dropdown-trigger::after {
+    #servicesItem:hover #servicesTrigger .chevron,
+    #servicesTrigger.open .chevron {
         transform: rotate(180deg);
     }
-    .nav-dropdown-menu {
+    #servicesDropdown {
+        display: none;
         position: absolute;
-        top: calc(100% + 20px);
-        left: 50%;
-        transform: translateX(-50%);
-        background: #0a0a0a;
-        border-radius: 20px;
-        padding: 16px 0;
-        min-width: 320px;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.25s ease, visibility 0.25s ease;
-        z-index: 1000;
-        box-shadow: 0 16px 48px rgba(0,0,0,0.35);
-    }
-    .nav-dropdown:hover .nav-dropdown-menu {
-        opacity: 1;
-        visibility: visible;
-    }
-    /* Invisible bridge so hover doesn't break */
-    .nav-dropdown-menu::before {
-        content: '';
-        position: absolute;
-        top: -22px;
+        top: calc(100% + 28px);
         left: 0;
-        right: 0;
-        height: 22px;
+        background: #111;
+        border-radius: 10px;
+        min-width: 300px;
+        max-width: 380px;
+        padding: 10px 0;
+        z-index: 1000;
     }
-    .nav-dropdown-menu a {
+    #servicesItem:hover #servicesDropdown,
+    #servicesDropdown.open {
         display: block;
-        padding: 14px 28px;
-        color: #ffffff !important;
-        font-size: 15px;
-        font-weight: 400;
-        text-decoration: none;
-        transition: background 0.15s ease;
-        line-height: 1.5;
-        word-wrap: break-word;
-        overflow-wrap: break-word;
     }
-    .nav-dropdown-menu a:hover {
-        background: rgba(255,255,255,0.08);
+    #servicesDropdown a {
+        display: flex;
+        align-items: center;
+        padding: 12px 24px;
+        text-decoration: none !important;
+        color: #fff !important;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        line-height: 1.5;
+        background: transparent !important;
+    }
+    #servicesDropdown a:hover {
+        background: #1a1a1a !important;
+    }
+    #servicesDropdown a .drop-arrow {
+        color: #F5B800;
+        font-size: 16px;
+        position: absolute;
+        left: 10px;
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+    #servicesDropdown a .drop-text {
+        transition: transform 0.3s ease, color 0.3s ease;
+        display: inline-block;
+    }
+    #servicesDropdown a:hover .drop-arrow {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    #servicesDropdown a:hover .drop-text {
+        transform: translateX(15px);
+        color: #F5B800;
     }
 
     .nav-center-menu .lang-selector-item {
@@ -1005,14 +1027,36 @@
         </div>
 
         <ul class="nav-center-menu">
-            <li class="nav-dropdown">
-                <a href="#" class="nav-dropdown-trigger" data-i18n="nav_services">Nos Services Bagages</a>
-                <div class="nav-dropdown-menu">
-                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/consigne-bagages/" data-i18n="service_consigne">Consigne Bagages</a>
-                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/transfert-livraison-bagages/" data-i18n="service_transfert">Transfert &amp; Livraison Bagages</a>
-                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/assistance-personnalisee/" data-i18n="service_assistance">Assistance Personnalisée</a>
-                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/bdm-travel-store/" data-i18n="service_bdm">BDM Travel Store</a>
-                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services-facilitateurs-de-voyage/" data-i18n="service_facilitateurs">Services Facilitateurs de Voyage</a>
+            <li class="nav-dropdown" id="servicesItem">
+                <button class="nav-dropdown-trigger" id="servicesTrigger" onclick="toggleServicesDropdown(event)">
+                    <span data-i18n="nav_services">Nos Services Bagages</span>
+                    <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                         stroke="currentColor" stroke-width="2.5"
+                         stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </button>
+                <div class="nav-dropdown-menu" id="servicesDropdown">
+                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/consigne-bagages/">
+                        <span class="drop-arrow">↗</span>
+                        <span class="drop-text" data-i18n="service_consigne">Consigne Bagages</span>
+                    </a>
+                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/transfert-livraison-bagages/">
+                        <span class="drop-arrow">↗</span>
+                        <span class="drop-text" data-i18n="service_transfert">Transfert &amp; Livraison Bagages</span>
+                    </a>
+                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/assistance-personnalisee/">
+                        <span class="drop-arrow">↗</span>
+                        <span class="drop-text" data-i18n="service_assistance">Assistance Personnalisée</span>
+                    </a>
+                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/bdm-travel-store/">
+                        <span class="drop-arrow">↗</span>
+                        <span class="drop-text" data-i18n="service_bdm">BDM Travel Store</span>
+                    </a>
+                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services-facilitateurs-de-voyage/">
+                        <span class="drop-arrow">↗</span>
+                        <span class="drop-text" data-i18n="service_facilitateurs">Services Facilitateurs de Voyage</span>
+                    </a>
                 </div>
             </li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/a-propos/" data-i18n="nav_about">A Propos</a></li>
@@ -1310,5 +1354,24 @@
                 });
             }
         });
+    });
+
+    // Services dropdown toggle (click to open/close)
+    function toggleServicesDropdown(event) {
+        event.stopPropagation();
+        document.getElementById('servicesTrigger').classList.toggle('open');
+        document.getElementById('servicesDropdown').classList.toggle('open');
+    }
+
+    // Close services dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        const container = document.getElementById('servicesItem');
+        const trigger = document.getElementById('servicesTrigger');
+        const dd = document.getElementById('servicesDropdown');
+
+        if (container && !container.contains(e.target)) {
+            trigger.classList.remove('open');
+            dd.classList.remove('open');
+        }
     });
 </script>
