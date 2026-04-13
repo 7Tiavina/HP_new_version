@@ -3,6 +3,7 @@
 @php
     $currentLang = session('app_language', 'fr');
     $isClientLoggedIn = Auth::guard('client')->check();
+    $googlePlacesApiKey = config('services.google.places_api_key');
 @endphp
 
 @section('title', $currentLang === 'en' ? 'My Account — Hello Passenger' : 'Mon Compte — Hello Passenger')
@@ -506,6 +507,12 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="register-adresse" data-i18n="register.addressLabel">Adresse</label>
+                        <input type="text" id="register-adresse" name="adresse" autocomplete="street-address" maxlength="255">
+                        <input type="hidden" id="register-adresse-complete" name="adresse_complete">
+                    </div>
+
+                    <div class="form-group">
                         <label for="register-password" data-i18n="register.passwordLabel">Mot de passe</label>
                         <input type="password" id="register-password" name="password" required autocomplete="new-password">
                     </div>
@@ -569,6 +576,17 @@
 
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+@if($googlePlacesApiKey)
+<script>
+(function loadGooglePlaces() {
+    if (window.google && window.google.maps && window.google.maps.places) return;
+    var s = document.createElement('script');
+    s.src = 'https://maps.googleapis.com/maps/api/js?key={{ $googlePlacesApiKey }}&libraries=places&language=fr&v=3.52';
+    s.async = true; s.defer = true;
+    document.head.appendChild(s);
+})();
+</script>
+@endif
 <script>
 (function() {
     'use strict';
@@ -630,6 +648,56 @@
                 document.getElementById('register-telephone-full').value = fullNumber;
             });
         }
+    }
+
+    // Google Places address autocomplete
+    const addressInput = document.getElementById('register-adresse');
+    if (addressInput && window.google && window.google.maps && window.google.maps.places) {
+        try {
+            const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+                types: ['address'],
+                fields: ['address_components', 'formatted_address']
+            });
+
+            autocomplete.addListener('place_changed', function() {
+                const place = autocomplete.getPlace();
+                if (!place.formatted_address) return;
+
+                let street_number = '', route = '', city = '', postal_code = '', admin_area = '';
+                for (let i = 0; i < place.address_components.length; i++) {
+                    const c = place.address_components[i];
+                    const t = c.types[0];
+                    if (t === 'street_number') street_number = c.long_name;
+                    else if (t === 'route') route = c.long_name;
+                    else if (t === 'locality' || t === 'postal_town') city = c.long_name;
+                    else if (t === 'postal_code') postal_code = c.long_name;
+                    else if (t === 'administrative_area_level_1') admin_area = c.long_name;
+                }
+
+                let parts = [];
+                if (street_number && route) parts.push(street_number + ' ' + route);
+                else if (route) parts.push(route);
+                if (postal_code && city) parts.push(postal_code + ' ' + city);
+                else if (city) parts.push(city);
+                if (admin_area && admin_area !== city) parts.push(admin_area);
+
+                // Fill visible field with clean address
+                addressInput.value = parts.join(', ');
+                // Store full Google address in hidden field
+                document.getElementById('register-adresse-complete').value = place.formatted_address;
+            });
+        } catch(e) { console.warn('Places autocomplete init failed', e); }
+    }
+
+    // On register form submit, use complete address if available
+    const registerForm2 = document.getElementById('register-form');
+    if (registerForm2) {
+        registerForm2.addEventListener('submit', function() {
+            const completeAddr = document.getElementById('register-adresse-complete').value;
+            if (completeAddr) {
+                document.getElementById('register-adresse').value = completeAddr;
+            }
+        });
     }
 
     // Forgot password form AJAX
