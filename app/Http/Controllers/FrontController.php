@@ -225,6 +225,12 @@ class FrontController extends Controller
 
     public function showAccountPage(Request $request)
     {
+        // Handle language switching via URL param
+        $lang = $request->query('lang');
+        if (in_array($lang, ['fr', 'en'])) {
+            $request->session()->put('app_language', $lang);
+        }
+
         if ($request->query('from') === 'payment') {
             $request->session()->put('from_payment', true);
         }
