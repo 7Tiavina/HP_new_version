@@ -137,7 +137,7 @@ if (typeof window.translations === 'undefined') {
         footer_cdg: "Terminal 2, gare TGV – Niveau 4, face à l'hôtel Sheraton, entre 2C et 2E.",
         footer_orly: "Terminal 3, niveau arrivées.",
         footer_since: "depuis 1998",
-        footer_credits: "© <a href='https://darkseagreen-mongoose-687346.hostingersite.com/' target='_blank' rel='noopener noreferrer'>Hello Passenger</a> 2026. Tous droits réservés.",
+        footer_credits: "© <a href='https://darkseagreen-mongoose-687346.hostingersite.com/LANG_PREFIX/' target='_blank' rel='noopener noreferrer'>Hello Passenger</a> 2026. Tous droits réservés.",
         footer_access: "Plan d'accès",
         footer_cdg_address: "Terminal 2 – Gare TGV<br>Niveau 4",
         footer_orly_address: "Orly 3<br>Niveau Arrivées<br>Porte 33a",
@@ -821,7 +821,7 @@ if (typeof window.translations === 'undefined') {
         footer_cdg: "Terminal 2, TGV station – Level 4, opposite Sheraton Hotel, between 2C and 2E.",
         footer_orly: "Terminal 3, arrival level.",
         footer_since: "since 1998",
-        footer_credits: "© <a href='https://darkseagreen-mongoose-687346.hostingersite.com/' target='_blank' rel='noopener noreferrer'>Hello Passenger</a> 2026. All rights reserved.",
+        footer_credits: "© <a href='https://darkseagreen-mongoose-687346.hostingersite.com/LANG_PREFIX/' target='_blank' rel='noopener noreferrer'>Hello Passenger</a> 2026. All rights reserved.",
         footer_access: "Access Plan",
         footer_cdg_address: "Terminal 2 – TGV Station<br>Level 4",
         footer_orly_address: "Orly 3<br>Arrival Level<br>Gate 33a",
@@ -1121,7 +1121,7 @@ if (typeof window.translations === 'undefined') {
         social_linkedin: "LinkedIn",
 
         // Navigation
-        nav_services: "Luggage Services",
+        nav_services: "Our Luggage Services",
         nav_about: "About Us",
         nav_locate: "Find Us",
         nav_contact: "Contact Us",
@@ -1298,8 +1298,12 @@ function applyLanguage(lang) {
         const key = el.getAttribute('data-i18n');
         if (window.translations[lang] && window.translations[lang][key]) {
             const oldText = el.textContent;
-            el.innerHTML = window.translations[lang][key];
-            console.log('✓ Translated:', key, 'from', oldText, 'to', window.translations[lang][key]);
+            let translatedHtml = window.translations[lang][key];
+            // Replace LANG_PREFIX with actual language prefix
+            const langPrefix = lang === 'en' ? '/en' : '';
+            translatedHtml = translatedHtml.replace(/LANG_PREFIX/g, langPrefix);
+            el.innerHTML = translatedHtml;
+            console.log('✓ Translated:', key, 'from', oldText, 'to', translatedHtml);
         }
     });
 

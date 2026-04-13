@@ -1,4 +1,8 @@
 <footer class="bg-[#212121] px-6 py-12 text-white font-sans" id="footer">
+@php
+    $currentLang = session('app_language', 'fr');
+    $langPrefix = $currentLang === 'en' ? '/en' : '';
+@endphp
     <div class="max-w-7xl mx-auto">
         <div class="text-center mb-10">
             <h2 class="text-xl font-bold tracking-wide" data-i18n="footer_locate">Locate Us</h2>

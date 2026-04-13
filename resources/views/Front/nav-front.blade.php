@@ -2,6 +2,8 @@
     $formUrl = route('form-consigne');
     $clientGuard = Auth::guard('client');
     $isClientLoggedIn = $clientGuard->check();
+    $currentLang = session('app_language', 'fr');
+    $langPrefix = $currentLang === 'en' ? '/en' : '';
 @endphp
 
 <style>
@@ -893,16 +895,16 @@
 
     <nav class="navbar">
         <div class="nav-left-group">
-            <a href="{{ $formUrl }}">
+            <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}">
                 <img src="{{ asset('HP-logo-290x91-1.webp') }}" alt="Hello Passenger" class="logo-img">
             </a>
         </div>
 
         <ul class="nav-center-menu">
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/services/" data-i18n="nav_services">Nos Services Bagages</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/a-propos/" data-i18n="nav_about">A Propos</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" data-i18n="nav_contact">Nous contacter</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services/" data-i18n="nav_services">Nos Services Bagages</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/a-propos/" data-i18n="nav_about">A Propos</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/contact/" data-i18n="nav_contact">Nous contacter</a></li>
             <li class="lang-selector-item">
                 @include('components.translation-widget')
             </li>
@@ -952,7 +954,9 @@
         <div class="left-photo-drawer-content">
             <!-- Logo -->
             <div class="left-photo-drawer-logo">
-                <img src="{{ asset('HP-Logo-White.png') }}" alt="Hello Passenger">
+                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}">
+                    <img src="{{ asset('HP-Logo-White.png') }}" alt="Hello Passenger">
+                </a>
             </div>
 
             <!-- Plan d'accès Section -->
@@ -962,7 +966,7 @@
                 <!-- CDG Airport -->
                 <div class="left-photo-drawer-location">
                     <div class="left-photo-drawer-location-title">
-                        <a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="drawer_cdg">Aéroport de Paris CDG</a><br>
+                        <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/nous-localiser/" data-i18n="drawer_cdg">Aéroport de Paris CDG</a><br>
                         <span data-i18n="drawer_cdg_address">Terminal 2<br>
                         Gare TGV – Niveau 4<br>
                         Opposition Hôtel Sheraton,<br>
@@ -978,7 +982,7 @@
                 <!-- Orly Airport -->
                 <div class="left-photo-drawer-location">
                     <div class="left-photo-drawer-location-title">
-                        <a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="drawer_orly">Aéroport de Paris ORLY</a><br>
+                        <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/nous-localiser/" data-i18n="drawer_orly">Aéroport de Paris ORLY</a><br>
                         <span data-i18n="drawer_orly_address">Terminal 3<br>
                         Niveau d'arrivée</span>
                     </div>
@@ -1034,13 +1038,15 @@
     </div>
 
     <div class="hp-drawer-main">
-        <img src="{{ asset('images/HP-logo-290x91.png') }}" class="drawer-logo" alt="Hello Passenger">
+        <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}">
+            <img src="{{ asset('images/HP-logo-290x91.png') }}" class="drawer-logo" alt="Hello Passenger">
+        </a>
 
         <ul class="drawer-nav-menu">
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/services/" data-i18n="nav_services">Nos Services Bagages</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/a-propos/" data-i18n="nav_about">A Propos</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com/contact/" data-i18n="nav_contact">Nous contacter</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services/" data-i18n="nav_services">Nos Services Bagages</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/a-propos/" data-i18n="nav_about">A Propos</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
+            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/contact/" data-i18n="nav_contact">Nous contacter</a></li>
             @if($isClientLoggedIn)
                 <li>
                     <form method="POST" action="{{ route('client.logout') }}" class="inline">
