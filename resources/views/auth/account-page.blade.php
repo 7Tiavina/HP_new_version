@@ -416,8 +416,8 @@
         <aside class="auth-card__info">
             <div>
                 <div class="auth-logo">
-                    <a href="{{ url('/') }}">
-                        <img src="{{ asset('HP-Logo-White.png') }}" alt="Hello Passenger" />
+                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/">
+                        <img src="{{ asset('HP-Logo-White.png') }}" alt="Hello Passenger" style="max-height: 100px; width: auto;" />
                     </a>
                 </div>
                 <h1 data-i18n="info.title">Vos bagages. Notre expertise.</h1>
@@ -425,13 +425,15 @@
                     Connectez-vous ou créez votre compte pour gérer vos réservations, vos services bagages et vos informations personnelles.
                 </p>
                 <ul>
-                    <li data-i18n="info.item1">Consigne & livraison de bagages</li>
-                    <li data-i18n="info.item2">Suivi de vos réservations</li>
-                    <li data-i18n="info.item3">Historique des services</li>
+                    <li data-i18n="info.item1">Consigne à Bagages</li>
+                    <li data-i18n="info.item2">Transfert & Livraison Bagages</li>
+                    <li data-i18n="info.item3">Assistance Personnalisée</li>
+                    <li data-i18n="info.item4">BDM Travel Store</li>
+                    <li data-i18n="info.item5">Services Pratiques</li>
                 </ul>
             </div>
             <div class="auth-card__info-footer" data-i18n="info.footer">
-                Aéroport de Paris CDG & Orly – Support : contact@hellopassenger.com
+                Aéroport de Paris CDG & Orly – Support : <a href="mailto:contact@hellopassenger.com" style="color: inherit;">contact@hellopassenger.com</a>
             </div>
         </aside>
 
@@ -541,7 +543,7 @@
 
                     <div class="form-group">
                         <label for="register-adresse" data-i18n="register.addressLabel">Adresse</label>
-                        <input type="text" id="register-adresse" name="adresse" autocomplete="street-address" maxlength="255">
+                        <input type="text" id="register-adresse" name="adresse" autocomplete="street-address" maxlength="255" data-i18n-placeholder="register.addressPlaceholder" placeholder="Commencez à taper votre adresse...">
                         <input type="hidden" id="register-adresse-complete" name="adresse_complete">
                     </div>
 
@@ -571,7 +573,7 @@
                         <label class="privacy-check">
                             <input type="checkbox" id="register-privacy" name="privacy" required>
                             <span data-i18n="register.privacy">J'accepte la politique de confidentialité</span>
-                            <a href="/privacy-policy" class="privacy-link" target="_blank" rel="noopener noreferrer" data-i18n="register.privacyLink">En savoir plus</a>
+                            <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/mentions-legales/" class="privacy-link" target="_blank" rel="noopener noreferrer" data-i18n="register.privacyLink">En savoir plus</a>
                         </label>
                     </div>
 
@@ -614,13 +616,6 @@
                 </form>
             </div>
             @endif
-
-            <!-- LANGUAGE SWITCH -->
-            <div class="lang-switch lang-switch--bottom">
-                <span class="lang-label">LANG</span>
-                <a href="{{ route('set-language', ['lang' => 'fr']) }}" class="lang-btn {{ $currentLang === 'fr' ? 'lang-btn--active' : '' }}">FR</a>
-                <a href="{{ route('set-language', ['lang' => 'en']) }}" class="lang-btn {{ $currentLang === 'en' ? 'lang-btn--active' : '' }}">EN</a>
-            </div>
 
         </section>
     </div>
@@ -665,6 +660,11 @@
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             el.textContent = t(key, el.textContent);
+        });
+        // Also translate placeholders
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            el.placeholder = t(key, el.placeholder);
         });
     }
 
