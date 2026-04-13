@@ -1128,7 +1128,7 @@ if (typeof window.translations === 'undefined') {
         btn_book: "Book Now",
 
         // Drawer
-        drawer_access_plan: "Access Plan",
+        drawer_access_plan: "How to find us",
         drawer_access_options_title: "Access Options (schedule constraints)",
         drawer_access_mandatory_for_schedule: "⚠️ Mandatory for this schedule",
         drawer_mandatory_badge: "(mandatory)",

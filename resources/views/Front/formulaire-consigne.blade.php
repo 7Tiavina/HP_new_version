@@ -1,10 +1,14 @@
 @php
     $isModal = isset($modal) && $modal;
     $layout = $isModal ? 'layouts.formulaire-embed' : 'layouts.front';
+    $currentLang = session('app_language', 'fr');
+    $formTitle = $currentLang === 'en'
+        ? 'Book luggage storage — Hello Passenger'
+        : 'Réserver une consigne — Hello Passenger';
 @endphp
 @extends($layout)
 
-@section('title', 'Réserver une consigne — Hello Passenger')
+@section('title', $formTitle)
 @section('meta_description', 'Book luggage storage or transport at Paris CDG and Orly. Hello Passenger — secure, simple booking.')
 
 @push('styles')

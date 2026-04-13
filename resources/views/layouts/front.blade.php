@@ -1,5 +1,12 @@
 @php
     $formUrl = route('form-consigne');
+    $currentLang = session('app_language', 'fr');
+    $pageTitle = $currentLang === 'en'
+        ? 'Hello Passenger — Luggage & travel services at Paris CDG & Orly'
+        : 'Hello Passenger — Transport et consigne de bagages à Paris CDG & Orly';
+    $metaDescription = $currentLang === 'en'
+        ? 'Hello Passenger — Luggage transport and left luggage at Paris CDG & Orly. Book online.'
+        : 'Hello Passenger — Transport de bagages et consigne à Paris CDG & Orly. Réservez en ligne.';
 @endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
@@ -7,9 +14,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="description" content="@yield('meta_description', 'Hello Passenger — Luggage transport and left luggage at Paris CDG & Orly. Book online.')">
+    <meta name="description" content="@yield('meta_description', $metaDescription)">
     <link rel="icon" type="image/png" href="{{ asset('favicon-hellopassenger.png') }}">
-    <title>@yield('title', 'Hello Passenger — Luggage & travel services at Paris CDG & Orly')</title>
+    <title>@yield('title', $pageTitle)</title>
 
     <script>
         (function () {
