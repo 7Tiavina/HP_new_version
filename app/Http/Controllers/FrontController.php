@@ -416,6 +416,7 @@ class FrontController extends Controller
             'adresse' => 'nullable|string|max:255',
             'adresse_complete' => 'nullable|string|max:255',
             'password' => 'required|string|min:6|confirmed',
+            'privacy' => 'required|accepted',
         ], [
             'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
             'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',

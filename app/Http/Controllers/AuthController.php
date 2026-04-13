@@ -231,6 +231,7 @@ class AuthController extends Controller
             'prenom' => 'required|string|max:100',
             'telephone' => 'nullable|string|max:30',
             'password' => 'required|string|min:6|confirmed',
+            'privacy' => 'required|accepted',
         ], [
             'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
             'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
