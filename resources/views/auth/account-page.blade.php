@@ -457,16 +457,6 @@
                         <input type="password" id="login-password" name="password" required autocomplete="current-password">
                     </div>
 
-                    <div class="inline">
-                        <label class="remember-me">
-                            <input type="checkbox" id="remember-me" name="remember">
-                            <span data-i18n="login.remember">Se souvenir de moi</span>
-                        </label>
-                        <button type="button" class="link-button" data-target="forgot-panel" data-i18n="login.forgotLink">
-                            Mot de passe oublié ?
-                        </button>
-                    </div>
-
                     <div class="form-group">
                         <label class="privacy-check">
                             <input type="checkbox" id="login-privacy" name="privacy" required>
@@ -476,16 +466,6 @@
                     </div>
 
                     <button type="submit" class="btn" data-i18n="login.submit">Se connecter</button>
-                    <div id="login-status" class="status"></div>
-                    @if($errors->any())
-                        <div id="login-status" class="status status--error">{{ $errors->first() }}</div>
-                    @endif
-                    <p class="small">
-                        <span data-i18n="login.noAccount">Pas encore de compte ?</span>
-                        <button type="button" class="link-button" data-target="register-panel" data-i18n="login.toRegister">
-                            Créer un compte
-                        </button>
-                    </p>
                 </form>
             </div>
 

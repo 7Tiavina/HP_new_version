@@ -935,8 +935,6 @@
                 <span></span><span></span>
             </div>
 
-            <a href="{{ $formUrl }}" class="btn-reserve" id="btn-reserve" data-i18n="btn_book">Réserver</a>
-
             <div class="hamburger-menu" id="hamburger-menu" onclick="toggleDrawer()">
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
