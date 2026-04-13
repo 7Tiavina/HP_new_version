@@ -451,6 +451,11 @@ if (typeof window.translations === 'undefined') {
 
         // Navigation
         nav_services: "Nos Services Bagages",
+        service_consigne: "Consigne Bagages",
+        service_transfert: "Transfert & Livraison Bagages",
+        service_assistance: "Assistance Personnalisée",
+        service_bdm: "BDM Travel Store",
+        service_facilitateurs: "Services Facilitateurs de Voyage",
         nav_about: "A Propos",
         nav_locate: "Nous Localiser",
         nav_contact: "Nous contacter",
@@ -1192,6 +1197,11 @@ if (typeof window.translations === 'undefined') {
 
         // Navigation
         nav_services: "Our Luggage Services",
+        service_consigne: "Luggage Storage",
+        service_transfert: "Luggage Transfer & Delivery",
+        service_assistance: "Dedicated Assistance",
+        service_bdm: "BDM Travel Store",
+        service_facilitateurs: "Practical Services",
         nav_about: "About Us",
         nav_locate: "Find Us",
         nav_contact: "Contact Us",

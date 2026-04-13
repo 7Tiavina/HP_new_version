@@ -152,6 +152,72 @@
         color: #FAC12E;
     }
 
+    /* Services Dropdown */
+    .nav-dropdown {
+        position: relative;
+    }
+    .nav-dropdown-trigger {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .nav-dropdown-trigger::after {
+        content: '';
+        flex-shrink: 0;
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 5px solid currentColor;
+        transition: transform 0.2s ease;
+    }
+    .nav-dropdown:hover .nav-dropdown-trigger::after {
+        transform: rotate(180deg);
+    }
+    .nav-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 20px);
+        left: 50%;
+        transform: translateX(-50%);
+        background: #0a0a0a;
+        border-radius: 20px;
+        padding: 16px 0;
+        min-width: 320px;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+        z-index: 1000;
+        box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+    }
+    .nav-dropdown:hover .nav-dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+    }
+    /* Invisible bridge so hover doesn't break */
+    .nav-dropdown-menu::before {
+        content: '';
+        position: absolute;
+        top: -22px;
+        left: 0;
+        right: 0;
+        height: 22px;
+    }
+    .nav-dropdown-menu a {
+        display: block;
+        padding: 14px 28px;
+        color: #ffffff !important;
+        font-size: 15px;
+        font-weight: 400;
+        text-decoration: none;
+        transition: background 0.15s ease;
+        line-height: 1.5;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+    .nav-dropdown-menu a:hover {
+        background: rgba(255,255,255,0.08);
+    }
+
     .nav-center-menu .lang-selector-item {
         display: inline-flex;
         align-items: center;
@@ -743,6 +809,43 @@
         color: #FAC12E;
     }
 
+    /* Drawer Submenu */
+    .drawer-submenu-trigger {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+    }
+    .drawer-submenu-trigger::after {
+        content: '+';
+        font-size: 20px;
+        font-weight: 300;
+        transition: transform 0.2s ease;
+    }
+    .drawer-submenu.open .drawer-submenu-trigger::after {
+        content: '−';
+    }
+    .drawer-submenu-list {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        background: rgba(0,0,0,0.03);
+        border-radius: 8px;
+        margin: 4px 0;
+    }
+    .drawer-submenu.open .drawer-submenu-list {
+        max-height: 300px;
+    }
+    .drawer-submenu-list li a {
+        padding: 10px 12px 10px 28px;
+        font-size: 14px;
+        color: #4B5563;
+    }
+    .drawer-submenu-list li a:hover {
+        background: rgba(250, 193, 46, 0.1);
+        color: #FAC12E;
+    }
+
     .drawer-section-title {
         font-size: 14px;
         font-weight: 700;
@@ -902,7 +1005,16 @@
         </div>
 
         <ul class="nav-center-menu">
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services/" data-i18n="nav_services">Nos Services Bagages</a></li>
+            <li class="nav-dropdown">
+                <a href="#" class="nav-dropdown-trigger" data-i18n="nav_services">Nos Services Bagages</a>
+                <div class="nav-dropdown-menu">
+                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/consigne-bagages/" data-i18n="service_consigne">Consigne Bagages</a>
+                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/transfert-livraison-bagages/" data-i18n="service_transfert">Transfert &amp; Livraison Bagages</a>
+                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/assistance-personnalisee/" data-i18n="service_assistance">Assistance Personnalisée</a>
+                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/bdm-travel-store/" data-i18n="service_bdm">BDM Travel Store</a>
+                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services-facilitateurs-de-voyage/" data-i18n="service_facilitateurs">Services Facilitateurs de Voyage</a>
+                </div>
+            </li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/a-propos/" data-i18n="nav_about">A Propos</a></li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/contact/" data-i18n="nav_contact">Nous contacter</a></li>
@@ -1042,7 +1154,16 @@
         </a>
 
         <ul class="drawer-nav-menu">
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services/" data-i18n="nav_services">Nos Services Bagages</a></li>
+            <li class="drawer-submenu">
+                <a href="#" class="drawer-submenu-trigger" data-i18n="nav_services">Nos Services Bagages</a>
+                <ul class="drawer-submenu-list">
+                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/consigne-bagages/" data-i18n="service_consigne">Consigne Bagages</a></li>
+                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/transfert-livraison-bagages/" data-i18n="service_transfert">Transfert &amp; Livraison Bagages</a></li>
+                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/assistance-personnalisee/" data-i18n="service_assistance">Assistance Personnalisée</a></li>
+                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/bdm-travel-store/" data-i18n="service_bdm">BDM Travel Store</a></li>
+                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services-facilitateurs-de-voyage/" data-i18n="service_facilitateurs">Services Facilitateurs de Voyage</a></li>
+                </ul>
+            </li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/a-propos/" data-i18n="nav_about">A Propos</a></li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
             <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/contact/" data-i18n="nav_contact">Nous contacter</a></li>
@@ -1168,9 +1289,26 @@
 
         const drawerLinks = document.querySelectorAll('.drawer-nav-menu a, .drawer-lang-btn');
         drawerLinks.forEach(function(link) {
-            link.addEventListener('click', function() {
-                toggleDrawer();
-            });
+            // Don't close drawer on submenu trigger click
+            if (link.classList.contains('drawer-submenu-trigger')) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const parent = this.closest('.drawer-submenu');
+                    if (parent) {
+                        parent.classList.toggle('open');
+                    }
+                });
+            } else if (link.closest('.drawer-submenu-list')) {
+                // Submenu item: close drawer on click
+                link.addEventListener('click', function() {
+                    toggleDrawer();
+                });
+            } else {
+                link.addEventListener('click', function() {
+                    toggleDrawer();
+                });
+            }
         });
     });
 </script>
