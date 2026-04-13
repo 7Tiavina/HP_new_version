@@ -370,6 +370,7 @@ class FrontController extends Controller
             'nom' => 'required|string|max:100',
             'prenom' => 'required|string|max:100',
             'telephone' => 'nullable|string|max:30',
+            'telephone_complete' => 'nullable|string|max:30',
             'password' => 'required|string|min:6|confirmed',
         ], [
             'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
@@ -393,9 +394,7 @@ class FrontController extends Controller
             $existingClient->password_hash = Hash::make($request->password);
             $existingClient->nom = $request->nom;
             $existingClient->prenom = $request->prenom;
-            if ($request->telephone) {
-                $existingClient->telephone = $request->telephone;
-            }
+            $existingClient->telephone = $request->telephone_complete ?: ($request->telephone ?: $existingClient->telephone);
             $existingClient->save();
             $client = $existingClient;
             
@@ -407,7 +406,7 @@ class FrontController extends Controller
                 'email' => $request->email,
                 'nom' => $request->nom,
                 'prenom' => $request->prenom,
-                'telephone' => $request->telephone ?? null,
+                'telephone' => $request->telephone_complete ?: ($request->telephone ?? null),
                 'password_hash' => Hash::make($request->password),
             ]);
         }

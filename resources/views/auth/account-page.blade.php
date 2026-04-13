@@ -8,6 +8,7 @@
 @section('title', $currentLang === 'en' ? 'My Account — Hello Passenger' : 'Mon Compte — Hello Passenger')
 
 @push('styles')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
 <style>
     .auth-page {
         min-height: 100vh;
@@ -196,6 +197,11 @@
         border-color: #f7b500;
         box-shadow: 0 0 0 1px rgba(247, 181, 0, 0.25);
     }
+
+    /* intl-tel-input fix */
+    .iti { width: 100%; }
+    .iti__flag-container { z-index: 2; }
+    .iti input { width: 100%; padding-left: 52px; }
 
     .inline {
         display: flex;
@@ -496,6 +502,7 @@
                     <div class="form-group">
                         <label for="register-telephone" data-i18n="register.phoneLabel">Téléphone</label>
                         <input type="tel" id="register-telephone" name="telephone" autocomplete="tel">
+                        <input type="hidden" id="register-telephone-full" name="telephone_complete">
                     </div>
 
                     <div class="form-group">
@@ -614,6 +621,15 @@
             preferredCountries: ['fr', 'us', 'gb'],
             separateDialCode: true
         });
+
+        // Inject full phone number with country code on form submit
+        const registerForm = document.getElementById('register-form');
+        if (registerForm) {
+            registerForm.addEventListener('submit', function() {
+                const fullNumber = window.itiInstance.getNumber();
+                document.getElementById('register-telephone-full').value = fullNumber;
+            });
+        }
     }
 
     // Forgot password form AJAX
