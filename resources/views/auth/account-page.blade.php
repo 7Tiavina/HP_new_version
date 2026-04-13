@@ -657,54 +657,156 @@
     }
 
     // Google Places address autocomplete
-    const addressInput = document.getElementById('register-adresse');
-    if (addressInput && window.google && window.google.maps && window.google.maps.places) {
+    function initRegisterAddressAutocomplete() {
+        const addressInput = document.getElementById('register-adresse');
+
+        if (!addressInput) {
+            console.error('Register address input not found');
+            return;
+        }
+
+        if (!window.google || !window.google.maps || !window.google.maps.places) {
+            console.error('Google Maps API not available for register');
+            return;
+        }
+
         try {
             const autocomplete = new google.maps.places.Autocomplete(addressInput, {
                 types: ['address'],
-                fields: ['address_components', 'formatted_address']
+                componentRestrictions: { country: [] },
+                fields: ['address_components', 'geometry', 'name', 'formatted_address']
             });
 
             autocomplete.addListener('place_changed', function() {
                 const place = autocomplete.getPlace();
-                if (!place.formatted_address) return;
 
-                let street_number = '', route = '', city = '', postal_code = '', admin_area = '';
-                for (let i = 0; i < place.address_components.length; i++) {
-                    const c = place.address_components[i];
-                    const t = c.types[0];
-                    if (t === 'street_number') street_number = c.long_name;
-                    else if (t === 'route') route = c.long_name;
-                    else if (t === 'locality' || t === 'postal_town') city = c.long_name;
-                    else if (t === 'postal_code') postal_code = c.long_name;
-                    else if (t === 'administrative_area_level_1') admin_area = c.long_name;
+                if (!place.geometry) {
+                    console.log("No geometry found for the selected place");
+                    return;
                 }
 
-                let parts = [];
-                if (street_number && route) parts.push(street_number + ' ' + route);
-                else if (route) parts.push(route);
-                if (postal_code && city) parts.push(postal_code + ' ' + city);
-                else if (city) parts.push(city);
-                if (admin_area && admin_area !== city) parts.push(admin_area);
+                let street_number = '';
+                let route = '';
+                let city = '';
+                let postal_code = '';
+                let administrative_area = '';
+                let country = '';
 
-                // Fill visible field with clean address
-                addressInput.value = parts.join(', ');
+                for (let i = 0; i < place.address_components.length; i++) {
+                    const component = place.address_components[i];
+                    const addressType = component.types[0];
+
+                    if (addressType === 'street_number') {
+                        street_number = component.long_name;
+                    } else if (addressType === 'route') {
+                        route = component.long_name;
+                    } else if (
+                        addressType === 'locality' ||
+                        addressType === 'postal_town' ||
+                        addressType === 'administrative_area_level_2' ||
+                        addressType === 'administrative_area_level_3' ||
+                        addressType === 'sublocality_level_1' ||
+                        addressType === 'sublocality'
+                    ) {
+                        if (!city) {
+                            city = component.long_name;
+                        }
+                    } else if (addressType === 'postal_code') {
+                        postal_code = component.long_name;
+                    } else if (addressType === 'administrative_area_level_1') {
+                        administrative_area = component.long_name;
+                    } else if (addressType === 'country') {
+                        country = component.long_name;
+                    }
+                }
+
+                if (!city && administrative_area) {
+                    city = administrative_area;
+                }
+
+                // Build complete address with all components
+                let addressParts = [];
+
+                // Street address
+                if (street_number && route) {
+                    addressParts.push(street_number + ' ' + route);
+                } else if (route) {
+                    addressParts.push(route);
+                }
+
+                // Postal code and city
+                if (postal_code && city) {
+                    addressParts.push(postal_code + ' ' + city);
+                } else if (city) {
+                    addressParts.push(city);
+                }
+
+                // State/Province
+                if (administrative_area && administrative_area !== city) {
+                    addressParts.push(administrative_area);
+                }
+
+                // Country
+                if (country) {
+                    addressParts.push(country);
+                }
+
+                let fullAddress = addressParts.join(', ');
+
+                addressInput.value = fullAddress.trim();
+
                 // Store full Google address in hidden field
                 document.getElementById('register-adresse-complete').value = place.formatted_address;
+
+                console.log('Complete address filled for register:', fullAddress);
+                console.log('Address components:', {
+                    street_number,
+                    route,
+                    postal_code,
+                    city,
+                    administrative_area,
+                    country
+                });
             });
-        } catch(e) { console.warn('Places autocomplete init failed', e); }
+
+            console.log('Google Places Autocomplete initialized for register');
+        } catch (error) {
+            console.error('Error initializing Google Places Autocomplete for register:', error);
+        }
     }
 
-    // On register form submit, use complete address if available
-    const registerForm2 = document.getElementById('register-form');
-    if (registerForm2) {
-        registerForm2.addEventListener('submit', function() {
-            const completeAddr = document.getElementById('register-adresse-complete').value;
-            if (completeAddr) {
-                document.getElementById('register-adresse').value = completeAddr;
-            }
-        });
+    // Load Google Maps API and init autocomplete
+    function loadRegisterGoogleMapsAPI(callback) {
+        if (window.google && window.google.maps && window.google.maps.places) {
+            if (callback) callback();
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ $googlePlacesApiKey }}&libraries=places&language=fr&callback=initRegisterGooglePlaces&v=3.52';
+        script.async = true;
+        script.defer = true;
+
+        window.initRegisterGooglePlaces = function() {
+            console.log('Google Places API loaded for register');
+            if (callback) callback();
+        };
+
+        script.onerror = function() {
+            console.error('Failed to load Google Places API for register');
+        };
+
+        document.head.appendChild(script);
     }
+
+    // Initialize on DOM ready
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!window.google || !window.google.maps || !window.google.maps.places) {
+            loadRegisterGoogleMapsAPI(initRegisterAddressAutocomplete);
+        } else {
+            setTimeout(initRegisterAddressAutocomplete, 100);
+        }
+    });
 
     // Forgot password form AJAX
     const forgotForm = document.getElementById('forgot-form');
