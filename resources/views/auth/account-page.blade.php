@@ -407,14 +407,34 @@
 
         <!-- RIGHT -->
         <section class="auth-card__form">
+            @if($isClientLoggedIn)
+                <!-- LOGGED IN: Dashboard preview -->
+                <div class="panel panel--active">
+                    <h2 class="panel-title">Bonjour, {{ Auth::guard('client')->user()->prenom }}</h2>
+                    <p class="panel-subtitle">
+                        Retrouvez vos réservations et gérez votre espace personnel.
+                    </p>
+
+                    <a href="{{ route('client.dashboard') }}" class="btn" style="display:inline-block; text-decoration:none; text-align:center;">
+                        Gérer mon compte →
+                    </a>
+
+                    <form id="logout-form" method="POST" action="{{ route('client.logout') }}" style="margin-top: 12px;">
+                        @csrf
+                        <button type="submit" class="btn btn--outline" data-i18n="logout.submit">Se déconnecter</button>
+                        <div id="logout-status" class="status"></div>
+                    </form>
+
+                    <p class="small" style="margin-top: 16px;" data-i18n="logout.footer">
+                        Après votre déconnexion, vous pourrez vous reconnecter à tout moment avec votre email et votre mot de passe.
+                    </p>
+                </div>
+            @else
             <div class="top-bar">
                 <nav class="tabs">
                     <button class="tab tab--active" data-target="login-panel" data-i18n="tab.login">Connexion</button>
                     <button class="tab" data-target="register-panel" data-i18n="tab.register">Inscription</button>
                     <button class="tab" data-target="forgot-panel" data-i18n="tab.forgot">Mot de passe oublié</button>
-                    @if($isClientLoggedIn)
-                    <button class="tab" data-target="logout-panel" data-i18n="tab.logout">Déconnexion</button>
-                    @endif
                 </nav>
             </div>
 
@@ -545,25 +565,6 @@
                         </button>
                     </p>
                 </form>
-            </div>
-
-            @if($isClientLoggedIn)
-            <!-- LOGOUT -->
-            <div id="logout-panel" class="panel">
-                <h2 class="panel-title" data-i18n="logout.title">Déconnexion</h2>
-                <p class="panel-subtitle" data-i18n="logout.subtitle">
-                    Vous êtes actuellement connecté. Cliquez ci-dessous pour vous déconnecter en toute sécurité.
-                </p>
-
-                <form id="logout-form" method="POST" action="{{ route('client.logout') }}">
-                    @csrf
-                    <button type="submit" class="btn btn--outline" data-i18n="logout.submit">Se déconnecter</button>
-                    <div id="logout-status" class="status"></div>
-                </form>
-
-                <p class="small" data-i18n="logout.footer">
-                    Après votre déconnexion, vous pourrez vous reconnecter à tout moment avec votre email et votre mot de passe.
-                </p>
             </div>
             @endif
 

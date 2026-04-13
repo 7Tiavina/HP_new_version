@@ -912,12 +912,12 @@
 
         <div class="nav-right-group">
             @if($isClientLoggedIn)
-                <a href="{{ route('client.dashboard') }}" class="nav-user-email" title="Mon compte">
+                <a href="{{ route('account') }}" class="nav-user-email" title="Mon compte">
                     <svg class="nav-user-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
-                    <span class="nav-user-email-text">{{ $clientGuard->user()->email ?? 'Client' }}</span>
+                    <span class="nav-user-email-text">{{ $clientGuard->user()->prenom ?? 'Client' }}</span>
                 </a>
             @else
                 <div class="icon-action" id="user-icon-trigger" style="cursor: pointer;" title="Se connecter">
@@ -1074,14 +1074,14 @@
         <!-- User account section -->
         <div class="mt-6 pt-6 border-t border-gray-200">
             @if($isClientLoggedIn)
-                <a href="{{ route('client.dashboard') }}" onclick="setTimeout(function() { toggleDrawer(); }, 100);" class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                <a href="{{ route('account') }}" onclick="setTimeout(function() { toggleDrawer(); }, 100);" class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors">
                     <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center flex-shrink-0">
                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
                         </svg>
                     </div>
                     <div class="min-w-0">
-                        <p class="text-sm font-bold text-gray-900 truncate">{{ $clientGuard->user()->email ?? 'Client' }}</p>
+                        <p class="text-sm font-bold text-gray-900 truncate">{{ $clientGuard->user()->prenom ?? 'Client' }}</p>
                         <p class="text-xs text-yellow-600 hover:text-yellow-700">Mon compte →</p>
                     </div>
                 </a>
