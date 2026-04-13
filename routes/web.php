@@ -145,6 +145,13 @@ Route::get('/api/test-remises', [FrontController::class, 'testApiRemises'])->nam
 // Routes pour le paiement
 Route::get('/link-form', [FrontController::class, 'redirectForm'])->name('form-consigne');
 
+// Account page route
+Route::get('/account', [FrontController::class, 'showAccountPage'])->name('account');
+Route::get('/en/account', function() {
+    session(['app_language' => 'en']);
+    return app(App\Http\Controllers\FrontController::class)->showAccountPage();
+})->name('account.en');
+
 // Route pour changer la langue
 Route::get('/set-language', function () {
     $lang = request('lang');

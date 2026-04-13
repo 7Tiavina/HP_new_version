@@ -424,36 +424,16 @@
     </div>
 </div>
 
-<!-- Login/Register Modals -->
-@include('Front.auth-modals')
-
-<!-- Auto-open login modal if ?login=1 or #login in URL -->
+<!-- Auto-redirect to account page if ?login=1 or #login in URL -->
 <script>
 (function() {
-    // Vérifier si on vient d'ouvrir le modal (flag dans sessionStorage)
     const alreadyOpened = sessionStorage.getItem('hp_login_modal_opened');
-    
     const urlParams = new URLSearchParams(window.location.search);
     const hash = window.location.hash;
-    
+
     if (!alreadyOpened && (urlParams.get('login') === '1' || hash === '#login')) {
-        // Marquer comme ouvert pour éviter de rouvrir au changement de langue
         sessionStorage.setItem('hp_login_modal_opened', '1');
-        
-        window.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                if (window.openLoginModal) {
-                    window.openLoginModal();
-                }
-            }, 500);
-        });
-        
-        // Supprimer les paramètres login de l'URL sans recharger la page
-        if (urlParams.get('login') === '1') {
-            urlParams.delete('login');
-            const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '') + window.location.hash;
-            window.history.replaceState({}, '', newUrl);
-        }
+        window.location.href = @json(route('account'));
     }
 })();
 </script>

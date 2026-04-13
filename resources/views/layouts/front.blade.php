@@ -20,9 +20,10 @@
 
     <script>
         (function () {
-            window.__hpAuthQueue = window.__hpAuthQueue || [];
-            if (!window.openLoginModal) window.openLoginModal = function () { window.__hpAuthQueue.push('login'); };
-            if (!window.openRegisterModal) window.openRegisterModal = function () { window.__hpAuthQueue.push('register'); };
+            // Redirect to account page instead of opening modals
+            var ACCOUNT_URL = @json(route('account'));
+            if (!window.openLoginModal) window.openLoginModal = function () { window.location.href = ACCOUNT_URL; };
+            if (!window.openRegisterModal) window.openRegisterModal = function () { window.location.href = ACCOUNT_URL + '#register-panel'; };
         })();
     </script>
     <script>
@@ -35,38 +36,27 @@
                 var isRegister = a.classList && a.classList.contains('register-link');
                 if (isLogin || href.indexOf('#login') !== -1) {
                     e.preventDefault(); e.stopImmediatePropagation(); e.stopPropagation();
-                    if (window.openLoginModal) window.openLoginModal();
+                    window.location.href = @json(route('account'));
                     return;
                 }
                 if (isRegister || href.indexOf('#signup') !== -1) {
                     e.preventDefault(); e.stopImmediatePropagation(); e.stopPropagation();
-                    if (window.openRegisterModal) window.openRegisterModal();
+                    window.location.href = @json(route('account')) + '#register-panel';
                     return;
                 }
             }
             document.addEventListener('click', onClick, true);
         })();
 
-        // Ouvrir le modal de connexion automatiquement si ?login=1 ou #login dans l'URL
+        // Redirect to account page if ?login=1 or #login in URL
         (function() {
-            // Vérifier si on vient d'ouvrir le modal (flag dans sessionStorage)
             const alreadyOpened = sessionStorage.getItem('hp_login_modal_opened');
-            
             const urlParams = new URLSearchParams(window.location.search);
             const hash = window.location.hash;
-            
+
             if (!alreadyOpened && (urlParams.get('login') === '1' || hash === '#login')) {
-                // Marquer comme ouvert pour éviter de rouvrir au changement de langue
                 sessionStorage.setItem('hp_login_modal_opened', '1');
-                
-                // Attendre que le modal soit prêt
-                window.addEventListener('DOMContentLoaded', function() {
-                    setTimeout(function() {
-                        if (window.openLoginModal) {
-                            window.openLoginModal();
-                        }
-                    }, 500);
-                });
+                window.location.href = @json(route('account'));
                 
                 // Supprimer les paramètres login de l'URL sans recharger la page
                 if (urlParams.get('login') === '1') {
@@ -198,10 +188,9 @@
         </div>
     </footer>
 
-    @include('Front.auth-modals')
-
     <script>
         (function () {
+            var ACCOUNT_URL = @json(route('account'));
             var DASHBOARD_URL = @json(route('client.dashboard'));
             var LOGOUT_URL = @json(route('client.logout'));
             var FORM_URL = @json(route('form-consigne'));
@@ -249,14 +238,10 @@
                 var spanLogin = document.createElement('span');
                 spanLogin.setAttribute('data-hp-auth-item', '1');
                 var aLogin = document.createElement('a');
-                aLogin.href = '#login';
+                aLogin.href = ACCOUNT_URL;
                 aLogin.className = 'login-link';
                 aLogin.textContent = loginText;
                 aLogin.style.color = '#1a1a1a';
-                aLogin.onclick = function(e) {
-                    e.preventDefault();
-                    if (window.openLoginModal) window.openLoginModal();
-                };
                 spanLogin.appendChild(aLogin);
                 inject.appendChild(spanLogin);
 
@@ -264,14 +249,10 @@
                 var spanRegister = document.createElement('span');
                 spanRegister.setAttribute('data-hp-auth-item', '1');
                 var aRegister = document.createElement('a');
-                aRegister.href = '#signup';
+                aRegister.href = ACCOUNT_URL;
                 aRegister.className = 'register-link';
                 aRegister.textContent = registerText;
                 aRegister.style.color = '#1a1a1a';
-                aRegister.onclick = function(e) {
-                    e.preventDefault();
-                    if (window.openRegisterModal) window.openRegisterModal();
-                };
                 spanRegister.appendChild(aRegister);
                 inject.appendChild(spanRegister);
             }

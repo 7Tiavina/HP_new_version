@@ -132,12 +132,12 @@
                 <a href="{{ route('client.dashboard') }}" class="text-gray-900 hover:text-gray-700 font-semibold">My account</a>
             @else
                 <div class="flex items-center gap-3">
-                    <button type="button" class="text-gray-900 hover:text-gray-700 font-semibold" onclick="window.openLoginModal?.()">
+                    <a href="{{ route('account') }}" class="text-gray-900 hover:text-gray-700 font-semibold">
                         Sign in
-                    </button>
-                    <button type="button" class="text-gray-900 hover:text-gray-700 font-semibold" onclick="window.openRegisterModal?.()">
+                    </a>
+                    <a href="{{ route('account') }}#register-panel" class="text-gray-900 hover:text-gray-700 font-semibold">
                         Register
-                    </button>
+                    </a>
                 </div>
             @endif
 
@@ -220,16 +220,16 @@
                         </div>
                     </div>
                     <div class="flex gap-2">
-                        <button type="button" 
-                                @click="open = false; document.body.classList.remove('drawer-chatbot-hidden'); window.openLoginModal?.();" 
-                                class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-full text-sm transition-colors">
+                        <a href="{{ route('account') }}"
+                           @click="open = false; document.body.classList.remove('drawer-chatbot-hidden');"
+                           class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-full text-sm transition-colors">
                             Login
-                        </button>
-                        <button type="button" 
-                                @click="open = false; document.body.classList.remove('drawer-chatbot-hidden'); window.openRegisterModal?.();" 
-                                class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-full text-sm transition-colors">
+                        </a>
+                        <a href="{{ route('account') }}#register-panel"
+                           @click="open = false; document.body.classList.remove('drawer-chatbot-hidden');"
+                           class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-full text-sm transition-colors">
                             Register
-                        </button>
+                        </a>
                     </div>
                 @endif
             </div>
@@ -304,5 +304,3 @@
         </div>
     </div>
 </div>
-
-@include('Front.auth-modals')

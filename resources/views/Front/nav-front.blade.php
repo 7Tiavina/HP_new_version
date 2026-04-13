@@ -1086,14 +1086,14 @@
                     </div>
                 </a>
             @else
-                <button type="button" onclick="toggleDrawer(); window.openLoginModal?.();" class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                <a href="{{ route('account') }}" onclick="toggleDrawer();" class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors">
                     <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
                         <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
                         </svg>
                     </div>
-                    <span class="text-sm font-bold text-gray-900">Se connecter</span>
-                </button>
+                    <span class="text-sm font-bold text-gray-900" data-i18n="login_btn">Se connecter</span>
+                </a>
             @endif
         </div>
     </div>
@@ -1163,9 +1163,7 @@
         if (userIcon) {
             userIcon.addEventListener('click', function(e) {
                 e.stopPropagation();
-                if (typeof openLoginModal === 'function') {
-                    openLoginModal();
-                }
+                window.location.href = @json(route('account'));
             });
         }
 

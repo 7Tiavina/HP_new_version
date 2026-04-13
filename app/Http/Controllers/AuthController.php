@@ -90,7 +90,7 @@ class AuthController extends Controller
             
             if ($isGuest) {
                 \Log::info('Guest client trying to login', ['client_id' => $client->id, 'email' => $email]);
-                return back()
+                return redirect()->route('account')
                     ->with('guest_login_attempt', true)
                     ->with('guest_email', $email)
                     ->withInput($request->only('email'));
@@ -173,7 +173,7 @@ class AuthController extends Controller
 
         // Aucune correspondance trouvée
         \Log::warning('Login failed - no matching user or password incorrect', ['email' => $email]);
-        return back()
+        return redirect()->route('account')
             ->withErrors(['email' => 'Email ou mot de passe incorrect'])
             ->with('login_error', true)
             ->withInput($request->only('email'));
@@ -210,12 +210,12 @@ class AuthController extends Controller
         $existingClient = Client::where('email', $request->email)->first();
         
         // Si le client existe et a déjà un mot de passe valide (hash bcrypt commence par $2y$ ou $2a$)
-        if ($existingClient && !empty($existingClient->password_hash) && 
+        if ($existingClient && !empty($existingClient->password_hash) &&
             (strpos($existingClient->password_hash, '$2y$') === 0 || strpos($existingClient->password_hash, '$2a$') === 0)) {
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email|max:255|unique:clients,email',
             ]);
-            return back()
+            return redirect()->route('account')
                 ->withInput()
                 ->withErrors(['email' => 'Cet email est déjà utilisé. Veuillez vous connecter.'])
                 ->with('from_register', true);
@@ -238,7 +238,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return back()
+            return redirect()->route('account')
                 ->withInput()
                 ->withErrors($validator)
                 ->with('from_register', true);

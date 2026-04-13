@@ -223,6 +223,11 @@ class FrontController extends Controller
     // and should no longer be present in FrontController directly.
     // The checkAvailability, getQuote, and getOptionsQuote methods below are correct.
 
+    public function showAccountPage()
+    {
+        return view('auth.account-page');
+    }
+
     public function showClientLogin()
     {
         return view('client.login'); 
