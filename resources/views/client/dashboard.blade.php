@@ -11,6 +11,14 @@
 @section('content')
 <div id="client-page-root" class="min-h-screen bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex justify-end mb-4">
+            <a href="{{ route('account') }}" class="inline-flex items-center gap-2 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium text-sm rounded-lg transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                </svg>
+                Retour
+            </a>
+        </div>
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900" data-i18n="dashboard_welcome">Bienvenue, {{ $client->prenom ?? '' }} {{ $client->nom ?? '' }}</h1>
             <p class="text-gray-600 mt-2" data-i18n="dashboard_subtitle">Gérez vos réservations et votre compte</p>
@@ -110,7 +118,7 @@
             </a>
             <a href="{{ route('client.profile') }}" class="bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-lg p-6 text-center transform transition-all hover:scale-105">
                 <i class="fas fa-user-edit text-4xl mb-3"></i>
-                <h3 class="font-bold text-lg" data-i18n="dashboard_edit_profile">Modifier profil</h3>
+                <h3 class="font-bold text-lg" data-i18n="dashboard_edit_profile">Mon profil</h3>
                 <p class="text-sm mt-2 opacity-90" data-i18n="dashboard_update_info">Mettre à jour mes informations</p>
             </a>
             <a href="mailto:support@hellopassenger.com" class="bg-purple-500 hover:bg-purple-600 text-white rounded-lg shadow-lg p-6 text-center transform transition-all hover:scale-105">
