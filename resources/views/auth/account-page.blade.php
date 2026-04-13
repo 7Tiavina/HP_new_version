@@ -497,6 +497,12 @@
                     </div>
 
                     <button type="submit" class="btn" data-i18n="login.submit">Se connecter</button>
+                    @if($errors->has('email'))
+                        <div class="status status--error">{{ $errors->first('email') }}</div>
+                    @endif
+                    @if(session('guest_login_attempt'))
+                        <div class="status status--info">Utilisez votre mot de passe ou demandez une réinitialisation.</div>
+                    @endif
                 </form>
             </div>
 
@@ -623,17 +629,6 @@
 
 @push('scripts')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
-@if($googlePlacesApiKey)
-<script>
-(function loadGooglePlaces() {
-    if (window.google && window.google.maps && window.google.maps.places) return;
-    var s = document.createElement('script');
-    s.src = 'https://maps.googleapis.com/maps/api/js?key={{ $googlePlacesApiKey }}&libraries=places&language=fr&v=3.52';
-    s.async = true; s.defer = true;
-    document.head.appendChild(s);
-})();
-</script>
-@endif
 <script>
 (function() {
     'use strict';
@@ -838,12 +833,20 @@
             return;
         }
 
+@if($googlePlacesApiKey)
+        // Check if script is already loading (prevent duplicate)
+        if (document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]')) {
+            // Script is loading, wait and retry
+            setTimeout(function() { loadRegisterGoogleMapsAPI(callback); }, 500);
+            return;
+        }
+
         const script = document.createElement('script');
-        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ $googlePlacesApiKey }}&libraries=places&language=fr&callback=initRegisterGooglePlaces&v=3.52';
+        script.src = 'https://maps.googleapis.com/maps/api/js?key={{ $googlePlacesApiKey }}&libraries=places&language=fr&v=3.52';
         script.async = true;
         script.defer = true;
 
-        window.initRegisterGooglePlaces = function() {
+        script.onload = function() {
             console.log('Google Places API loaded for register');
             if (callback) callback();
         };
@@ -853,6 +856,9 @@
         };
 
         document.head.appendChild(script);
+@else
+        console.warn('Google Places API key not configured');
+@endif
     }
 
     // Initialize on DOM ready
@@ -888,11 +894,13 @@
 
                 const data = await response.json();
 
-                if (response.ok) {
-                    statusEl.textContent = t('forgot.status.success', 'Si cet email existe, un lien a été envoyé.');
+                if (response.ok && data.success) {
+                    statusEl.textContent = data.message || t('forgot.status.success', 'Un mot de passe a été envoyé à votre adresse email.');
                     statusEl.className = 'status status--success';
+                    showPanel('forgot-panel');
                 } else {
-                    statusEl.textContent = data.message || t('forgot.status.error', 'Erreur lors de l\'envoi.');
+                    const errorMsg = (data && data.message) || (data && data.errors && data.errors.email ? (Array.isArray(data.errors.email) ? data.errors.email[0] : data.errors.email) : t('forgot.status.error', 'Erreur lors de l\'envoi.'));
+                    statusEl.textContent = errorMsg;
                     statusEl.className = 'status status--error';
                 }
             } catch (err) {
@@ -905,7 +913,7 @@
     // Auto-show panels based on session/errors
     @if(session('from_register'))
         showPanel('register-panel');
-    @elseif(session('login_error') && $errors->any())
+    @elseif($errors->has('email') || session('login_error') || session('guest_login_attempt'))
         showPanel('login-panel');
     @elseif(session('forgot_password_sent'))
         showPanel('forgot-panel');

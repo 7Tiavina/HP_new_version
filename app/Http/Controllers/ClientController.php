@@ -44,6 +44,8 @@ class ClientController extends Controller
      */
     public function forgotPassword(Request $request)
     {
+        $lang = session('app_language', 'fr');
+
         Log::info('forgotPassword called', [
             'email' => $request->email,
             'all_input' => $request->all(),
@@ -51,16 +53,17 @@ class ClientController extends Controller
 
         try {
             $request->validate([
-                // Validate format only; avoid generic "The selected email is invalid."
-                // We'll handle "not found" with a clearer message below.
                 'email' => 'required|email',
+            ], [
+                'email.email' => $lang === 'en' ? 'The email address is invalid.' : 'L\'adresse email est invalide.',
+                'email.required' => $lang === 'en' ? 'The email address is required.' : 'L\'adresse email est obligatoire.',
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             if ($request->expectsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'L\'adresse email est invalide.',
-                    'errors' => ['email' => ['L\'adresse email est invalide.']]
+                    'message' => $lang === 'en' ? 'The email address is invalid.' : 'L\'adresse email est invalide.',
+                    'errors' => ['email' => [$lang === 'en' ? 'The email address is invalid.' : 'L\'adresse email est invalide.']]
                 ], 422);
             }
             return back()->withErrors($e->errors());
@@ -73,22 +76,24 @@ class ClientController extends Controller
         if (!$client) {
             Log::warning('Client not found in forgotPassword', ['email' => $request->email]);
 
-            // Previous system: email might exist in `users` table (role != admin/agent).
+            // Check legacy users table
             $legacyUser = User::where('email', $request->email)->first();
             if ($this->isLegacyClientUser($legacyUser)) {
                 Log::info('Legacy user found for forgotPassword, syncing to client', ['user_id' => $legacyUser->id, 'email' => $legacyUser->email, 'role' => $legacyUser->role]);
                 $client = $this->ensureClientFromLegacyUser($legacyUser);
             } else {
-            
-            if ($request->expectsJson() || $request->ajax()) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Aucun compte trouvé avec cet email.',
-                    'errors' => ['email' => 'Aucun compte trouvé avec cet email.']
-                ], 422);
-            }
-            
-            return back()->withErrors(['email' => 'Aucun compte trouvé avec cet email.']);
+                // Email not found
+                $msg = $lang === 'en' ? 'No account found with this email address.' : 'Aucun compte trouvé avec cet email.';
+
+                if ($request->expectsJson() || $request->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => $msg,
+                        'errors' => ['email' => $msg]
+                    ], 422);
+                }
+
+                return back()->withErrors(['email' => $msg]);
             }
         }
 
@@ -97,13 +102,13 @@ class ClientController extends Controller
             'email' => $client->email,
         ]);
 
-        // Générer un nouveau mot de passe
+        // Generate new password
         $password = Str::random(12);
         $newHash = Hash::make($password);
         $client->password_hash = $newHash;
         $client->save();
 
-        // Keep legacy `users` (if any) in sync for this email.
+        // Keep legacy users in sync
         $legacyUserToSync = User::where('email', $client->email)->first();
         if ($this->isLegacyClientUser($legacyUserToSync)) {
             $legacyUserToSync->password_hash = $newHash;
@@ -115,51 +120,53 @@ class ClientController extends Controller
             'email' => $client->email,
         ]);
 
-        // Envoyer l'email avec le mot de passe
+        // Send email with new password
         try {
             Log::info('Attempting to send password reset email', [
                 'client_id' => $client->id,
                 'email' => $client->email,
-                'password_length' => strlen($password),
-                'mail_driver' => config('mail.default'),
             ]);
-            
+
             Mail::to($client->email)->send(new ClientPasswordGeneratedMail($client, $password));
-            
+
             Log::info('Password reset email sent successfully', [
                 'client_id' => $client->id,
                 'email' => $client->email,
-                'to_address' => $client->email,
             ]);
+
+            $successMessage = $lang === 'en'
+                ? 'A new password has been generated and sent to ' . $client->email . '. Please check your inbox (and spam if necessary).'
+                : 'Un nouveau mot de passe a été généré et envoyé à ' . $client->email . '. Veuillez vérifier votre boîte de réception (et vos spams si nécessaire).';
+
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => $successMessage
+                ]);
+            }
+
+            return back()->with('success', $successMessage)->with('forgot_password_sent', true);
         } catch (\Exception $e) {
             Log::error('Failed to send password reset email', [
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
                 'client_id' => $client->id,
                 'email' => $client->email,
             ]);
-            
+
+            $errMsg = $lang === 'en'
+                ? 'Error sending email. Please try again.'
+                : 'Erreur lors de l\'envoi de l\'email. Veuillez réessayer.';
+
             if ($request->expectsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Erreur lors de l\'envoi de l\'email: ' . $e->getMessage() . '. Veuillez réessayer.',
-                    'errors' => ['email' => 'Erreur lors de l\'envoi de l\'email: ' . $e->getMessage() . '. Veuillez réessayer.']
+                    'message' => $errMsg,
+                    'errors' => ['email' => $errMsg]
                 ], 422);
             }
-            
-            return back()->withErrors(['email' => 'Erreur lors de l\'envoi de l\'email: ' . $e->getMessage() . '. Veuillez réessayer.']);
-        }
 
-        $successMessage = 'Un nouveau mot de passe a été généré et envoyé à ' . $client->email . '. Veuillez vérifier votre boîte de réception (et vos spams si nécessaire).';
-        
-        if ($request->expectsJson() || $request->ajax()) {
-            return response()->json([
-                'success' => true,
-                'message' => $successMessage
-            ]);
+            return back()->withErrors(['email' => $errMsg]);
         }
-
-        return back()->with('success', $successMessage);
     }
 
     /**

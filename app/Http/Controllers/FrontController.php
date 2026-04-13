@@ -389,23 +389,23 @@ class FrontController extends Controller
 
     public function clientRegister(Request $request)
     {
-        // Vérifier si un client existe déjà avec cet email
+        $lang = session('app_language', 'fr');
+
+        // Check if client already exists with this email
         $existingClient = Client::where('email', $request->email)->first();
-        
-        // Si le client existe et a déjà un mot de passe valide (hash bcrypt commence par $2y$ ou $2a$)
-        if ($existingClient && !empty($existingClient->password_hash) && 
+
+        // If client exists with valid password, block registration
+        if ($existingClient && !empty($existingClient->password_hash) &&
             (strpos($existingClient->password_hash, '$2y$') === 0 || strpos($existingClient->password_hash, '$2a$') === 0)) {
-            $validator = Validator::make($request->all(), [
-                'email' => 'required|email|max:255|unique:clients,email',
-            ]);
+            $emailMsg = $lang === 'en'
+                ? 'This email is already in use. Please log in or use "Forgot password".'
+                : 'Cet email est déjà utilisé. Veuillez vous connecter ou utiliser "Mot de passe oublié".';
+
             return back()
                 ->withInput()
-                ->withErrors(['email' => 'Cet email est déjà utilisé. Veuillez vous connecter ou utiliser "Mot de passe oublié".'])
+                ->withErrors(['email' => $emailMsg])
                 ->with('from_register', true);
         }
-        
-        // Si le client existe mais sans mot de passe (compte invité), permettre la création de compte
-        // On ne bloque pas, on va juste mettre à jour le compte existant
 
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:255',
@@ -418,13 +418,15 @@ class FrontController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'privacy' => 'required|accepted',
         ], [
-            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
-            'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
-            'password.required' => 'Le mot de passe est obligatoire.',
-            'email.required' => 'L\'adresse email est obligatoire.',
-            'email.email' => 'L\'adresse email n\'est pas valide.',
-            'nom.required' => 'Le nom est obligatoire.',
-            'prenom.required' => 'Le prénom est obligatoire.',
+            'password.min' => $lang === 'en' ? 'The password must be at least 6 characters.' : 'Le mot de passe doit contenir au moins 6 caractères.',
+            'password.confirmed' => $lang === 'en' ? 'The password confirmation does not match.' : 'La confirmation du mot de passe ne correspond pas.',
+            'password.required' => $lang === 'en' ? 'The password is required.' : 'Le mot de passe est obligatoire.',
+            'email.required' => $lang === 'en' ? 'The email address is required.' : 'L\'adresse email est obligatoire.',
+            'email.email' => $lang === 'en' ? 'The email address is not valid.' : 'L\'adresse email n\'est pas valide.',
+            'nom.required' => $lang === 'en' ? 'The last name is required.' : 'Le nom est obligatoire.',
+            'prenom.required' => $lang === 'en' ? 'The first name is required.' : 'Le prénom est obligatoire.',
+            'privacy.required' => $lang === 'en' ? 'You must accept the privacy policy.' : 'Vous devez accepter la politique de confidentialité.',
+            'privacy.accepted' => $lang === 'en' ? 'You must accept the privacy policy.' : 'Vous devez accepter la politique de confidentialité.',
         ]);
 
         if ($validator->fails()) {

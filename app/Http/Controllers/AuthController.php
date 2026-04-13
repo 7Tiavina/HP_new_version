@@ -66,16 +66,46 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
+        // Validate email format first
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
+        ], [
+            'email.email' => 'L\'adresse email n\'est pas valide.',
+            'email.required' => 'L\'adresse email est obligatoire.',
+            'password.required' => 'Le mot de passe est obligatoire.',
         ]);
 
         $email = $request->email;
         $password = $request->password;
+        $lang = session('app_language', 'fr');
 
-        // Essayer d'abord comme client
+        // Check if email exists in system
         $client = Client::where('email', $email)->first();
+        if (!$client) {
+            // Check legacy users table
+            $user = User::where('email', $email)->first();
+            if (!$user) {
+                // Email not found at all
+                $msg = $lang === 'en' ? 'Email address not found in our system.' : 'Adresse email introuvable dans notre système.';
+                return redirect()->route('account')
+                    ->withErrors(['email' => $msg])
+                    ->with('login_error', true)
+                    ->withInput($request->only('email'));
+            }
+
+            // Legacy user found - check if it's a client user
+            if ($this->isLegacyClientUser($user)) {
+                $client = $this->ensureClientFromLegacyUser($user);
+            } else {
+                $msg = $lang === 'en' ? 'Email address not found in our system.' : 'Adresse email introuvable dans notre système.';
+                return redirect()->route('account')
+                    ->withErrors(['email' => $msg])
+                    ->with('login_error', true)
+                    ->withInput($request->only('email'));
+            }
+        }
+
         if ($client) {
             \Log::info('Client found', [
                 'client_id' => $client->id,
@@ -83,11 +113,11 @@ class AuthController extends Controller
                 'has_password_hash' => !empty($client->password_hash),
                 'password_hash_start' => substr($client->password_hash ?? '', 0, 10)
             ]);
-            
+
             // Vérifier si c'est un client invité (pas de mot de passe valide)
-            $isGuest = empty($client->password_hash) || 
+            $isGuest = empty($client->password_hash) ||
                       (strpos($client->password_hash, '$2y$') !== 0 && strpos($client->password_hash, '$2a$') !== 0);
-            
+
             if ($isGuest) {
                 \Log::info('Guest client trying to login', ['client_id' => $client->id, 'email' => $email]);
                 return redirect()->route('account')
@@ -95,10 +125,10 @@ class AuthController extends Controller
                     ->with('guest_email', $email)
                     ->withInput($request->only('email'));
             }
-            
+
             // Nettoyer le mot de passe (supprimer les espaces en début/fin)
             $cleanPassword = trim($password);
-            
+
             if (Hash::check($cleanPassword, $client->password_hash)) {
                 Auth::guard('client')->login($client);
                 $request->session()->regenerate();
@@ -110,11 +140,16 @@ class AuthController extends Controller
                 }
                 return redirect()->route('client.dashboard')->with('success', 'Connexion réussie !');
             } else {
+                // Password is wrong
+                $msg = $lang === 'en' ? 'Incorrect password.' : 'Mot de passe incorrect.';
                 \Log::warning('Client password mismatch', [
-                    'client_id' => $client->id, 
+                    'client_id' => $client->id,
                     'email' => $email,
-                    'password_length' => strlen($cleanPassword)
                 ]);
+                return redirect()->route('account')
+                    ->withErrors(['email' => $msg])
+                    ->with('login_error', true)
+                    ->withInput($request->only('email'));
             }
         }
 
@@ -210,18 +245,21 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        // Vérifier si un client existe déjà avec cet email
+        $lang = session('app_language', 'fr');
+
+        // Check if client already exists with this email
         $existingClient = Client::where('email', $request->email)->first();
-        
-        // Si le client existe et a déjà un mot de passe valide (hash bcrypt commence par $2y$ ou $2a$)
+
+        // If client exists with valid password, block registration
         if ($existingClient && !empty($existingClient->password_hash) &&
             (strpos($existingClient->password_hash, '$2y$') === 0 || strpos($existingClient->password_hash, '$2a$') === 0)) {
-            $validator = Validator::make($request->all(), [
-                'email' => 'required|email|max:255|unique:clients,email',
-            ]);
+            $emailMsg = $lang === 'en'
+                ? 'This email is already in use. Please log in.'
+                : 'Cet email est déjà utilisé. Veuillez vous connecter.';
+
             return redirect()->route('account')
                 ->withInput()
-                ->withErrors(['email' => 'Cet email est déjà utilisé. Veuillez vous connecter.'])
+                ->withErrors(['email' => $emailMsg])
                 ->with('from_register', true);
         }
 
@@ -233,13 +271,15 @@ class AuthController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'privacy' => 'required|accepted',
         ], [
-            'password.min' => 'Le mot de passe doit contenir au moins 6 caractères.',
-            'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
-            'password.required' => 'Le mot de passe est obligatoire.',
-            'email.required' => 'L\'adresse email est obligatoire.',
-            'email.email' => 'L\'adresse email n\'est pas valide.',
-            'nom.required' => 'Le nom est obligatoire.',
-            'prenom.required' => 'Le prénom est obligatoire.',
+            'password.min' => $lang === 'en' ? 'The password must be at least 6 characters.' : 'Le mot de passe doit contenir au moins 6 caractères.',
+            'password.confirmed' => $lang === 'en' ? 'The password confirmation does not match.' : 'La confirmation du mot de passe ne correspond pas.',
+            'password.required' => $lang === 'en' ? 'The password is required.' : 'Le mot de passe est obligatoire.',
+            'email.required' => $lang === 'en' ? 'The email address is required.' : 'L\'adresse email est obligatoire.',
+            'email.email' => $lang === 'en' ? 'The email address is not valid.' : 'L\'adresse email n\'est pas valide.',
+            'nom.required' => $lang === 'en' ? 'The last name is required.' : 'Le nom est obligatoire.',
+            'prenom.required' => $lang === 'en' ? 'The first name is required.' : 'Le prénom est obligatoire.',
+            'privacy.required' => $lang === 'en' ? 'You must accept the privacy policy.' : 'Vous devez accepter la politique de confidentialité.',
+            'privacy.accepted' => $lang === 'en' ? 'You must accept the privacy policy.' : 'Vous devez accepter la politique de confidentialité.',
         ]);
 
         if ($validator->fails()) {
