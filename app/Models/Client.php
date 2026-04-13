@@ -54,4 +54,14 @@ class Client extends Authenticatable
     {
         return $this->password_hash;
     }
+
+    public function commandes()
+    {
+        return $this->hasMany(Commande::class, 'client_id');
+    }
+
+    public function paymentClients()
+    {
+        return $this->hasMany(PaymentClient::class);
+    }
 }

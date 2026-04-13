@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Models\Commande;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
@@ -513,5 +514,79 @@ class ClientController extends Controller
 
             return back()->withErrors(['error' => 'Erreur lors de la mise à jour: ' . $e->getMessage()]);
         }
+    }
+
+    /**
+     * Delete the authenticated client account and all associated data (GDPR).
+     */
+    public function deleteAccount(Request $request)
+    {
+        $lang = session('app_language', 'fr');
+        $client = Auth::guard('client')->user();
+
+        if (!$client) {
+            if ($request->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Non authentifié.'], 401);
+            }
+            return redirect()->route('account')->withErrors(['error' => 'Non authentifié.']);
+        }
+
+        // Validate confirmation
+        $request->validate([
+            'confirm_delete' => 'required|accepted',
+        ], [
+            'confirm_delete.accepted' => $lang === 'en'
+                ? 'You must confirm that you want to delete your account.'
+                : 'Vous devez confirmer la suppression de votre compte.',
+        ]);
+
+        Log::warning('Client account deletion requested', [
+            'client_id' => $client->id,
+            'email' => $client->email,
+        ]);
+
+        $clientEmail = $client->email;
+        $clientName = $client->prenom . ' ' . $client->nom;
+
+        // Send confirmation email BEFORE deletion
+        try {
+            \Illuminate\Support\Facades\Mail::to($clientEmail)->send(new \App\Mail\AccountDeletedConfirmationMail($client));
+            Log::info('Account deletion confirmation email sent', ['client_id' => $client->id, 'email' => $clientEmail]);
+        } catch (\Exception $e) {
+            Log::error('Failed to send account deletion email', [
+                'client_id' => $client->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        // Delete associated payment client records
+        \App\Models\PaymentClient::where('client_id', $client->id)->delete();
+
+        // Soft-delete or anonymize commandes (keep for legal/accounting purposes)
+        // We anonymize instead of hard-deleting to preserve transaction history
+        \App\Models\Commande::where('client_id', $client->id)->update([
+            'client_id' => null,
+            'client_email' => 'deleted_' . $client->id . '_' . Str::random(8) . '@deleted.local',
+        ]);
+
+        // Delete the client
+        $clientId = $client->id;
+        $client->delete();
+
+        // Logout
+        Auth::guard('client')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        Log::info('Client account deleted successfully', [
+            'client_id' => $clientId,
+            'email' => $clientEmail,
+        ]);
+
+        $successMessage = $lang === 'en'
+            ? 'Your account has been permanently deleted. A confirmation email has been sent to ' . $clientEmail . '.'
+            : 'Votre compte a été supprimé définitivement. Un email de confirmation a été envoyé à ' . $clientEmail . '.';
+
+        return redirect()->route('form-consigne')->with('success', $successMessage);
     }
 }

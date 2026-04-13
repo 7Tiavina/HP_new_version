@@ -105,8 +105,105 @@
                 </div>
             </form>
         </div>
+
+        <!-- DELETE ACCOUNT SECTION -->
+        <div class="mt-8">
+            <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+                <div class="flex items-start gap-4">
+                    <svg class="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+                    </svg>
+                    <div class="flex-1">
+                        <h3 class="text-lg font-semibold text-red-900" data-i18n="delete_account_title">Supprimer mon compte</h3>
+                        <p class="text-sm text-red-700 mt-1" data-i18n="delete_account_desc">Cette action est irréversible. Toutes vos données personnelles seront définitivement supprimées conformément au RGPD.</p>
+                        <button type="button" id="open-delete-modal" class="mt-3 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg transition-colors" data-i18n="delete_account_btn">Supprimer mon compte</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- DELETE ACCOUNT MODAL -->
+<div id="delete-account-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden">
+        <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold text-gray-900" data-i18n="delete_modal_title">Confirmer la suppression</h2>
+                <button type="button" id="close-delete-modal" class="text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <form id="delete-account-form" method="POST" action="{{ route('client.delete-account') }}">
+            @csrf
+            @method('DELETE')
+            <div class="p-6">
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                    <p class="text-sm text-red-800" data-i18n="delete_modal_warning">En supprimant votre compte :</p>
+                    <ul class="text-sm text-red-700 mt-2 space-y-1 list-disc list-inside">
+                        <li data-i18n="delete_modal_item1">Vos données personnelles seront définitivement effacées</li>
+                        <li data-i18n="delete_modal_item3">Vous ne pourrez plus accéder à votre historique</li>
+                        <li data-i18n="delete_modal_item4">Cette action est <strong>irréversible</strong></li>
+                    </ul>
+                </div>
+                <label class="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-lg cursor-pointer">
+                    <input type="checkbox" id="delete-confirm-checkbox" name="confirm_delete" value="1" required
+                        class="mt-0.5 w-4 h-4 text-red-600 border-red-300 rounded focus:ring-red-500">
+                    <span class="text-sm text-red-800" data-i18n="delete_modal_confirm_checkbox">Je comprends que la suppression de mon compte est <strong>définitive et irréversible</strong> et que toutes mes données personnelles seront effacées.</span>
+                </label>
+            </div>
+            <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-3">
+                <button type="button" id="cancel-delete" class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors" data-i18n="delete_modal_cancel">Annuler</button>
+                <button type="submit" id="confirm-delete-btn" disabled class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" data-i18n="delete_modal_confirm">Supprimer définitivement</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Delete account modal
+    const openDeleteBtn = document.getElementById('open-delete-modal');
+    const deleteModal = document.getElementById('delete-account-modal');
+    const closeDeleteBtn = document.getElementById('close-delete-modal');
+    const cancelDeleteBtn = document.getElementById('cancel-delete');
+    const deleteCheckbox = document.getElementById('delete-confirm-checkbox');
+    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+
+    function openDeleteModal() {
+        deleteModal.classList.remove('hidden');
+        if (deleteCheckbox) deleteCheckbox.checked = false;
+        confirmDeleteBtn.disabled = true;
+    }
+
+    function closeDeleteModal() {
+        deleteModal.classList.add('hidden');
+        if (deleteCheckbox) deleteCheckbox.checked = false;
+        confirmDeleteBtn.disabled = true;
+    }
+
+    if (openDeleteBtn) openDeleteBtn.addEventListener('click', openDeleteModal);
+    if (closeDeleteBtn) closeDeleteBtn.addEventListener('click', closeDeleteModal);
+    if (cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', closeDeleteModal);
+
+    // Close on backdrop click
+    if (deleteModal) {
+        deleteModal.addEventListener('click', function(e) {
+            if (e.target === deleteModal) closeDeleteModal();
+        });
+    }
+
+    // Enable/disable confirm button based on checkbox
+    if (deleteCheckbox) {
+        deleteCheckbox.addEventListener('change', function() {
+            confirmDeleteBtn.disabled = !this.checked;
+        });
+    }
+});
+</script>
 @endsection
 
 <!-- intl-tel-input JS -->

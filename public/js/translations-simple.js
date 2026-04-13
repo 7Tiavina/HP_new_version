@@ -418,7 +418,20 @@ if (typeof window.translations === 'undefined') {
         profile_title: "Mon Profil",
         profile_subtitle: "Gérez vos informations personnelles",
         profile_email_note: "L'email ne peut pas être modifié",
-        
+
+        // Delete Account (GDPR)
+        delete_account_title: "Supprimer mon compte",
+        delete_account_desc: "Cette action est irréversible. Toutes vos données personnelles seront définitivement supprimées conformément au RGPD.",
+        delete_account_btn: "Supprimer mon compte",
+        delete_modal_title: "Confirmer la suppression",
+        delete_modal_warning: "En supprimant votre compte :",
+        delete_modal_item1: "Vos données personnelles seront définitivement effacées",
+        delete_modal_item3: "Vous ne pourrez plus accéder à votre historique",
+        delete_modal_item4: "Cette action est <strong>irréversible</strong>",
+        delete_modal_confirm_checkbox: "Je comprends que la suppression de mon compte est <strong>définitive et irréversible</strong> et que toutes mes données personnelles seront effacées.",
+        delete_modal_cancel: "Annuler",
+        delete_modal_confirm: "Supprimer définitivement",
+
         // Header Menu
         header_admin: "Administrateur",
         header_my_dashboard: "Mon tableau de bord",
@@ -1146,7 +1159,20 @@ if (typeof window.translations === 'undefined') {
         profile_title: "My Profile",
         profile_subtitle: "Manage your personal information",
         profile_email_note: "Email cannot be changed",
-        
+
+        // Delete Account (GDPR)
+        delete_account_title: "Delete my account",
+        delete_account_desc: "This action is irreversible. All your personal data will be permanently deleted in accordance with GDPR.",
+        delete_account_btn: "Delete my account",
+        delete_modal_title: "Confirm deletion",
+        delete_modal_warning: "By deleting your account:",
+        delete_modal_item1: "Your personal data will be permanently deleted",
+        delete_modal_item3: "You will no longer be able to access your history",
+        delete_modal_item4: "This action is <strong>irreversible</strong>",
+        delete_modal_confirm_checkbox: "I understand that deleting my account is <strong>permanent and irreversible</strong> and that all my personal data will be erased.",
+        delete_modal_cancel: "Cancel",
+        delete_modal_confirm: "Delete permanently",
+
         // Header Menu
         header_admin: "Administrator",
         header_my_dashboard: "My dashboard",
