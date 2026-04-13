@@ -102,8 +102,12 @@ class AuthController extends Controller
             if (Hash::check($cleanPassword, $client->password_hash)) {
                 Auth::guard('client')->login($client);
                 $request->session()->regenerate();
-                
+
                 \Log::info('Client logged in successfully', ['client_id' => $client->id, 'email' => $email]);
+
+                if ($request->input('redirect_link_form')) {
+                    return redirect(route('payment'))->with('success', 'Connexion réussie !');
+                }
                 return redirect()->route('client.dashboard')->with('success', 'Connexion réussie !');
             } else {
                 \Log::warning('Client password mismatch', [
@@ -271,8 +275,13 @@ class AuthController extends Controller
         Auth::guard('client')->login($client);
         $request->session()->regenerate();
 
-        // Redirect to profile so user can fill in their address
-        return redirect()->route('client.profile')->with('success', 'Compte créé avec succès ! Complétez votre profil.');
+        if ($request->input('redirect_link_form')) {
+            return redirect(route('payment'))->with('success', 'Compte créé avec succès !');
+        }
+
+        // Redirect to profile so user can fill in their address, or back to payment if from payment flow
+        $redirect = session('from_payment') ? route('payment') : route('client.profile');
+        return redirect($redirect)->with('success', 'Compte créé avec succès !');
     }
 
     /**

@@ -454,6 +454,12 @@
 
                 <form id="login-form" method="POST" action="{{ route('auth.login.submit') }}">
                     @csrf
+                    @if(request()->query('from') === 'payment')
+                    <input type="hidden" name="redirect_payment" value="1">
+                    @endif
+                    @if(request()->query('from') === 'link-form')
+                    <input type="hidden" name="redirect_link_form" value="1">
+                    @endif
                     <div class="form-group">
                         <label for="login-email" data-i18n="login.emailLabel">Email</label>
                         <input type="email" id="login-email" name="email" required autocomplete="email" value="{{ old('email') }}">
@@ -485,6 +491,12 @@
 
                 <form id="register-form" method="POST" action="{{ route('client.register') }}">
                     @csrf
+                    @if(request()->query('from') === 'payment')
+                    <input type="hidden" name="redirect_payment" value="1">
+                    @endif
+                    @if(request()->query('from') === 'link-form')
+                    <input type="hidden" name="redirect_link_form" value="1">
+                    @endif
                     <div class="form-group">
                         <label for="register-firstname" data-i18n="register.firstNameLabel">Prénom</label>
                         <input type="text" id="register-firstname" name="prenom" required value="{{ old('prenom') }}">

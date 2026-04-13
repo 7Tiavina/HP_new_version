@@ -4,6 +4,7 @@
     $isClientLoggedIn = $clientGuard->check();
     $currentLang = session('app_language', 'fr');
     $langPrefix = $currentLang === 'en' ? '/en' : '';
+    $fromPayment = request()->routeIs('payment*') ? '?from=payment' : '';
 @endphp
 
 <style>
@@ -912,7 +913,7 @@
 
         <div class="nav-right-group">
             @if($isClientLoggedIn)
-                <a href="{{ route('account') }}" class="nav-user-email" title="Mon compte">
+                <a href="{{ route('account') }}{{ $fromPayment }}" class="nav-user-email" title="Mon compte">
                     <svg class="nav-user-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
@@ -1072,7 +1073,7 @@
         <!-- User account section -->
         <div class="mt-6 pt-6 border-t border-gray-200">
             @if($isClientLoggedIn)
-                <a href="{{ route('account') }}" onclick="setTimeout(function() { toggleDrawer(); }, 100);" class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                <a href="{{ route('account') }}{{ $fromPayment }}" onclick="setTimeout(function() { toggleDrawer(); }, 100);" class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors">
                     <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center flex-shrink-0">
                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
@@ -1084,7 +1085,7 @@
                     </div>
                 </a>
             @else
-                <a href="{{ route('account') }}" onclick="toggleDrawer();" class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                <a href="{{ route('account') }}{{ $fromPayment }}" onclick="toggleDrawer();" class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors">
                     <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
                         <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
@@ -1161,7 +1162,7 @@
         if (userIcon) {
             userIcon.addEventListener('click', function(e) {
                 e.stopPropagation();
-                window.location.href = @json(route('account'));
+                window.location.href = @json(route('account')) + '{{ $fromPayment }}';
             });
         }
 

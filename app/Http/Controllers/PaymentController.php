@@ -881,13 +881,13 @@ class PaymentController extends Controller
         }
     }
 
-    public function showPaymentPage()
+    public function showPaymentPage(Request $request)
     {
         Log::info('----------------------------------------------------');
         Log::info('[showPaymentPage] START - Handling /payment route.');
         Log::info('[showPaymentPage] Session ID: ' . session()->getId());
         Log::info('[showPaymentPage] Session data keys: ' . json_encode(array_keys(session()->all())));
-        
+
         // Check if user has already completed a payment recently (to prevent duplicate orders)
         $lastCommandeId = Session::get('last_commande_id');
         $apiPaymentResult = Session::get('api_payment_result');
@@ -896,6 +896,33 @@ class PaymentController extends Controller
         if ($lastCommandeId && $apiPaymentResult) {
             Log::info('[showPaymentPage] User has already completed a payment. Redirecting to success page.');
             return redirect()->route('payment.success.show')->with('info', 'Votre commande a déjà été traitée avec succès.');
+        }
+
+        // Restore booking state from login redirect (from /link-form context)
+        $bookingState = Session::get('booking_form_state');
+        if ($bookingState && !Session::has('commande_en_cours')) {
+            Log::info('[showPaymentPage] Restoring booking state from login redirect');
+            try {
+                $decodedState = json_decode(base64_decode($bookingState), true);
+                if ($decodedState && isset($decodedState['baggages']) && isset($decodedState['products'])) {
+                    // Forward to preparePayment to populate commande_en_cours
+                    $restoreRequest = new \Illuminate\Http\Request();
+                    $restoreRequest->replace($decodedState);
+                    $restoreRequest->request->set('guest_email', null);
+                    $restoreRequest->query->set('lang', $decodedState['lang'] ?? 'fr');
+                    $restoreRequest->cookies->replace($request->cookies->all());
+
+                    $prepareResponse = $this->preparePayment($restoreRequest);
+
+                    // preparePayment returns JSON with redirect_url to /payment
+                    // Clear booking state and redirect to /payment which now has commande_en_cours
+                    Session::forget('booking_form_state');
+                    return redirect(route('payment'));
+                }
+            } catch (\Exception $e) {
+                Log::error('[showPaymentPage] Failed to restore booking state: ' . $e->getMessage());
+            }
+            Session::forget('booking_form_state');
         }
 
         $commandeData = Session::get('commande_en_cours');

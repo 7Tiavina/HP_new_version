@@ -223,8 +223,17 @@ class FrontController extends Controller
     // and should no longer be present in FrontController directly.
     // The checkAvailability, getQuote, and getOptionsQuote methods below are correct.
 
-    public function showAccountPage()
+    public function showAccountPage(Request $request)
     {
+        if ($request->query('from') === 'payment') {
+            $request->session()->put('from_payment', true);
+        }
+
+        // Store booking state from /link-form so it survives login → /payment
+        if ($request->query('from') === 'link-form' && $request->query('state')) {
+            $request->session()->put('booking_form_state', $request->query('state'));
+        }
+
         return view('auth.account-page');
     }
 
@@ -418,8 +427,14 @@ class FrontController extends Controller
         Auth::guard('client')->login($client);
         $request->session()->regenerate();
 
-        // Redirect to profile so user can fill in their address
-        return redirect()->route('client.profile')->with('success', 'Compte créé avec succès ! Complétez votre profil.');
+        if ($request->input('redirect_link_form')) {
+            return redirect(route('payment'))->with('success', 'Compte créé avec succès !');
+        }
+
+        // Redirect to profile so user can fill in their address, or back to payment if from payment flow
+        $fromPayment = session('from_payment') || $request->input('redirect_payment');
+        $redirect = $fromPayment ? route('payment') : route('client.profile');
+        return redirect($redirect)->with('success', 'Compte créé avec succès !');
     }
 
     /**

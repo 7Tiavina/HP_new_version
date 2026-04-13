@@ -1010,6 +1010,36 @@
         checkAuthStatus: @json(url('check-auth-status')),
         preparePayment: @json(route('prepare.payment')),
     };
+
+    // Override login/register redirects for the /link-form context
+    // Pass command state via URL param so it survives login → /payment
+    var ACCOUNT_URL = @json(route('account'));
+    window.openLoginModal = function () {
+        if (typeof saveStateToSession === 'function') saveStateToSession();
+
+        var url = ACCOUNT_URL + '?from=link-form';
+        try {
+            var state = sessionStorage.getItem('bookingFormState');
+            if (state) {
+                url += '&state=' + encodeURIComponent(btoa(state));
+            }
+        } catch(e) {}
+
+        window.location.href = url;
+    };
+    window.openRegisterModal = function () {
+        if (typeof saveStateToSession === 'function') saveStateToSession();
+
+        var url = ACCOUNT_URL + '?from=link-form#register-panel';
+        try {
+            var state = sessionStorage.getItem('bookingFormState');
+            if (state) {
+                url = ACCOUNT_URL + '?from=link-form&state=' + encodeURIComponent(btoa(state)) + '#register-panel';
+            }
+        } catch(e) {}
+
+        window.location.href = url;
+    };
 </script>
 
 @php
