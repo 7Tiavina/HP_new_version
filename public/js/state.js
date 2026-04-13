@@ -25,6 +25,7 @@ let staticOptions = {
 function saveStateToSession() {
     const state = {
         airportId: document.getElementById('airport-select').value,
+        airportName: document.getElementById('airport-select').selectedOptions[0]?.text || '',
         dateDepot: document.getElementById('date-depot').value,
         heureDepot: document.getElementById('heure-depot').value,
         dateRecuperation: document.getElementById('date-recuperation').value,

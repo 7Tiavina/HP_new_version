@@ -888,6 +888,74 @@ class PaymentController extends Controller
         Log::info('[showPaymentPage] Session ID: ' . session()->getId());
         Log::info('[showPaymentPage] Session data keys: ' . json_encode(array_keys(session()->all())));
 
+        // Restore booking state from login redirect (from /link-form context)
+        $bookingState = Session::get('booking_form_state');
+        if ($bookingState && !Session::has('commande_en_cours')) {
+            Log::info('[showPaymentPage] Restoring booking state from login redirect');
+            try {
+                // Build a request and forward to preparePayment
+                $restoreRequest = new \Illuminate\Http\Request();
+                $restoreRequest->setMethod('POST');
+                $restoreRequest->query->set('lang', Session::get('app_language', 'fr'));
+
+                // Map cart data to preparePayment format
+                $dateDepot = $bookingState['dateDepot'];
+                $heureDepot = $bookingState['heureDepot'];
+                $dateRecup = $bookingState['dateRecuperation'];
+                $heureRecup = $bookingState['heureRecuperation'];
+                $airportName = $bookingState['airportName'] ?? '';
+
+                // Derive airport name from lieux data if not set
+                if (empty($airportName) && !empty($bookingState['globalLieuxData'])) {
+                    $firstLieu = reset($bookingState['globalLieuxData']);
+                    if (is_array($firstLieu)) {
+                        $airportName = $firstLieu['plateforme'] ?? '';
+                    }
+                }
+
+                $restoreRequest->request->set('airportId', $bookingState['airportId']);
+                $restoreRequest->request->set('airportName', $airportName);
+                $restoreRequest->request->set('dateDepot', $dateDepot);
+                $restoreRequest->request->set('heureDepot', $heureDepot);
+                $restoreRequest->request->set('dateRecuperation', $dateRecup);
+                $restoreRequest->request->set('heureRecuperation', $heureRecup);
+                $restoreRequest->request->set('guest_email', $bookingState['guestEmail'] ?? null);
+                $restoreRequest->request->set('lang', Session::get('app_language', 'fr'));
+                $restoreRequest->request->set('options', []);
+                $restoreRequest->request->set('contraintes', []);
+
+                // Convert cartItems to baggages format
+                $baggages = [];
+                $products = $bookingState['globalProductsData'] ?? [];
+                foreach ($bookingState['cartItems'] as $item) {
+                    // cartItems structure: {itemCategory, productId, quantity, baggageType, ...}
+                    if ($item['itemCategory'] === 'baggage' || $item['type'] === 'baggage') {
+                        $baggages[] = [
+                            'type' => $item['baggageType'] ?? $item['type'] ?? 'cabin',
+                            'quantity' => $item['quantity'] ?? 1,
+                        ];
+                    }
+                }
+                $restoreRequest->request->set('baggages', $baggages);
+                $restoreRequest->request->set('products', $products);
+
+                Log::info('[showPaymentPage] Calling preparePayment with restored state', [
+                    'baggages' => $baggages,
+                    'products_count' => count($products),
+                ]);
+
+                $prepareResponse = $this->preparePayment($restoreRequest);
+
+                // preparePayment populated commande_en_cours in session
+                // Clear booking state and redirect to /payment
+                Session::forget('booking_form_state');
+                return redirect(route('payment'));
+            } catch (\Exception $e) {
+                Log::error('[showPaymentPage] Failed to restore booking state: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+                Session::forget('booking_form_state');
+            }
+        }
+
         // Check if user has already completed a payment recently (to prevent duplicate orders)
         $lastCommandeId = Session::get('last_commande_id');
         $apiPaymentResult = Session::get('api_payment_result');
@@ -896,33 +964,6 @@ class PaymentController extends Controller
         if ($lastCommandeId && $apiPaymentResult) {
             Log::info('[showPaymentPage] User has already completed a payment. Redirecting to success page.');
             return redirect()->route('payment.success.show')->with('info', 'Votre commande a déjà été traitée avec succès.');
-        }
-
-        // Restore booking state from login redirect (from /link-form context)
-        $bookingState = Session::get('booking_form_state');
-        if ($bookingState && !Session::has('commande_en_cours')) {
-            Log::info('[showPaymentPage] Restoring booking state from login redirect');
-            try {
-                $decodedState = json_decode(base64_decode($bookingState), true);
-                if ($decodedState && isset($decodedState['baggages']) && isset($decodedState['products'])) {
-                    // Forward to preparePayment to populate commande_en_cours
-                    $restoreRequest = new \Illuminate\Http\Request();
-                    $restoreRequest->replace($decodedState);
-                    $restoreRequest->request->set('guest_email', null);
-                    $restoreRequest->query->set('lang', $decodedState['lang'] ?? 'fr');
-                    $restoreRequest->cookies->replace($request->cookies->all());
-
-                    $prepareResponse = $this->preparePayment($restoreRequest);
-
-                    // preparePayment returns JSON with redirect_url to /payment
-                    // Clear booking state and redirect to /payment which now has commande_en_cours
-                    Session::forget('booking_form_state');
-                    return redirect(route('payment'));
-                }
-            } catch (\Exception $e) {
-                Log::error('[showPaymentPage] Failed to restore booking state: ' . $e->getMessage());
-            }
-            Session::forget('booking_form_state');
         }
 
         $commandeData = Session::get('commande_en_cours');

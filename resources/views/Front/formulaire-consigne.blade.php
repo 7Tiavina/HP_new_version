@@ -1012,33 +1012,44 @@
     };
 
     // Override login/register redirects for the /link-form context
-    // Pass command state via URL param so it survives login → /payment
+    // Save complete command state to server BEFORE redirect, so it survives login → /payment
     var ACCOUNT_URL = @json(route('account'));
-    window.openLoginModal = function () {
+    window.openLoginModal = async function () {
         if (typeof saveStateToSession === 'function') saveStateToSession();
 
-        var url = ACCOUNT_URL + '?from=link-form';
+        // Save command to server session before redirect
         try {
-            var state = sessionStorage.getItem('bookingFormState');
-            if (state) {
-                url += '&state=' + encodeURIComponent(btoa(state));
+            var formState = JSON.parse(sessionStorage.getItem('formState') || '{}');
+            if (formState.cartItems && formState.cartItems.length > 0) {
+                await fetch(@json(route('api.save-command-state')), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '' },
+                    body: JSON.stringify(formState)
+                });
+                console.log('[openLoginModal] Command state saved to server');
             }
-        } catch(e) {}
+        } catch(e) { console.warn('Failed to save command state:', e); }
 
-        window.location.href = url;
+        window.location.href = ACCOUNT_URL + '?from=link-form';
     };
-    window.openRegisterModal = function () {
+    window.openRegisterModal = async function () {
         if (typeof saveStateToSession === 'function') saveStateToSession();
 
-        var url = ACCOUNT_URL + '?from=link-form#register-panel';
         try {
-            var state = sessionStorage.getItem('bookingFormState');
-            if (state) {
-                url = ACCOUNT_URL + '?from=link-form&state=' + encodeURIComponent(btoa(state)) + '#register-panel';
+            var fs2 = JSON.parse(sessionStorage.getItem('formState') || '{}');
+            if (fs2.cartItems && fs2.cartItems.length > 0) {
+                await fetch(@json(route('api.save-command-state')), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '' },
+                    body: JSON.stringify(fs2)
+                });
+                console.log('[openRegisterModal] Command state saved to server');
             }
-        } catch(e) {}
+        } catch(e) { console.warn('Failed to save command state:', e); }
 
-        window.location.href = url;
+        window.location.href = ACCOUNT_URL + '?from=link-form#register-panel';
     };
 </script>
 

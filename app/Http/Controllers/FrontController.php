@@ -229,12 +229,39 @@ class FrontController extends Controller
             $request->session()->put('from_payment', true);
         }
 
-        // Store booking state from /link-form so it survives login → /payment
-        if ($request->query('from') === 'link-form' && $request->query('state')) {
-            $request->session()->put('booking_form_state', $request->query('state'));
+        return view('auth.account-page');
+    }
+
+    /**
+     * Save booking form state to Laravel session (for login redirect flow)
+     */
+    public function saveCommandState(Request $request)
+    {
+        $validated = $request->validate([
+            'airportId' => 'required|string',
+            'airportName' => 'nullable|string',
+            'dateDepot' => 'required|string',
+            'heureDepot' => 'required|string',
+            'dateRecuperation' => 'required|string',
+            'heureRecuperation' => 'required|string',
+            'cartItems' => 'required|array',
+            'globalProductsData' => 'required|array',
+            'globalLieuxData' => 'nullable|array',
+            'guestEmail' => 'nullable|string',
+        ]);
+
+        // Try to get airport name from lieux data
+        if (empty($validated['airportName']) && !empty($validated['globalLieuxData'])) {
+            $firstLieu = reset($validated['globalLieuxData']);
+            if (is_array($firstLieu)) {
+                $validated['airportName'] = $firstLieu['plateforme'] ?? '';
+            }
         }
 
-        return view('auth.account-page');
+        $request->session()->put('booking_form_state', $validated);
+        \Log::info('Command state saved to session', ['cartItems_count' => count($validated['cartItems'])]);
+
+        return response()->json(['status' => 'ok']);
     }
 
     public function showClientLogin()
@@ -431,10 +458,8 @@ class FrontController extends Controller
             return redirect(route('payment'))->with('success', 'Compte créé avec succès !');
         }
 
-        // Redirect to profile so user can fill in their address, or back to payment if from payment flow
-        $fromPayment = session('from_payment') || $request->input('redirect_payment');
-        $redirect = $fromPayment ? route('payment') : route('client.profile');
-        return redirect($redirect)->with('success', 'Compte créé avec succès !');
+        // Redirect to profile so user can fill in their address
+        return redirect()->route('client.profile')->with('success', 'Compte créé avec succès !');
     }
 
     /**

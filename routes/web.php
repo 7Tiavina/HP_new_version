@@ -138,6 +138,7 @@ Route::get('/bdm-status', function () {
 // Nouvelles routes pour les appels de l'API BDM via le FrontController
 Route::post('/api/check-availability', [FrontController::class, 'checkAvailability'])->name('api.check-availability');
 Route::post('/api/get-quote', [FrontController::class, 'getQuote'])->name('api.get-quote');
+Route::post('/api/save-command-state', [FrontController::class, 'saveCommandState'])->name('api.save-command-state');
 Route::get('/api/plateforme/{idPlateforme}/lieux', [FrontController::class, 'getLieux'])->name('api.lieux');
 // Test : vérifier si l'API BDM renvoie des remises sur les produits
 Route::get('/api/test-remises', [FrontController::class, 'testApiRemises'])->name('api.test-remises');

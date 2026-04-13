@@ -279,9 +279,8 @@ class AuthController extends Controller
             return redirect(route('payment'))->with('success', 'Compte créé avec succès !');
         }
 
-        // Redirect to profile so user can fill in their address, or back to payment if from payment flow
-        $redirect = session('from_payment') ? route('payment') : route('client.profile');
-        return redirect($redirect)->with('success', 'Compte créé avec succès !');
+        // Redirect to profile so user can fill in their address
+        return redirect()->route('client.profile')->with('success', 'Compte créé avec succès !');
     }
 
     /**

@@ -454,9 +454,6 @@
 
                 <form id="login-form" method="POST" action="{{ route('auth.login.submit') }}">
                     @csrf
-                    @if(request()->query('from') === 'payment')
-                    <input type="hidden" name="redirect_payment" value="1">
-                    @endif
                     @if(request()->query('from') === 'link-form')
                     <input type="hidden" name="redirect_link_form" value="1">
                     @endif
@@ -491,9 +488,6 @@
 
                 <form id="register-form" method="POST" action="{{ route('client.register') }}">
                     @csrf
-                    @if(request()->query('from') === 'payment')
-                    <input type="hidden" name="redirect_payment" value="1">
-                    @endif
                     @if(request()->query('from') === 'link-form')
                     <input type="hidden" name="redirect_link_form" value="1">
                     @endif
