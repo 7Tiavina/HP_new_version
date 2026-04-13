@@ -197,6 +197,15 @@
         padding: 10px 0;
         z-index: 1000;
     }
+    /* Invisible bridge to keep dropdown open when moving cursor */
+    #servicesDropdown::before {
+        content: '';
+        position: absolute;
+        top: -30px;
+        left: 0;
+        right: 0;
+        height: 30px;
+    }
     #servicesItem:hover #servicesDropdown,
     #servicesDropdown.open {
         display: block;
@@ -1039,7 +1048,7 @@
                 <div class="nav-dropdown-menu" id="servicesDropdown">
                     <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/consigne-bagages/">
                         <span class="drop-arrow">↗</span>
-                        <span class="drop-text" data-i18n="service_consigne">Consigne Bagages</span>
+                        <span class="drop-text" data-i18n="service_consigne">Consigne à Bagages</span>
                     </a>
                     <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/transfert-livraison-bagages/">
                         <span class="drop-arrow">↗</span>
@@ -1055,7 +1064,7 @@
                     </a>
                     <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services-facilitateurs-de-voyage/">
                         <span class="drop-arrow">↗</span>
-                        <span class="drop-text" data-i18n="service_facilitateurs">Services Facilitateurs de Voyage</span>
+                        <span class="drop-text" data-i18n="service_facilitateurs">Services Pratiques</span>
                     </a>
                 </div>
             </li>
