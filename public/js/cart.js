@@ -148,9 +148,9 @@ function updateCartDisplay() {
             
             // Translate option labels
             if (libelle === 'Priority' || libelle === 'Service Priority') {
-                libelle = typeof window.t === 'function' ? window.t('drawer_priority_title', 'Priority Service') : 'Priority Service';
+                libelle = typeof window.t === 'function' ? window.t('drawer_priority_cart_label', 'Priority Product') : 'Priority Product';
             } else if (libelle === 'Premium' || libelle === 'Service Premium') {
-                libelle = typeof window.t === 'function' ? window.t('drawer_premium_title', 'Premium Service') : 'Premium Service';
+                libelle = typeof window.t === 'function' ? window.t('drawer_premium_cart_label', 'Premium - Porter Service and Product') : 'Premium - Porter Service and Product';
             }
         } else if (item.itemCategory === 'contrainte') {
             // Contrainte obligatoire - prix déjà défini dans l'item

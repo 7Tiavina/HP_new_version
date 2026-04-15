@@ -461,6 +461,13 @@ function updateDrawerCart() {
             itemTotal = unitPriceValue * (item.quantity || 1);
             // Use new icon images for options
             itemIcon = getItemIcon(item, '');
+            
+            // Translate option labels for cart display
+            if (item.key === 'priority') {
+                libelle = typeof window.t === 'function' ? window.t('drawer_priority_cart_label', 'Priority Product') : 'Priority Product';
+            } else if (item.key === 'premium') {
+                libelle = typeof window.t === 'function' ? window.t('drawer_premium_cart_label', 'Premium - Porter Service and Product') : 'Premium - Porter Service and Product';
+            }
         } else if (item.itemCategory === 'contrainte') {
             // Contraintes: use prix from item
             unitPriceValue = parseFloat(item.prix) || parseFloat(item.prixUnitaire) || 0;

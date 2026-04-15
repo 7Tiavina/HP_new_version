@@ -918,8 +918,18 @@
                                     $icon = $product_map_icons[$libelle] ?? $default_icon;
                                     // Map libelle to translation key - remove accents
                                     $libelleKey = strtolower(str_replace(' ', '_', $libelle));
-                                    // Remove accents and special characters
-                                    $libelleKey = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $libelleKey);
+                                    // Remove accents and special characters with multiple fallbacks
+                                    if (function_exists('iconv')) {
+                                        $libelleKey = @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $libelleKey);
+                                    }
+                                    if ($libelleKey === false || $libelleKey === '') {
+                                        // Fallback: manual character replacement
+                                        $libelleKey = str_replace(
+                                            ['é', 'è', 'ê', 'ë', 'à', 'â', 'ä', 'ù', 'û', 'ü', 'ô', 'ö', 'î', 'ï', 'ç', 'É', 'È', 'Ê', 'Ë', 'À', 'Â', 'Ä', 'Ù', 'Û', 'Ü', 'Ô', 'Ö', 'Î', 'Ï', 'Ç'],
+                                            ['e', 'e', 'e', 'e', 'a', 'a', 'a', 'u', 'u', 'u', 'o', 'o', 'i', 'i', 'c', 'E', 'E', 'E', 'E', 'A', 'A', 'A', 'U', 'U', 'U', 'O', 'O', 'I', 'I', 'C'],
+                                            strtolower(str_replace(' ', '_', $libelle))
+                                        );
+                                    }
                                     $i18nKey = 'luggage_' . $libelleKey;
                                 @endphp
                                 <div class="baggage-option p-4 rounded-lg flex flex-col items-center justify-between space-y-2" data-product-id="{{ $product['id'] }}" data-libelle="{{ $libelle }}">
@@ -1066,7 +1076,7 @@
     (function() {
         var sessionLang = '{{ session("app_language", "fr") }}';
         var savedLang = localStorage.getItem('app_language');
-        
+
         if (!savedLang) {
             var deviceLang = navigator.language || navigator.userLanguage || '';
             var langCode = (deviceLang || '').toLowerCase().split('-')[0];
@@ -1505,49 +1515,55 @@
     // OR if user is returning after successful payment (always reset)
     const urlParams = new URLSearchParams(window.location.search);
     const isNewReservation = urlParams.get('new') === '1';
+    const isCleared = urlParams.get('cleared') === '1';
+
+    // Only reset form when explicitly requested (new=1, cleared=1, or returning from payment)
+    // Otherwise, restore from session on normal page refresh
+    const shouldReset = isNewReservation || isCleared;
     
-    // ALWAYS reset form when accessing /link-form directly
-    // This ensures users start fresh after successful payment
-    console.log('[Form Reset] Resetting all form data on page load...');
-    sessionStorage.removeItem('formState');
-    
-    // Clear any form inputs
-    const airportSelect = document.getElementById('airport-select');
-    const dateDepot = document.getElementById('date-depot');
-    const heureDepot = document.getElementById('heure-depot');
-    const dateRecup = document.getElementById('date-recuperation');
-    const heureRecup = document.getElementById('heure-recuperation');
+    if (shouldReset) {
+        console.log('[Form Reset] Resetting all form data on page load...');
+        sessionStorage.removeItem('formState');
 
-    if (airportSelect) airportSelect.value = '';
-    if (dateDepot) dateDepot.value = '';
-    if (heureDepot) heureDepot.value = '';
-    if (dateRecup) dateRecup.value = '';
-    if (heureRecup) heureRecup.value = '';
+        // Clear any form inputs
+        const airportSelect = document.getElementById('airport-select');
+        const dateDepot = document.getElementById('date-depot');
+        const heureDepot = document.getElementById('heure-depot');
+        const dateRecup = document.getElementById('date-recuperation');
+        const heureRecup = document.getElementById('heure-recuperation');
 
-    // Reset form to step 1
-    const step1 = document.getElementById('step-1');
-    const baggageStep = document.getElementById('baggage-selection-step');
-    const stickyWrapper = document.getElementById('sticky-wrapper');
-    const backBtn = document.getElementById('back-to-step-1-btn');
+        if (airportSelect) airportSelect.value = '';
+        if (dateDepot) dateDepot.value = '';
+        if (heureDepot) heureDepot.value = '';
+        if (dateRecup) dateRecup.value = '';
+        if (heureRecup) heureRecup.value = '';
 
-    if (step1) {
-        step1.style.display = 'block';
-        step1.classList.add('hp-step-active');
+        // Reset form to step 1
+        const step1 = document.getElementById('step-1');
+        const baggageStep = document.getElementById('baggage-selection-step');
+        const stickyWrapper = document.getElementById('sticky-wrapper');
+        const backBtn = document.getElementById('back-to-step-1-btn');
+
+        if (step1) {
+            step1.style.display = 'block';
+            step1.classList.add('hp-step-active');
+        }
+        if (baggageStep) baggageStep.style.display = 'none';
+        if (stickyWrapper) stickyWrapper.style.display = 'none';
+        if (backBtn) backBtn.classList.add('hidden');
+
+        // Initialize timepickers with default values
+        if (typeof initializeTimepickers === 'function') {
+            setTimeout(initializeTimepickers, 100);
+        }
+
+        // Clean URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+
+        console.log('[Form Reset] Form reset complete. Starting fresh at step 1.');
+    } else {
+        console.log('[Form Restore] Attempting to restore form state from sessionStorage...');
     }
-    if (baggageStep) baggageStep.style.display = 'none';
-    if (stickyWrapper) stickyWrapper.style.display = 'none';
-    if (backBtn) backBtn.classList.add('hidden');
-
-    // Initialize timepickers with default values
-    if (typeof initializeTimepickers === 'function') {
-        setTimeout(initializeTimepickers, 100);
-    }
-    
-    // Clean URL
-    window.history.replaceState({}, document.title, window.location.pathname);
-    
-    // Skip loadStateFromSession since we want a fresh start
-    console.log('[Form Reset] Form reset complete. Starting fresh at step 1.');
 
     // Le setup des listeners de la modale custom est déjà dans modal.js
     // Le setup des listeners du booking est dans booking.js
@@ -1591,6 +1607,14 @@
             setTimeout(alignStickyWithBaggage, 50);
         }
     });
+
+    // Apply translations on page load for luggage items and other data-i18n elements
+    if (typeof applyLanguage === 'function') {
+        setTimeout(function() {
+            applyLanguage();
+            console.log('[Lang] Translations applied on page load, lang:', window.getCurrentLanguage ? window.getCurrentLanguage() : 'unknown');
+        }, 200);
+    }
 </script>
 @endpush
 

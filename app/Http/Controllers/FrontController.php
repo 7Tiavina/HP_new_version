@@ -52,24 +52,30 @@ class FrontController extends Controller
             }
         }
 
-        // Reset form session for new reservation
-        // Clear ALL booking-related data and force return to step 1
-        // Preserve authentication if user is logged in
-        $authGuard = Auth::guard('client');
-        $isAuthenticated = $authGuard->check();
-        $authUserId = $isAuthenticated ? $authGuard->id() : null;
-        $authUserData = null;
-        
-        if ($isAuthenticated && $authUserId) {
-            $authUser = $authGuard->user();
-            $authUserData = [
-                'id' => $authUser->id,
-                'email' => $authUser->email,
-            ];
-        }
-        
-        // Comprehensive list of all booking/session keys to clear
-        $keysToClear = [
+        // Only reset form session for new reservation or explicit clear request
+        // Check for ?new=1 or ?cleared=1 parameters
+        $isNewReservation = $request->query('new') === '1';
+        $isCleared = $request->query('cleared') === '1';
+        $shouldReset = $isNewReservation || $isCleared;
+
+        if ($shouldReset) {
+            // Clear ALL booking-related data and force return to step 1
+            // Preserve authentication if user is logged in
+            $authGuard = Auth::guard('client');
+            $isAuthenticated = $authGuard->check();
+            $authUserId = $isAuthenticated ? $authGuard->id() : null;
+            $authUserData = null;
+
+            if ($isAuthenticated && $authUserId) {
+                $authUser = $authGuard->user();
+                $authUserData = [
+                    'id' => $authUser->id,
+                    'email' => $authUser->email,
+                ];
+            }
+
+            // Comprehensive list of all booking/session keys to clear
+            $keysToClear = [
             // Form state
             'formState',
             'booking_data',
@@ -112,10 +118,13 @@ class FrontController extends Controller
             'payment_intent',
             'session_token',
         ];
-        
-        $request->session()->forget($keysToClear);
-        
-        Log::info('Form reset on redirect to /link-form. Auth preserved: ' . ($isAuthenticated ? 'YES (user ID: ' . $authUserId . ')' : 'NO (guest)'));
+
+            $request->session()->forget($keysToClear);
+
+            Log::info('Form reset on redirect to /link-form. Auth preserved: ' . ($isAuthenticated ? 'YES (user ID: ' . $authUserId . ')' : 'NO (guest)'));
+        } else {
+            Log::info('Form state preserved on redirect to /link-form (no reset requested)');
+        }
 
         try {
             $responsePlateformes = $this->bdmApiService->getPlateformes();

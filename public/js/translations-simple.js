@@ -529,9 +529,11 @@ if (typeof window.translations === 'undefined') {
         drawer_options_subtitle: "Personnalisez votre expérience de voyage",
         drawer_priority_label: "PRIORITAIRE",
         drawer_priority_title: "Service Priority",
+        drawer_priority_cart_label: "Produit.PRIO",
         drawer_priority_desc: "Traitement prioritaire de vos bagages à la dépose et à la récupération. Gagnez du temps et évitez les files d'attente.",
         drawer_premium_label: "PREMIUM",
         drawer_premium_title: "Service Premium",
+        drawer_premium_cart_label: "Premium - Service Porteur et Produit.PRIO",
         drawer_premium_desc_simple: "Remise ou récupération de vos bagages à l'endroit exact choisi dans l'aéroport avec porteur dédié. Service VIP complet.",
         drawer_premium_unavailable: "Service Premium indisponible",
         drawer_cart_title: "Votre panier",
@@ -839,9 +841,11 @@ if (typeof window.translations === 'undefined') {
         drawer_options_subtitle: "Personalize your travel experience",
         drawer_priority_label: "PRIORITY",
         drawer_priority_title: "Priority Service",
+        drawer_priority_cart_label: "Priority Product",
         drawer_priority_desc: "Priority handling of your luggage at drop-off and pickup. Save time and avoid queues.",
         drawer_premium_label: "PREMIUM",
         drawer_premium_title: "Premium Service",
+        drawer_premium_cart_label: "Premium - Porter Service and Product",
         drawer_premium_desc_simple: "Drop-off or pickup of your luggage at the exact location chosen in the airport with dedicated porter. Full VIP service.",
         drawer_premium_unavailable: "Premium service unavailable",
         drawer_cart_title: "Your cart",
@@ -1462,6 +1466,8 @@ function applyLanguage(lang) {
             translatedHtml = translatedHtml.replace(/LANG_PREFIX/g, langPrefix);
             el.innerHTML = translatedHtml;
             console.log('✓ Translated:', key, 'from', oldText, 'to', translatedHtml);
+        } else {
+            console.warn('✗ Translation key not found:', key, 'for language:', lang);
         }
     });
 
