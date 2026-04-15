@@ -580,27 +580,13 @@
 
     <!-- Drawer Footer - Fixed at bottom -->
     <div class="border-t-2 border-yellow-400 p-4 bg-white flex-shrink-0">
-        <div class="flex flex-col items-center gap-4">
-            <div class="flex justify-end w-full">
-                <button id="confirm-options-drawer" class="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-3.5 px-10 rounded-full transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105 duration-300 text-base flex items-center gap-2.5 group" data-i18n="drawer_confirm">
-                    <span>Continuer</span>
-                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Language Switcher below the button -->
-            <div class="flex items-center justify-center gap-8 w-full py-2 border-t border-gray-100">
-                <button data-lang="fr" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                    <img src="https://flagcdn.com/w40/fr.png" alt="FR" class="w-6 h-auto shadow-sm rounded-sm">
-                    <span class="text-sm font-bold text-gray-800">FR</span>
-                </button>
-                <button data-lang="en" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                    <img src="https://flagcdn.com/w40/us.png" alt="EN" class="w-6 h-auto shadow-sm rounded-sm">
-                    <span class="text-sm font-bold text-gray-800">EN</span>
-                </button>
-            </div>
+        <div class="flex justify-end w-full">
+            <button id="confirm-options-drawer" class="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-3.5 px-10 rounded-full transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105 duration-300 text-base flex items-center gap-2.5 group" data-i18n="drawer_confirm">
+                <span>Continuer</span>
+                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+            </button>
         </div>
     </div>
 </div>

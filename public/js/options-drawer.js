@@ -423,7 +423,27 @@ function updateDrawerCart() {
             if (unitPriceBeforeDiscount === 0) unitPriceBeforeDiscount = unitPriceValue;
             itemTotal = unitPriceValue * (item.quantity || 1);
             libelle = product ? (product.libelle || product.nom || libelle) : libelle;
-            libelle = (item.quantity || 1) + ' × ' + libelle;
+            
+            // Translate the libelle if possible
+            const translationMap = {
+                'Accessoires': 'luggage_accessoires',
+                'Bagage cabine': 'luggage_bagage_cabine',
+                'Bagage soute': 'luggage_bagage_soute',
+                'Bagage spécial': 'luggage_bagage_special',
+                'Vestiaire': 'luggage_vestiaire'
+            };
+            // Remove quantity prefix for translation lookup
+            const libelleForTranslation = libelle.replace(/^\d+\s*×\s*/, '');
+            if (translationMap[libelleForTranslation]) {
+                libelle = typeof window.t === 'function' ? window.t(translationMap[libelleForTranslation], libelleForTranslation) : libelleForTranslation;
+            } else {
+                libelle = libelleForTranslation;
+            }
+            // Re-add quantity prefix if needed
+            if ((item.quantity || 1) > 1) {
+                libelle = (item.quantity || 1) + ' × ' + libelle;
+            }
+            
             // Use product image for baggage
             itemIcon = getItemIcon(item, product?.libelle || product?.nom || '');
         } else if (item.itemCategory === 'option') {
