@@ -147,14 +147,35 @@
             </a>
         </div>
 
-        <!-- Mobile menu button -->
-        <button class="lg:hidden inline-flex items-center gap-3 font-bold text-gray-900"
-                x-data
-                @click="$dispatch('hp-toggle-mobile')"
-                aria-label="Open menu">
-            <span class="uppercase">Menu</span>
-            <span class="w-8 h-8 rounded-full bg-gray-900 text-white inline-flex items-center justify-center">≡</span>
-        </button>
+        <!-- Mobile actions -->
+        <div class="lg:hidden flex items-center gap-3">
+            @if($isClientLoggedIn)
+                <a href="{{ route('client.dashboard') }}" 
+                   class="w-9 h-9 rounded-full bg-gray-900 text-white flex items-center justify-center hover:bg-gray-800 transition-colors"
+                   aria-label="Mon compte">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                    </svg>
+                </a>
+            @else
+                <a href="{{ route('account') }}" 
+                   class="w-9 h-9 rounded-full bg-gray-100 text-gray-700 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                   aria-label="Se connecter">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                    </svg>
+                </a>
+            @endif
+
+            <!-- Mobile menu button -->
+            <button class="inline-flex items-center gap-2 font-bold text-gray-900"
+                    x-data
+                    @click="$dispatch('hp-toggle-mobile')"
+                    aria-label="Open menu">
+                <span class="uppercase text-sm">Menu</span>
+                <span class="w-9 h-9 rounded-full bg-gray-900 text-white inline-flex items-center justify-center text-xl">≡</span>
+            </button>
+        </div>
     </div>
 </header>
 
@@ -183,55 +204,6 @@
                         aria-label="Close menu">
                     &times;
                 </button>
-            </div>
-
-            <!-- Login/Account section (same as header with user icon) -->
-            <div class="mt-4 flex items-center justify-between border-t border-gray-200 pt-4">
-                @if($isClientLoggedIn)
-                    <div class="flex items-center gap-3">
-                        <!-- User icon (same as header) -->
-                        <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-gray-900">{{ $clientGuard->user()->email ?? 'Client' }}</p>
-                            <a href="{{ route('client.dashboard') }}" @click="open = false; document.body.classList.remove('drawer-chatbot-hidden');" 
-                               class="text-xs text-yellow-600 hover:text-yellow-700 font-medium">Mon compte</a>
-                        </div>
-                    </div>
-                    <a href="{{ route('client.dashboard') }}" 
-                       @click="open = false; document.body.classList.remove('drawer-chatbot-hidden');"
-                       class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-full text-sm transition-colors">
-                        Dashboard
-                    </a>
-                @else
-                    <div class="flex items-center gap-3">
-                        <!-- User icon (same as header) -->
-                        <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
-                            <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                            </svg>
-                        </div>
-                        <div>
-                            <p class="text-sm font-bold text-gray-900">Connectez-vous</p>
-                            <p class="text-xs text-gray-500">Accédez à vos réservations</p>
-                        </div>
-                    </div>
-                    <div class="flex gap-2">
-                        <a href="{{ route('account') }}"
-                           @click="open = false; document.body.classList.remove('drawer-chatbot-hidden');"
-                           class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-full text-sm transition-colors">
-                            Login
-                        </a>
-                        <a href="{{ route('account') }}#register-panel"
-                           @click="open = false; document.body.classList.remove('drawer-chatbot-hidden');"
-                           class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-2 px-4 rounded-full text-sm transition-colors">
-                            Register
-                        </a>
-                    </div>
-                @endif
             </div>
         </div>
 

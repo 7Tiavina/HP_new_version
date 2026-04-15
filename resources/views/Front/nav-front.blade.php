@@ -983,7 +983,7 @@
         }
 
         .nav-center-menu,
-        .nav-right-group .icon-action,
+        .nav-right-group .icon-action:not(.mobile-user-icon),
         .nav-right-group .luxe-auth-inject,
         .nav-right-group .btn-reserve {
             display: none;
@@ -992,12 +992,29 @@
         .nav-right-group {
             display: flex;
             align-items: center;
+            gap: 10px;
             margin-left: auto;
+        }
+
+        .mobile-user-icon {
+            display: flex !important;
+            width: 38px;
+            height: 38px;
+            background: #f3f4f6;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            color: #374151;
+        }
+
+        .mobile-user-icon.logged-in {
+            background: #FAC12E;
+            color: #000;
         }
 
         .hamburger-menu {
             display: flex;
-            margin-left: 10px;
+            margin-left: 5px;
         }
     }
 </style>
@@ -1085,6 +1102,12 @@
                     </svg>
                     <span class="nav-user-email-text">{{ $clientGuard->user()->prenom ?? 'Client' }}</span>
                 </a>
+                <a href="{{ route('account') }}{{ $fromPayment }}" class="mobile-user-icon logged-in" title="Mon compte">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
             @else
                 <div class="icon-action" id="user-icon-trigger" style="cursor: pointer;" title="Se connecter">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1092,6 +1115,12 @@
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                 </div>
+                <a href="{{ route('account') }}{{ $fromPayment }}" class="mobile-user-icon" title="Se connecter">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </a>
             @endif
 
             <div class="luxe-auth-inject" style="display: none;"></div>
@@ -1242,32 +1271,6 @@
         <div class="drawer-contact-item">
             <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
             <a href="mailto:contact@hellopassenger.com">contact@hellopassenger.com</a>
-        </div>
-
-        <!-- User account section -->
-        <div class="mt-6 pt-6 border-t border-gray-200">
-            @if($isClientLoggedIn)
-                <a href="{{ route('account') }}{{ $fromPayment }}" onclick="setTimeout(function() { toggleDrawer(); }, 100);" class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-full flex items-center justify-center flex-shrink-0">
-                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-sm font-bold text-gray-900 truncate">{{ $clientGuard->user()->prenom ?? 'Client' }}</p>
-                        <p class="text-xs text-yellow-600 hover:text-yellow-700">Mon compte →</p>
-                    </div>
-                </a>
-            @else
-                <a href="{{ route('account') }}{{ $fromPayment }}" onclick="toggleDrawer();" class="flex items-center gap-3 w-full p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                    <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center flex-shrink-0">
-                        <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-                    <span class="text-sm font-bold text-gray-900" data-i18n="login_btn">Se connecter</span>
-                </a>
-            @endif
         </div>
     </div>
 
