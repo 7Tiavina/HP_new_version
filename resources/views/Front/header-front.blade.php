@@ -53,7 +53,7 @@
         </a>
 
         <!-- Desktop nav -->
-        <nav class="hidden lg:flex items-center gap-6 text-gray-900 font-medium" x-data>
+        <nav class="hidden xl:flex items-center gap-6 text-gray-900 font-medium" x-data>
             <a href="{{ route('form-consigne') }}" class="hover:text-gray-700">Home</a>
 
             <div class="relative" x-data="{ open: false }">
@@ -98,7 +98,7 @@
         </nav>
 
         <!-- Right actions -->
-        <div class="hidden lg:flex items-center gap-6">
+        <div class="hidden xl:flex items-center gap-6">
             <!-- Social -->
             <div class="hidden xl:flex items-center gap-4 text-gray-700 font-semibold">
                 <a href="https://www.facebook.com/hello.passenger.officiel/" class="hover:text-gray-900" target="_blank" rel="noopener noreferrer">Facebook</a>
@@ -148,18 +148,18 @@
         </div>
 
         <!-- Mobile actions -->
-        <div class="lg:hidden flex items-center gap-3">
+        <div class="xl:hidden flex items-center justify-end gap-3">
             @if($isClientLoggedIn)
-                <a href="{{ route('client.dashboard') }}" 
-                   class="w-9 h-9 rounded-full bg-gray-900 text-white flex items-center justify-center hover:bg-gray-800 transition-colors"
+                <a href="{{ route('client.dashboard') }}"
+                   class="w-9 h-9 rounded-full bg-gray-900 text-white flex items-center justify-center hover:bg-gray-800 transition-colors shrink-0"
                    aria-label="Mon compte">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
                     </svg>
                 </a>
             @else
-                <a href="{{ route('account') }}" 
-                   class="w-9 h-9 rounded-full bg-gray-100 text-gray-700 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                <a href="{{ route('account') }}"
+                   class="w-9 h-9 rounded-full bg-gray-100 text-gray-700 flex items-center justify-center hover:bg-gray-200 transition-colors shrink-0"
                    aria-label="Se connecter">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
@@ -168,19 +168,18 @@
             @endif
 
             <!-- Mobile menu button -->
-            <button class="inline-flex items-center gap-2 font-bold text-gray-900"
+            <button class="w-9 h-9 rounded-full bg-gray-900 text-white flex items-center justify-center text-xl shrink-0"
                     x-data
                     @click="$dispatch('hp-toggle-mobile')"
                     aria-label="Open menu">
-                <span class="uppercase text-sm">Menu</span>
-                <span class="w-9 h-9 rounded-full bg-gray-900 text-white inline-flex items-center justify-center text-xl">≡</span>
+                ≡
             </button>
         </div>
     </div>
 </header>
 
 <!-- Mobile menu -->
-<div class="lg:hidden" x-data="{ open: false }" 
+<div class="xl:hidden" x-data="{ open: false }" 
      @hp-toggle-mobile.window="open = true; document.body.classList.add('drawer-chatbot-hidden');" 
      @keydown.escape.window="open = false; document.body.classList.remove('drawer-chatbot-hidden');">
     <div x-show="open" 

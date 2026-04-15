@@ -50,7 +50,9 @@ if (typeof window.translations === 'undefined') {
         placeholder_nom: "Nom",
         placeholder_telephone: "+33 6 12 34 56 78 (avec code pays)",
         placeholder_pays: "Ex: France",
-        
+        placeholder_address: "Commencez à taper votre adresse...",
+        placeholder_address_payment: "Indiquez un lieu",
+
         // Options
         option_mr: "Monsieur",
         option_mrs: "Madame",
@@ -120,6 +122,7 @@ if (typeof window.translations === 'undefined') {
         loading: "CHARGEMENT",
         error: "Erreur",
         success: "Succès",
+        success_account_created: "Compte créé avec succès !",
         warning: "Attention",
         
         // Footer
@@ -754,7 +757,9 @@ if (typeof window.translations === 'undefined') {
         placeholder_nom: "Last name",
         placeholder_telephone: "+33 6 12 34 56 78 (with country code)",
         placeholder_pays: "e.g., France",
-        
+        placeholder_address: "Start typing your address...",
+        placeholder_address_payment: "Enter a location",
+
         // Options
         option_mr: "Mr.",
         option_mrs: "Mrs.",
@@ -880,6 +885,7 @@ if (typeof window.translations === 'undefined') {
         loading: "LOADING",
         error: "Error",
         success: "Success",
+        success_account_created: "Account created successfully!",
         warning: "Warning",
         
         // Footer

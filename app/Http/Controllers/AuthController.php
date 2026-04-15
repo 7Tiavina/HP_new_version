@@ -41,25 +41,6 @@ class AuthController extends Controller
         $client->save();
         return $client;
     }
-    /**
-     * Affiche le formulaire de login unifié (admin ou client)
-     */
-    public function showLogin()
-    {
-        // Si déjà connecté, rediriger selon le type
-        if (session()->has('user_id')) {
-            // Si c'est un agent connecté via la session "admin/user", le rediriger vers l'espace agent
-            if (session('user_role') === 'agent') {
-                return redirect()->route('agent.dashboard');
-            }
-            return redirect()->route('dashboard');
-        }
-        if (Auth::guard('client')->check()) {
-            return redirect()->route('form-consigne');
-        }
-        
-        return view('auth.login');
-    }
 
     /**
      * Traite la connexion (admin ou client) - détection automatique

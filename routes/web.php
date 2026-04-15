@@ -48,7 +48,6 @@ Route::get('/', fn() => redirect()->route('form-consigne'));
 
 // Routes d'authentification unifiées
 use App\Http\Controllers\AuthController;
-Route::get('/auth/login', [AuthController::class, 'showLogin'])->name('auth.login');
 Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login.submit');
 Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
 Route::post('/auth/register', [AuthController::class, 'register'])->name('auth.register');

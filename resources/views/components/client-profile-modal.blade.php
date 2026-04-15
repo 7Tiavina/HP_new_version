@@ -55,11 +55,11 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                                 <div>
                                     <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="label_prenom">Prénom <span class="text-red-500">*</span></label>
-                                    <input type="text" name="prenom" id="modal-prenom" required placeholder="Prénom" class="mt-1.5 sm:mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-yellow-400 focus:ring-4 focus:ring-yellow-100 transition-all py-2.5 sm:py-3 text-gray-800 font-medium text-sm sm:text-base">
+                                    <input type="text" name="prenom" id="modal-prenom" required data-i18n-placeholder="placeholder_prenom" placeholder="Prénom" class="mt-1.5 sm:mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-yellow-400 focus:ring-4 focus:ring-yellow-100 transition-all py-2.5 sm:py-3 text-gray-800 font-medium text-sm sm:text-base">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="label_nom">Nom <span class="text-red-500">*</span></label>
-                                    <input type="text" name="nom" id="modal-nom" required placeholder="Nom" class="mt-1.5 sm:mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-yellow-400 focus:ring-4 focus:ring-yellow-100 transition-all py-2.5 sm:py-3 text-gray-800 font-medium text-sm sm:text-base">
+                                    <input type="text" name="nom" id="modal-nom" required data-i18n-placeholder="placeholder_nom" placeholder="Nom" class="mt-1.5 sm:mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-yellow-400 focus:ring-4 focus:ring-yellow-100 transition-all py-2.5 sm:py-3 text-gray-800 font-medium text-sm sm:text-base">
                                 </div>
                             </div>
 
@@ -73,7 +73,7 @@
 
                             <div>
                                 <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide" data-i18n="label_adresse">Adresse <span class="text-red-500">*</span></label>
-                                <input type="text" name="adresse" id="modal-adresse" required maxlength="50" class="mt-1.5 sm:mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-yellow-400 focus:ring-4 focus:ring-yellow-100 transition-all py-2.5 sm:py-3 text-gray-800 font-medium text-sm sm:text-base">
+                                <input type="text" name="adresse" id="modal-adresse" required maxlength="50" data-i18n-placeholder="placeholder_address_payment" class="mt-1.5 sm:mt-2 block w-full rounded-xl border-2 border-gray-300 bg-gray-50 focus:bg-white focus:border-yellow-400 focus:ring-4 focus:ring-yellow-100 transition-all py-2.5 sm:py-3 text-gray-800 font-medium text-sm sm:text-base">
                                 <p class="text-xs text-gray-500 mt-1.5 sm:mt-2"><span id="adresse-counter">0</span><span data-i18n="address_counter_suffix">/50 caractères</span></p>
                             </div>
                         </div>

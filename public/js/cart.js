@@ -114,7 +114,27 @@ function updateCartDisplay() {
                 lineNormal += linePrice;
             }
             libelle = product ? productLibelle(product) : (libelle || ('Produit #' + (item.productId || index)));
-            libelle = (qty > 1 ? qty + ' × ' : '') + libelle;
+            
+            // Translate the libelle if possible
+            var translationMap = {
+                'Accessoires': 'luggage_accessoires',
+                'Bagage cabine': 'luggage_bagage_cabine',
+                'Bagage soute': 'luggage_bagage_soute',
+                'Bagage spécial': 'luggage_bagage_special',
+                'Vestiaire': 'luggage_vestiaire'
+            };
+            var originalLibelle = libelle;
+            // Remove quantity prefix for translation lookup
+            var libelleForTranslation = libelle.replace(/^\d+\s*×\s*/, '');
+            if (translationMap[libelleForTranslation]) {
+                libelle = typeof window.t === 'function' ? window.t(translationMap[libelleForTranslation], libelleForTranslation) : libelleForTranslation;
+            } else {
+                libelle = libelleForTranslation;
+            }
+            // Re-add quantity prefix if needed
+            if (qty > 1) {
+                libelle = qty + ' × ' + libelle;
+            }
         } else if (item.itemCategory === 'option') {
             unitPriceValue = (typeof item.prix === 'number' && !isNaN(item.prix)) ? item.prix : 0;
             unitPriceBeforeDiscountValue = (typeof item.prixUnitaireAvantRemise === 'number' && !isNaN(item.prixUnitaireAvantRemise)) ? item.prixUnitaireAvantRemise :
@@ -124,6 +144,13 @@ function updateCartDisplay() {
             // Pour les options, calculer le taux de remise
             if (unitPriceBeforeDiscountValue > unitPriceValue && unitPriceBeforeDiscountValue > 0) {
                 lineDiscountRate = Math.round(((unitPriceBeforeDiscountValue - unitPriceValue) / unitPriceBeforeDiscountValue) * 100);
+            }
+            
+            // Translate option labels
+            if (libelle === 'Priority' || libelle === 'Service Priority') {
+                libelle = typeof window.t === 'function' ? window.t('drawer_priority_title', 'Priority Service') : 'Priority Service';
+            } else if (libelle === 'Premium' || libelle === 'Service Premium') {
+                libelle = typeof window.t === 'function' ? window.t('drawer_premium_title', 'Premium Service') : 'Premium Service';
             }
         } else if (item.itemCategory === 'contrainte') {
             // Contrainte obligatoire - prix déjà défini dans l'item
