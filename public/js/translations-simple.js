@@ -702,6 +702,9 @@ if (typeof window.translations === 'undefined') {
         "logout.subtitle": "Vous êtes actuellement connecté. Cliquez ci-dessous pour vous déconnecter en toute sécurité.",
         "logout.submit": "Se déconnecter",
         "logout.footer": "Après votre déconnexion, vous pourrez vous reconnecter à tout moment avec votre email et votre mot de passe.",
+        "dashboard.greeting": "Bonjour",
+        "dashboard.subtitle": "Retrouvez vos réservations et gérez votre espace personnel.",
+        "dashboard.manage": "Gérer mon compte →"
     },
     en: {
         // Header & Navigation
@@ -1403,6 +1406,9 @@ if (typeof window.translations === 'undefined') {
         "logout.subtitle": "You are currently logged in. Click below to log out securely.",
         "logout.submit": "Logout",
         "logout.footer": "After logging out, you can log in again at any time with your email and password.",
+        "dashboard.greeting": "Hello",
+        "dashboard.subtitle": "Find your bookings and manage your personal account.",
+        "dashboard.manage": "Manage my account →",
     }
 };
 }  // Close the if (typeof window.translations === 'undefined')

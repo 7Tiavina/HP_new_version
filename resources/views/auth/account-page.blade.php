@@ -449,12 +449,12 @@
             @if($isClientLoggedIn)
                 <!-- LOGGED IN: Dashboard preview -->
                 <div class="panel panel--active">
-                    <h2 class="panel-title">Bonjour, {{ Auth::guard('client')->user()->prenom }}</h2>
-                    <p class="panel-subtitle">
+                    <h2 class="panel-title"><span data-i18n="dashboard.greeting">Bonjour</span>, {{ Auth::guard('client')->user()->prenom }}</h2>
+                    <p class="panel-subtitle" data-i18n="dashboard.subtitle">
                         Retrouvez vos réservations et gérez votre espace personnel.
                     </p>
 
-                    <a href="{{ route('client.dashboard') }}" class="btn" style="display:inline-block; text-decoration:none; text-align:center;">
+                    <a href="{{ route('client.dashboard') }}" class="btn" style="display:inline-block; text-decoration:none; text-align:center;" data-i18n="dashboard.manage">
                         Gérer mon compte →
                     </a>
 
