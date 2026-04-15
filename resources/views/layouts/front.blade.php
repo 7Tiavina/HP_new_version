@@ -179,8 +179,6 @@
                 <h3 data-i18n="footer_links">Liens Rapides</h3>
                 <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/faq/" data-i18n="footer_faq">FAQ</a>
                 <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services/" data-i18n="footer_services">Services</a>
-                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/conditions-generales-livraison-de-bagages/" data-i18n="footer_cdg_delivery_terms">Conditions Générales Livraison De Bagages</a>
-                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/conditions-generales-de-vente-des-services-de-consigne-de-bagages/" data-i18n="footer_left_luggage_terms">Conditions Générales De Vente Des Services De Consigne De Bagages</a>
                 <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/mentions-legales/" data-i18n="footer_legal">Mentions Légales</a>
                 <br>
                 <a href="{{ $formUrl }}" class="footer-reserve"><span class="reserve-text" data-i18n="footer_book">Réservez</span></a>

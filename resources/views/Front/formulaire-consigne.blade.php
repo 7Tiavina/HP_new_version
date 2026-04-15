@@ -725,9 +725,6 @@
     <!-- Breadcrumb with increased spacing -->
     <div class="hp-breadcrumb-wrapper flex justify-between items-center mb-12" style="margin-top: 30px; align-items: center;">
         <div class="flex items-center space-x-2 text-sm text-gray-500" style="display: flex; align-items: center;">
-            <span data-i18n="breadcrumb_home">Accueil</span>
-            <span>→</span>
-            <span class="text-gray-800 font-medium" data-i18n="breadcrumb_booking">Réserver une consigne</span>
         </div>
         <button id="back-to-step-1-btn" class="hidden bg-yellow-custom text-gray-dark font-bold py-2 px-4 rounded-full btn-hover flex items-center" style="align-self: center;">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
