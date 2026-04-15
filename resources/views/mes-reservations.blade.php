@@ -1,6 +1,6 @@
 @extends('layouts.front')
 
-@section('title', 'Mes Réservations — Hello Passenger')
+@section('title', session('app_language', 'fr') === 'en' ? 'My Reservations — Hello Passenger' : 'Mes Réservations — Hello Passenger')
 
 @push('styles')
     <script>window.tailwind=window.tailwind||{};window.tailwind.config={corePlugins:{preflight:false},important:'#client-page-root'};</script>

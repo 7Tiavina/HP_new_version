@@ -41,6 +41,7 @@ if (typeof window.translations === 'undefined') {
         label_ville: "Ville",
         label_code_postal: "Code Postal",
         label_pays: "Pays",
+        address_section: "Adresse",
         label_email: "Email",
         label_password: "Mot de passe",
         
@@ -479,6 +480,7 @@ if (typeof window.translations === 'undefined') {
         status_pending: "En attente",
         status_cancelled: "Annulé",
         status_processing: "En cours",
+        status_failed: "Échoué",
         
         payment_error: "Erreur!",
         payment_no_data: "Aucune donnée de commande trouvée. Votre session a peut-être expiré.",
@@ -743,6 +745,7 @@ if (typeof window.translations === 'undefined') {
         label_ville: "City",
         label_code_postal: "Postal Code",
         label_pays: "Country",
+        address_section: "Address",
         label_email: "Email",
         label_password: "Password",
         
@@ -1144,7 +1147,7 @@ if (typeof window.translations === 'undefined') {
         dashboard_pending_label: "pending",
         dashboard_completed: "Completed",
         dashboard_pending: "{count} pending",
-        dashboard_photos: "Photos",
+        dashboard_photos: "Pictures",
         dashboard_my_bags: "of my bags",
         dashboard_today: "Today",
         dashboard_this_week: "This week",
@@ -1237,6 +1240,7 @@ if (typeof window.translations === 'undefined') {
         status_pending: "Pending",
         status_cancelled: "Cancelled",
         status_processing: "Processing",
+        status_failed: "Failed",
         
         payment_error: "Error!",
         payment_no_data: "No order data found. Your session may have expired.",
