@@ -326,6 +326,23 @@
         color: #FAC12E;
     }
 
+    .mobile-user-icon {
+        display: none;
+        width: 38px;
+        height: 38px;
+        background: #f3f4f6;
+        border-radius: 50%;
+        align-items: center;
+        justify-content: center;
+        color: #374151;
+        text-decoration: none;
+    }
+
+    .mobile-user-icon.logged-in {
+        background: #FAC12E;
+        color: #000;
+    }
+
     /* Desktop user email link */
     .nav-user-email {
         display: flex;
@@ -363,6 +380,9 @@
     @media (max-width: 1150px) {
         .nav-user-email {
             display: none;
+        }
+        .mobile-user-icon.logged-in {
+            display: flex;
         }
     }
 
@@ -998,18 +1018,6 @@
 
         .mobile-user-icon {
             display: flex !important;
-            width: 38px;
-            height: 38px;
-            background: #f3f4f6;
-            border-radius: 50%;
-            align-items: center;
-            justify-content: center;
-            color: #374151;
-        }
-
-        .mobile-user-icon.logged-in {
-            background: #FAC12E;
-            color: #000;
         }
 
         .hamburger-menu {
