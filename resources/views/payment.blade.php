@@ -5,7 +5,7 @@
 
 @extends('layouts.front')
 
-@section('title', 'Finaliser le Paiement — Hello Passenger')
+@section('title', session('app_language', 'fr') === 'en' ? 'Finalize Payment — Hello Passenger' : 'Finaliser le Paiement — Hello Passenger')
 
 @push('head_scripts')
     <script>
@@ -370,9 +370,9 @@
                 <!-- Colonne de droite : Informations et Paiement -->
                 <div class="space-y-8">
                     <!-- Bloc d'informations client -->
-                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center">
-                        <h2 class="text-xl font-bold text-gray-800 mb-4 text-center" data-i18n="your_info">Vos informations</h2>
-                        <div class="text-sm text-gray-600 space-y-2 text-left mx-auto max-w-sm">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4" data-i18n="your_info">Vos informations</h2>
+                        <div class="text-sm text-gray-600 space-y-2 text-left max-w-sm">
                             <p id="display-user-name"><strong data-i18n="name">Nom:</strong> {{ $user->prenom ?? 'Non renseigné' }} {{ $user->nom ?? 'Non renseigné' }}</p>
                             <p id="display-user-email"><strong data-i18n="email">Email:</strong> {{ $user->email }}</p>
                             <p id="display-user-phone"><strong data-i18n="phone">Téléphone:</strong>
@@ -397,12 +397,12 @@
                                 @endif
                             </p>
                         </div>
-                        <button id="openClientProfileModalBtn" class="mt-4 bg-yellow-custom text-gray-dark font-bold py-2 px-4 rounded-full btn-hover mx-auto" data-i18n="edit">Modifier</button>
+                        <button id="openClientProfileModalBtn" class="mt-4 bg-yellow-custom text-gray-dark font-bold py-2 px-4 rounded-full btn-hover" data-i18n="edit">Modifier</button>
                     </div>
 
                     <!-- Bloc de paiement -->
-                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center">
-                        <h2 class="text-xl font-bold text-gray-800 mb-4 text-center" data-i18n="secure_payment">Paiement sécurisé</h2>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4" data-i18n="secure_payment">Paiement sécurisé</h2>
                         
                         @php
                             // Utiliser les variables passées par le controller

@@ -50,7 +50,7 @@
     }
 
     .auth-logo img {
-        height: 36px;
+        height: 80px;
     }
 
     .auth-logo span {

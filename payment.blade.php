@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" href="{{ asset('favicon-hellopassenger.png') }}">
-    <title>Finaliser le Paiement - HelloPassenger</title>
+    <title>{{ session('app_language', 'fr') === 'en' ? 'Finalize Payment - HelloPassenger' : 'Finaliser le Paiement - HelloPassenger' }}</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -279,9 +279,9 @@
                 <!-- Colonne de droite : Informations et Paiement -->
                 <div class="space-y-8">
                     <!-- Bloc d'informations client -->
-                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center">
-                        <h2 class="text-xl font-bold text-gray-800 mb-4 text-center" data-i18n="your_info">Vos informations</h2>
-                        <div class="text-sm text-gray-600 space-y-2 text-left mx-auto max-w-sm">
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4" data-i18n="your_info">Vos informations</h2>
+                        <div class="text-sm text-gray-600 space-y-2 text-left max-w-sm">
                             <p id="display-user-name"><strong data-i18n="name">Nom:</strong> {{ $user->prenom ?? 'Non renseigné' }} {{ $user->nom ?? 'Non renseigné' }}</p>
                             <p id="display-user-email"><strong data-i18n="email">Email:</strong> {{ $user->email }}</p>
                             <p id="display-user-phone"><strong data-i18n="phone">Téléphone:</strong>
@@ -306,12 +306,12 @@
                                 @endif
                             </p>
                         </div>
-                        <button id="openClientProfileModalBtn" class="mt-4 bg-yellow-custom text-gray-dark font-bold py-2 px-4 rounded-full btn-hover mx-auto" data-i18n="edit">Modifier</button>
+                        <button id="openClientProfileModalBtn" class="mt-4 bg-yellow-custom text-gray-dark font-bold py-2 px-4 rounded-full btn-hover" data-i18n="edit">Modifier</button>
                     </div>
 
                     <!-- Bloc de paiement -->
-                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200 text-center">
-                        <h2 class="text-xl font-bold text-gray-800 mb-4 text-center" data-i18n="secure_payment">Paiement sécurisé</h2>
+                    <div class="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                        <h2 class="text-xl font-bold text-gray-800 mb-4" data-i18n="secure_payment">Paiement sécurisé</h2>
                         @if($isProfileComplete)
                             @if($hasSavedCard && $savedCardInfo)
                                 <!-- Option pour utiliser la carte sauvegardée -->
@@ -352,7 +352,7 @@
                                 
                                 <!-- Formulaire Monetico (caché par défaut si carte sauvegardée disponible) -->
                                 <div id="monetico-form-container" class="hidden">
-                                    <div class="kr-smart-form mx-auto" kr-form-token="{{ $formToken }}"></div>
+                                    <div class="kr-smart-form" kr-form-token="{{ $formToken }}"></div>
                                 </div>
                                 
                                 <!-- Bouton pour payer avec la carte sauvegardée -->
@@ -366,7 +366,7 @@
                                 </div>
                             @else
                                 <!-- Pas de carte sauvegardée, afficher le formulaire normal -->
-                                <div class="kr-smart-form mx-auto" kr-form-token="{{ $formToken }}"></div>
+                                <div class="kr-smart-form" kr-form-token="{{ $formToken }}"></div>
                                 
                                 <!-- Debug: Log form token -->
                                 <script>
