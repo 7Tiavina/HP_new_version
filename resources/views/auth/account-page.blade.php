@@ -80,6 +80,15 @@
         list-style: disc;
     }
 
+    .auth-card__info ul li a:hover {
+        text-decoration: underline !important;
+        opacity: 1;
+    }
+
+    .auth-card__info-footer a:hover {
+        opacity: 0.8;
+    }
+
     .auth-card__info li {
         margin-bottom: 8px;
     }
@@ -199,10 +208,8 @@
         box-shadow: 0 0 0 1px rgba(247, 181, 0, 0.25);
     }
 
-    /* intl-tel-input fix */
-    .iti { width: 100%; }
-    .iti__flag-container { z-index: 2; }
-    .iti input { width: 100%; padding-left: 52px; }
+    /* intl-tel-input fix - override CDN styles */
+    .iti input { padding-left: 40px !important; padding-right: 10px !important; }
 
     /* Password toggle */
     .password-input-wrapper { position: relative; }
@@ -425,15 +432,15 @@
                     Connectez-vous ou créez votre compte pour gérer vos réservations, vos services bagages et vos informations personnelles.
                 </p>
                 <ul>
-                    <li data-i18n="info.item1">Consigne à Bagages</li>
-                    <li data-i18n="info.item2">Transfert & Livraison Bagages</li>
-                    <li data-i18n="info.item3">Assistance Personnalisée</li>
-                    <li data-i18n="info.item4">BDM Travel Store</li>
-                    <li data-i18n="info.item5">Services Pratiques</li>
+                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/consigne-a-bagages/" style="color: inherit; text-decoration: none;" data-i18n="info.item1">Consigne à Bagages</a></li>
+                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/transfert-livraison-bagages/" style="color: inherit; text-decoration: none;" data-i18n="info.item2">Transfert & Livraison Bagages</a></li>
+                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/assistance-personnalisee/" style="color: inherit; text-decoration: none;" data-i18n="info.item3">Assistance Personnalisée</a></li>
+                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/bdm-travel-store/" style="color: inherit; text-decoration: none;" data-i18n="info.item4">BDM Travel Store</a></li>
+                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/services-pratiques/" style="color: inherit; text-decoration: none;" data-i18n="info.item5">Services Pratiques</a></li>
                 </ul>
             </div>
-            <div class="auth-card__info-footer" data-i18n="info.footer">
-                Aéroport de Paris CDG & Orly – Support : <a href="mailto:contact@hellopassenger.com" style="color: inherit;">contact@hellopassenger.com</a>
+            <div class="auth-card__info-footer">
+                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/nous-localiser/" style="color: inherit; text-decoration: underline;" data-i18n="info.airport">Aéroport de Paris CDG & Orly</a> – <span data-i18n="info.support">Support :</span> <a href="mailto:contact@hellopassenger.com" style="color: inherit; text-decoration: underline;" data-i18n="info.email">contact@hellopassenger.com</a>
             </div>
         </aside>
 
@@ -496,6 +503,14 @@
                                 <svg class="eye-closed" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
                             </button>
                         </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="privacy-check">
+                            <input type="checkbox" id="login-privacy" name="privacy" required>
+                            <span data-i18n="login.privacy">J'accepte la politique de confidentialité</span>
+                            <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/mentions-legales/" class="privacy-link" target="_blank" rel="noopener noreferrer" data-i18n="login.privacyLink">En savoir plus</a>
+                        </label>
                     </div>
 
                     <button type="submit" class="btn" data-i18n="login.submit">Se connecter</button>
@@ -694,7 +709,27 @@
         window.itiInstance = intlTelInput(phoneInput, {
             utilsScript: 'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js',
             preferredCountries: ['fr', 'us', 'gb'],
-            separateDialCode: true
+            initialCountry: 'fr',
+            autoPlaceholder: 'off',
+            separateDialCode: false
+        });
+
+        // Set placeholder with country code
+        phoneInput.placeholder = '+33 6 12 34 56 78';
+
+        // Update placeholder on country change
+        phoneInput.addEventListener('countrychange', function() {
+            var selectedCountry = window.itiInstance.getSelectedCountryData();
+            var dialCode = selectedCountry.dialCode;
+            if (dialCode === '33') {
+                phoneInput.placeholder = '+33 6 12 34 56 78';
+            } else if (dialCode === '1') {
+                phoneInput.placeholder = '+1 555 123 4567';
+            } else if (dialCode === '44') {
+                phoneInput.placeholder = '+44 7700 900077';
+            } else {
+                phoneInput.placeholder = '+' + dialCode + ' ';
+            }
         });
 
         // Inject full phone number with country code on form submit
