@@ -424,7 +424,7 @@
             <div>
                 <div class="auth-logo">
                     <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/">
-                        <img src="{{ asset('HP-Logo-White.png') }}" alt="Hello Passenger" style="max-height: 100px; width: auto;" />
+                        <img src="{{ asset('HP-Logo-White.png') }}" alt="Hello Passenger" style="max-height: 160px; width: auto;" />
                     </a>
                 </div>
                 <h1 data-i18n="info.title">Vos bagages. Notre expertise.</h1>
