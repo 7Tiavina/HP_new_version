@@ -141,11 +141,11 @@ function populateDrawerOptions() {
                 if (unitPriceBeforeDiscount != null && unitPriceBeforeDiscount > unitPrice) {
                     // Show discounted price with strikethrough original price
                     priceEl.innerHTML = `
-                        <span class="text-lg text-gray-400 line-through font-normal mr-2">${formatPrice(unitPriceBeforeDiscount)} €</span>
-                        <span class="text-black">+${formatPrice(unitPrice)} €</span>
+                        <span class="text-lg text-gray-400 line-through font-normal mr-2">${formatPrice(unitPriceBeforeDiscount)}</span>
+                        <span class="text-black">+${formatPrice(unitPrice)}</span>
                     `;
                 } else {
-                    priceEl.textContent = '+' + formatPrice(unitPrice) + ' €';
+                    priceEl.textContent = '+' + formatPrice(unitPrice);
                 }
             }
         } else {
@@ -178,11 +178,11 @@ function populateDrawerOptions() {
                 if (unitPriceBeforeDiscount != null && unitPriceBeforeDiscount > unitPrice) {
                     // Show discounted price with strikethrough original price
                     priceEl.innerHTML = `
-                        <span class="text-lg text-gray-400 line-through font-normal mr-2">${formatPrice(unitPriceBeforeDiscount)} €</span>
-                        <span class="text-black">+${formatPrice(unitPrice)} €</span>
+                        <span class="text-lg text-gray-400 line-through font-normal mr-2">${formatPrice(unitPriceBeforeDiscount)}</span>
+                        <span class="text-black">+${formatPrice(unitPrice)}</span>
                     `;
                 } else {
-                    priceEl.textContent = '+' + formatPrice(unitPrice) + ' €';
+                    priceEl.textContent = '+' + formatPrice(unitPrice);
                 }
             }
         } else {
@@ -255,11 +255,11 @@ function displayAccessOptionsInDrawer() {
         let priceHtml = '';
         if (hasDiscount) {
             priceHtml = `
-                <span class="text-sm text-gray-400 line-through mr-2">${formatPrice(unitPriceBeforeDiscount)} €</span>
-                <span class="text-lg font-bold text-black">${formatPrice(unitPrice)} €</span>
+                <span class="text-sm text-gray-400 line-through mr-2">${formatPrice(unitPriceBeforeDiscount)}</span>
+                <span class="text-lg font-bold text-black">${formatPrice(unitPrice)}</span>
             `;
         } else {
-            priceHtml = `<span class="text-lg font-bold text-black">${formatPrice(unitPrice)} €</span>`;
+            priceHtml = `<span class="text-lg font-bold text-black">${formatPrice(unitPrice)}</span>`;
         }
 
         const mandatoryText = typeof window.t === 'function' ? window.t('drawer_access_mandatory_for_schedule', '⚠️ Obligatoire pour cet horaire') : '⚠️ Obligatoire pour cet horaire';
@@ -488,11 +488,11 @@ function updateDrawerCart() {
                     ${hasDiscount ? `
                         <div class="flex items-center gap-2 justify-end">
                             <span class="badge-promo inline-flex items-center px-2 py-0.5 rounded text-xs font-bold bg-black text-white flex-shrink-0" style="min-width: 42px; justify-content: center; font-size: 11px;">-${discountRate}%</span>
-                            <span class="old-price text-xs text-gray-400 line-through flex-shrink-0">${formatPrice(unitPriceBeforeDiscount * (item.quantity || 1))} €</span>
+                            <span class="old-price text-xs text-gray-400 line-through flex-shrink-0">${formatPrice(unitPriceBeforeDiscount * (item.quantity || 1))}</span>
                         </div>
                     ` : ''}
                     <div class="flex items-center gap-1 justify-end">
-                        <span class="current-price text-sm font-bold text-gray-900 flex-shrink-0" style="min-width: 70px; text-align: right;">${formatPrice(itemTotal)} €</span>
+                        <span class="current-price text-sm font-bold text-gray-900 flex-shrink-0" style="min-width: 70px; text-align: right;">${formatPrice(itemTotal)}</span>
                         ${isOption ? `
                             <button onclick="removeOptionFromDrawer('${item.key}')" class="delete-item-btn text-red-500 hover:text-red-700 p-1 flex-shrink-0" aria-label="Retirer">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -509,7 +509,7 @@ function updateDrawerCart() {
     console.log('[updateDrawerCart] Total:', total);
     
     cartItemsContainer.innerHTML = html;
-    cartTotalEl.textContent = formatPrice(total) + ' €';
+    cartTotalEl.textContent = formatPrice(total);
     
     // Update buttons state
     updateButtonsState();
@@ -624,7 +624,7 @@ function removeOptionFromDrawer(optionKey) {
  * Format price for display
  */
 function formatPrice(price) {
-    return (parseFloat(price) || 0).toFixed(2).replace('.', ',');
+    return (parseFloat(price) || 0).toFixed(2).replace('.', ',') + ' €';
 }
 
 // Export for use in other files
