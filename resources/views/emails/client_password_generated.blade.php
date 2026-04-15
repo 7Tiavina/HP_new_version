@@ -13,7 +13,6 @@
         .value { font-family: monospace; font-size: 14px; color: #1f2937; background-color: #fff; padding: 5px; border: 1px solid #ddd; display: inline-block; min-width: 200px; word-break: break-all; }
         .warning { background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 10px; margin: 20px 0; }
         .footer { margin-top: 20px; font-size: 0.9em; color: #777; }
-        .button { display: inline-block; padding: 12px 24px; background-color: #FFC107; color: #1f2937; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
     </style>
 </head>
 <body>
@@ -43,9 +42,7 @@
         </div>
         
         <p>Vous pouvez maintenant vous connecter à votre compte pour accéder à toutes vos commandes.</p>
-        
-        <a href="{{ route('auth.login') }}" class="button">Se connecter</a>
-        
+
         <div class="footer">
             <p>Cet email a été envoyé automatiquement par le système HelloPassenger.</p>
             <p>Si vous n'avez pas demandé ce mot de passe, veuillez ignorer cet email.</p>

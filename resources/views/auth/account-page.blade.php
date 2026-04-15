@@ -433,11 +433,11 @@
                     Connectez-vous ou créez votre compte pour gérer vos réservations, vos services bagages et vos informations personnelles.
                 </p>
                 <ul>
-                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/consigne-a-bagages/" style="color: inherit; text-decoration: none;" data-i18n="info.item1">Consigne à Bagages</a></li>
+                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/consigne-bagages/" style="color: inherit; text-decoration: none;" data-i18n="info.item1">Consigne à Bagages</a></li>
                     <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/transfert-livraison-bagages/" style="color: inherit; text-decoration: none;" data-i18n="info.item2">Transfert & Livraison Bagages</a></li>
                     <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/assistance-personnalisee/" style="color: inherit; text-decoration: none;" data-i18n="info.item3">Assistance Personnalisée</a></li>
                     <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/bdm-travel-store/" style="color: inherit; text-decoration: none;" data-i18n="info.item4">BDM Travel Store</a></li>
-                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/services-pratiques/" style="color: inherit; text-decoration: none;" data-i18n="info.item5">Services Pratiques</a></li>
+                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/services-facilitateurs-de-voyage/" style="color: inherit; text-decoration: none;" data-i18n="info.item5">Services Pratiques</a></li>
                 </ul>
             </div>
             <div class="auth-card__info-footer">
