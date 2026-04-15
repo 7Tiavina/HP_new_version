@@ -911,7 +911,7 @@
         forgotForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const statusEl = document.getElementById('forgot-status');
-            statusEl.textContent = t('login.status.loading', 'Envoi en cours...');
+            statusEl.textContent = t('forgot.status.loading', 'Envoi en cours...');
             statusEl.className = 'status';
 
             const formData = new FormData(forgotForm);
@@ -922,7 +922,8 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content || '{{ csrf_token() }}'
                     },
                     body: JSON.stringify({ email: email })
                 });
@@ -930,16 +931,29 @@
                 const data = await response.json();
 
                 if (response.ok && data.success) {
-                    statusEl.textContent = data.message || t('forgot.status.success', 'Un mot de passe a été envoyé à votre adresse email.');
+                    statusEl.textContent = data.message || t('forgot.status.success', 'Un nouveau mot de passe a été envoyé à votre adresse email.');
                     statusEl.className = 'status status--success';
                     showPanel('forgot-panel');
                 } else {
-                    const errorMsg = (data && data.message) || (data && data.errors && data.errors.email ? (Array.isArray(data.errors.email) ? data.errors.email[0] : data.errors.email) : t('forgot.status.error', 'Erreur lors de l\'envoi.'));
+                    // Handle validation/email not found errors
+                    var errorMsg = t('forgot.status.error', 'Erreur lors de l\'envoi.');
+                    if (data && data.message) {
+                        errorMsg = data.message;
+                    } else if (data && data.errors) {
+                        var firstKey = Object.keys(data.errors)[0];
+                        if (firstKey && Array.isArray(data.errors[firstKey])) {
+                            errorMsg = data.errors[firstKey][0];
+                        } else if (firstKey) {
+                            errorMsg = data.errors[firstKey];
+                        }
+                    }
                     statusEl.textContent = errorMsg;
                     statusEl.className = 'status status--error';
                 }
             } catch (err) {
-                statusEl.textContent = t('forgot.status.error', 'Erreur réseau.');
+                // Real network error (no response at all)
+                console.error('Forgot password error:', err);
+                statusEl.textContent = t('forgot.status.networkError', 'Impossible de contacter le serveur. Veuillez réessayer.');
                 statusEl.className = 'status status--error';
             }
         });
