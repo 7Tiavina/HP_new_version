@@ -11,6 +11,9 @@
     
     <!-- intl-tel-input dark theme -->
     <style>
+        #client-page-root {
+            font-family: 'Space Grotesk', sans-serif !important;
+        }
         .iti__country-list {
             background-color: #1f2937 !important;
             border-color: #374151 !important;

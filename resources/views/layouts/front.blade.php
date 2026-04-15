@@ -16,6 +16,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="@yield('meta_description', $metaDescription)">
     <link rel="icon" type="image/png" href="{{ asset('favicon-hellopassenger.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap" rel="stylesheet">
     <title>@yield('title', $pageTitle)</title>
 
     <script>
