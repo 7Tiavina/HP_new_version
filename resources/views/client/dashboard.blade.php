@@ -38,7 +38,7 @@
                     <div class="ml-4">
                         <p class="text-sm font-medium text-gray-600" data-i18n="dashboard_total_reservations">Total réservations</p>
                         <p class="text-2xl font-bold text-gray-900">{{ $totalCommandes }}</p>
-                        <p class="text-xs text-gray-500 mt-1">{{ $commandesMois }} ce mois</p>
+                        <p class="text-xs text-gray-500 mt-1">{{ $commandesMois }} <span data-i18n="dashboard_this_month_label">ce mois</span></p>
                     </div>
                 </div>
             </div>

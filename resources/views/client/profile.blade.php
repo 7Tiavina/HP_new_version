@@ -50,7 +50,7 @@
         @if (session('success'))
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6" role="alert">
                 <strong class="font-bold" data-i18n="success">Succès!</strong>
-                <span class="block sm:inline" data-i18n="success_account_created">{{ session('success') }}</span>
+                <span class="block sm:inline">{{ session('success') }}</span>
             </div>
         @endif
 
@@ -105,6 +105,43 @@
 
                 <div class="flex justify-end pt-4 border-t border-gray-200">
                     <button type="submit" class="px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold transition-colors" data-i18n="btn_save">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- PASSWORD UPDATE SECTION -->
+        <div class="bg-white rounded-lg shadow p-6 mt-8">
+            <form method="POST" action="{{ route('client.update-password') }}" class="space-y-6">
+                @csrf
+                <h2 class="text-xl font-bold text-gray-900 mb-4" data-i18n="profile_password_section">Modifier le mot de passe</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2" data-i18n="profile_new_password">Nouveau mot de passe</label>
+                        <div class="relative">
+                            <input type="password" id="password" name="password" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 pr-10">
+                            <button type="button" onclick="togglePasswordVisibility('password')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
+                                <svg class="h-5 w-5 toggle-icon-password" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700 mb-2" data-i18n="profile_confirm_password">Confirmer le nouveau mot de passe</label>
+                        <div class="relative">
+                            <input type="password" id="password_confirmation" name="password_confirmation" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 pr-10">
+                            <button type="button" onclick="togglePasswordVisibility('password_confirmation')" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none">
+                                <svg class="h-5 w-5 toggle-icon-password_confirmation" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end pt-4 border-t border-gray-200">
+                    <button type="submit" class="px-6 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg font-semibold transition-colors" data-i18n="btn_save_password">Enregistrer le mot de passe</button>
                 </div>
             </form>
         </div>
@@ -186,6 +223,18 @@ document.addEventListener('DOMContentLoaded', function() {
         deleteModal.classList.add('hidden');
         if (deleteCheckbox) deleteCheckbox.checked = false;
         confirmDeleteBtn.disabled = true;
+    }
+
+    window.togglePasswordVisibility = function(inputId) {
+        const input = document.getElementById(inputId);
+        const icon = document.querySelector(`.toggle-icon-${inputId}`);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18" />';
+        } else {
+            input.type = 'password';
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />';
+        }
     }
 
     if (openDeleteBtn) openDeleteBtn.addEventListener('click', openDeleteModal);

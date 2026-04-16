@@ -170,6 +170,7 @@ Route::middleware('auth:client')->group(function () { // Spécifier la garde 'cl
     Route::get('/mes-reservations/photos/{id}', [CommandeController::class, 'getPhotos'])->name('mes.reservations.photos');
     Route::get('/client/profile', [ClientController::class, 'showProfile'])->name('client.profile');
     Route::post('/client/update-profile', [ClientController::class, 'updateProfile'])->name('client.update-profile'); // Point to ClientController
+    Route::post('/client/update-password', [ClientController::class, 'updatePassword'])->name('client.update-password');
     Route::delete('/client/delete-account', [ClientController::class, 'deleteAccount'])->name('client.delete-account');
 });
 

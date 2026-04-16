@@ -387,6 +387,7 @@ if (typeof window.translations === 'undefined') {
         dashboard_total_spent: "Total dépensé",
         dashboard_spent_today: "{amount} € aujourd'hui",
         dashboard_today_label: "aujourd'hui",
+        dashboard_this_month_label: "ce mois",
         dashboard_pending_label: "en attente",
         dashboard_completed: "Complétées",
         dashboard_pending: "{count} en attente",
@@ -422,6 +423,11 @@ if (typeof window.translations === 'undefined') {
         profile_title: "Mon Profil",
         profile_subtitle: "Gérez vos informations personnelles",
         profile_email_note: "L'email ne peut pas être modifié",
+        profile_password_section: "Modifier le mot de passe",
+        profile_new_password: "Nouveau mot de passe",
+        profile_confirm_password: "Confirmer le nouveau mot de passe",
+        profile_password_hint: "Laissez vide si vous ne souhaitez pas changer de mot de passe",
+        btn_save_password: "Enregistrer le mot de passe",
 
         // Delete Account (GDPR)
         delete_account_title: "Supprimer mon compte",
@@ -1154,6 +1160,7 @@ if (typeof window.translations === 'undefined') {
         dashboard_total_spent: "Total spent",
         dashboard_spent_today: "{amount} € today",
         dashboard_today_label: "today",
+        dashboard_this_month_label: "this month",
         dashboard_pending_label: "pending",
         dashboard_completed: "Completed",
         dashboard_pending: "{count} pending",
@@ -1189,6 +1196,11 @@ if (typeof window.translations === 'undefined') {
         profile_title: "My Profile",
         profile_subtitle: "Manage your personal information",
         profile_email_note: "Email cannot be changed",
+        profile_password_section: "Change password",
+        profile_new_password: "New password",
+        profile_confirm_password: "Confirm new password",
+        profile_password_hint: "Leave empty if you don't want to change password",
+        btn_save_password: "Save Password",
 
         // Delete Account (GDPR)
         delete_account_title: "Delete my account",

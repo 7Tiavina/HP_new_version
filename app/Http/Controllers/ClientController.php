@@ -316,6 +316,47 @@ class ClientController extends Controller
     }
 
     /**
+     * Met à jour uniquement le mot de passe du client
+     */
+    public function updatePassword(Request $request)
+    {
+        $client = auth()->guard('client')->user();
+        if (!$client) return back()->withErrors(['error' => 'Non authentifié.']);
+
+        $lang = session('app_language', 'fr');
+
+        $messages = [
+            'password.required' => $lang === 'en' ? 'The password field is required.' : 'Le champ mot de passe est obligatoire.',
+            'password.min' => $lang === 'en' ? 'The password must be at least 8 characters.' : 'Le mot de passe doit contenir au moins 8 caractères.',
+            'password.confirmed' => $lang === 'en' ? 'The password confirmation does not match.' : 'La confirmation du mot de passe ne correspond pas.',
+        ];
+
+        $request->validate([
+            'password' => 'required|string|min:8|confirmed',
+        ], $messages);
+
+        try {
+            $hashedPassword = Hash::make($request->password);
+            
+            // Update Client
+            $client->update(['password_hash' => $hashedPassword]);
+
+            // Sync with Legacy User
+            $legacyUserToSync = User::where('email', $client->email)->first();
+            if ($this->isLegacyClientUser($legacyUserToSync)) {
+                $legacyUserToSync->password_hash = $hashedPassword;
+                $legacyUserToSync->save();
+            }
+
+            return back()->with('success', session('app_language', 'fr') === 'en' 
+                ? 'Password updated successfully!' 
+                : 'Mot de passe mis à jour avec succès !');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Erreur lors de la mise à jour : ' . $e->getMessage()]);
+        }
+    }
+
+    /**
      * Met à jour le profil client
      */
     public function updateProfile(Request $request)
@@ -344,6 +385,13 @@ class ClientController extends Controller
             'client_email' => $client->email,
         ]);
 
+        $lang = session('app_language', 'fr');
+
+        $messages = [
+            'nom.required' => $lang === 'en' ? 'The last name field is required.' : 'Le champ nom est obligatoire.',
+            'prenom.required' => $lang === 'en' ? 'The first name field is required.' : 'Le champ prénom est obligatoire.',
+        ];
+
         $validated = $request->validate([
             'nom' => 'required|string|max:100',
             'prenom' => 'required|string|max:100',
@@ -354,7 +402,7 @@ class ClientController extends Controller
             'codePostal' => 'nullable|string|max:20',
             'pays' => 'nullable|string|max:100',
             'premiumDetails' => 'nullable|array',
-        ]);
+        ], $messages);
 
         Log::info('[ClientController@updateProfile] Validation passed', ['validated' => $validated]);
 
@@ -372,7 +420,6 @@ class ClientController extends Controller
 
             Log::info('[ClientController@updateProfile] Client profile updated successfully', [
                 'client_id' => $client->id,
-                'new_data' => $validated,
             ]);
 
             // === HANDLE PREMIUM DETAILS FOR CONNECTED CLIENTS (SAME AS GUEST FLOW) ===
@@ -488,16 +535,18 @@ class ClientController extends Controller
                 Log::info('[ClientController@updateProfile] Premium details saved to session for connected client');
             }
 
+            $successMsg = $lang === 'en' ? 'Profile updated successfully!' : 'Profil mis à jour avec succès !';
+
             if ($request->expectsJson()) {
                 Log::info('=== [ClientController@updateProfile] SUCCESS (JSON) ===');
                 return response()->json([
                     'success' => true,
-                    'message' => 'Profil mis à jour avec succès !'
+                    'message' => $successMsg
                 ]);
             }
 
             Log::info('=== [ClientController@updateProfile] SUCCESS (redirect) ===');
-            return back()->with('success', 'Profil mis à jour avec succès !');
+            return back()->with('success', $successMsg);
 
         } catch (\Exception $e) {
             Log::error('=== [ClientController@updateProfile] EXCEPTION ===', [
@@ -505,14 +554,16 @@ class ClientController extends Controller
                 'trace' => $e->getTraceAsString(),
             ]);
 
+            $errorMsg = $lang === 'en' ? 'Error during update: ' : 'Erreur lors de la mise à jour : ';
+
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Erreur lors de la mise à jour: ' . $e->getMessage(),
+                    'message' => $errorMsg . $e->getMessage(),
                 ], 500);
             }
 
-            return back()->withErrors(['error' => 'Erreur lors de la mise à jour: ' . $e->getMessage()]);
+            return back()->withErrors(['error' => $errorMsg . $e->getMessage()]);
         }
     }
 
