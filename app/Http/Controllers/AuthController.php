@@ -235,8 +235,8 @@ class AuthController extends Controller
         if ($existingClient && !empty($existingClient->password_hash) &&
             (strpos($existingClient->password_hash, '$2y$') === 0 || strpos($existingClient->password_hash, '$2a$') === 0)) {
             $emailMsg = $lang === 'en'
-                ? 'This email is already in use. Please log in.'
-                : 'Cet email est déjà utilisé. Veuillez vous connecter.';
+                ? 'This email is already in use. Please log in or use "Forgot password".'
+                : 'Cet email est déjà utilisé. Veuillez vous connecter ou utiliser "Mot de passe oublié".';
 
             return redirect()->route('account')
                 ->withInput()

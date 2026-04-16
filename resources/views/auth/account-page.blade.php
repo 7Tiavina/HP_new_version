@@ -528,8 +528,10 @@
                     </div>
 
                     <button type="submit" class="btn" data-i18n="login.submit">Se connecter</button>
-                    @if($errors->has('email'))
-                        <div class="status status--error">{{ $errors->first('email') }}</div>
+                    @if($errors->any() && !session('from_register'))
+                        <div class="status status--error">
+                            {{ $errors->first() }}
+                        </div>
                     @endif
                     @if(session('guest_login_attempt'))
                         <div class="status status--info">Utilisez votre mot de passe ou demandez une réinitialisation.</div>
@@ -608,6 +610,13 @@
 
                     <button type="submit" class="btn" data-i18n="register.submit">Créer mon compte</button>
                     <div id="register-status" class="status"></div>
+                    @if($errors->any() && session('from_register'))
+                        <div class="status status--error">
+                            @foreach($errors->all() as $error)
+                                <p style="margin: 0;">{{ $error }}</p>
+                            @endforeach
+                        </div>
+                    @endif
                     @if(session('register_error'))
                         <div id="register-status" class="status status--error">{{ session('register_error') }}</div>
                     @endif
