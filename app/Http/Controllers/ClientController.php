@@ -128,7 +128,7 @@ class ClientController extends Controller
                 'email' => $client->email,
             ]);
 
-            Mail::to($client->email)->send(new ClientPasswordGeneratedMail($client, $password));
+            Mail::to($client->email)->send(new ClientPasswordGeneratedMail($client, $password, $lang));
 
             Log::info('Password reset email sent successfully', [
                 'client_id' => $client->id,
@@ -244,8 +244,10 @@ class ClientController extends Controller
                 'mail_driver' => config('mail.default'),
             ]);
             
+            $lang = session('app_language', 'fr');
+            
             // Envoyer l'email de manière synchrone (pas en queue)
-            Mail::to($client->email)->send(new ClientPasswordGeneratedMail($client, $password));
+            Mail::to($client->email)->send(new ClientPasswordGeneratedMail($client, $password, $lang));
             
             Log::info('Client password generated and email sent successfully', [
                 'client_id' => $client->id,

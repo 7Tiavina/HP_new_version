@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ $lang }}">
 <head>
     <meta charset="UTF-8">
-    <title>Votre mot de passe HelloPassenger</title>
+    <title>{{ $lang === 'en' ? 'Your HelloPassenger password' : 'Votre mot de passe HelloPassenger' }}</title>
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
         .container { width: 90%; max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
@@ -17,11 +17,15 @@
 </head>
 <body>
     <div class="container">
-        <h1>Votre mot de passe HelloPassenger</h1>
+        <h1>{{ $lang === 'en' ? 'Your HelloPassenger password' : 'Votre mot de passe HelloPassenger' }}</h1>
         
-        <p>Bonjour {{ $client->prenom ?? 'Client' }},</p>
+        <p>{{ $lang === 'en' ? 'Hello' : 'Bonjour' }} {{ $client->prenom ?? 'Client' }},</p>
         
-        <p>Un mot de passe a été généré pour votre compte HelloPassenger.</p>
+        <p>
+            {{ $lang === 'en' 
+                ? 'A password has been generated for your HelloPassenger account.' 
+                : 'Un mot de passe a été généré pour votre compte HelloPassenger.' }}
+        </p>
         
         <div class="credentials">
             <div class="credential-item">
@@ -29,23 +33,42 @@
                 <span class="value">{{ $client->email }}</span>
             </div>
             <div class="credential-item">
-                <span class="label">Mot de passe :</span>
+                <span class="label">{{ $lang === 'en' ? 'Password :' : 'Mot de passe :' }}</span>
                 <span class="value">{{ $password }}</span>
             </div>
             <div class="credential-item" style="margin-top: 10px;">
-                <span class="label" style="font-size: 12px; color: #666;">⚠️ Copiez le mot de passe COMPLET sans espaces</span>
+                <span class="label" style="font-size: 12px; color: #666;">
+                    {{ $lang === 'en' 
+                        ? '⚠️ Copy the COMPLETE password without spaces' 
+                        : '⚠️ Copiez le mot de passe COMPLET sans espaces' }}
+                </span>
             </div>
         </div>
         
         <div class="warning">
-            <strong>⚠️ Important :</strong> Veuillez conserver ce mot de passe en sécurité. Vous pouvez le changer après votre première connexion.
+            <strong>⚠️ {{ $lang === 'en' ? 'Important :' : 'Important :' }}</strong> 
+            {{ $lang === 'en' 
+                ? 'Please keep this password secure. You can change it after your first login.' 
+                : 'Veuillez conserver ce mot de passe en sécurité. Vous pouvez le changer après votre première connexion.' }}
         </div>
         
-        <p>Vous pouvez maintenant vous connecter à votre compte pour accéder à toutes vos commandes.</p>
+        <p>
+            {{ $lang === 'en' 
+                ? 'You can now log in to your account to access all your orders.' 
+                : 'Vous pouvez maintenant vous connecter à votre compte pour accéder à toutes vos commandes.' }}
+        </p>
 
         <div class="footer">
-            <p>Cet email a été envoyé automatiquement par le système HelloPassenger.</p>
-            <p>Si vous n'avez pas demandé ce mot de passe, veuillez ignorer cet email.</p>
+            <p>
+                {{ $lang === 'en' 
+                    ? 'This email was automatically sent by the HelloPassenger system.' 
+                    : 'Cet email a été envoyé automatiquement par le système HelloPassenger.' }}
+            </p>
+            <p>
+                {{ $lang === 'en' 
+                    ? 'If you did not request this password, please ignore this email.' 
+                    : 'Si vous n\'avez pas demandé ce mot de passe, veuillez ignorer cet email.' }}
+            </p>
         </div>
     </div>
 </body>

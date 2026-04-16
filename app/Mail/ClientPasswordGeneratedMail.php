@@ -15,17 +15,23 @@ class ClientPasswordGeneratedMail extends Mailable
 
     public $client;
     public $password;
+    public $lang;
 
-    public function __construct(Client $client, string $password)
+    public function __construct(Client $client, string $password, string $lang = 'fr')
     {
         $this->client = $client;
         $this->password = $password;
+        $this->lang = $lang;
     }
 
     public function envelope(): Envelope
     {
+        $subject = $this->lang === 'en' 
+            ? 'Your HelloPassenger password' 
+            : 'Votre mot de passe HelloPassenger';
+
         return new Envelope(
-            subject: 'Votre mot de passe HelloPassenger',
+            subject: $subject,
         );
     }
 
