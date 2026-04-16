@@ -19,6 +19,17 @@ class FrontController extends Controller
 {
     protected $bdmApiService;
 
+    /**
+     * IDs des produits de type "Bagage" autorisÃ©s dans le formulaire.
+     */
+    private const ALLOWED_BAGGAGE_PRODUCT_IDS = [
+        'cf2192d7-8358-41e7-82e1-4341658bbeb0', // Accessoires
+        'c9d1371a-b654-4c7a-85a3-6c6a99f1f2b2', // Bagage cabine
+        '01fbbaa3-7fb2-4f24-880f-cfe7d8a50a9b', // Bagage soute
+        '868800b2-5635-4da6-a30f-5dbdbc995766', // Bagage spÃ©cial
+        '2418a6cf-4426-4402-8374-f0b2bd12ee0a', // Vestiaire
+    ];
+
     public function __construct(BdmApiService $bdmApiService)
     {
         $this->bdmApiService = $bdmApiService;
@@ -195,7 +206,13 @@ class FrontController extends Controller
                     $pStatut = $responseProducts['statut'] ?? $responseProducts['status'] ?? $responseProducts['isSucceed'] ?? null;
                     $pContent = $responseProducts['content'] ?? $responseProducts['data'] ?? $responseProducts['products'] ?? null;
                     if (($pStatut === 1 || $pStatut === true) && is_array($pContent)) {
-                        $products = $pContent;
+                        // Filtrer pour ne garder que les 5 produits de bagages autorisÃ©s
+                        $products = array_filter($pContent, function($product) {
+                            $id = $product['id'] ?? $product['Id'] ?? $product['ID'] ?? null;
+                            return in_array($id, self::ALLOWED_BAGGAGE_PRODUCT_IDS);
+                        });
+                        // RÃ©indexer le tableau
+                        $products = array_values($products);
                     } else {
                         Log::warning("API BDM produits : format inattendu.", ['keys' => is_array($responseProducts) ? array_keys($responseProducts) : gettype($responseProducts)]);
                     }
@@ -575,6 +592,14 @@ class FrontController extends Controller
                 $validated['duree']
             );
             
+            // Filtrer les produits dans la rÃ©ponse
+            if (isset($response['content']['products']) && is_array($response['content']['products'])) {
+                $response['content']['products'] = array_values(array_filter($response['content']['products'], function($product) {
+                    $id = $product['id'] ?? $product['Id'] ?? $product['ID'] ?? null;
+                    return in_array($id, self::ALLOWED_BAGGAGE_PRODUCT_IDS);
+                }));
+            }
+            
             return response()->json($response, 200);
 
         } catch (\Exception $e) {
@@ -736,10 +761,16 @@ class FrontController extends Controller
             }
 
             $response = $this->bdmApiService->getQuote((string) $firstId, $serviceId, $duree);
-            $products = $response['content']['products'] ?? $response['content'] ?? [];
-            if (!is_array($products)) {
-                $products = [];
+            $productsRaw = $response['content']['products'] ?? $response['content'] ?? [];
+            if (!is_array($productsRaw)) {
+                $productsRaw = [];
             }
+
+            // Filtrer les produits
+            $products = array_values(array_filter($productsRaw, function($product) {
+                $id = $product['id'] ?? $product['Id'] ?? $product['ID'] ?? null;
+                return in_array($id, self::ALLOWED_BAGGAGE_PRODUCT_IDS);
+            }));
 
             $remiseSummary = [];
             foreach ($products as $i => $p) {
