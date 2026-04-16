@@ -447,6 +447,19 @@
 
         <!-- RIGHT -->
         <section class="auth-card__form">
+            <div class="back-navigation" style="margin-bottom: 16px;">
+                @php
+                    $backUrl = session('from_payment') ? route('payment') : route('form-consigne');
+                    $backText = $currentLang === 'en' ? 'Back' : 'Retour';
+                @endphp
+                <a href="{{ $backUrl }}" class="flex items-center text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors" style="display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: #555; font-weight: 500; font-size: 13px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style="width: 14px; height: 14px;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7 7-7" />
+                    </svg>
+                    <span>{{ $backText }}</span>
+                </a>
+            </div>
+
             @if($isClientLoggedIn)
                 <!-- LOGGED IN: Dashboard preview -->
                 <div class="panel panel--active">

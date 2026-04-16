@@ -883,6 +883,9 @@ class PaymentController extends Controller
 
     public function showPaymentPage(Request $request)
     {
+        // Indicate that we are on the payment page for the "Back" button on /account
+        session(['from_payment' => true]);
+        
         Log::info('----------------------------------------------------');
         Log::info('[showPaymentPage] START - Handling /payment route.');
         Log::info('[showPaymentPage] Session ID: ' . session()->getId());

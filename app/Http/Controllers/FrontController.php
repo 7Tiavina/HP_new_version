@@ -51,6 +51,9 @@ class FrontController extends Controller
 
     public function redirectForm(Request $request)
     {
+        // On efface l'indicateur de provenance de la page de paiement
+        $request->session()->forget('from_payment');
+
         // Handle language preference from URL parameter (?lang=en or ?lang=fr)
         $langParam = $request->query('lang');
         if ($langParam) {
