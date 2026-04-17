@@ -413,6 +413,22 @@
         .auth-page {
             padding: 60px 16px 30px;
         }
+
+        .tabs {
+            gap: 4px;
+        }
+
+        .tab {
+            padding: 6px 10px;
+            font-size: 12px;
+        }
+    }
+
+    @media (max-width: 380px) {
+        .tab {
+            padding: 6px 8px;
+            font-size: 11px;
+        }
     }
 </style>
 @endpush
