@@ -25,6 +25,21 @@ class BdmApiService
     }
 
     /**
+     * Nettoie une chaîne de caractères pour l'API BDM (supprime les accents et caractères spéciaux Unicode).
+     *
+     * @param string|null $string La chaîne à nettoyer.
+     * @return string|null La chaîne nettoyée.
+     */
+    public static function sanitizeString(?string $string): ?string
+    {
+        if (empty($string)) {
+            return $string;
+        }
+
+        return \Illuminate\Support\Str::ascii($string);
+    }
+
+    /**
      * Récupère un token d'authentification pour l'API BDM, en le mettant en cache.
      * @return string
      * @throws \Illuminate\Http\Client\RequestException
@@ -311,6 +326,19 @@ class BdmApiService
             ];
         }
 
+        // Nettoyage des chaînes pour éviter les erreurs Unicode avec l'API BDM
+        foreach (['adresse', 'complementAdresse', 'ville', 'nom', 'prenom', 'nomSociete'] as $key) {
+            if (isset($client[$key])) {
+                $client[$key] = self::sanitizeString($client[$key]);
+            }
+        }
+
+        foreach (['lieu', 'commentaires'] as $key) {
+            if (isset($commandeInfos[$key])) {
+                $commandeInfos[$key] = self::sanitizeString($commandeInfos[$key]);
+            }
+        }
+
         $payload = [
             "commandeLignes" => $commandeLignes,
             "commandeOptions" => $commandeOptions,
@@ -499,6 +527,14 @@ class BdmApiService
             $clientData['email'] = "temp@hellopassenger.com";
         }
 
+        // Nettoyage des chaînes pour éviter les erreurs Unicode avec l'API BDM
+        foreach (['adresse', 'complementAdresse', 'ville', 'nom', 'prenom', 'nomSociete'] as $key) {
+            if (isset($clientData[$key])) {
+                $clientData[$key] = self::sanitizeString($clientData[$key]);
+            }
+        }
+
+        $commentairesForBdm = self::sanitizeString($commentairesForBdm);
 
         $payload = [
             "commandeLignes" => $commandeLignes,

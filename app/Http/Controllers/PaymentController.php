@@ -1247,19 +1247,19 @@ class PaymentController extends Controller
             }
             
             // L'API BDM attend les champs avec majuscules (Nom, Email, Prenom)
-            // Créer un nouveau tableau avec les champs formatés correctement
+            // Créer un nouveau tableau avec les champs formatés correctement et sans accents (compatibilité BDM)
             $clientDataFormatted = [
-                'Nom' => $clientDataForBdm['nom'] ?? $clientDataForBdm['Nom'] ?? null,
+                'Nom' => \App\Services\BdmApiService::sanitizeString($clientDataForBdm['nom'] ?? $clientDataForBdm['Nom'] ?? null),
                 'Email' => $clientDataForBdm['email'] ?? $clientDataForBdm['Email'] ?? null,
-                'Prenom' => $clientDataForBdm['prenom'] ?? $clientDataForBdm['Prenom'] ?? null,
+                'Prenom' => \App\Services\BdmApiService::sanitizeString($clientDataForBdm['prenom'] ?? $clientDataForBdm['Prenom'] ?? null),
                 'Telephone' => $clientDataForBdm['telephone'] ?? $clientDataForBdm['Telephone'] ?? null,
-                'Adresse' => $clientDataForBdm['adresse'] ?? $clientDataForBdm['Adresse'] ?? null,
-                'ComplementAdresse' => $clientDataForBdm['complementAdresse'] ?? $clientDataForBdm['ComplementAdresse'] ?? null,
-                'Ville' => $clientDataForBdm['ville'] ?? $clientDataForBdm['Ville'] ?? null,
+                'Adresse' => \App\Services\BdmApiService::sanitizeString($clientDataForBdm['adresse'] ?? $clientDataForBdm['Adresse'] ?? null),
+                'ComplementAdresse' => \App\Services\BdmApiService::sanitizeString($clientDataForBdm['complementAdresse'] ?? $clientDataForBdm['ComplementAdresse'] ?? null),
+                'Ville' => \App\Services\BdmApiService::sanitizeString($clientDataForBdm['ville'] ?? $clientDataForBdm['Ville'] ?? null),
                 'CodePostal' => $clientDataForBdm['codePostal'] ?? $clientDataForBdm['CodePostal'] ?? null,
                 'Pays' => $clientDataForBdm['pays'] ?? $clientDataForBdm['Pays'] ?? null,
                 'Civilite' => $clientDataForBdm['civilite'] ?? $clientDataForBdm['Civilite'] ?? null,
-                'NomSociete' => $clientDataForBdm['nomSociete'] ?? $clientDataForBdm['NomSociete'] ?? null,
+                'NomSociete' => \App\Services\BdmApiService::sanitizeString($clientDataForBdm['nomSociete'] ?? $clientDataForBdm['NomSociete'] ?? null),
             ];
             
             // Retirer les valeurs null pour éviter d'envoyer des champs vides
@@ -1273,6 +1273,11 @@ class PaymentController extends Controller
                 ['modeTransport' => '', 'lieu' => '', 'commentaires' => ''],
                 is_array($commandeInfos) ? $commandeInfos : (array) $commandeInfos
             );
+
+            // Nettoyage des infos de commande pour la compatibilité BDM
+            $commandeInfos['modeTransport'] = \App\Services\BdmApiService::sanitizeString($commandeInfos['modeTransport']);
+            $commandeInfos['lieu'] = \App\Services\BdmApiService::sanitizeString($commandeInfos['lieu']);
+            $commandeInfos['commentaires'] = \App\Services\BdmApiService::sanitizeString($commandeInfos['commentaires']);
 
             $payload = [
                 'commandeLignes' => $lignesProduits,
