@@ -9,7 +9,17 @@ if (typeof t === 'undefined') {
     var t = (key, fallback) => (window.translateKey ? window.translateKey(key, fallback) : (fallback || key));
 }
 
-function openQuickDateModal() {
+function openQuickDateModal(forceOpen = false) {
+    // Bouton de fermeture
+    const closeBtn = document.getElementById('close-quick-date-modal');
+    if (closeBtn) {
+        if (forceOpen) {
+            closeBtn.classList.add('hidden');
+        } else {
+            closeBtn.classList.remove('hidden');
+        }
+    }
+
     // Copier les valeurs actuelles depuis le formulaire principal
     const depotDate = document.getElementById('date-depot').value;
     const depotHeure = document.getElementById('heure-depot').value;
@@ -57,6 +67,7 @@ function openQuickDateModal() {
     };
     qdmEscapeHandler = function(e) {
         if (e.key === 'Escape') {
+            if (forceOpen) return; // Ne pas fermer si forcé
             qdmModal.classList.add('hidden');
             removeEscape();
         }
@@ -195,8 +206,8 @@ async function validateQdmDates() {
             t('alert_agency_closed_title', 'Horaires non disponibles'),
             t('alert_hours_not_available', 'Les horaires sélectionnés ne sont pas disponibles. Veuillez choisir d\'autres horaires.')
         );
-        // Rouvrir la modale pour permettre de choisir d'autres horaires
-        openQuickDateModal();
+        // Rouvrir la modale pour permettre de choisir d'autres horaires (forcé)
+        openQuickDateModal(true);
     }
 }
 
