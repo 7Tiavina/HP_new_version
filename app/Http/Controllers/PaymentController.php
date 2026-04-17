@@ -1830,37 +1830,66 @@ class PaymentController extends Controller
      */
     private function _moneticoVoidPayment(string $transactionId)
     {
-        // According to Monetico API V4 documentation, the correct endpoint for Void is:
-        // POST /Charge/{transactionId}/Void for TEST mode
-        // Note: Some Monetico instances use /PaymentMethod/{uuid}/Void
-        // We'll try both endpoints
-        $url = config('monetico.base_url') . "/Charge/{$transactionId}/Void";
-        Log::info('Calling Monetico Void API.', ['url' => $url]);
+        // Standard Monetico/Lyra REST API V4 endpoint for cancellation is /Transaction/CancelOrRefund
+        // Note: We use 'uuid' as the parameter name for the transaction ID
+        $url = config('monetico.base_url') . "/Transaction/CancelOrRefund";
+        Log::info('Calling Monetico Void API (CancelOrRefund).', ['url' => $url, 'transaction_id' => $transactionId]);
+
+        $payload = [
+            'uuid' => $transactionId
+        ];
 
         $response = Http::withHeaders([
             'Authorization' => 'Basic ' . base64_encode(config('monetico.login') . ':' . config('monetico.secret_key')),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-        ])->post($url);
+        ])->post($url, $payload);
 
-        // If the first endpoint fails with INT_901, try the alternative endpoint
-        if (!$response->successful()) {
-            $responseData = $response->json();
-            if (($responseData['answer']['errorCode'] ?? '') === 'INT_901') {
-                Log::info('First Void endpoint failed, trying alternative endpoint...', [
+        $status = $response->status();
+        $body = $response->json();
+        $moneticoStatus = $body['status'] ?? 'UNKNOWN';
+
+        Log::info('Monetico Void response received.', [
+            'http_status' => $status,
+            'monetico_status' => $moneticoStatus,
+            'error_code' => $body['answer']['errorCode'] ?? null,
+            'error_message' => $body['answer']['errorMessage'] ?? null
+        ]);
+
+        // If standard endpoint fails, try the alternative legacy endpoints
+        if ($moneticoStatus !== 'SUCCESS') {
+            $errorCode = $body['answer']['errorCode'] ?? '';
+            
+            // If the standard endpoint is not enabled (PSP_100) or not found (INT_901), try legacy Charge endpoint
+            if ($errorCode === 'PSP_100' || $errorCode === 'INT_901' || $errorCode === 'INT_902') {
+                Log::info('Standard Void endpoint failed or not enabled, trying legacy Charge endpoint...', [
                     'transaction_id' => $transactionId,
+                    'reason' => $errorCode
                 ]);
                 
-                $alternativeUrl = config('monetico.base_url') . "/PaymentMethod/{$transactionId}/Void";
-                Log::info('Calling Monetico Void API (alternative endpoint).', ['url' => $alternativeUrl]);
-                
-                $alternativeResponse = Http::withHeaders([
+                $legacyUrl = config('monetico.base_url') . "/Charge/{$transactionId}/Void";
+                $legacyResponse = Http::withHeaders([
                     'Authorization' => 'Basic ' . base64_encode(config('monetico.login') . ':' . config('monetico.secret_key')),
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
-                ])->post($alternativeUrl);
+                ])->post($legacyUrl);
                 
-                return $alternativeResponse;
+                $legacyBody = $legacyResponse->json();
+                if (($legacyBody['status'] ?? '') === 'SUCCESS') {
+                    return $legacyResponse;
+                }
+                
+                // Final attempt: PaymentMethod endpoint
+                Log::info('Legacy Charge endpoint also failed, trying PaymentMethod endpoint...', [
+                    'transaction_id' => $transactionId
+                ]);
+                
+                $pmUrl = config('monetico.base_url') . "/PaymentMethod/{$transactionId}/Void";
+                return Http::withHeaders([
+                    'Authorization' => 'Basic ' . base64_encode(config('monetico.login') . ':' . config('monetico.secret_key')),
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ])->post($pmUrl);
             }
         }
 
@@ -2255,6 +2284,14 @@ class PaymentController extends Controller
         if (strpos(strtolower($errorMessage), 'telephone') !== false ||
             strpos(strtolower($errorMessage), 'téléphone') !== false) {
             return "Le numéro de téléphone que vous avez saisi n'est pas valide. Veuillez le corriger et réessayer.";
+        }
+
+        // Si c'est une erreur de validation du Nom ou Prénom
+        if (strpos(strtolower($errorMessage), 'nom') !== false || 
+            strpos(strtolower($errorMessage), 'prenom') !== false ||
+            (is_array($apiResult) && isset($apiResult['errors']) && 
+             (isset($apiResult['errors']['Client.Nom']) || isset($apiResult['errors']['Client.Prenom'])))) {
+            return "Le nom ou le prénom saisi contient des caractères non autorisés. Veuillez utiliser uniquement des lettres et réessayer.";
         }
 
         // Si c'est une erreur de disponibilité
