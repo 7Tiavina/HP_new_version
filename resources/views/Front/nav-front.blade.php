@@ -1031,8 +1031,10 @@
     <div class="contact-info-top">
         <div class="contact-left">
             <div class="contact-item">
-                <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                <span><span data-i18n="header_location_label">Location:</span> <span data-i18n="header_location_value">Aéroport de Paris CDG et Orly</span></span>
+                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/nous-localiser/" style="display: flex; align-items: center; gap: 6px; text-decoration: none;">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span><span data-i18n="header_location_label">Location:</span> <span data-i18n="header_location_value">Aéroport de Paris CDG et Orly</span></span>
+                </a>
             </div>
             <div class="contact-item">
                 <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.81 12.81 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"></path></svg>
@@ -1062,14 +1064,14 @@
 
         <ul class="nav-center-menu">
             <li class="nav-dropdown" id="servicesItem">
-                <button class="nav-dropdown-trigger" id="servicesTrigger" onclick="toggleServicesDropdown(event)">
+                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services/" class="nav-dropdown-trigger" id="servicesTrigger">
                     <span data-i18n="nav_services">Nos Services Bagages</span>
                     <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2.5"
                          stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9"/>
                     </svg>
-                </button>
+                </a>
                 <div class="nav-dropdown-menu" id="servicesDropdown">
                     <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/consigne-bagages/">
                         <span class="drop-arrow">↗</span>
@@ -1245,7 +1247,7 @@
 
         <ul class="drawer-nav-menu">
             <li class="drawer-submenu">
-                <a href="#" class="drawer-submenu-trigger" data-i18n="nav_services">Nos Services Bagages</a>
+                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services/" class="drawer-submenu-trigger" data-i18n="nav_services">Nos Services Bagages</a>
                 <ul class="drawer-submenu-list">
                     <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/consigne-bagages/" data-i18n="service_consigne">Consigne Bagages</a></li>
                     <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/transfert-livraison-bagages/" data-i18n="service_transfert">Transfert &amp; Livraison Bagages</a></li>
@@ -1356,12 +1358,14 @@
             // Don't close drawer on submenu trigger click
             if (link.classList.contains('drawer-submenu-trigger')) {
                 link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
                     const parent = this.closest('.drawer-submenu');
-                    if (parent) {
-                        parent.classList.toggle('open');
+                    // Si le menu n'est pas encore ouvert, on l'ouvre d'abord
+                    if (parent && !parent.classList.contains('open')) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        parent.classList.add('open');
                     }
+                    // Sinon (déjà ouvert), on laisse le lien rediriger normalement
                 });
             } else if (link.closest('.drawer-submenu-list')) {
                 // Submenu item: close drawer on click
