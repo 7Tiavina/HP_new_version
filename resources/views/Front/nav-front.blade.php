@@ -438,7 +438,7 @@
         color: #000000;
     }
 
-    @media (max-width: 1150px) {
+    @media (max-width: 1024px) {
         .nav-center-menu, .contact-left { display: none; }
     }
 
@@ -983,13 +983,13 @@
     }
 
     /* --- RESPONSIVE --- */
-    @media (max-width: 1150px) {
+    @media (max-width: 1024px) {
         .nav-right-group .btn-reserve {
             display: none;
         }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
         .navbar {
             height: 80px;
             padding: 0 15px;
