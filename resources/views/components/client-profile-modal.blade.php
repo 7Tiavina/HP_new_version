@@ -178,7 +178,7 @@
                                             <svg class="w-4 h-4 text-gray-400 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
-                                            <div class="absolute left-0 top-6 transform ml-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg shadow-lg w-56 sm:w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                            <div class="absolute left-0 top-6 transform ml-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg shadow-lg w-56 sm:w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50" data-i18n="premium_pickup_hint">
                                                 Les dates et heures de prise en charge peuvent être modifiées et peuvent être différentes de celles de la consigne.
                                             </div>
                                         </div>
@@ -241,7 +241,7 @@
                                             <svg class="w-4 h-4 text-gray-400 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
-                                            <div class="absolute left-0 top-6 transform ml-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg shadow-lg w-56 sm:w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                            <div class="absolute left-0 top-6 transform ml-2 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg shadow-lg w-56 sm:w-64 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50" data-i18n="premium_restitution_hint">
                                                 Les dates et heures de restitution peuvent être modifiées et peuvent être différentes de celles de la consigne.
                                             </div>
                                         </div>
