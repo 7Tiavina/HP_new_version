@@ -49,7 +49,7 @@
                         <div class="space-y-4 sm:space-y-5">
                             <h4 class="font-bold text-gray-900 flex items-center text-base sm:text-lg">
                                 <span class="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-yellow-400 to-yellow-500 text-white rounded-full flex items-center justify-center mr-2 sm:mr-3 text-xs sm:text-sm font-bold shadow-md">1</span>
-                                Vos coordonnées
+                                <span data-i18n="modal_section_1">Vos coordonnées</span>
                             </h4>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
