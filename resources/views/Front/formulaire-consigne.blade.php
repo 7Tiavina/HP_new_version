@@ -1580,7 +1580,16 @@
                 loader.classList.remove('hidden');
             }
 
+            // Nettoyage complet
             sessionStorage.removeItem('formState');
+            localStorage.removeItem('formState');
+
+            // Réinitialisation visuelle immédiate du DOM
+            const inputs = document.querySelectorAll('#step-1 input, #step-1 select');
+            inputs.forEach(input => {
+                input.value = '';
+                if (typeof setInputDefault === 'function') setInputDefault(input);
+            });
 
             try {
                 // La route 'session.reset' est necessaire ici.
@@ -1595,9 +1604,8 @@
                 console.error('Failed to reset server session:', error);
             }
 
-            setTimeout(() => {
-                location.reload();
-            }, 500);
+            // Forcer le rechargement sans cache
+            window.location.href = window.location.pathname;
         }
     });
 
