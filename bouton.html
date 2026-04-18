@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bouton Spinner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+    <button 
+        id="btn" 
+        onclick="charger()"
+        class="flex items-center justify-center bg-yellow-400 hover:bg-yellow-500 text-yellow-900 font-bold py-3 px-8 rounded-full transition-all duration-200 min-w-[160px] h-[55px] shadow-lg"
+    >
+        <span id="texte">Confirmer</span>
+        
+        <svg id="spinner" class="hidden animate-spin h-6 w-6 text-yellow-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+    </button>
+
+    <script>
+        function charger() {
+            const btn = document.getElementById('btn');
+            const texte = document.getElementById('texte');
+            const spinner = document.getElementById('spinner');
+
+            // On cache le texte et on montre le spinner
+            texte.classList.add('hidden');
+            spinner.classList.remove('hidden');
+            
+            // On désactive le bouton pour éviter de cliquer 100 fois
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            // On simule une fin de chargement après 2 secondes
+            setTimeout(() => {
+                texte.classList.remove('hidden');
+                spinner.classList.add('hidden');
+                btn.disabled = false;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            }, 2000);
+        }
+    </script>
+
+</body>
+</html>

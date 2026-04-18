@@ -505,11 +505,7 @@ async function checkSingleDateAvailability(date, time) {
  */
 async function checkAvailability() {
     console.log('checkAvailability() called');
-    const spinner = document.getElementById('loading-spinner-availability');
     const btn = document.getElementById('check-availability-btn');
-
-    console.log('Spinner element:', spinner);
-    console.log('Button element:', btn);
 
     // Exit early if button doesn't exist (not on booking page)
     if (!btn) {
@@ -528,12 +524,6 @@ async function checkAvailability() {
         }
         return false;
     }
-
-    // Show spinner if it exists
-    if (spinner) {
-        spinner.style.display = 'inline-block';
-    }
-    btn.disabled = true;
 
     const dateDepot = document.getElementById('date-depot').value;
     const heureDepot = document.getElementById('heure-depot').value;
@@ -631,10 +621,7 @@ async function checkAvailability() {
         await showCustomAlert(t('error'), t('alert_availability_error'));
         return false;
     } finally {
-        if (spinner) {
-            spinner.style.display = 'none';
-        }
-        btn.disabled = false;
+        // Le reset est géré par les appelants (bouton principal ou modale QDM)
     }
 }
 
@@ -749,8 +736,23 @@ async function getQuoteAndDisplay() {
  * Gère le clic sur le bouton de paiement.
  */
 async function handleTotalClick() {
+    const btn = document.getElementById('btn-proceed-payment');
+    const text = document.getElementById('btn-proceed-payment-text');
+    const spinner = document.getElementById('btn-proceed-payment-spinner');
+    
     const loader = document.getElementById('loader');
     const t = (key, fallback) => (window.translateKey ? window.translateKey(key, fallback) : (fallback || key));
+    
+    // On cache le texte et on montre le spinner
+    if (text && spinner) {
+        text.classList.add('hidden');
+        spinner.classList.remove('hidden');
+    }
+    if (btn) {
+        btn.style.pointerEvents = 'none';
+        btn.classList.add('opacity-75', 'cursor-not-allowed');
+    }
+
     if (loader) loader.classList.remove('hidden');
 
     var loaderSafetyId = setTimeout(function () {
@@ -1078,9 +1080,24 @@ async function handleTotalClick() {
         await showCustomAlert(t('error'), t('alert_tech_error') || 'Une erreur est survenue. Réessayez.');
     } finally {
         clearTimeout(loaderSafetyId);
-        if (!didRedirect && loader) {
-            loader.classList.add('hidden');
-            loader.style.display = 'none';
+        if (!didRedirect) {
+            if (loader) {
+                loader.classList.add('hidden');
+                loader.style.display = 'none';
+            }
+            // Restaurer le bouton
+            if (text && spinner) {
+                text.classList.remove('hidden');
+                spinner.classList.add('hidden');
+            }
+            if (btn) {
+                btn.style.pointerEvents = 'auto';
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+            }
+            // Fermer le drawer d'options s'il est resté ouvert
+            if (typeof window.closeOptionsDrawer === 'function') {
+                window.closeOptionsDrawer();
+            }
         }
     }
 }
@@ -1302,30 +1319,50 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.getElementById('check-availability-btn').addEventListener('click', async () => {
-        console.log('CHECK AVAILABILITY BUTTON CLICKED!');
-        saveStateToSession();
-        const isAvailable = await checkAvailability();
-        console.log('checkAvailability returned:', isAvailable);
-        if (isAvailable) {
-            var step1 = document.getElementById('step-1');
-            var step2 = document.getElementById('baggage-selection-step');
-            step1.style.display = 'none';
-            step2.style.display = 'block';
-            if (document.getElementById('hp-booking-root') && document.getElementById('hp-booking-root').classList.contains('hp-modal-mode')) {
-                step1.classList.remove('hp-step-active');
-                step2.classList.add('hp-step-active');
-            }
-            document.getElementById('back-to-step-1-btn').classList.remove('hidden');
-            document.getElementById('sticky-wrapper').style.display = 'block';
-            
-            // Aligner le panier avec la section Aéroport sélectionné
-            if (typeof alignStickyWithBaggage === 'function') {
-                setTimeout(alignStickyWithBaggage, 50);
-            }
-            
-            displaySelectedDates();
-            getQuoteAndDisplay();
+        const btn = document.getElementById('check-availability-btn');
+        const text = document.getElementById('check-availability-text');
+        const spinner = document.getElementById('check-availability-spinner');
+
+        if (text && spinner) {
+            text.classList.add('hidden');
+            spinner.classList.remove('hidden');
+        }
+        btn.disabled = true;
+        btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+        try {
+            console.log('CHECK AVAILABILITY BUTTON CLICKED!');
             saveStateToSession();
+            const isAvailable = await checkAvailability();
+            console.log('checkAvailability returned:', isAvailable);
+            if (isAvailable) {
+                var step1 = document.getElementById('step-1');
+                var step2 = document.getElementById('baggage-selection-step');
+                step1.style.display = 'none';
+                step2.style.display = 'block';
+                if (document.getElementById('hp-booking-root') && document.getElementById('hp-booking-root').classList.contains('hp-modal-mode')) {
+                    step1.classList.remove('hp-step-active');
+                    step2.classList.add('hp-step-active');
+                }
+                document.getElementById('back-to-step-1-btn').classList.remove('hidden');
+                document.getElementById('sticky-wrapper').style.display = 'block';
+                
+                // Aligner le panier avec la section Aéroport sélectionné
+                if (typeof alignStickyWithBaggage === 'function') {
+                    setTimeout(alignStickyWithBaggage, 50);
+                }
+                
+                displaySelectedDates();
+                getQuoteAndDisplay();
+                saveStateToSession();
+            }
+        } finally {
+            if (text && spinner) {
+                text.classList.remove('hidden');
+                spinner.classList.add('hidden');
+            }
+            btn.disabled = false;
+            btn.classList.remove('opacity-75', 'cursor-not-allowed');
         }
     });
 

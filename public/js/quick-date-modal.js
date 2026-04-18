@@ -128,6 +128,10 @@ function applyQdmDateConstraints() {
 
 // Fonction pour valider et appliquer les nouvelles dates
 async function validateQdmDates() {
+    const btn = document.getElementById('qdm-validate-btn');
+    const text = document.getElementById('qdm-validate-text');
+    const spinner = document.getElementById('qdm-validate-spinner');
+
     // Vérifier que airportId est défini
     if (typeof airportId === 'undefined' || !airportId) {
         await showCustomAlert(t('alert_missing_data_title'), 'Aéroport non sélectionné. Veuillez sélectionner un aéroport d\'abord.');
@@ -164,50 +168,72 @@ async function validateQdmDates() {
         }
     }
 
-    // Appliquer les nouvelles valeurs au formulaire principal
-    const pad = (num) => num.toString().padStart(2, '0');
-    document.getElementById('date-depot').value = newDepotDate;
-    document.getElementById('heure-depot').value = newDepotHeure;
-    document.getElementById('date-recuperation').value = newRetraitDate;
-    document.getElementById('heure-recuperation').value = newRetraitHeure;
-
-    // Mettre à jour l'affichage des dates sélectionnées
-    if (typeof displaySelectedDates === 'function') {
-        displaySelectedDates();
+    // Activer le spinner
+    if (text && spinner) {
+        text.classList.add('hidden');
+        spinner.classList.remove('hidden');
+    }
+    if (btn) {
+        btn.disabled = true;
+        btn.classList.add('opacity-75', 'cursor-not-allowed');
     }
 
-    // Réinitialiser les contraintes avant de recalculer
-    if (typeof resetContraintes === 'function') {
-        resetContraintes();
-    }
+    try {
+        // Appliquer les nouvelles valeurs au formulaire principal
+        const pad = (num) => num.toString().padStart(2, '0');
+        document.getElementById('date-depot').value = newDepotDate;
+        document.getElementById('heure-depot').value = newDepotHeure;
+        document.getElementById('date-recuperation').value = newRetraitDate;
+        document.getElementById('heure-recuperation').value = newRetraitHeure;
 
-    // Fermer la modale d'abord
-    document.getElementById('quick-date-modal').classList.add('hidden');
-    if (typeof qdmEscapeHandler === 'function') {
-        document.removeEventListener('keydown', qdmEscapeHandler);
-    }
-
-    // Maintenant vérifier la disponibilité (avec les nouvelles valeurs déjà appliquées)
-    const isAvailable = await checkAvailability();
-
-    if (isAvailable) {
-        // Recalculer les tarifs
-        if (typeof getQuoteAndDisplay === 'function') {
-            await getQuoteAndDisplay();
+        // Mettre à jour l'affichage des dates sélectionnées
+        if (typeof displaySelectedDates === 'function') {
+            displaySelectedDates();
         }
 
-        // Sauvegarder l'état
-        if (typeof saveStateToSession === 'function') {
-            saveStateToSession();
+        // Réinitialiser les contraintes avant de recalculer
+        if (typeof resetContraintes === 'function') {
+            resetContraintes();
         }
-    } else {
-        // Si pas disponible, afficher un message puis rouvrir la modale
-        await showCustomAlert(
-            t('alert_agency_closed_title', 'Horaires non disponibles'),
-            t('alert_hours_not_available', 'Les horaires sélectionnés ne sont pas disponibles. Veuillez choisir d\'autres horaires.')
-        );
-        // Rouvrir la modale pour permettre de choisir d'autres horaires (forcé)
-        openQuickDateModal(true);
+
+        // Fermer la modale d'abord
+        document.getElementById('quick-date-modal').classList.add('hidden');
+        if (typeof qdmEscapeHandler === 'function') {
+            document.removeEventListener('keydown', qdmEscapeHandler);
+        }
+
+        // Maintenant vérifier la disponibilité (avec les nouvelles valeurs déjà appliquées)
+        const isAvailable = await checkAvailability();
+
+        if (isAvailable) {
+            // Recalculer les tarifs
+            if (typeof getQuoteAndDisplay === 'function') {
+                await getQuoteAndDisplay();
+            }
+
+            // Sauvegarder l'état
+            if (typeof saveStateToSession === 'function') {
+                saveStateToSession();
+            }
+        } else {
+            // Si pas disponible, afficher un message puis rouvrir la modale
+            await showCustomAlert(
+                t('alert_agency_closed_title', 'Horaires non disponibles'),
+                t('alert_hours_not_available', 'Les horaires sélectionnés ne sont pas disponibles. Veuillez choisir d\'autres horaires.')
+            );
+            // Rouvrir la modale pour permettre de choisir d'autres horaires (forcé)
+            openQuickDateModal(true);
+        }
+    } finally {
+        // Restaurer le bouton
+        if (text && spinner) {
+            text.classList.remove('hidden');
+            spinner.classList.add('hidden');
+        }
+        if (btn) {
+            btn.disabled = false;
+            btn.classList.remove('opacity-75', 'cursor-not-allowed');
+        }
     }
 }
 

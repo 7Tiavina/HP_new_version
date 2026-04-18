@@ -581,10 +581,16 @@
     <!-- Drawer Footer - Fixed at bottom -->
     <div class="border-t-2 border-yellow-400 p-4 bg-white flex-shrink-0">
         <div class="flex justify-end w-full">
-            <button id="confirm-options-drawer" class="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-3.5 px-10 rounded-full transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105 duration-300 text-base flex items-center gap-2.5 group" data-i18n="drawer_confirm">
-                <span>Continuer</span>
-                <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            <button id="confirm-options-drawer" class="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-gray-900 font-bold py-3.5 px-10 rounded-full transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1 hover:scale-105 duration-300 text-base flex items-center justify-center min-w-[180px] gap-2.5 group">
+                <span id="confirm-options-text" class="flex items-center gap-2.5" data-i18n="drawer_confirm">
+                    <span>Continuer</span>
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                    </svg>
+                </span>
+                <svg id="confirm-options-spinner" class="hidden animate-spin h-6 w-6 text-gray-900" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
             </button>
         </div>
@@ -697,8 +703,12 @@
 
         <!-- Modal Footer -->
         <div class="flex justify-center p-6 border-t border-gray-200">
-            <button id="qdm-validate-btn" class="bg-yellow-custom text-gray-dark font-bold py-3 px-8 rounded-full btn-hover w-full md:w-auto" data-i18n="modal_validate_dates">
-                Valider les dates
+            <button id="qdm-validate-btn" class="bg-yellow-custom text-gray-dark font-bold py-3 px-8 rounded-full btn-hover w-full md:w-auto flex items-center justify-center min-w-[200px]">
+                <span id="qdm-validate-text" data-i18n="modal_validate_dates">Valider les dates</span>
+                <svg id="qdm-validate-spinner" class="hidden animate-spin h-6 w-6 text-gray-dark ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
             </button>
         </div>
     </div>
@@ -868,9 +878,12 @@
                 </div>
 
                 <div class="mt-8 text-center">
-                    <button id="check-availability-btn" class="bg-yellow-custom text-gray-dark font-bold py-3 px-8 rounded-full btn-hover" data-i18n="form_check_availability">
-                        VOIR LA DISPONIBILITÉ
-                        <span class="custom-spinner" role="status" aria-hidden="true" id="loading-spinner-availability" style="display: none;"></span>
+                    <button id="check-availability-btn" class="bg-yellow-custom text-gray-dark font-bold py-3 px-8 rounded-full btn-hover flex items-center justify-center min-w-[220px] mx-auto">
+                        <span id="check-availability-text" data-i18n="form_check_availability">VOIR LA DISPONIBILITÉ</span>
+                        <svg id="check-availability-spinner" class="hidden animate-spin h-6 w-6 text-gray-dark ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
                     </button>
                 </div>
             </div>
@@ -998,8 +1011,12 @@
                         <span class="discount-amount text-sm text-yellow-600 font-semibold"></span>
                     </div>
                     
-                    <div class="bg-yellow-custom rounded p-3 mt-4 flex justify-center items-center summary-total-container cursor-pointer hover:opacity-90 transition-opacity" role="button" tabindex="0" id="btn-proceed-payment" aria-label="Procéder au paiement">
-                        <span class="text-lg font-bold text-gray-dark" data-i18n="form_proceed_payment">Procéder au paiement</span>
+                    <div class="bg-yellow-custom rounded p-3 mt-4 flex justify-center items-center summary-total-container cursor-pointer hover:opacity-90 transition-opacity min-h-[52px]" role="button" tabindex="0" id="btn-proceed-payment" aria-label="Procéder au paiement">
+                        <span id="btn-proceed-payment-text" class="text-lg font-bold text-gray-dark" data-i18n="form_proceed_payment">Procéder au paiement</span>
+                        <svg id="btn-proceed-payment-spinner" class="hidden animate-spin h-6 w-6 text-gray-dark ml-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
                     </div>
                 </div>
             </div>

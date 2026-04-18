@@ -47,6 +47,17 @@ function openOptionsDrawer() {
         populateDrawerOptions();
         updateDrawerCart();
 
+        // Reset confirm button state
+        const confirmBtn = document.getElementById('confirm-options-drawer');
+        const confirmText = document.getElementById('confirm-options-text');
+        const confirmSpinner = document.getElementById('confirm-options-spinner');
+        if (confirmBtn) {
+            confirmBtn.disabled = false;
+            confirmBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+        }
+        if (confirmText) confirmText.classList.remove('hidden');
+        if (confirmSpinner) confirmSpinner.classList.add('hidden');
+
         // Setup event listeners
         setupDrawerEventListeners();
     });
@@ -582,7 +593,19 @@ function setupDrawerEventListeners() {
     // Confirm button
     if (confirmBtn) {
         confirmBtn.onclick = () => {
-            closeOptionsDrawer();
+            const text = document.getElementById('confirm-options-text');
+            const spinner = document.getElementById('confirm-options-spinner');
+
+            if (text && spinner) {
+                text.classList.add('hidden');
+                spinner.classList.remove('hidden');
+            }
+            confirmBtn.disabled = true;
+            confirmBtn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            // NOTE: On ne ferme pas le drawer ici, on laisse le caller (booking.js) 
+            // le faire après ses opérations (auth check, etc.) ou via closeOptionsDrawer()
+            // Cependant, le code actuel dans booking.js attend que la promesse soit résolue.
             if (optionsDrawerResolve) optionsDrawerResolve(true);
         };
     }
