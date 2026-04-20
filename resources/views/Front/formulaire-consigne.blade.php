@@ -749,9 +749,9 @@
     </div>
 
     <!-- Baggage info notice -->
-    <div class="mb-6" style="max-width: 66.666667%;">
-        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-            <div class="flex items-start space-x-4">
+    <div class="mb-6">
+        <div class="bg-white border border-gray-200 rounded-lg p-6">
+            <div class="flex flex-col sm:flex-row items-start space-y-4 sm:space-y-0 sm:space-x-4">
                 <div class="flex-shrink-0">
                     <svg class="w-8 h-8 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
