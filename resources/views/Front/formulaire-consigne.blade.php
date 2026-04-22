@@ -802,17 +802,17 @@
                     </div>
                 </div>
 
-                <div class="grid md:grid-cols-2 gap-6 mt-6">
-                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <div class="bg-white border border-gray-200 rounded-lg p-4 md:p-6">
                         <h3 class="date-label text-sm font-medium text-gray-700 mb-4" data-i18n="form_deposit_date">DATE DE DÉPÔT DES BAGAGES *</h3>
                         <div class="datetime-container">
                             <div class="datetime-field">
-                                <input type="date" id="date-depot" class="input-style w-full">
+                                <input type="date" id="date-depot" class="input-style w-full text-base" style="font-size: 16px !important; -webkit-appearance: none;">
                             </div>
-                            <div class="datetime-field">
+                            <div class="datetime-field mt-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_deposit_time">HEURE DE DÉPÔT *</label>
                                 <div class="time-field-wrapper">
-                                    <input type="text" id="heure-depot" class="time-field" readonly>
+                                    <input type="text" id="heure-depot" class="time-field text-base" readonly style="font-size: 16px !important;">
                                     <svg class="time-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
@@ -839,16 +839,16 @@
                             </div>
                         </div>
                     </div>
-                    <div class="bg-white border border-gray-200 rounded-lg p-6">
+                    <div class="bg-white border border-gray-200 rounded-lg p-4 md:p-6">
                         <h3 class="date-label text-sm font-medium text-gray-700 mb-4" data-i18n="form_pickup_date">DATE DE RÉCUPÉRATION DES BAGAGES *</h3>
                         <div class="datetime-container">
                             <div class="datetime-field">
-                                <input type="date" id="date-recuperation" class="input-style w-full">
+                                <input type="date" id="date-recuperation" class="input-style w-full text-base" style="font-size: 16px !important; -webkit-appearance: none;">
                             </div>
-                            <div class="datetime-field">
+                            <div class="datetime-field mt-4">
                                 <label class="block text-sm font-medium text-gray-700 mb-2" data-i18n="form_pickup_time">HEURE DE RÉCUPÉRATION *</label>
                                 <div class="time-field-wrapper">
-                                    <input type="text" id="heure-recuperation" class="time-field" readonly>
+                                    <input type="text" id="heure-recuperation" class="time-field text-base" readonly style="font-size: 16px !important;">
                                     <svg class="time-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                     </svg>
