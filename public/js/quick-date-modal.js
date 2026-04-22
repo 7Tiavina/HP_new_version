@@ -32,19 +32,12 @@ function openQuickDateModal(forceOpen = false) {
     document.getElementById('heure-qdm-depot').value = depotHeure || '';
     document.getElementById('heure-qdm-recuperation').value = retraitHeure || '';
 
-    // Mettre à jour les scroll wheels si elles existent
-    if (depotHeure) {
-        const [h, m] = depotHeure.split(':');
-        setScrollWheelValue('qdm-depot', h, m);
-    } else {
-        setScrollWheelValue('qdm-depot', '09', '00');
-    }
-
-    if (retraitHeure) {
-        const [h, m] = retraitHeure.split(':');
-        setScrollWheelValue('qdm-recuperation', h, m);
-    } else {
-        setScrollWheelValue('qdm-recuperation', '18', '00');
+    // Mettre à jour l'alignement des roues via la fonction globale
+    if (typeof alignWheelsToInput === 'function') {
+        setTimeout(() => {
+            alignWheelsToInput('qdm-depot');
+            alignWheelsToInput('qdm-recuperation');
+        }, 150);
     }
 
     // Appliquer les mêmes contraintes que le formulaire principal
@@ -53,7 +46,7 @@ function openQuickDateModal(forceOpen = false) {
     // Afficher la modale
     document.getElementById('quick-date-modal').classList.remove('hidden');
 
-    // Initialiser les scroll wheels après l'affichage
+    // Initialiser les scroll wheels après l'affichage si nécessaire
     setTimeout(() => {
         if (typeof initScrollWheelsIfNeeded === 'function') {
             initScrollWheelsIfNeeded();
@@ -73,31 +66,6 @@ function openQuickDateModal(forceOpen = false) {
         }
     };
     document.addEventListener('keydown', qdmEscapeHandler);
-}
-
-function setScrollWheelValue(suffix, hour, minute) {
-    // Set value on hours wheel (cycle 1 = middle cycle)
-    const hWheel = document.getElementById(`scroll-h-${suffix}`);
-    if (hWheel) {
-        const hItem = hWheel.querySelector(`[data-value="${hour}"]`);
-        if (hItem) {
-            // Use the item from cycle 1 (middle)
-            const allHItems = hWheel.querySelectorAll(`[data-value="${hour}"]`);
-            const targetItem = allHItems[1] || hItem; // cycle 1
-            targetItem.parentElement.scrollTop = targetItem.offsetTop - 40;
-        }
-    }
-    
-    // Set value on minutes wheel (cycle 1 = middle cycle)
-    const mWheel = document.getElementById(`scroll-m-${suffix}`);
-    if (mWheel) {
-        const mItem = mWheel.querySelector(`[data-value="${minute}"]`);
-        if (mItem) {
-            const allMItems = mWheel.querySelectorAll(`[data-value="${minute}"]`);
-            const targetItem = allMItems[1] || mItem; // cycle 1
-            targetItem.parentElement.scrollTop = targetItem.offsetTop - 40;
-        }
-    }
 }
 
 function applyQdmDateConstraints() {

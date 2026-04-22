@@ -1146,10 +1146,19 @@
         }
 
         const now = new Date();
-        const currentHour = formatTime(now.getHours());
-        const currentMinute = formatTime(Math.floor(now.getMinutes() / 5) * 5);
+        // Arrondir à la tranche de 5 minutes supérieure pour éviter d'être dans le passé
+        let minutes = Math.ceil(now.getMinutes() / 5) * 5;
+        let hours = now.getHours();
+        if (minutes >= 60) {
+            minutes = 0;
+            hours++;
+        }
+        if (hours >= 24) hours = 0;
+        
+        const currentHour = formatTime(hours);
+        const currentMinute = formatTime(minutes);
 
-        // Heure de dépôt = heure actuelle
+        // Heure de dépôt = heure actuelle arrondie
         depotInput.value = `${currentHour}:${currentMinute}`;
         const depotHDisplay = document.getElementById('h-val-depot');
         const depotMDisplay = document.getElementById('m-val-depot');
@@ -1193,11 +1202,13 @@
         if (depotInput && depotPopover) {
             depotInput.addEventListener('click', (e) => {
                 e.stopPropagation();
+                const val = depotInput.value;
                 const parent = e.target.parentElement;
                 parent.appendChild(depotPopover);
                 depotPopover.classList.add('active');
-                console.log('[depot click] Opening popover, init wheels');
                 initScrollWheelsIfNeeded();
+                if (val) depotInput.value = val;
+                alignWheelsToInput('depot');
             });
         }
 
@@ -1208,11 +1219,13 @@
         if (recupInput && recupPopover) {
             recupInput.addEventListener('click', (e) => {
                 e.stopPropagation();
+                const val = recupInput.value;
                 const parent = e.target.parentElement;
                 parent.appendChild(recupPopover);
                 recupPopover.classList.add('active');
-                console.log('[recup click] Opening popover, init wheels');
                 initScrollWheelsIfNeeded();
+                if (val) recupInput.value = val;
+                alignWheelsToInput('recuperation');
             });
         }
         
@@ -1223,10 +1236,13 @@
         if (qdmDepotInput && qdmDepotPopover) {
             qdmDepotInput.addEventListener('click', (e) => {
                 e.stopPropagation();
+                const val = qdmDepotInput.value;
                 const parent = e.target.parentElement;
                 parent.appendChild(qdmDepotPopover);
                 qdmDepotPopover.classList.add('active');
                 initScrollWheelsIfNeeded();
+                if (val) qdmDepotInput.value = val;
+                alignWheelsToInput('qdm-depot');
             });
         }
 
@@ -1236,10 +1252,13 @@
         if (qdmRecupInput && qdmRecupPopover) {
             qdmRecupInput.addEventListener('click', (e) => {
                 e.stopPropagation();
+                const val = qdmRecupInput.value;
                 const parent = e.target.parentElement;
                 parent.appendChild(qdmRecupPopover);
                 qdmRecupPopover.classList.add('active');
                 initScrollWheelsIfNeeded();
+                if (val) qdmRecupInput.value = val;
+                alignWheelsToInput('qdm-recuperation');
             });
         }
 
@@ -1255,6 +1274,39 @@
     });
 
     // Fonctions globales pour les timepickers
+    function alignWheelsToInput(suffix) {
+        const hWheelInner = document.getElementById(`scroll-h-${suffix}`);
+        const mWheelInner = document.getElementById(`scroll-m-${suffix}`);
+        const input = document.getElementById(`heure-${suffix}`);
+
+        if (!hWheelInner || !mWheelInner || !input || !input.value) return;
+
+        const hContainer = hWheelInner.parentElement;
+        const mContainer = mWheelInner.parentElement;
+        if (!hContainer || !mContainer) return;
+
+        // VERROU : On empêche le scroll event d'écraser l'input pendant l'alignement
+        hContainer._isAligning = true;
+        mContainer._isAligning = true;
+
+        const parts = input.value.split(':');
+        const h = parseInt(parts[0]) || 0;
+        const m = parseInt(parts[1]) || 0;
+
+        const targetHItem = hWheelInner.querySelector(`[data-index="${24 + h}"]`);
+        const mIndexInCycle = Math.floor(m / 5);
+        const targetMItem = mWheelInner.querySelector(`[data-index="${12 + mIndexInCycle}"]`);
+
+        if (targetHItem) hContainer.scrollTop = targetHItem.offsetTop - 40;
+        if (targetMItem) mContainer.scrollTop = targetMItem.offsetTop - 40;
+
+        // On libère le verrou après que le scroll soit stabilisé
+        setTimeout(() => {
+            hContainer._isAligning = false;
+            mContainer._isAligning = false;
+        }, 300);
+    }
+
     function enableDragToScroll(container) {
         let isDown = false;
         let startY;
@@ -1383,16 +1435,7 @@
             });
             
             // Positionner sur l'heure actuelle
-            setTimeout(() => {
-                const input = document.getElementById(`heure-${suffix}`);
-                let h = 9;
-                if (input && input.value) h = parseInt(input.value.split(':')[0]) || 0;
-                const targetIndex = 24 + h; 
-                const targetItem = hoursWheel.querySelector(`[data-index="${targetIndex}"]`);
-                if (targetItem) {
-                    hoursWheel.parentElement.scrollTop = targetItem.offsetTop - 40;
-                }
-            }, 50);
+            setTimeout(() => alignWheelsToInput(suffix), 50);
 
             // Activer le drag-to-scroll sur desktop
             enableDragToScroll(hoursWheel.parentElement);
@@ -1442,17 +1485,7 @@
             });
             
             // Positionner sur les minutes actuelles
-            setTimeout(() => {
-                const input = document.getElementById(`heure-${suffix}`);
-                let m = 0;
-                if (input && input.value && input.value.includes(':')) m = parseInt(input.value.split(':')[1]) || 0;
-                const mIndexInCycle = Math.floor(m / 5);
-                const targetIndex = 12 + mIndexInCycle;
-                const targetItem = minutesWheel.querySelector(`[data-index="${targetIndex}"]`);
-                if (targetItem) {
-                    minutesWheel.parentElement.scrollTop = targetItem.offsetTop - 40;
-                }
-            }, 50);
+            setTimeout(() => alignWheelsToInput(suffix), 50);
 
             // Activer le drag-to-scroll sur desktop
             enableDragToScroll(minutesWheel.parentElement);
@@ -1483,6 +1516,9 @@
     }
 
     function handleWheelScrollWithWrap(container, suffix, type) {
+        // Bloquer si on est en train d'aligner programmatiquement
+        if (container._isAligning) return;
+
         const itemHeight = 40;
         const items = container.querySelectorAll('.scroll-wheel-item');
         const totalItems = items.length;
@@ -1549,13 +1585,16 @@
 
     // Initialize scroll wheels when popover opens
     function initScrollWheelsIfNeeded() {
-        console.log('[initScrollWheelsIfNeeded] Called');
         ['depot', 'recuperation', 'qdm-depot', 'qdm-recuperation'].forEach(suffix => {
             const wheel = document.getElementById(`scroll-h-${suffix}`);
-            console.log('[initScrollWheelsIfNeeded] Checking', suffix, 'wheel exists:', !!wheel, 'children:', wheel?.children.length);
-            if (wheel && wheel.children.length === 0) {
-                console.log('[initScrollWheelsIfNeeded] Initializing wheel for:', suffix);
-                initScrollWheel(suffix);
+            if (wheel) {
+                if (wheel.children.length === 0) {
+                    initScrollWheel(suffix);
+                }
+                // Aligner après 100ms (temps de rendu moyen après appendChild)
+                setTimeout(() => alignWheelsToInput(suffix), 100);
+                // Deuxième tentative après 300ms au cas où le navigateur ferait un reset tardif
+                setTimeout(() => alignWheelsToInput(suffix), 300);
             }
         });
     }
