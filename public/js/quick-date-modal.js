@@ -32,12 +32,12 @@ function openQuickDateModal(forceOpen = false) {
     document.getElementById('heure-qdm-depot').value = depotHeure || '';
     document.getElementById('heure-qdm-recuperation').value = retraitHeure || '';
 
-    // Mettre à jour l'alignement des roues via la fonction globale
+    // Mettre à jour l'alignement des roues via la fonction globale (instantané pour éviter les sauts)
     if (typeof alignWheelsToInput === 'function') {
         setTimeout(() => {
-            alignWheelsToInput('qdm-depot');
-            alignWheelsToInput('qdm-recuperation');
-        }, 150);
+            alignWheelsToInput('qdm-depot', false);
+            alignWheelsToInput('qdm-recuperation', false);
+        }, 50);
     }
 
     // Appliquer les mêmes contraintes que le formulaire principal

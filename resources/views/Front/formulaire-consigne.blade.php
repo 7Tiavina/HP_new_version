@@ -1208,7 +1208,7 @@
                 depotPopover.classList.add('active');
                 initScrollWheelsIfNeeded();
                 if (val) depotInput.value = val;
-                alignWheelsToInput('depot');
+                alignWheelsToInput('depot', false);
             });
         }
 
@@ -1225,7 +1225,7 @@
                 recupPopover.classList.add('active');
                 initScrollWheelsIfNeeded();
                 if (val) recupInput.value = val;
-                alignWheelsToInput('recuperation');
+                alignWheelsToInput('recuperation', false);
             });
         }
         
@@ -1242,7 +1242,7 @@
                 qdmDepotPopover.classList.add('active');
                 initScrollWheelsIfNeeded();
                 if (val) qdmDepotInput.value = val;
-                alignWheelsToInput('qdm-depot');
+                alignWheelsToInput('qdm-depot', false);
             });
         }
 
@@ -1258,7 +1258,7 @@
                 qdmRecupPopover.classList.add('active');
                 initScrollWheelsIfNeeded();
                 if (val) qdmRecupInput.value = val;
-                alignWheelsToInput('qdm-recuperation');
+                alignWheelsToInput('qdm-recuperation', false);
             });
         }
 
@@ -1274,7 +1274,7 @@
     });
 
     // Fonctions globales pour les timepickers
-    function alignWheelsToInput(suffix) {
+    function alignWheelsToInput(suffix, animate = true) {
         const hWheelInner = document.getElementById(`scroll-h-${suffix}`);
         const mWheelInner = document.getElementById(`scroll-m-${suffix}`);
         const input = document.getElementById(`heure-${suffix}`);
@@ -1285,7 +1285,7 @@
         const mContainer = mWheelInner.parentElement;
         if (!hContainer || !mContainer) return;
 
-        // VERROU : On empêche le scroll event d'écraser l'input pendant l'alignement
+        // VERROU
         hContainer._isAligning = true;
         mContainer._isAligning = true;
 
@@ -1297,14 +1297,23 @@
         const mIndexInCycle = Math.floor(m / 5);
         const targetMItem = mWheelInner.querySelector(`[data-index="${12 + mIndexInCycle}"]`);
 
-        if (targetHItem) hContainer.scrollTop = targetHItem.offsetTop - 40;
-        if (targetMItem) mContainer.scrollTop = targetMItem.offsetTop - 40;
+        if (targetHItem) {
+            hContainer.scrollTo({
+                top: targetHItem.offsetTop - 40,
+                behavior: animate ? 'smooth' : 'instant'
+            });
+        }
+        if (targetMItem) {
+            mContainer.scrollTo({
+                top: targetMItem.offsetTop - 40,
+                behavior: animate ? 'smooth' : 'instant'
+            });
+        }
 
-        // On libère le verrou après que le scroll soit stabilisé
         setTimeout(() => {
             hContainer._isAligning = false;
             mContainer._isAligning = false;
-        }, 300);
+        }, animate ? 300 : 50);
     }
 
     function enableDragToScroll(container) {
