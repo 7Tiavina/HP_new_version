@@ -245,6 +245,11 @@
             background: #fafafa;
             border-radius: 8px;
             border: 1px solid var(--border);
+            cursor: grab;
+            user-select: none;
+        }
+        .scroll-wheel:active {
+            cursor: grabbing;
         }
 
         .scroll-wheel::-webkit-scrollbar {
@@ -333,19 +338,21 @@
         }
 
         .arrow {
-            background: white; 
+            background: #fafafa; 
             border: 1px solid var(--border); 
             border-radius: 6px;
-            width: 28px; 
-            height: 28px; 
+            width: 100%; 
+            height: 24px; 
             cursor: pointer;
             display: flex; 
             align-items: center; 
             justify-content: center;
             transition: all 0.2s ease;
-            font-size: 10px; 
+            font-size: 12px; 
             color: #666;
             font-weight: 600;
+            margin: 2px 0;
+            z-index: 100;
         }
         .arrow:hover { 
             background: var(--primary); 
@@ -1248,22 +1255,53 @@
     });
 
     // Fonctions globales pour les timepickers
-    function changeVal(type, step, suffix) {
-        const hDisplay = document.getElementById(`h-val-${suffix}`);
-        const mDisplay = document.getElementById(`m-val-${suffix}`);
+    function enableDragToScroll(container) {
+        let isDown = false;
+        let startY;
+        let scrollTop;
 
-        if (type === 'H') {
-            let h = parseInt(hDisplay.innerText) + step;
-            if (h > 23) h = 0;
-            if (h < 0) h = 23;
-            hDisplay.innerText = h.toString().padStart(2, '0');
-        } else {
-            let m = parseInt(mDisplay.innerText) + step;
-            if (m > 59) m = 0;
-            if (m < 0) m = 55;
-            mDisplay.innerText = m.toString().padStart(2, '0');
+        container.addEventListener('mousedown', (e) => {
+            isDown = true;
+            container.focus(); 
+            container.style.scrollSnapType = 'none'; 
+            startY = e.pageY - container.offsetTop;
+            scrollTop = container.scrollTop;
+            container.style.cursor = 'grabbing';
+            e.preventDefault();
+        });
+
+        const endDrag = () => {
+            if (!isDown) return;
+            isDown = false;
+            container.style.scrollSnapType = 'y mandatory';
+            container.style.cursor = 'grab';
+            
+            // Forcer un petit scroll pour déclencher le snap
+            const currentScroll = container.scrollTop;
+            container.scrollTop = currentScroll + 1;
+            container.scrollTop = currentScroll;
+        };
+
+        container.addEventListener('mouseleave', endDrag);
+        container.addEventListener('mouseup', endDrag);
+
+        container.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const y = e.pageY - container.offsetTop;
+            const walk = (y - startY) * 1.5; 
+            container.scrollTop = scrollTop - walk;
+        });
+    }
+
+    function changeVal(type, step, suffix) {
+        const wheel = document.getElementById(`scroll-${type.toLowerCase()}-${suffix}`);
+        if (wheel && wheel.parentElement) {
+            wheel.parentElement.scrollBy({
+                top: step * 40,
+                behavior: 'smooth'
+            });
         }
-        updateInput(suffix);
     }
 
     // iOS-style scroll wheel initialization
@@ -1309,7 +1347,7 @@
             hoursWheel.parentElement.setAttribute('role', 'listbox');
             hoursWheel.parentElement.setAttribute('aria-label', 'Heures');
             hoursWheel.parentElement.style.outline = 'none';
-            hoursWheel.parentElement.style.cursor = 'pointer';
+            hoursWheel.parentElement.style.cursor = 'grab';
             
             // Highlight au focus
             hoursWheel.parentElement.addEventListener('focus', function() {
@@ -1344,14 +1382,20 @@
                 handleWheelKeydown(e, hoursWheel, 'H', 24);
             });
             
-            // Positionner au milieu du cycle (cycle 1, heure 09)
+            // Positionner sur l'heure actuelle
             setTimeout(() => {
-                const targetIndex = 24 + 9; // cycle 1, heure 09
+                const input = document.getElementById(`heure-${suffix}`);
+                let h = 9;
+                if (input && input.value) h = parseInt(input.value.split(':')[0]) || 0;
+                const targetIndex = 24 + h; 
                 const targetItem = hoursWheel.querySelector(`[data-index="${targetIndex}"]`);
                 if (targetItem) {
                     hoursWheel.parentElement.scrollTop = targetItem.offsetTop - 40;
                 }
-            }, 10);
+            }, 50);
+
+            // Activer le drag-to-scroll sur desktop
+            enableDragToScroll(hoursWheel.parentElement);
             console.log('[initScrollWheel] Hours wheel populated:', suffix, 'items:', hoursWheel.children.length);
         }
 
@@ -1362,7 +1406,7 @@
             minutesWheel.parentElement.setAttribute('role', 'listbox');
             minutesWheel.parentElement.setAttribute('aria-label', 'Minutes');
             minutesWheel.parentElement.style.outline = 'none';
-            minutesWheel.parentElement.style.cursor = 'pointer';
+            minutesWheel.parentElement.style.cursor = 'grab';
             
             // Highlight au focus
             minutesWheel.parentElement.addEventListener('focus', function() {
@@ -1397,14 +1441,21 @@
                 handleWheelKeydown(e, minutesWheel, 'M', 12);
             });
             
-            // Positionner au milieu du cycle (cycle 1, minute 00)
+            // Positionner sur les minutes actuelles
             setTimeout(() => {
-                const targetIndex = 12 + 0; // cycle 1, minute 00
+                const input = document.getElementById(`heure-${suffix}`);
+                let m = 0;
+                if (input && input.value && input.value.includes(':')) m = parseInt(input.value.split(':')[1]) || 0;
+                const mIndexInCycle = Math.floor(m / 5);
+                const targetIndex = 12 + mIndexInCycle;
                 const targetItem = minutesWheel.querySelector(`[data-index="${targetIndex}"]`);
                 if (targetItem) {
                     minutesWheel.parentElement.scrollTop = targetItem.offsetTop - 40;
                 }
-            }, 10);
+            }, 50);
+
+            // Activer le drag-to-scroll sur desktop
+            enableDragToScroll(minutesWheel.parentElement);
             console.log('[initScrollWheel] Minutes wheel populated:', suffix, 'items:', minutesWheel.children.length);
         }
 
