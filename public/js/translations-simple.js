@@ -601,15 +601,15 @@ if (typeof window.translations === 'undefined') {
         date_update_error: "Une erreur est survenue lors de la mise à jour des dates.",
         
         // Contraintes/Unusual Hours Modal
-        contraintes_modal_title: "⚠️ Horaires inhabituels - Supplément obligatoire",
+        contraintes_modal_title: "⚠️ Horaires spécifiques - Supplément hors ouverture",
         contraintes_single_service_detail: "Une prestation obligatoire pour le {type} sera ajoutée à votre commande.",
         contraintes_multiple_service_detail: "Des prestations obligatoires pour le dépôt et le retrait seront ajoutées à votre commande.",
         contraintes_selected_hours_title: "Horaires sélectionnés :",
         contraintes_deposit: "Dépôt",
         contraintes_pickup: "Retrait",
         contraintes_supplement_title: "Supplément horaire :",
-        contraintes_supplement_text: "Ces horaires sont en dehors des heures d'ouverture standards. Un supplément de <strong>{amount} €</strong> sera automatiquement ajouté à votre panier.",
-        contraintes_supplement_info: "ℹ️ Ce supplément est obligatoire et sera facturé automatiquement lors du paiement.",
+        contraintes_supplement_text: "Notre agence est ouverte de 07h00 à 21h00, 7j/7. Votre horaire de dépôt se situe en dehors de ces créneaux.",
+        contraintes_supplement_info: "Une prestation de service spécifique est nécessaire pour assurer votre accueil durant la nuit. Un supplément obligatoire de 250.00 € sera ajouté à votre panier.",
         cart_mandatory_badge: "(obligatoire)",
 
         modal_ok: "OK",

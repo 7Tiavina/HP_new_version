@@ -641,6 +641,7 @@ class FrontController extends Controller
         $dateRecuperation = $validated['dateRecuperation'];
         $heureRecuperation = $validated['heureRecuperation'];
         $globalProductsData = $validated['globalProductsData'];
+        $lang = session('app_language', 'fr');
 
         Log::info('FrontController::getOptionsQuote - Données de requête reçues', [
             'idPlateforme' => $idPlateforme,
@@ -678,7 +679,8 @@ class FrontController extends Controller
                 $idPlateforme,
                 $baggages,
                 $guestEmail, // Conserver guestEmail séparément
-                $premiumDetails // Passer l'objet premiumDetails complet
+                $premiumDetails, // Passer l'objet premiumDetails complet
+                $lang
             );
             Log::info('FrontController::getOptionsQuote - Réponse de BdmApiService::getCommandeOptionsQuote', ['response' => $response]);
     
@@ -883,6 +885,7 @@ class FrontController extends Controller
         $commandeOptions = $validated['commandeOptions'] ?? [];
         $commandeInfos = $validated['commandeInfos'] ?? [];
         $client = $validated['client'] ?? [];
+        $lang = session('app_language', 'fr');
 
         Log::info('FrontController::getContraintes - Données reçues', [
             'idPlateforme' => $idPlateforme,
@@ -896,7 +899,8 @@ class FrontController extends Controller
                 $commandeLignes,
                 $commandeOptions,
                 $commandeInfos,
-                $client
+                $client,
+                $lang
             );
 
             if ($response && ($response['statut'] ?? 0) === 1 && isset($response['content'])) {

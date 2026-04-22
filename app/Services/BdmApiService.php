@@ -289,6 +289,7 @@ class BdmApiService
      * @param array $commandeOptions Les options sélectionnées (ex: Priority, Premium).
      * @param array $commandeInfos Informations sur la commande (modeTransport, lieu, commentaires).
      * @param array $client Données du client.
+     * @param string $lang Langue de la réponse (fr/en).
      * @return array|null La liste des contraintes ou null en cas d'erreur.
      */
     public function getCommandeContraintes(
@@ -296,10 +297,11 @@ class BdmApiService
         array $commandeLignes,
         array $commandeOptions = [],
         array $commandeInfos = [],
-        array $client = []
+        array $client = [],
+        string $lang = 'fr'
     ): ?array
     {
-        $url = "{$this->baseUrl}/api/plateforme/{$idPlateforme}/commande/contraintes";
+        $url = "{$this->baseUrl}/api/plateforme/{$idPlateforme}/commande/contraintes?lg={$lang}";
 
         // Valeurs par défaut si non fournies
         if (empty($client)) {
@@ -385,11 +387,12 @@ class BdmApiService
      * @param array $baggages Les lignes de commande pour les bagages.
      * @param array $options Les options à évaluer (ex: Priority, Premium).
      * @param string $guestEmail L'email de l'invité, si disponible.
+     * @param string $lang Langue de la réponse (fr/en).
      * @return array|null Les prix des options ou null en cas d'erreur.
      */
-    public function getCommandeOptionsQuote(string $idPlateforme, array $baggages, ?string $guestEmail = null, ?array $premiumDetails = null): ?array
+    public function getCommandeOptionsQuote(string $idPlateforme, array $baggages, ?string $guestEmail = null, ?array $premiumDetails = null, string $lang = 'fr'): ?array
     {
-        $url = "{$this->baseUrl}/api/plateforme/{$idPlateforme}/commande/options?lg=fr";
+        $url = "{$this->baseUrl}/api/plateforme/{$idPlateforme}/commande/options?lg={$lang}";
 
         // Construire commandeLignes à partir des baggages
         $commandeLignes = array_map(function($baggage) {

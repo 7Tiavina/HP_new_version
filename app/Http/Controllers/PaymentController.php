@@ -1312,9 +1312,10 @@ class PaymentController extends Controller
                 'total_attendu' => $commandeData['total_prix_ttc'],
             ]);
 
+            $lang = Session::get('app_language', 'fr');
             $bdmResponse = Http::withHeaders([
                 'Authorization' => 'Bearer ' . $token, 'Accept' => 'application/json',
-            ])->post(config('services.bdm.base_url') . "/api/plateforme/{$idPlateforme}/commande", $payload);
+            ])->post(config('services.bdm.base_url') . "/api/plateforme/{$idPlateforme}/commande?lg={$lang}", $payload);
 
             Log::info('[paymentSuccess] BDM API response received.', [
                 'status_code' => $bdmResponse->status(),
