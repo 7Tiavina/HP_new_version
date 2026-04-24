@@ -1959,6 +1959,8 @@
             let currentStep = 1;
             
             function goToStep(step) {
+                const hasPremium = hasPremiumInCart();
+                
                 if (step === 1) {
                     step1Content.classList.remove('hidden');
                     step2Content.classList.add('hidden');
@@ -1969,6 +1971,14 @@
                     step2Indicator.classList.add('bg-white', 'bg-opacity-30', 'text-white');
                     step2Indicator.classList.remove('bg-white', 'text-yellow-600');
                     backToStep1Btn.classList.add('hidden');
+                    
+                    // Masquer Annuler si Premium à l'étape 1
+                    if (hasPremium && closeClientProfileModalBtn) {
+                        closeClientProfileModalBtn.classList.add('hidden');
+                    } else if (closeClientProfileModalBtn) {
+                        closeClientProfileModalBtn.classList.remove('hidden');
+                    }
+                    
                     btnContinueText.classList.remove('hidden');
                     btnConfirmText.classList.add('hidden');
                     currentStep = 1;
@@ -1982,6 +1992,12 @@
                     step2Indicator.classList.remove('bg-white', 'bg-opacity-30', 'text-white');
                     step2Indicator.classList.add('bg-white', 'text-yellow-600');
                     backToStep1Btn.classList.remove('hidden');
+                    
+                    // Toujours afficher Annuler à l'étape 2
+                    if (closeClientProfileModalBtn) {
+                        closeClientProfileModalBtn.classList.remove('hidden');
+                    }
+                    
                     btnContinueText.classList.add('hidden');
                     btnConfirmText.classList.remove('hidden');
                     currentStep = 2;
