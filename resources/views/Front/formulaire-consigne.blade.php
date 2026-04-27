@@ -487,8 +487,8 @@
                                 <div class="flex items-center gap-2 mb-1">
                                     <span class="inline-block bg-gradient-to-r from-yellow-500 to-yellow-600 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm" data-i18n="drawer_premium_label">PREMIUM</span>
                                 </div>
-                                <h3 class="text-lg font-bold text-gray-900" data-i18n="drawer_premium_title">Service Premium</h3>
-                                <p class="mt-1 text-xs text-gray-600 leading-relaxed" data-i18n="drawer_premium_desc_simple">Remise ou récupération de vos bagages à l'endroit exact choisi dans l'aéroport avec porteur dédié. Service VIP complet.</p>
+                                <h3 id="drawer-premium-title" class="text-lg font-bold text-gray-900" data-i18n="drawer_premium_title">Service Premium</h3>
+                                <p id="drawer-premium-desc" class="mt-1 text-xs text-gray-600 leading-relaxed" data-i18n="drawer_premium_desc_simple">Remise ou récupération de vos bagages à l'endroit exact choisi dans l'aéroport avec porteur dédié. Service VIP complet.</p>
                             </div>
                             <!-- Add Button - Integrated -->
                             <div class="flex flex-col gap-1 flex-shrink-0">
@@ -535,8 +535,8 @@
                                 <div class="flex items-center gap-2 mb-1">
                                     <span class="inline-block text-white text-xs font-bold px-2 py-0.5 rounded-full shadow-sm" style="background-color: #1F1F1F;" data-i18n="drawer_priority_label">PRIORITAIRE</span>
                                 </div>
-                                <h3 class="text-lg font-bold text-gray-900" data-i18n="drawer_priority_title">Service Priority</h3>
-                                <p class="mt-1 text-xs text-gray-600 leading-relaxed" data-i18n="drawer_priority_desc">Traitement prioritaire de vos bagages à la dépose et à la récupération. Gagnez du temps et évitez les files d'attente.</p>
+                                <h3 id="drawer-priority-title" class="text-lg font-bold text-gray-900" data-i18n="drawer_priority_title">Service Priority</h3>
+                                <p id="drawer-priority-desc" class="mt-1 text-xs text-gray-600 leading-relaxed" data-i18n="drawer_priority_desc">Traitement prioritaire de vos bagages à la dépose et à la récupération. Gagnez du temps et évitez les files d'attente.</p>
                             </div>
                             <!-- Add Button - Integrated -->
                             <div class="flex flex-col gap-1 flex-shrink-0">

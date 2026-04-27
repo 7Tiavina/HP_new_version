@@ -146,12 +146,8 @@ function updateCartDisplay() {
                 lineDiscountRate = Math.round(((unitPriceBeforeDiscountValue - unitPriceValue) / unitPriceBeforeDiscountValue) * 100);
             }
             
-            // Translate option labels
-            if (libelle === 'Priority' || libelle === 'Service Priority') {
-                libelle = typeof window.t === 'function' ? window.t('drawer_priority_cart_label', 'Priority Product') : 'Priority Product';
-            } else if (libelle === 'Premium' || libelle === 'Service Premium') {
-                libelle = typeof window.t === 'function' ? window.t('drawer_premium_cart_label', 'Premium - Porter Service and Product') : 'Premium - Porter Service and Product';
-            }
+            // Use API labels for options (priority/premium)
+            // Removed translations that were overriding API labels
         } else if (item.itemCategory === 'contrainte') {
             // Contrainte obligatoire - prix déjà défini dans l'item
             unitPriceValue = (typeof item.prix === 'number' && !isNaN(item.prix)) ? item.prix : 0;
@@ -207,6 +203,12 @@ function updateCartDisplay() {
             leftHtml += '<span class="text-sm font-medium text-gray-800 break-words">' + escapeHtml(libelle) + '</span>';
         }
         leftHtml += '</div>';
+
+        // Afficher la description pour Priority et Premium seulement
+        if ((item.key === 'priority' || item.key === 'premium') && item.description) {
+            leftHtml += '<div class="text-xs text-gray-500 mt-1 leading-tight">' + escapeHtml(item.description) + '</div>';
+        }
+
         leftHtml += '</div>';
 
         // Partie droite : badge remise + prix + bouton supprimer (tous alignés à droite)

@@ -59,6 +59,7 @@ class PaymentController extends Controller
                 'options' => 'nullable|array',
                 'options.*.id' => 'required|string',
                 'options.*.libelle' => 'required|string',
+                'options.*.description' => 'nullable|string',
                 'options.*.prix' => 'required_without:options.*.prixUnitaire|nullable|numeric',
                 'options.*.prixUnitaire' => 'required_without:options.*.prix|nullable|numeric',
                 'options.*.details' => 'nullable|array',
@@ -170,10 +171,12 @@ class PaymentController extends Controller
 
                 // Call BDM API to get fresh option prices using BdmApiService
                 $bdmApiService = new \App\Services\BdmApiService();
+                $lang = Session::get('app_language', 'fr');
 
                 Log::info('[preparePayment] Calling BdmApiService::getCommandeOptionsQuote with baggages...', [
                     'idPlateforme' => $idPlateforme,
-                    'commandeLignes_count' => count($apiCommandeLignes)
+                    'commandeLignes_count' => count($apiCommandeLignes),
+                    'lang' => $lang
                 ]);
 
                 // Pass the baggages to the API so it can calculate options prices correctly
@@ -181,7 +184,8 @@ class PaymentController extends Controller
                     $idPlateforme,
                     $apiCommandeLignes,
                     $validatedData['guest_email'] ?? ($user->email ?? null),
-                    null
+                    null,
+                    $lang
                 );
 
                 Log::info('[preparePayment] BdmApiService response', [
@@ -218,12 +222,14 @@ class PaymentController extends Controller
                     // Try to get fresh price from BDM API response
                     $optionId = $selectedOption['id'];
                     $freshOption = $freshOptionsData[$optionId] ?? null;
+                    $optDescription = $selectedOption['description'] ?? null;
 
                     if ($freshOption) {
                         // Use fresh price from BDM API
                         $optPrix = (float)($freshOption['prixUnitaire'] ?? 0);
                         $optTauxRemise = (float)($freshOption['tauxRemise'] ?? 0);
                         $optPrixAvantRemise = (float)($freshOption['prixUnitaireAvantRemise'] ?? $freshOption['prixUnitaire'] ?? 0);
+                        $optDescription = $freshOption['description'] ?? $freshOption['Description'] ?? $optDescription;
 
                         Log::info('[preparePayment] Using FRESH price from BDM', [
                             'option_id' => $optionId,
@@ -268,6 +274,7 @@ class PaymentController extends Controller
                         "tauxRemise" => $optTauxRemise,
                         "quantite" => 1,
                         "libelleProduit" => $selectedOption['libelle'],
+                        "description" => $optDescription,
                         "is_option" => true
                     ];
                 }

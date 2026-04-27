@@ -138,6 +138,13 @@ function populateDrawerOptions() {
     if (priorityCard) {
         if (hasPriorityFromApi) {
             priorityCard.classList.remove('hidden');
+            
+            // Update title and description from API
+            const titleEl = document.getElementById('drawer-priority-title');
+            const descEl = document.getElementById('drawer-priority-desc');
+            if (titleEl && staticOptions.priority.libelle) titleEl.textContent = staticOptions.priority.libelle;
+            if (descEl && staticOptions.priority.description) descEl.textContent = staticOptions.priority.description;
+
             const priceEl = document.getElementById('drawer-priority-price');
             if (priceEl) {
                 const unitPrice = staticOptions.priority.prixUnitaire || 0;
@@ -172,6 +179,13 @@ function populateDrawerOptions() {
         if (isPremiumAvailable) {
             // Premium disponible (API OK + 72h OK)
             premiumCard.classList.remove('hidden');
+
+            // Update title and description from API
+            const titleEl = document.getElementById('drawer-premium-title');
+            const descEl = document.getElementById('drawer-premium-desc');
+            if (titleEl && staticOptions.premium.libelle) titleEl.textContent = staticOptions.premium.libelle;
+            if (descEl && staticOptions.premium.description) descEl.textContent = staticOptions.premium.description;
+
             if (premiumUnavailableMsg) {
                 premiumUnavailableMsg.classList.add('hidden');
             }
@@ -472,13 +486,9 @@ function updateDrawerCart() {
             itemTotal = unitPriceValue * (item.quantity || 1);
             // Use new icon images for options
             itemIcon = getItemIcon(item, '');
-            
-            // Translate option labels for cart display
-            if (item.key === 'priority') {
-                libelle = typeof window.t === 'function' ? window.t('drawer_priority_cart_label', 'Priority Product') : 'Priority Product';
-            } else if (item.key === 'premium') {
-                libelle = typeof window.t === 'function' ? window.t('drawer_premium_cart_label', 'Premium - Porter Service and Product') : 'Premium - Porter Service and Product';
-            }
+
+            // Use API labels for options (priority/premium)
+            // Removed translations that were overriding API labels
         } else if (item.itemCategory === 'contrainte') {
             // Contraintes: use prix from item
             unitPriceValue = parseFloat(item.prix) || parseFloat(item.prixUnitaire) || 0;
@@ -519,6 +529,7 @@ function updateDrawerCart() {
                         </div>
                         <div class="min-w-0 flex-1">
                             <p class="text-sm font-bold text-gray-900 break-words" style="font-size: 0.9rem; line-height: 1.5;">${libelle}</p>
+                            ${(item.key === 'priority' || item.key === 'premium') && item.description ? `<p class="text-xs text-gray-500 mt-0.5 leading-tight">${escapeHtml(item.description)}</p>` : ''}
                         </div>
                     </div>
                 </div>
@@ -635,6 +646,7 @@ function addOptionToCart(optionKey) {
         id: option.id,
         key: optionKey,
         libelle: option.libelle,
+        description: option.description,
         prix: option.prixUnitaire,
         prixUnitaire: option.prixUnitaire,
         prixUnitaireAvantRemise: option.prixUnitaireAvantRemise ?? null,

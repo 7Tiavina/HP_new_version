@@ -239,6 +239,9 @@
                                 <li class="py-4 flex justify-between items-center">
                                     <div>
                                         <p class="font-semibold text-gray-800">{{ $ligne['libelleProduit'] }}</p>
+                                        @if(!empty($ligne['description']))
+                                            <p class="text-xs text-gray-500 mt-0.5 leading-tight">{{ $ligne['description'] }}</p>
+                                        @endif
                                         <p class="text-sm text-gray-500"><span data-i18n="payment_quantity">Quantité :</span> {{ $ligne['quantite'] }}</p>
                                     </div>
                                     <div class="text-right">
