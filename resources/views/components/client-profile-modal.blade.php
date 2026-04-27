@@ -121,8 +121,8 @@
 
                 <!-- STEP 2: Premium Information -->
                 <div id="step-2-content" class="hidden space-y-4 sm:space-y-6">
-                    <div class="mb-4 sm:mb-6 p-3 sm:p-4 bg-purple-50 rounded-xl border border-purple-200">
-                        <p class="text-xs sm:text-sm text-purple-800" data-i18n="premium_info_notice">
+                    <div class="mb-4 sm:mb-6 p-3 sm:p-4 bg-yellow-50 rounded-xl border border-yellow-200">
+                        <p class="text-xs sm:text-sm text-yellow-800" data-i18n="premium_info_notice">
                             <span class="font-bold">ℹ️ Information :</span> Vous avez choisi l'option Premium, et nous vous en remercions.
                             <br>
                             Les informations à compléter ci-dessous nous permettent d'organiser votre prestation.
