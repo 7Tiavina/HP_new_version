@@ -136,7 +136,14 @@ function populateDrawerOptions() {
     // Priority Option
     const priorityCard = document.getElementById('drawer-option-priority');
     if (priorityCard) {
-        if (hasPriorityFromApi) {
+        // Vérifier si une option "Access" est déjà présente dans les contraintes
+        const hasAccessOption = Array.isArray(window.bookingContraintesItems) && 
+                                window.bookingContraintesItems.some(item => 
+                                    (item.libelle || '').toLowerCase().includes('access') || 
+                                    (item.referenceInterne || '').toUpperCase().includes('ACCESS')
+                                );
+
+        if (hasPriorityFromApi && !hasAccessOption) {
             priorityCard.classList.remove('hidden');
             
             // Update title and description from API

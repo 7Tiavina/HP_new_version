@@ -884,10 +884,37 @@ async function handleTotalClick() {
                 console.log('Priority found:', !!foundPriority?.id, 'Premium found:', !!foundPremium?.id);
                 console.log('Access options found:', staticOptions.access);
 
+                // --- NOUVELLE CONDITION D'AFFICHAGE ---
+                // 1. Vérifier si Premium est disponible (> 72h)
+                let isPremiumTimeValid = false;
+                try {
+                    const dateDepotStr = document.getElementById('date-depot')?.value;
+                    const heureDepotStr = document.getElementById('heure-depot')?.value;
+                    if (dateDepotStr && heureDepotStr) {
+                        const dateDepot = new Date(`${dateDepotStr}T${heureDepotStr}`);
+                        const nowFrance = new Date(new Date().toLocaleString('en-US', {timeZone: 'Europe/Paris'}));
+                        const diffInMs = dateDepot.getTime() - nowFrance.getTime();
+                        const diffInHours = diffInMs / (1000 * 60 * 60);
+                        isPremiumTimeValid = diffInHours > 72;
+                    }
+                } catch (e) { isPremiumTimeValid = true; }
+
+                const isPremiumAvailable = !!staticOptions.premium?.id && isPremiumTimeValid;
+                
+                // 2. Vérifier si Priority est disponible (et pas d'option Access dans le panier)
+                const hasAccessOptionInCart = Array.isArray(window.bookingContraintesItems) && 
+                                            window.bookingContraintesItems.some(item => 
+                                                (item.libelle || '').toLowerCase().includes('access') || 
+                                                (item.referenceInterne || '').toUpperCase().includes('ACCESS')
+                                            );
+                const isPriorityAvailable = !!staticOptions.priority?.id && !hasAccessOptionInCart;
+
                 // Déterminer si le drawer doit être affiché
-                if (staticOptions.priority?.id || staticOptions.premium?.id || staticOptions.access.length > 0) {
+                // On ne l'affiche QUE si Priority ou Premium est disponible
+                if (isPriorityAvailable || isPremiumAvailable) {
                     shouldShowOptionsModal = true;
                 }
+                // --- FIN NOUVELLE CONDITION ---
 
             } else {
                 console.warn('Options API:', optionsQuoteResult.message || 'Pas d\'options');
