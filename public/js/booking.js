@@ -349,48 +349,31 @@ function resetValidationStates() {
  * @param {Array} contraintes - Liste des contraintes détectées
  */
 async function showContraintesInfoModal(contraintes) {
-    // Calculer le total des contraintes
-    const totalContraintes = contraintes.reduce((sum, c) => sum + (c.prix || 0), 0);
-
-    // Construire le message selon le nombre de contraintes
-    let messageDetail = '';
-    if (contraintes.length === 1) {
-        const typeKey = contraintes[0].type === 'depot' ? 'contraintes_deposit' : 'contraintes_pickup';
-        const type = t(typeKey, contraintes[0].type === 'depot' ? 'dépôt' : 'retrait');
-        messageDetail = t('contraintes_single_service_detail', 'Une prestation obligatoire pour le {type} sera ajoutée à votre commande.')
-            .replace('{type}', type);
-    } else {
-        messageDetail = t('contraintes_multiple_service_detail', 'Des prestations obligatoires pour le dépôt et le retrait seront ajoutées à votre commande.');
-    }
-
-    const selectedHoursTitle = t('contraintes_selected_hours_title', 'Horaires sélectionnés :');
-    const depositLabel = t('contraintes_deposit', 'Dépôt');
-    const pickupLabel = t('contraintes_pickup', 'Retrait');
-    const supplementTitle = t('contraintes_supplement_title', 'Supplément horaire :');
-    const supplementText = t('contraintes_supplement_text', 'Ces horaires sont en dehors des heures d\'ouverture standards. Un supplément de <strong>{amount} €</strong> sera automatiquement ajouté à votre panier.')
-        .replace('{amount}', totalContraintes.toFixed(2));
-    const supplementInfo = t('contraintes_supplement_info', 'ℹ️ Ce supplément est obligatoire et sera facturé automatiquement lors du paiement.');
-    const modalTitle = t('contraintes_modal_title', '⚠️ Horaires inhabituels - Supplément obligatoire');
+    const modalTitle = t('contraintes_modal_title', 'Accueil en horaires spécifiques');
+    const introText = t('contraintes_intro', 'Votre réservation implique un accueil en dehors des horaires d’ouverture de l’agence et nécessite une prise en charge dédiée.');
+    const agencyHoursText = t('contraintes_agency_hours', 'Notre agence est ouverte 7j/7 de 07h00 à 21h00. Un ou plusieurs horaires sélectionnés se situent en dehors de cette plage d’ouverture.');
+    const conclusionText = t('contraintes_conclusion', 'Les prestations suivantes seront ajoutées automatiquement selon l’horaire concerné :');
+    
+    const listEarly = t('contraintes_list_early', 'Early Access — 05h00 à 07h00 : 100 €');
+    const listLate = t('contraintes_list_late', 'Late Access — 21h00 à 23h00 : 100 €');
+    const listNight = t('contraintes_list_night', 'Night Access — 23h00 à 05h00 : 250 €');
 
     const message = `
-        <div class="text-left space-y-3">
-            <p class="font-medium">${messageDetail}</p>
-            <div class="bg-orange-50 border border-orange-200 rounded-lg p-3">
-                <p class="text-sm text-orange-800">
-                    <strong>${selectedHoursTitle}</strong><br>
-                    • ${depositLabel} : ${document.getElementById('date-depot').value} à ${document.getElementById('heure-depot').value}<br>
-                    • ${pickupLabel} : ${document.getElementById('date-recuperation').value} à ${document.getElementById('heure-recuperation').value}
-                </p>
+        <div class="text-left space-y-4">
+            <p class="font-medium text-gray-800">${introText}</p>
+            
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-3">
+                <p class="text-sm text-yellow-800">${agencyHoursText}</p>
             </div>
-            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                <p class="text-sm text-yellow-800">
-                    <strong>${supplementTitle}</strong><br>
-                    ${supplementText}
-                </p>
+
+            <div class="space-y-2">
+                <p class="text-sm font-semibold text-gray-700">${conclusionText}</p>
+                <ul class="text-sm text-gray-600 list-disc list-inside pl-2 space-y-1">
+                    <li>${listEarly}</li>
+                    <li>${listLate}</li>
+                    <li>${listNight}</li>
+                </ul>
             </div>
-            <p class="text-sm text-gray-600 italic">
-                ${supplementInfo}
-            </p>
         </div>
     `;
 

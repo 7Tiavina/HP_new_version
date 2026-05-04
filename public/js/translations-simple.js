@@ -601,15 +601,16 @@ if (typeof window.translations === 'undefined') {
         date_update_error: "Une erreur est survenue lors de la mise à jour des dates.",
         
         // Contraintes/Unusual Hours Modal
-        contraintes_modal_title: "⚠️ Horaires spécifiques - Supplément hors ouverture",
-        contraintes_single_service_detail: "Une prestation obligatoire pour le {type} sera ajoutée à votre commande.",
-        contraintes_multiple_service_detail: "Des prestations obligatoires pour le dépôt et le retrait seront ajoutées à votre commande.",
+        contraintes_modal_title: "Accueil en horaires spécifiques",
+        contraintes_intro: "Votre réservation implique un accueil en dehors des horaires d’ouverture de l’agence et nécessite une prise en charge dédiée.",
+        contraintes_agency_hours: "Notre agence est ouverte 7j/7 de 07h00 à 21h00. Un ou plusieurs horaires sélectionnés se situent en dehors de cette plage d’ouverture.",
+        contraintes_conclusion: "Les prestations suivantes seront ajoutées automatiquement selon l’horaire concerné :",
+        contraintes_list_early: "Early Access — 05h00 à 07h00 : 100 €",
+        contraintes_list_late: "Late Access — 21h00 à 23h00 : 100 €",
+        contraintes_list_night: "Night Access — 23h00 à 05h00 : 250 €",
         contraintes_selected_hours_title: "Horaires sélectionnés :",
         contraintes_deposit: "Dépôt",
         contraintes_pickup: "Retrait",
-        contraintes_supplement_title: "Supplément horaire :",
-        contraintes_supplement_text: "Notre agence est ouverte de 07h00 à 21h00, 7j/7. Votre horaire de dépôt se situe en dehors de ces créneaux.",
-        contraintes_supplement_info: "Une prestation de service spécifique est nécessaire pour assurer votre accueil durant la nuit. Un supplément obligatoire de 250.00 € sera ajouté à votre panier.",
         cart_mandatory_badge: "(obligatoire)",
 
         modal_ok: "OK",
@@ -1377,15 +1378,16 @@ if (typeof window.translations === 'undefined') {
         phone_country_code_hint: "⚠️ Please enter your number with the country code (e.g., +33 for France, +230 for Mauritius)",
         
         // Contraintes/Unusual Hours Modal
-        contraintes_modal_title: "⚠️ Unusual Hours - Mandatory Supplement",
-        contraintes_single_service_detail: "A mandatory service for {type} will be added to your order.",
-        contraintes_multiple_service_detail: "Mandatory services for drop-off and pick-up will be added to your order.",
+        contraintes_modal_title: "Special Hours Access",
+        contraintes_intro: "Your booking requires access outside our standard opening hours and includes dedicated assistance.",
+        contraintes_agency_hours: "Our agency operates 7 days a week from 7:00 AM to 9:00 PM. Your selected time(s) fall outside these standard hours.",
+        contraintes_conclusion: "The following surcharges will be automatically applied based on your access time:",
+        contraintes_list_early: "Early Access — 5:00 AM to 7:00 AM: €100",
+        contraintes_list_late: "Late Access — 9:00 PM to 11:00 PM: €100",
+        contraintes_list_night: "Night Access — 11:00 PM to 5:00 AM: €250",
         contraintes_selected_hours_title: "Selected hours:",
         contraintes_deposit: "Drop-off",
         contraintes_pickup: "Pick-up",
-        contraintes_supplement_title: "Hourly supplement:",
-        contraintes_supplement_text: "These hours are outside standard opening hours. A supplement of <strong>{amount} €</strong> will be automatically added to your cart.",
-        contraintes_supplement_info: "ℹ️ This supplement is mandatory and will be charged automatically during payment.",
         cart_mandatory_badge: "(mandatory)",
 
         // Account Page
