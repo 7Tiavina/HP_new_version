@@ -82,10 +82,6 @@ class FrontController extends Controller
 
             if ($isAuthenticated && $authUserId) {
                 $authUser = $authGuard->user();
-                $authUserData = [
-                    'id' => $authUser->id,
-                    'email' => $authUser->email,
-                ];
             }
 
             // Comprehensive list of all booking/session keys to clear
@@ -135,7 +131,7 @@ class FrontController extends Controller
 
             $request->session()->forget($keysToClear);
 
-            Log::info('Form reset on redirect to /link-form. Auth preserved: ' . ($isAuthenticated ? 'YES (user ID: ' . $authUserId . ')' : 'NO (guest)'));
+            Log::info('Form reset on redirect to /link-form. Auth preserved: ' . ($isAuthenticated ? 'YES' : 'NO'));
         } else {
             Log::info('Form state preserved on redirect to /link-form (no reset requested)');
         }
@@ -315,11 +311,8 @@ class FrontController extends Controller
         $client = Client::where('email', $request->email)->first();
 
         if ($client) {
-            \Log::info('Client found in clientLogin', [
+            \Log::info('Client login attempt (FrontController)', [
                 'client_id' => $client->id,
-                'email' => $request->email,
-                'has_password_hash' => !empty($client->password_hash),
-                'password_hash_start' => substr($client->password_hash ?? '', 0, 10)
             ]);
             
             // Vérifier si c'est un client invité (pas de mot de passe valide)
@@ -327,7 +320,7 @@ class FrontController extends Controller
                       (strpos($client->password_hash, '$2y$') !== 0 && strpos($client->password_hash, '$2a$') !== 0);
             
             if ($isGuest) {
-                \Log::info('Guest client trying to login via clientLogin', ['client_id' => $client->id, 'email' => $request->email]);
+                \Log::info('Guest client trying to login via clientLogin', ['client_id' => $client->id]);
                 return back()
                     ->withInput($request->only('email'))
                     ->with('guest_login_attempt', true)
@@ -338,14 +331,14 @@ class FrontController extends Controller
                 Auth::guard('client')->login($client); // login via guard client
                 $request->session()->regenerate();
 
-                \Log::info('Client logged in via clientLogin', ['client_id' => $client->id, 'email' => $request->email]);
+                \Log::info('Client logged in via clientLogin', ['client_id' => $client->id]);
                 // Redirect to client dashboard
                 return redirect()->route('client.dashboard')->with('success', 'Connexion réussie !');
             } else {
-                \Log::warning('Client password mismatch in clientLogin', ['client_id' => $client->id, 'email' => $request->email]);
+                \Log::warning('Client password mismatch in clientLogin', ['client_id' => $client->id]);
             }
         } else {
-            \Log::warning('Client not found in clientLogin', ['email' => $request->email]);
+            \Log::warning('Client not found in clientLogin');
         }
 
         // échec : on renvoie avec un flash pour afficher le modal d'erreur
@@ -523,7 +516,6 @@ class FrontController extends Controller
         if ($transferredCount > 0) {
             \Log::info('Guest orders transferred to client', [
                 'client_id' => $client->id,
-                'email' => $client->email,
                 'orders_count' => $transferredCount,
             ]);
         }
@@ -645,8 +637,6 @@ class FrontController extends Controller
 
         Log::info('FrontController::getOptionsQuote - Données de requête reçues', [
             'idPlateforme' => $idPlateforme,
-            'cartItemsFromFrontend' => $cartItemsFromFrontend,
-            'guestEmail' => $guestEmail,
             'dates' => "{$dateDepot} {$heureDepot} - {$dateRecuperation} {$heureRecuperation}",
         ]);
 

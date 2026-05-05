@@ -43,7 +43,7 @@ class PaymentController extends Controller
     public function preparePayment(Request $request)
     {
         try {
-            Log::info('Entering preparePayment method.', ['request_data' => $request->all()]);
+            Log::info('Entering preparePayment method.');
 
             $validatedData = $request->validate([
                 'lang' => 'nullable|string|in:en,fr',
@@ -420,7 +420,7 @@ class PaymentController extends Controller
             ];
 
             Session::put('commande_en_cours', $commandeData);
-            Log::info('Commande data stored in session.', ['data' => $commandeData]);
+            Log::info('Commande data stored in session.');
 
             return response()->json(['message' => 'Commande préparée avec succès.', 'redirect_url' => route('payment')]);
 
@@ -442,7 +442,6 @@ class PaymentController extends Controller
             'is_ajax' => $request->ajax(),
             'expects_json' => $request->expectsJson(),
             'method' => $request->method(),
-            'all_input' => $request->all(),
             'session_id' => $request->session()->getId(),
             'has_commande_en_cours' => $request->session()->has('commande_en_cours'),
         ]);
@@ -482,11 +481,11 @@ class PaymentController extends Controller
                 'premiumDetails.instructions_departure' => 'sometimes|nullable|string',
             ]);
 
-            Log::info('[updateGuestInfoInSession] Validation passed', ['validated' => $validated]);
+            Log::info('[updateGuestInfoInSession] Validation passed');
 
             // Force phone to E.164 with country code (e.g. +33...), no auto-detection.
             $rawPhone = (string)($validated['telephone'] ?? '');
-            Log::info('[updateGuestInfoInSession] Raw phone before normalization', ['rawPhone' => $rawPhone]);
+            Log::info('[updateGuestInfoInSession] Raw phone before normalization');
             
             $rawPhone = trim($rawPhone);
             $rawPhone = preg_replace('/[^\d\+]/', '', $rawPhone); // keep digits and +
@@ -500,13 +499,11 @@ class PaymentController extends Controller
 
             Log::info('[updateGuestInfoInSession] Phone normalization result', [
                 'hasPlus' => $hasPlus,
-                'digits' => $digits,
                 'len' => $len,
             ]);
 
             if (!$hasPlus || $len < 6 || $len > 15) {
                 Log::error('[updateGuestInfoInSession] Phone validation failed', [
-                    'hasPlus' => $hasPlus,
                     'len' => $len,
                 ]);
                 throw \Illuminate\Validation\ValidationException::withMessages([
@@ -515,7 +512,7 @@ class PaymentController extends Controller
             }
 
             $validated['telephone'] = '+' . $digits;
-            Log::info('[updateGuestInfoInSession] Phone validated', ['telephone' => $validated['telephone']]);
+            Log::info('[updateGuestInfoInSession] Phone validated');
 
             // SERVER-SIDE DEFAULTS
             $data = array_merge([
@@ -523,7 +520,7 @@ class PaymentController extends Controller
                 'complementAdresse' => null,
             ], $validated);
 
-            Log::info('[updateGuestInfoInSession] Data to store', ['data' => $data]);
+            Log::info('[updateGuestInfoInSession] Data to store');
 
             Session::put('guest_customer_details', $data);
             Log::info('[updateGuestInfoInSession] guest_customer_details stored in session');
@@ -716,7 +713,6 @@ class PaymentController extends Controller
             Log::info('Tentative d\'authentification BDM', [
                 'url' => config('services.bdm.base_url') . '/User/Login',
                 'username' => $credentials['userName'],
-                'email' => $credentials['email']
             ]);
             
             try {
@@ -793,7 +789,7 @@ class PaymentController extends Controller
             $customerLastName = $customerLastName ?? $authenticatedUser->nom;
         }
         if (!$customerEmail || !$customerFirstName || !$customerLastName) {
-            Log::error('Monetico redirection failed: Missing customer email, first name or last name.', ['commandeData' => $commandeData]);
+            Log::error('Monetico redirection failed: Missing customer email, first name or last name.');
             return null;
         }
 
@@ -836,7 +832,6 @@ class PaymentController extends Controller
             'amount' => $payload['amount'],
             'currency' => $payload['currency'],
             'orderId' => $payload['orderId'],
-            'customer_email' => $payload['customer']['email'],
         ]);
 
         try {
@@ -979,13 +974,7 @@ class PaymentController extends Controller
         $commandeData = Session::get('commande_en_cours');
         Log::info('[showPaymentPage] commande_en_cours exists: ' . ($commandeData ? 'YES' : 'NO'));
         if ($commandeData) {
-            Log::info('[showPaymentPage] commande_en_cours client data: ', [
-                'is_guest' => $commandeData['client']['is_guest'] ?? 'NOT_SET',
-                'email' => $commandeData['client']['email'] ?? 'NOT_SET',
-                'telephone' => $commandeData['client']['telephone'] ?? 'NOT_SET',
-                'nom' => $commandeData['client']['nom'] ?? 'NOT_SET',
-                'prenom' => $commandeData['client']['prenom'] ?? 'NOT_SET',
-            ]);
+            Log::info('[showPaymentPage] commande_en_cours client data exists');
         }
         
         if (!$commandeData || !isset($commandeData['client'])) {
@@ -1102,7 +1091,7 @@ class PaymentController extends Controller
                 $formToken = null;
             }
         } else {
-            Log::warning('[showPaymentPage] Profile for client ' . ($user->email ?? '') . ' is incomplete. Displaying form for completion.');
+            Log::warning('[showPaymentPage] Profile for client is incomplete. Displaying form for completion.');
         }
 
         // Get any error message from the session
@@ -1129,14 +1118,9 @@ class PaymentController extends Controller
             return redirect()->route('payment')->with('error', 'Votre session a expiré. Veuillez recommencer votre commande.');
         }
 
-        // LOG COMPLET de toute la requête pour debug
-        Log::info('[paymentSuccess] Requête COMPLÈTE reçue de Monetico', [
-            'request_all' => $request->all(),
-            'request_query' => $request->query(),
-            'request_post' => $request->post(),
-            'request_input' => $request->input(),
+        // LOG de la requête reçue de Monetico
+        Log::info('[paymentSuccess] Requête reçue de Monetico', [
             'has_kr_answer' => $request->has('kr-answer'),
-            'kr_answer_raw' => $request->get('kr-answer'),
         ]);
 
         // Extraire le transactionId de la réponse Monetico
@@ -1293,7 +1277,7 @@ class PaymentController extends Controller
                 'commandeInfos' => $commandeInfos,
             ];
 
-            Log::info('[paymentSuccess] Sending final creation request to BDM API.', ['payload' => $payload]);
+            Log::info('[paymentSuccess] Sending final creation request to BDM API.');
             
             // Log détaillé des prix envoyés pour débogage
             Log::info('[paymentSuccess] Prix envoyés à BDM:', [
@@ -1484,7 +1468,6 @@ class PaymentController extends Controller
                     }
                     
                     Log::info('[paymentSuccess] Creating/updating client', [
-                        'email' => $clientData['email'],
                         'is_guest' => $isGuest,
                         'has_password_hash' => isset($clientCreateData['password_hash']),
                     ]);
@@ -1497,7 +1480,6 @@ class PaymentController extends Controller
                     
                     Log::info('[paymentSuccess] Client created/updated successfully', [
                         'client_id' => $clientId,
-                        'email' => $clientData['email'],
                     ]);
                 }
 
@@ -1668,13 +1650,13 @@ class PaymentController extends Controller
 
     public function paymentError(Request $request)
     {
-        Log::error('Payment failed or was rejected by Monetico.', $request->all());
+        Log::error('Payment failed or was rejected by Monetico.');
         return redirect()->route('payment')->with('error', 'Votre paiement a été refusé par votre banque. Veuillez vérifier vos informations de paiement et réessayer.');
     }
 
     public function paymentCancel(Request $request)
     {
-        Log::info('Payment was cancelled by the user.', $request->all());
+        Log::info('Payment was cancelled by the user.');
         return redirect()->route('payment')->with('info', 'Vous avez annulé le processus de paiement. Vous pouvez recommencer votre commande.');
     }
 

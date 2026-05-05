@@ -58,7 +58,6 @@ class AgentController extends Controller
 
         Log::info('Agent logged in successfully (AgentController)', [
             'agent_id' => $user->id,
-            'email' => $user->email,
         ]);
 
         return redirect()->route('agent.dashboard')->with('success', 'Connexion réussie !');
@@ -154,10 +153,8 @@ class AgentController extends Controller
             }
             
             Log::info('Photo file saved successfully', [
-                'full_path' => $fullPath,
                 'photo_path' => $photoPath,
                 'file_size' => filesize($fullPath),
-                'url' => Storage::disk('public')->url($photoPath)
             ]);
 
             // Save photo record

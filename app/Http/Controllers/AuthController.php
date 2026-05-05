@@ -88,11 +88,9 @@ class AuthController extends Controller
         }
 
         if ($client) {
-            \Log::info('Client found', [
+            \Log::info('Client login attempt', [
                 'client_id' => $client->id,
-                'email' => $email,
-                'has_password_hash' => !empty($client->password_hash),
-                'password_hash_start' => substr($client->password_hash ?? '', 0, 10)
+                'email' => substr((string)$email, 0, 2) . '***@' . explode('@', (string)$email)[1] ?? '',
             ]);
 
             // Vérifier si c'est un client invité (pas de mot de passe valide)
@@ -100,7 +98,7 @@ class AuthController extends Controller
                       (strpos($client->password_hash, '$2y$') !== 0 && strpos($client->password_hash, '$2a$') !== 0);
 
             if ($isGuest) {
-                \Log::info('Guest client trying to login', ['client_id' => $client->id, 'email' => $email]);
+                \Log::info('Guest client trying to login', ['client_id' => $client->id]);
                 return redirect()->route('account')
                     ->with('guest_login_attempt', true)
                     ->with('guest_email', $email)
@@ -114,7 +112,7 @@ class AuthController extends Controller
                 Auth::guard('client')->login($client);
                 $request->session()->regenerate();
 
-                \Log::info('Client logged in successfully', ['client_id' => $client->id, 'email' => $email]);
+                \Log::info('Client logged in successfully', ['client_id' => $client->id]);
 
                 if ($request->input('redirect_link_form')) {
                     return redirect(route('payment'))->with('success', 'Connexion réussie !');
@@ -125,7 +123,6 @@ class AuthController extends Controller
                 $msg = $lang === 'en' ? 'Incorrect password.' : 'Mot de passe incorrect.';
                 \Log::warning('Client password mismatch', [
                     'client_id' => $client->id,
-                    'email' => $email,
                 ]);
                 return redirect()->route('account')
                     ->withErrors(['email' => $msg])
@@ -137,11 +134,9 @@ class AuthController extends Controller
         // Si pas client, essayer comme admin
         $user = User::where('email', $email)->first();
         if ($user) {
-            \Log::info('User found', [
+            \Log::info('Admin/User found', [
                 'user_id' => $user->id,
-                'email' => $email,
-                'has_password_hash' => !empty($user->password_hash),
-                'password_hash_start' => substr($user->password_hash ?? '', 0, 10)
+                'email' => substr((string)$email, 0, 2) . '***@' . explode('@', (string)$email)[1] ?? '',
             ]);
             
             // Nettoyer le mot de passe (supprimer les espaces en début/fin)
@@ -155,7 +150,7 @@ class AuthController extends Controller
                     Auth::guard('client')->login($client);
                     $request->session()->regenerate();
 
-                    \Log::info('Legacy user logged in as client', ['user_id' => $user->id, 'client_id' => $client->id, 'email' => $email, 'role' => $user->role]);
+                    \Log::info('Legacy user logged in as client', ['user_id' => $user->id, 'client_id' => $client->id]);
                     return redirect()->route('client.dashboard')->with('success', 'Connexion réussie !');
                 }
 
@@ -169,7 +164,7 @@ class AuthController extends Controller
                     ]);
                     $request->session()->regenerate();
 
-                    \Log::info('Agent logged in successfully (AuthController)', ['agent_id' => $user->id, 'email' => $email]);
+                    \Log::info('Agent logged in successfully (AuthController)', ['agent_id' => $user->id]);
                     return redirect()->route('agent.dashboard')->with('success', 'Connexion réussie !');
                 }
 
@@ -178,21 +173,17 @@ class AuthController extends Controller
                 session(['user_id' => $user->id, 'user_role' => $user->role]);
                 $request->session()->regenerate();
 
-                \Log::info('Admin logged in successfully', ['user_id' => $user->id, 'email' => $email, 'role' => $user->role]);
+                \Log::info('Admin logged in successfully', ['user_id' => $user->id, 'role' => $user->role]);
                 return redirect()->route('dashboard')->with('success', 'Connexion réussie !');
             } else {
                 \Log::warning('User password mismatch', [
-                    'user_id' => $user->id, 
-                    'email' => $email,
-                    'password_length' => strlen($cleanPassword),
-                    'password_first_chars' => substr($cleanPassword, 0, 3) . '...',
-                    'hash_start' => substr($user->password_hash, 0, 20)
+                    'user_id' => $user->id,
                 ]);
             }
         }
 
         // Aucune correspondance trouvée
-        \Log::warning('Login failed - no matching user or password incorrect', ['email' => $email]);
+        \Log::warning('Login failed - no matching user or password incorrect');
         return redirect()->route('account')
             ->withErrors(['email' => 'Email ou mot de passe incorrect'])
             ->with('login_error', true)

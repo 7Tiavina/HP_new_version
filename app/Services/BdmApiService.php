@@ -186,7 +186,6 @@ class BdmApiService
 
             Log::info('Réponse reçue de l\'API BDM', [
                 'status' => $response->status(), 
-                'body' => $response->json(),
                 'url_called' => "{$this->baseUrl}/api/plateforme/{$idPlateforme}/date/{$dateToCheck}"
             ]);
 
@@ -348,7 +347,7 @@ class BdmApiService
             "client" => $client
         ];
 
-        Log::info('BdmApiService::getCommandeContraintes - Payload envoyé', ['payload' => $payload]);
+        Log::info('BdmApiService::getCommandeContraintes - Requête envoyée');
 
         try {
             $token = $this->getAuthToken();
@@ -358,9 +357,8 @@ class BdmApiService
                 'Content-Type' => 'application/json',
             ])->post($url, $payload);
 
-            Log::info('BdmApiService::getCommandeContraintes - Réponse de l\'API BDM', [
+            Log::info('BdmApiService::getCommandeContraintes - Réponse de l\'API BDM reçue', [
                 'status' => $response->status(),
-                'body' => $response->json()
             ]);
 
             if ($response->successful()) {
@@ -550,7 +548,7 @@ class BdmApiService
             "client" => $clientData
         ];
 
-        Log::info('BdmApiService::getCommandeOptionsQuote - Payload envoyé pour découvrir les options', ['payload' => $payload]);
+        Log::info('BdmApiService::getCommandeOptionsQuote - Payload envoyé pour découvrir les options');
 
         try {
             $token = $this->getAuthToken();
@@ -560,9 +558,8 @@ class BdmApiService
                 'Content-Type' => 'application/json',
             ])->post($url, $payload);
 
-            Log::info('BdmApiService::getCommandeOptionsQuote - Réponse brute de l\'API BDM pour la découverte d\'options', [
+            Log::info('BdmApiService::getCommandeOptionsQuote - Réponse brute de l\'API BDM pour la découverte d\'options reçue', [
                 'status' => $response->status(),
-                'body' => $response->body()
             ]);
 
             if ($response->successful()) {

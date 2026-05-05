@@ -46,9 +46,7 @@ class CommandeController extends Controller
 
             // Also check by email if client_id is null
             if (!$commande->client_id && $commande->client_email !== $client->email) {
-                \Illuminate\Support\Facades\Log::warning('Unauthorized photo access attempt by email', [
-                    'client_email' => $client->email,
-                    'commande_email' => $commande->client_email,
+                \Illuminate\Support\Facades\Log::warning('Unauthorized photo access attempt (email mismatch)', [
                     'commande_id' => $id
                 ]);
                 return response()->json(['error' => 'Unauthorized'], 403);

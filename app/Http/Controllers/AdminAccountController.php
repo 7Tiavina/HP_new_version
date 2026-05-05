@@ -73,14 +73,12 @@ class AdminAccountController extends Controller
             
             Log::info('Admin account created and email sent', [
                 'user_id' => $user->id,
-                'email' => $user->email,
                 'role' => $user->role,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to send admin account creation email', [
                 'error' => $e->getMessage(),
                 'user_id' => $user->id,
-                'email' => $user->email,
             ]);
         }
 
@@ -141,13 +139,11 @@ class AdminAccountController extends Controller
             
             Log::info('Admin password reset and email sent', [
                 'user_id' => $user->id,
-                'email' => $user->email,
             ]);
         } catch (\Exception $e) {
             Log::error('Failed to send admin password reset email', [
                 'error' => $e->getMessage(),
                 'user_id' => $user->id,
-                'email' => $user->email,
             ]);
         }
 

@@ -47,10 +47,7 @@ class ClientController extends Controller
     {
         $lang = session('app_language', 'fr');
 
-        Log::info('forgotPassword called', [
-            'email' => $request->email,
-            'all_input' => $request->all(),
-        ]);
+        Log::info('forgotPassword called');
 
         try {
             $request->validate([
@@ -70,17 +67,17 @@ class ClientController extends Controller
             return back()->withErrors($e->errors());
         }
 
-        Log::info('Validation passed, looking for client', ['email' => $request->email]);
+        Log::info('Validation passed, looking for client');
 
         $client = Client::where('email', $request->email)->first();
 
         if (!$client) {
-            Log::warning('Client not found in forgotPassword', ['email' => $request->email]);
+            Log::warning('Client not found in forgotPassword');
 
             // Check legacy users table
             $legacyUser = User::where('email', $request->email)->first();
             if ($this->isLegacyClientUser($legacyUser)) {
-                Log::info('Legacy user found for forgotPassword, syncing to client', ['user_id' => $legacyUser->id, 'email' => $legacyUser->email, 'role' => $legacyUser->role]);
+                Log::info('Legacy user found for forgotPassword, syncing to client', ['user_id' => $legacyUser->id]);
                 $client = $this->ensureClientFromLegacyUser($legacyUser);
             } else {
                 // Email not found
@@ -100,7 +97,6 @@ class ClientController extends Controller
 
         Log::info('Client found for password reset', [
             'client_id' => $client->id,
-            'email' => $client->email,
         ]);
 
         // Generate new password
@@ -118,21 +114,18 @@ class ClientController extends Controller
 
         Log::info('New password generated for client', [
             'client_id' => $client->id,
-            'email' => $client->email,
         ]);
 
         // Send email with new password
         try {
             Log::info('Attempting to send password reset email', [
                 'client_id' => $client->id,
-                'email' => $client->email,
             ]);
 
             Mail::to($client->email)->send(new ClientPasswordGeneratedMail($client, $password, $lang));
 
             Log::info('Password reset email sent successfully', [
                 'client_id' => $client->id,
-                'email' => $client->email,
             ]);
 
             $successMessage = $lang === 'en'
@@ -151,7 +144,6 @@ class ClientController extends Controller
             Log::error('Failed to send password reset email', [
                 'error' => $e->getMessage(),
                 'client_id' => $client->id,
-                'email' => $client->email,
             ]);
 
             $errMsg = $lang === 'en'
@@ -175,10 +167,7 @@ class ClientController extends Controller
      */
     public function sendGeneratedPassword(Request $request)
     {
-        Log::info('sendGeneratedPassword called', [
-            'email' => $request->email,
-            'all_input' => $request->all(),
-        ]);
+        Log::info('sendGeneratedPassword called');
 
         try {
             $request->validate([
@@ -193,7 +182,7 @@ class ClientController extends Controller
             return back()->withErrors($e->errors())->withInput();
         }
 
-        Log::info('Validation passed, looking for client', ['email' => $request->email]);
+        Log::info('Validation passed, looking for client');
 
         $client = Client::where('email', $request->email)->first();
 
@@ -300,7 +289,6 @@ class ClientController extends Controller
         if ($transferredCount > 0) {
             Log::info('Guest orders transferred to client', [
                 'client_id' => $client->id,
-                'email' => $client->email,
                 'orders_count' => $transferredCount,
             ]);
         }
@@ -367,7 +355,6 @@ class ClientController extends Controller
             'is_ajax' => $request->ajax(),
             'expects_json' => $request->expectsJson(),
             'method' => $request->method(),
-            'all_input' => $request->all(),
             'guard_check' => auth()->guard('client')->check(),
             'guard_id' => auth()->guard('client')->id(),
         ]);
@@ -384,7 +371,6 @@ class ClientController extends Controller
 
         Log::info('[ClientController@updateProfile] Authenticated client found', [
             'client_id' => $client->id,
-            'client_email' => $client->email,
         ]);
 
         $lang = session('app_language', 'fr');
@@ -406,7 +392,7 @@ class ClientController extends Controller
             'premiumDetails' => 'nullable|array',
         ], $messages);
 
-        Log::info('[ClientController@updateProfile] Validation passed', ['validated' => $validated]);
+        Log::info('[ClientController@updateProfile] Validation passed');
 
         try {
             $client->update([
@@ -595,7 +581,6 @@ class ClientController extends Controller
 
         Log::warning('Client account deletion requested', [
             'client_id' => $client->id,
-            'email' => $client->email,
         ]);
 
         $clientEmail = $client->email;
@@ -604,7 +589,7 @@ class ClientController extends Controller
         // Send confirmation email BEFORE deletion
         try {
             \Illuminate\Support\Facades\Mail::to($clientEmail)->send(new \App\Mail\AccountDeletedConfirmationMail($client));
-            Log::info('Account deletion confirmation email sent', ['client_id' => $client->id, 'email' => $clientEmail]);
+            Log::info('Account deletion confirmation email sent', ['client_id' => $client->id]);
         } catch (\Exception $e) {
             Log::error('Failed to send account deletion email', [
                 'client_id' => $client->id,
@@ -633,7 +618,6 @@ class ClientController extends Controller
 
         Log::info('Client account deleted successfully', [
             'client_id' => $clientId,
-            'email' => $clientEmail,
         ]);
 
         $successMessage = $lang === 'en'

@@ -44,7 +44,6 @@ class UserController extends Controller
         if ($user && Hash::check($request->password, $user->password_hash)) {
             // Log pour debug
             \Illuminate\Support\Facades\Log::info('Login attempt', [
-                'email' => $request->email,
                 'user_id' => $user->id,
                 'user_role' => $user->role,
                 'role_from_db' => $user->getOriginal('role') ?? $user->role,
@@ -204,7 +203,6 @@ class UserController extends Controller
         // Log pour debug
         \Illuminate\Support\Facades\Log::info('User created', [
             'id' => $user->id,
-            'email' => $user->email,
             'role' => $user->role,
         ]);
 
