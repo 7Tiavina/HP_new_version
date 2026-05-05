@@ -252,13 +252,6 @@ function displayOptions(dureeEnMinutes) {
             
             // Premium disponible seulement si > 72h
             isPremiumTimeValid = diffInHours > 72;
-            
-            console.log('[displayOptions] Premium 72h check:', {
-                dateDepot: dateDepot.toISOString(),
-                nowFrance: nowFrance.toISOString(),
-                diffInHours: diffInHours.toFixed(2),
-                isPremiumTimeValid: isPremiumTimeValid
-            });
         }
     } catch (error) {
         console.error('[displayOptions] Error checking 72h condition:', error);
@@ -268,11 +261,6 @@ function displayOptions(dureeEnMinutes) {
     
     // Premium n'est affiché que si API OK ET condition des 72h remplie
     isPremiumAvailable = hasPremiumFromApi && isPremiumTimeValid;
-
-    console.log('[displayOptions] staticOptions.premium:', staticOptions.premium);
-    console.log('[displayOptions] hasPremiumFromApi:', hasPremiumFromApi);
-    console.log('[displayOptions] isPremiumTimeValid (>72h):', isPremiumTimeValid);
-    console.log('[displayOptions] isPremiumAvailable (final):', isPremiumAvailable);
 }
 
 function updateAdvertModalButtons() {
@@ -312,8 +300,6 @@ function updateAdvertModalButtons() {
             continueBtn.classList.add('bg-yellow-custom', 'text-gray-dark');
         }
     }
-    
-    console.log('[updateAdvertModalButtons] Cart items:', cartItems.filter(i => i.itemCategory === 'option'));
 }
 
 function toggleOptionFromModal(optionKey) {
@@ -326,7 +312,6 @@ function toggleOptionFromModal(optionKey) {
         // Item does not exist, so add it - check if the other option is already in cart
         const otherOptionKey = optionKey === 'premium' ? 'priority' : 'premium';
         if (cartItems.some(item => item.key === otherOptionKey)) {
-            console.log(`[toggleOptionFromModal] Cannot add ${optionKey} because ${otherOptionKey} is already in cart`);
             return;
         }
         
@@ -337,7 +322,6 @@ function toggleOptionFromModal(optionKey) {
             // Pour premium, on ajoute juste l'option sans demander les infos
             // Les infos seront complétées dans la modale de paiement /payment
             premiumDetails.direction = 'both';
-            console.log('[toggleOptionFromModal] Premium added to cart - details will be filled at payment step');
         }
 
         cartItems.push({
@@ -367,7 +351,6 @@ function showOptionsAdvertisementModal() {
         
         // Vérifier que les éléments essentiels existent
         if (!modal) {
-            console.error('Modal element not found!');
             resolve('continued'); // Passer directement
             return;
         }
@@ -391,9 +374,6 @@ function showOptionsAdvertisementModal() {
         const premiumAvailableContent = document.getElementById('premium-available-content');
         const premiumUnavailableMessage = document.getElementById('premium-unavailable-message');
         const hasPremiumFromApi = staticOptions.premium && staticOptions.premium.id && staticOptions.premium.prixUnitaire > 0;
-
-        console.log('[showOptionsAdvertisementModal] staticOptions.premium:', staticOptions.premium);
-        console.log('[showOptionsAdvertisementModal] hasPremiumFromApi:', hasPremiumFromApi);
 
         if (hasPremiumFromApi) {
             // Afficher premium avec le bon prix récupéré de l'API

@@ -41,8 +41,6 @@ function openOptionsDrawer() {
         // Elles ont été calculées lors du checkAvailability ou updateContraintesInCart
         // On ne recharge PAS depuis sessionStorage pour éviter d'afficher d'anciennes contraintes
         
-        console.log('[openOptionsDrawer] window.bookingContraintesItems:', window.bookingContraintesItems);
-
         // Populate drawer with current options
         populateDrawerOptions();
         updateDrawerCart();
@@ -110,13 +108,6 @@ function populateDrawerOptions() {
             
             // Premium disponible seulement si > 72h
             isPremiumTimeValid = diffInHours > 72;
-            
-            console.log('[populateDrawerOptions] Premium 72h check:', {
-                dateDepot: dateDepot.toISOString(),
-                nowFrance: nowFrance.toISOString(),
-                diffInHours: diffInHours.toFixed(2),
-                isPremiumTimeValid: isPremiumTimeValid
-            });
         }
     } catch (error) {
         console.error('[populateDrawerOptions] Error checking 72h condition:', error);
@@ -126,12 +117,6 @@ function populateDrawerOptions() {
     
     // Premium n'est affiché que si API OK ET condition des 72h remplie
     isPremiumAvailable = hasPremiumFromApi && isPremiumTimeValid;
-
-    console.log('[populateDrawerOptions] staticOptions:', staticOptions);
-    console.log('[populateDrawerOptions] Priority:', staticOptions.priority);
-    console.log('[populateDrawerOptions] Premium:', staticOptions.premium);
-    console.log('[populateDrawerOptions] isPremiumTimeValid (>72h):', isPremiumTimeValid);
-    console.log('[populateDrawerOptions] isPremiumAvailable (final):', isPremiumAvailable);
 
     // Priority Option
     const priorityCard = document.getElementById('drawer-option-priority');
@@ -156,12 +141,6 @@ function populateDrawerOptions() {
             if (priceEl) {
                 const unitPrice = staticOptions.priority.prixUnitaire || 0;
                 const unitPriceBeforeDiscount = staticOptions.priority.prixUnitaireAvantRemise || staticOptions.priority.prix_unitaire_avant_remise || null;
-
-                console.log('[populateDrawerOptions] Priority prices:', {
-                    unitPrice,
-                    unitPriceBeforeDiscount,
-                    allKeys: Object.keys(staticOptions.priority)
-                });
 
                 if (unitPriceBeforeDiscount != null && unitPriceBeforeDiscount > unitPrice) {
                     // Show discounted price with strikethrough original price
@@ -200,12 +179,6 @@ function populateDrawerOptions() {
             if (priceEl) {
                 const unitPrice = staticOptions.premium.prixUnitaire || 0;
                 const unitPriceBeforeDiscount = staticOptions.premium.prixUnitaireAvantRemise || staticOptions.premium.prix_unitaire_avant_remise || null;
-
-                console.log('[populateDrawerOptions] Premium prices:', {
-                    unitPrice,
-                    unitPriceBeforeDiscount,
-                    allKeys: Object.keys(staticOptions.premium)
-                });
 
                 if (unitPriceBeforeDiscount != null && unitPriceBeforeDiscount > unitPrice) {
                     // Show discounted price with strikethrough original price
@@ -259,15 +232,9 @@ function displayAccessOptionsInDrawer() {
     // Afficher les contraintes depuis window.bookingContraintesItems
     const contraintesItems = window.bookingContraintesItems || [];
 
-    console.log('[displayAccessOptionsInDrawer] window.bookingContraintesItems:', contraintesItems);
-    console.log('[displayAccessOptionsInDrawer] sessionStorage:', sessionStorage.getItem('hp_booking_contraintes'));
-
     if (contraintesItems.length === 0) {
-        console.log('[displayAccessOptionsInDrawer] Aucune contrainte à afficher');
         return;
     }
-
-    console.log('[displayAccessOptionsInDrawer] Affichage de', contraintesItems.length, 'contrainte(s)');
 
     // Titre pour la section Access
     const titleEl = document.createElement('h3');
@@ -355,9 +322,6 @@ function updateDrawerCart() {
     const contraintesItems = window.bookingContraintesItems || [];
     const allItems = [...(cartItems || []), ...contraintesItems];
 
-    console.log('[updateDrawerCart] Cart items:', allItems);
-    console.log('[updateDrawerCart] Contraintes items:', contraintesItems);
-
     if (allItems.length === 0) {
         cartItemsContainer.innerHTML = `
             <div class="text-center py-8">
@@ -429,8 +393,6 @@ function updateDrawerCart() {
     let total = 0;
 
     allItems.forEach((item, index) => {
-        console.log('[updateDrawerCart] Item:', item);
-
         let itemTotal = 0;
         let unitPriceValue = 0;
         let unitPriceBeforeDiscount = 0;
@@ -519,8 +481,6 @@ function updateDrawerCart() {
             ? Math.round(((unitPriceBeforeDiscount - unitPriceValue) / unitPriceBeforeDiscount) * 100) 
             : 0;
 
-        console.log('[updateDrawerCart] unitPrice:', unitPriceValue, 'unitPriceBeforeDiscount:', unitPriceBeforeDiscount, 'itemTotal:', itemTotal);
-
         total += itemTotal;
 
         const isOption = item.itemCategory === 'option';
@@ -561,8 +521,6 @@ function updateDrawerCart() {
             </div>
         `;
     });
-    
-    console.log('[updateDrawerCart] Total:', total);
     
     cartItemsContainer.innerHTML = html;
     cartTotalEl.textContent = formatPrice(total);
@@ -644,7 +602,6 @@ function addOptionToCart(optionKey) {
     // Check if the other option (premium/priority) is already in cart - they are mutually exclusive
     const otherOptionKey = optionKey === 'premium' ? 'priority' : 'premium';
     if (cartItems.some(item => item.key === otherOptionKey)) {
-        console.log(`[addOptionToCart] Cannot add ${optionKey} because ${otherOptionKey} is already in cart`);
         return;
     }
 

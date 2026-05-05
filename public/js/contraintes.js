@@ -20,7 +20,6 @@ function saveContraintesToSession() {
             timestamp: Date.now()
         };
         sessionStorage.setItem(CONTRAINTES_STORAGE_KEY, JSON.stringify(data));
-        console.log('Contraintes sauvegardées dans sessionStorage:', data);
     } catch (e) {
         console.error('Erreur sauvegarde contraintes dans sessionStorage:', e);
     }
@@ -39,12 +38,10 @@ function loadContraintesFromSession() {
         // Expirer après 30 minutes
         const maxAge = 30 * 60 * 1000;
         if (Date.now() - data.timestamp > maxAge) {
-            console.log('Contraintes expirées dans sessionStorage');
             sessionStorage.removeItem(CONTRAINTES_STORAGE_KEY);
             return null;
         }
         
-        console.log('Contraintes chargées depuis sessionStorage:', data.contraintes);
         return data.contraintes || [];
     } catch (e) {
         console.error('Erreur chargement contraintes depuis sessionStorage:', e);
@@ -89,10 +86,7 @@ function haveContraintesDatesChanged(dateDepot, heureDepot, dateRetrait, heureRe
  * @returns {Promise<Array>} - Liste des contraintes
  */
 async function fetchContraintes(airportId, baggagesForOptionsQuote) {
-    console.log('[fetchContraintes] Called with:', { airportId, baggagesCount: baggagesForOptionsQuote?.length });
-    
     if (!airportId || !baggagesForOptionsQuote || baggagesForOptionsQuote.length === 0) {
-        console.log('[fetchContraintes] Pas de contraintes à récupérer (données insuffisantes)');
         return [];
     }
 
@@ -131,15 +125,10 @@ async function fetchContraintes(airportId, baggagesForOptionsQuote) {
             modeTransport: "Inconnu",
             lieu: "Inconnu",
             commentaires: "Demande de contraintes"
-        };
+            };
 
-        console.log('Appel API /commande/contraintes avec:', {
-            idPlateforme: airportId,
-            commandeLignes: commandeLignes
-        });
-
-        // Appel à l'API /plateforme/{id}/commande/contraintes
-        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+            // Appel à l'API /plateforme/${airportId}/commande/contraintes
+            const csrfMeta = document.querySelector('meta[name="csrf-token"]');
         const csrfToken = csrfMeta ? csrfMeta.getAttribute('content') : '';
 
         const response = await fetch(`/api/plateforme/${airportId}/commande/contraintes`, {
@@ -162,11 +151,9 @@ async function fetchContraintes(airportId, baggagesForOptionsQuote) {
         }
 
         const result = await response.json();
-        console.log('Réponse API contraintes:', result);
 
         // Vérifier le statut de la réponse
         if (result.statut !== 1 || !result.content || !Array.isArray(result.content)) {
-            console.log('Aucune contrainte retournée par l\'API ou statut échec');
             return [];
         }
 
@@ -191,7 +178,6 @@ async function fetchContraintes(airportId, baggagesForOptionsQuote) {
             };
         });
 
-        console.log('Contraintes récupérées depuis l\'API:', contraintes);
         return contraintes;
 
     } catch (error) {
@@ -207,9 +193,6 @@ async function fetchContraintes(airportId, baggagesForOptionsQuote) {
  * @param {boolean} forceRefresh - Forcer le recalcul même si les dates n'ont pas changé
  */
 async function updateContraintesInCart(airportId, baggagesForOptionsQuote, forceRefresh = false) {
-    console.log('[updateContraintesInCart] Called with forceRefresh:', forceRefresh);
-    console.log('[updateContraintesInCart] Current window.bookingContraintesItems:', window.bookingContraintesItems);
-    
     // Vérifier si on peut utiliser le sessionStorage
     const dateDepot = document.getElementById('date-depot')?.value;
     const heureDepot = document.getElementById('heure-depot')?.value;
@@ -219,14 +202,11 @@ async function updateContraintesInCart(airportId, baggagesForOptionsQuote, force
     // Si forceRefresh ou si les dates ont changé, on doit appeler l'API
     const datesChanged = haveContraintesDatesChanged(dateDepot, heureDepot, dateRetrait, heureRetrait);
     
-    console.log('[updateContraintesInCart] Dates changed:', datesChanged);
-    
     // Seulement utiliser le cache si pas de forceRefresh et dates identiques
     if (!forceRefresh && !datesChanged) {
         const cachedContraintes = loadContraintesFromSession();
         if (cachedContraintes && cachedContraintes.length > 0) {
             window.bookingContraintesItems = cachedContraintes;
-            console.log('[updateContraintesInCart] Contraintes utilisées depuis sessionStorage:', cachedContraintes);
             
             // Mettre à jour l'affichage du panier
             if (typeof updateCartDisplay === 'function') {
@@ -240,7 +220,6 @@ async function updateContraintesInCart(airportId, baggagesForOptionsQuote, force
     }
     
     // Si on arrive ici, c'est qu'on doit appeler l'API
-    console.log('[updateContraintesInCart] Appel API nécessaire (forceRefresh ou dates changées)');
     
     // Appeler l'API pour obtenir les contraintes à jour
     const contraintes = await fetchContraintes(airportId, baggagesForOptionsQuote);
@@ -256,13 +235,10 @@ async function updateContraintesInCart(airportId, baggagesForOptionsQuote, force
         }
     } else {
         // Si pas de contraintes, on nettoie le sessionStorage
-        console.log('[updateContraintesInCart] Pas de contraintes, nettoyage sessionStorage');
         sessionStorage.removeItem(CONTRAINTES_STORAGE_KEY);
         sessionStorage.removeItem(CONTRAINTES_DATES_KEY);
     }
     
-    console.log('[updateContraintesInCart] Contraintes stockées:', contraintes);
-
     // Mettre à jour l'affichage du panier si la fonction existe
     if (typeof updateCartDisplay === 'function') {
         updateCartDisplay();
@@ -312,10 +288,7 @@ function resetContraintes() {
  * @param {string} airportId - ID de la plateforme
  */
 async function initContraintes(airportId) {
-    console.log('[initContraintes] Called with airportId:', airportId);
-    
     if (!airportId) {
-        console.log('[initContraintes] airportId is null or undefined, skipping initialization');
         return false;
     }
     
@@ -323,6 +296,5 @@ async function initContraintes(airportId) {
     // Les contraintes doivent être recalculées en fonction des dates/heures actuelles
     // Elles seront calculées lors du checkAvailability ou updateContraintesInCart
     
-    console.log('[initContraintes] Skip restoration, will be calculated on checkAvailability');
     return false;
 }

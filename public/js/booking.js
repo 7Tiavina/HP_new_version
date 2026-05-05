@@ -425,7 +425,6 @@ async function checkSingleDateAvailability(date, time) {
         now.setSeconds(0, 0);
         
         if (dateTime < now) {
-            console.log('Date antérieure à maintenant:', { dateTime, now });
             return { 
                 available: false, 
                 estContrainte: false, 
@@ -444,8 +443,6 @@ async function checkSingleDateAvailability(date, time) {
         
         const dateToVerify = `${year}${month}${day}T${hours}${minutes}`;
         
-        console.log('Date envoyée à l\'API BDM:', dateToVerify);
-
         const response = await fetch(routeUrl('checkAvailability', '/api/check-availability'), {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content') },
@@ -465,8 +462,6 @@ async function checkSingleDateAvailability(date, time) {
         // La plateforme est "disponible" si elle est ouverte OU si elle est contrainte (on peut débloquer)
         const available = estOuvert || estContrainte;
         
-        console.log('Check availability result:', { estOuvert, estContrainte, contrainte, available, dateToVerify });
-        
         return { 
             available, 
             estContrainte, 
@@ -475,7 +470,6 @@ async function checkSingleDateAvailability(date, time) {
             message: result.message
         };
     } catch (error) {
-        console.error(`Erreur lors de la vérification de disponibilité pour ${date} ${time}:`, error);
         await showCustomAlert(t('error'), t('alert_availability_error'));
         return { available: false, estContrainte: false, contrainte: null };
     }
@@ -487,12 +481,10 @@ async function checkSingleDateAvailability(date, time) {
  * @returns {Promise<boolean>}
  */
 async function checkAvailability() {
-    console.log('checkAvailability() called');
     const btn = document.getElementById('check-availability-btn');
 
     // Exit early if button doesn't exist (not on booking page)
     if (!btn) {
-        console.log('Button not found, exiting');
         return false;
     }
 
@@ -513,9 +505,6 @@ async function checkAvailability() {
     const dateRetrait = document.getElementById('date-recuperation').value;
     const heureRetrait = document.getElementById('heure-recuperation').value;
 
-    console.log('Airport ID:', airportId);
-    console.log('Dates/Times:', { dateDepot, heureDepot, dateRetrait, heureRetrait });
-
     try {
         // Check both dates in parallel
         const [depotResult, retraitResult] = await Promise.all([
@@ -531,8 +520,6 @@ async function checkAvailability() {
             depot: depotResult.estContrainte ? depotResult.contrainte : null,
             retrait: retraitResult.estContrainte ? retraitResult.contrainte : null
         };
-
-        console.log('Booking constraints:', window.bookingConstraints);
 
         if (depotAvailable && retraitAvailable) {
             // Vérifier s'il y a des contraintes détectées depuis l'API /date
@@ -669,14 +656,7 @@ async function getQuoteAndDisplay() {
                 { id: 4, libelle: 'Lieu 4' }
             ];
             // Pour tester les remises : ouvrir la console (F12) et vérifier que les produits ont tauxRemise ou prixUnitaireAvantRemise
-            if (globalProductsData.length > 0 && typeof console !== 'undefined' && console.info) {
-                console.info('[Remises] Produits reçus de l\'API getQuote:', globalProductsData.map(p => ({
-                    libelle: p.libelle,
-                    prixUnitaire: p.prixUnitaire ?? p.prix_unitaire,
-                    tauxRemise: p.tauxRemise ?? p.taux_remise,
-                    prixUnitaireAvantRemise: p.prixUnitaireAvantRemise ?? p.prix_unitaire_avant_remise
-                })));
-            }
+            
             displayOptions(dureeEnMinutes);
             
             // Charger les contraintes obligatoires (prestations complémentaires)
@@ -1004,9 +984,6 @@ async function handleTotalClick() {
                 };
             });
         }
-
-        console.log('Options envoyées (hors contraintes - ajoutées auto par ERP):', options);
-        console.log('Contraintes (pour calcul du total uniquement):', contraintes);
 
         var airportSelect = document.getElementById('airport-select');
         var airportName = (airportSelect && airportSelect.options && airportSelect.options[airportSelect.selectedIndex]) ? airportSelect.options[airportSelect.selectedIndex].text : '';
@@ -1482,28 +1459,5 @@ window.addEventListener('pageshow', function(event) {
         if (loader) {
             loader.classList.add('hidden');
         }
-        console.log('Page restaurée depuis le cache. Loader masqué.');
     }
 });
-
-// ============================================
-// DEBUG / TEST FUNCTIONS - Remove in production
-// ============================================
-window.testValidation = function() {
-    console.log('Testing validation functions...');
-    console.log('setInputDefault:', typeof setInputDefault);
-    console.log('setInputFilled:', typeof setInputFilled);
-    console.log('setInputError:', typeof setInputError);
-    console.log('validateField:', typeof validateField);
-    console.log('validateStep1:', typeof validateStep1);
-    
-    // Test on first field
-    const airport = document.getElementById('airport-select');
-    if (airport) {
-        console.log('Airport select found:', airport);
-        console.log('Current classes:', airport.classList);
-        setInputFilled(airport);
-        console.log('After setInputFilled - classes:', airport.classList);
-    }
-};
-console.log('Validation functions loaded. Run testValidation() to test.');

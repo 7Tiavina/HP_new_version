@@ -211,7 +211,6 @@ class LanguageManager {
                     frBtn.classList.remove('bg-[#ffc107]', 'text-[#212121]');
                     frBtn.classList.add('bg-gray-300', 'text-gray-700', 'hover:bg-gray-400');
                 }
-                console.log('Modal buttons updated');
             }
             
             // Update header language button states
@@ -229,7 +228,6 @@ class LanguageManager {
                     headerFrBtn.classList.remove('bg-yellow-custom', 'text-gray-dark', 'hover:bg-yellow-hover');
                     headerFrBtn.classList.add('bg-gray-700', 'text-gray-300', 'hover:bg-gray-600');
                 }
-                console.log('Header buttons updated');
             }
             
             // Update mobile language button states
@@ -247,7 +245,6 @@ class LanguageManager {
                     mobileFrBtn.classList.remove('bg-yellow-custom', 'text-gray-dark', 'hover:bg-yellow-hover');
                     mobileFrBtn.classList.add('bg-gray-700', 'text-gray-300', 'hover:bg-gray-600');
                 }
-                console.log('Mobile buttons updated');
             }
             
             // Update toggle text for profile fields
@@ -256,19 +253,14 @@ class LanguageManager {
     }
     
     setupLanguageButtons() {
-        console.log('Setting up language buttons with event delegation...');
-        
         // Use event delegation on document for all language buttons
         document.addEventListener('click', (e) => {
             const langBtn = e.target.closest('[data-lang]');
             if (langBtn) {
                 const lang = langBtn.getAttribute('data-lang');
-                console.log('Language button clicked:', lang);
                 this.setLanguage(lang);
             }
         });
-        
-        console.log('Event delegation setup complete');
     }
     
     updateToggleText() {
@@ -286,20 +278,13 @@ class LanguageManager {
 
 // Initialize language manager when DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOMContentLoaded fired');
     if (!window.languageManager) {
         window.languageManager = new LanguageManager();
-        console.log('LanguageManager instance created and stored');
-    } else {
-        console.log('LanguageManager already exists');
     }
 });
 
 // Also run on interactive state
-if (document.readyState === 'loading') {
-    console.log('Document still loading, waiting for DOMContentLoaded');
-} else {
-    console.log('Document already loaded, initializing LanguageManager immediately');
+if (document.readyState !== 'loading') {
     if (!window.languageManager) {
         window.languageManager = new LanguageManager();
     }

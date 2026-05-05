@@ -259,12 +259,7 @@ function updateCartDisplay() {
     }
 
     if (typeof console !== 'undefined' && console.info && products.length > 0) {
-        var firstWithRemise = products.find(function (p) {
-            var b = p.prixUnitaireAvantRemise ?? p.prix_unitaire_avant_remise;
-            var t = p.tauxRemise ?? p.taux_remise;
-            return (b != null && b !== '') || (t != null && t !== '' && Number(t) > 0);
-        });
-        console.info('[Remises panier] sous-total normal=', subtotalNormal, 'total=', total, 'remise=', discountAmount, 'hasRemise=', hasRemise, 'discountRate=', discountRate, 'totalSavings=', totalSavings, 'exemple produit avec remise=', firstWithRemise ? { libelle: firstWithRemise.libelle, prixUnitaire: firstWithRemise.prixUnitaire ?? firstWithRemise.prix_unitaire, prixUnitaireAvantRemise: firstWithRemise.prixUnitaireAvantRemise ?? firstWithRemise.prix_unitaire_avant_remise, tauxRemise: firstWithRemise.tauxRemise ?? firstWithRemise.taux_remise } : 'aucun');
+        // [Remises panier] info removed
     }
 
     // Affichage du sous-total et des économies
