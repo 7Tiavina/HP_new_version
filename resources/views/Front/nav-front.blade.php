@@ -1031,7 +1031,7 @@
     <div class="contact-info-top">
         <div class="contact-left">
             <div class="contact-item">
-                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/nous-localiser/" style="display: flex; align-items: center; gap: 6px; text-decoration: none;">
+                <a href="{{ config('app.front_url') }}{{ $langPrefix }}/nous-localiser/" style="display: flex; align-items: center; gap: 6px; text-decoration: none;">
                     <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                     <span><span data-i18n="header_location_label">Location:</span> <span data-i18n="header_location_value">Aéroport de Paris CDG et Orly</span></span>
                 </a>
@@ -1057,14 +1057,14 @@
 
     <nav class="navbar">
         <div class="nav-left-group">
-            <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}">
+            <a href="{{ config('app.front_url') }}{{ $langPrefix }}">
                 <img src="{{ asset('HP-logo-290x91-1.webp') }}" alt="Hello Passenger" class="logo-img">
             </a>
         </div>
 
         <ul class="nav-center-menu">
             <li class="nav-dropdown" id="servicesItem">
-                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services/" class="nav-dropdown-trigger" id="servicesTrigger">
+                <a href="{{ config('app.front_url') }}{{ $langPrefix }}/services/" class="nav-dropdown-trigger" id="servicesTrigger">
                     <span data-i18n="nav_services">Nos Services Bagages</span>
                     <svg class="chevron" width="12" height="12" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2.5"
@@ -1073,31 +1073,31 @@
                     </svg>
                 </a>
                 <div class="nav-dropdown-menu" id="servicesDropdown">
-                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/consigne-bagages/">
+                    <a href="{{ config('app.front_url') }}{{ $langPrefix }}/consigne-bagages/">
                         <span class="drop-arrow">↗</span>
                         <span class="drop-text" data-i18n="service_consigne">Consigne à Bagages</span>
                     </a>
-                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/transfert-livraison-bagages/">
+                    <a href="{{ config('app.front_url') }}{{ $langPrefix }}/transfert-livraison-bagages/">
                         <span class="drop-arrow">↗</span>
                         <span class="drop-text" data-i18n="service_transfert">Transfert &amp; Livraison Bagages</span>
                     </a>
-                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/assistance-personnalisee/">
+                    <a href="{{ config('app.front_url') }}{{ $langPrefix }}/assistance-personnalisee/">
                         <span class="drop-arrow">↗</span>
                         <span class="drop-text" data-i18n="service_assistance">Assistance Personnalisée</span>
                     </a>
-                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/bdm-travel-store/">
+                    <a href="{{ config('app.front_url') }}{{ $langPrefix }}/bdm-travel-store/">
                         <span class="drop-arrow">↗</span>
                         <span class="drop-text" data-i18n="service_bdm">BDM Travel Store</span>
                     </a>
-                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services-facilitateurs-de-voyage/">
+                    <a href="{{ config('app.front_url') }}{{ $langPrefix }}/services-facilitateurs-de-voyage/">
                         <span class="drop-arrow">↗</span>
                         <span class="drop-text" data-i18n="service_facilitateurs">Services Pratiques</span>
                     </a>
                 </div>
             </li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/a-propos/" data-i18n="nav_about">A Propos</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/contact/" data-i18n="nav_contact">Nous contacter</a></li>
+            <li><a href="{{ config('app.front_url') }}{{ $langPrefix }}/a-propos/" data-i18n="nav_about">A Propos</a></li>
+            <li><a href="{{ config('app.front_url') }}{{ $langPrefix }}/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
+            <li><a href="{{ config('app.front_url') }}{{ $langPrefix }}/contact/" data-i18n="nav_contact">Nous contacter</a></li>
             <li class="lang-selector-item">
                 @include('components.translation-widget')
             </li>
@@ -1157,7 +1157,7 @@
         <div class="left-photo-drawer-content">
             <!-- Logo -->
             <div class="left-photo-drawer-logo">
-                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}">
+                <a href="{{ config('app.front_url') }}{{ $langPrefix }}">
                     <img src="{{ asset('HP-Logo-White.png') }}" alt="Hello Passenger">
                 </a>
             </div>
@@ -1169,7 +1169,7 @@
                 <!-- CDG Airport -->
                 <div class="left-photo-drawer-location">
                     <div class="left-photo-drawer-location-title">
-                        <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/nous-localiser/" data-i18n="drawer_cdg">Aéroport de Paris CDG</a><br>
+                        <a href="{{ config('app.front_url') }}{{ $langPrefix }}/nous-localiser/" data-i18n="drawer_cdg">Aéroport de Paris CDG</a><br>
                         <span data-i18n="drawer_cdg_address">Terminal 2<br>
                         Gare TGV – Niveau 4<br>
                         Opposition Hôtel Sheraton,<br>
@@ -1185,7 +1185,7 @@
                 <!-- Orly Airport -->
                 <div class="left-photo-drawer-location">
                     <div class="left-photo-drawer-location-title">
-                        <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/nous-localiser/" data-i18n="drawer_orly">Aéroport de Paris ORLY</a><br>
+                        <a href="{{ config('app.front_url') }}{{ $langPrefix }}/nous-localiser/" data-i18n="drawer_orly">Aéroport de Paris ORLY</a><br>
                         <span data-i18n="drawer_orly_address">Terminal 3<br>
                         Niveau d'arrivée</span>
                     </div>
@@ -1241,24 +1241,24 @@
     </div>
 
     <div class="hp-drawer-main">
-        <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}">
+        <a href="{{ config('app.front_url') }}{{ $langPrefix }}">
             <img src="{{ asset('images/HP-logo-290x91.png') }}" class="drawer-logo" alt="Hello Passenger">
         </a>
 
         <ul class="drawer-nav-menu">
             <li class="drawer-submenu">
-                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services/" class="drawer-submenu-trigger" data-i18n="nav_services">Nos Services Bagages</a>
+                <a href="{{ config('app.front_url') }}{{ $langPrefix }}/services/" class="drawer-submenu-trigger" data-i18n="nav_services">Nos Services Bagages</a>
                 <ul class="drawer-submenu-list">
-                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/consigne-bagages/" data-i18n="service_consigne">Consigne Bagages</a></li>
-                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/transfert-livraison-bagages/" data-i18n="service_transfert">Transfert &amp; Livraison Bagages</a></li>
-                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/assistance-personnalisee/" data-i18n="service_assistance">Assistance Personnalisée</a></li>
-                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/bdm-travel-store/" data-i18n="service_bdm">BDM Travel Store</a></li>
-                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services-facilitateurs-de-voyage/" data-i18n="service_facilitateurs">Services Facilitateurs de Voyage</a></li>
+                    <li><a href="{{ config('app.front_url') }}{{ $langPrefix }}/consigne-bagages/" data-i18n="service_consigne">Consigne Bagages</a></li>
+                    <li><a href="{{ config('app.front_url') }}{{ $langPrefix }}/transfert-livraison-bagages/" data-i18n="service_transfert">Transfert &amp; Livraison Bagages</a></li>
+                    <li><a href="{{ config('app.front_url') }}{{ $langPrefix }}/assistance-personnalisee/" data-i18n="service_assistance">Assistance Personnalisée</a></li>
+                    <li><a href="{{ config('app.front_url') }}{{ $langPrefix }}/bdm-travel-store/" data-i18n="service_bdm">BDM Travel Store</a></li>
+                    <li><a href="{{ config('app.front_url') }}{{ $langPrefix }}/services-facilitateurs-de-voyage/" data-i18n="service_facilitateurs">Services Facilitateurs de Voyage</a></li>
                 </ul>
             </li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/a-propos/" data-i18n="nav_about">A Propos</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
-            <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/contact/" data-i18n="nav_contact">Nous contacter</a></li>
+            <li><a href="{{ config('app.front_url') }}{{ $langPrefix }}/a-propos/" data-i18n="nav_about">A Propos</a></li>
+            <li><a href="{{ config('app.front_url') }}{{ $langPrefix }}/nous-localiser/" data-i18n="nav_locate">Nous Localiser</a></li>
+            <li><a href="{{ config('app.front_url') }}{{ $langPrefix }}/contact/" data-i18n="nav_contact">Nous contacter</a></li>
             @if($isClientLoggedIn)
                 <li>
                     <form method="POST" action="{{ route('client.logout') }}" class="inline">

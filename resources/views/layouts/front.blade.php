@@ -22,6 +22,10 @@
     <title>@yield('title', $pageTitle)</title>
 
     <script>
+        window.APP_FRONT_URL = @json(config('app.front_url'));
+    </script>
+
+    <script>
         (function () {
             // Redirect to account page instead of opening modals
             var ACCOUNT_URL = @json(route('account'));
@@ -141,7 +145,7 @@
 @endphp
         <div class="footer-grid">
             <div class="footer-col">
-                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}" class="footer-logo-link">
+                <a href="{{ config('app.front_url') }}{{ $langPrefix }}" class="footer-logo-link">
                     <img src="{{ asset('logo footer.webp') }}" alt="Logo" class="footer-logo">
                 </a>
                 <div class="since-text" data-i18n="footer_since">depuis 1998</div>
@@ -151,15 +155,15 @@
 
             <div class="footer-col">
                 <h3 data-i18n="footer_access">Plan d'accès</h3>
-                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/nous-localiser/" class="footer-airport-link" data-i18n="footer_cdg">Aéroport de Roissy Charles de Gaulle</a>
+                <a href="{{ config('app.front_url') }}{{ $langPrefix }}/nous-localiser/" class="footer-airport-link" data-i18n="footer_cdg">Aéroport de Roissy Charles de Gaulle</a>
                 <p data-i18n="footer_cdg_address">Terminal 2 – Gare TGV<br>Niveau 4</p>
                 <br>
-                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/nous-localiser/" class="footer-airport-link" data-i18n="footer_orly">Aéroport de Paris Orly</a>
+                <a href="{{ config('app.front_url') }}{{ $langPrefix }}/nous-localiser/" class="footer-airport-link" data-i18n="footer_orly">Aéroport de Paris Orly</a>
                 <p data-i18n="footer_orly_address">Orly 3<br>Niveau Arrivées<br>Porte 33a</p>
             </div>
 
             <div class="footer-col">
-                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/contact/" class="footer-contact-link" data-i18n="footer_contact">Contactez-nous</a>
+                <a href="{{ config('app.front_url') }}{{ $langPrefix }}/contact/" class="footer-contact-link" data-i18n="footer_contact">Contactez-nous</a>
                 <a href="tel:+33134385898" class="yellow-text">+33 (0)1 34 38 58 98</a>
                 <h3 data-i18n="footer_email">Email</h3>
                 <a href="mailto:contact@hellopassenger.com" class="yellow-text">contact@hellopassenger.com</a>
@@ -180,9 +184,9 @@
 
             <div class="footer-col">
                 <h3 data-i18n="footer_links">Liens Rapides</h3>
-                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/faq/" data-i18n="footer_faq">FAQ</a>
-                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/services/" data-i18n="footer_services">Services</a>
-                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $langPrefix }}/mentions-legales/" data-i18n="footer_legal">Mentions Légales</a>
+                <a href="{{ config('app.front_url') }}{{ $langPrefix }}/faq/" data-i18n="footer_faq">FAQ</a>
+                <a href="{{ config('app.front_url') }}{{ $langPrefix }}/services/" data-i18n="footer_services">Services</a>
+                <a href="{{ config('app.front_url') }}{{ $langPrefix }}/mentions-legales/" data-i18n="footer_legal">Mentions Légales</a>
                 <br>
                 <a href="{{ $formUrl }}" class="footer-reserve"><span class="reserve-text" data-i18n="footer_book">Réservez</span></a>
             </div>

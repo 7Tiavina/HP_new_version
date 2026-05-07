@@ -54,6 +54,8 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'front_url' => env('APP_FRONT_URL', 'https://darkseagreen-mongoose-687346.hostingersite.com'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

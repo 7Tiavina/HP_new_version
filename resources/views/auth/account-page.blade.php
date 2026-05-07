@@ -440,7 +440,7 @@
         <aside class="auth-card__info">
             <div>
                 <div class="auth-logo">
-                    <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/">
+                    <a href="{{ config('app.front_url') }}{{ $currentLang === 'en' ? '/en' : '' }}/">
                         <img src="{{ asset('HP-Logo-White.png') }}" alt="Hello Passenger" style="max-height: 160px; width: auto;" />
                     </a>
                 </div>
@@ -449,15 +449,15 @@
                     Connectez-vous ou créez votre compte pour gérer vos réservations, vos services bagages et vos informations personnelles.
                 </p>
                 <ul>
-                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/consigne-bagages/" style="color: inherit; text-decoration: none;" data-i18n="info.item1">Consigne à Bagages</a></li>
-                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/transfert-livraison-bagages/" style="color: inherit; text-decoration: none;" data-i18n="info.item2">Transfert & Livraison Bagages</a></li>
-                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/assistance-personnalisee/" style="color: inherit; text-decoration: none;" data-i18n="info.item3">Assistance Personnalisée</a></li>
-                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/bdm-travel-store/" style="color: inherit; text-decoration: none;" data-i18n="info.item4">BDM Travel Store</a></li>
-                    <li><a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/services-facilitateurs-de-voyage/" style="color: inherit; text-decoration: none;" data-i18n="info.item5">Services Pratiques</a></li>
+                    <li><a href="{{ config('app.front_url') }}{{ $currentLang === 'en' ? '/en' : '' }}/consigne-bagages/" style="color: inherit; text-decoration: none;" data-i18n="info.item1">Consigne à Bagages</a></li>
+                    <li><a href="{{ config('app.front_url') }}{{ $currentLang === 'en' ? '/en' : '' }}/transfert-livraison-bagages/" style="color: inherit; text-decoration: none;" data-i18n="info.item2">Transfert & Livraison Bagages</a></li>
+                    <li><a href="{{ config('app.front_url') }}{{ $currentLang === 'en' ? '/en' : '' }}/assistance-personnalisee/" style="color: inherit; text-decoration: none;" data-i18n="info.item3">Assistance Personnalisée</a></li>
+                    <li><a href="{{ config('app.front_url') }}{{ $currentLang === 'en' ? '/en' : '' }}/bdm-travel-store/" style="color: inherit; text-decoration: none;" data-i18n="info.item4">BDM Travel Store</a></li>
+                    <li><a href="{{ config('app.front_url') }}{{ $currentLang === 'en' ? '/en' : '' }}/services-facilitateurs-de-voyage/" style="color: inherit; text-decoration: none;" data-i18n="info.item5">Services Pratiques</a></li>
                 </ul>
             </div>
             <div class="auth-card__info-footer">
-                <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/nous-localiser/" style="color: inherit; text-decoration: underline;" data-i18n="info.airport">Aéroport de Paris CDG & Orly</a> – <span data-i18n="info.support">Support :</span> <a href="mailto:contact@hellopassenger.com" style="color: inherit; text-decoration: underline;" data-i18n="info.email">contact@hellopassenger.com</a>
+                <a href="{{ config('app.front_url') }}{{ $currentLang === 'en' ? '/en' : '' }}/nous-localiser/" style="color: inherit; text-decoration: underline;" data-i18n="info.airport">Aéroport de Paris CDG & Orly</a> – <span data-i18n="info.support">Support :</span> <a href="mailto:contact@hellopassenger.com" style="color: inherit; text-decoration: underline;" data-i18n="info.email">contact@hellopassenger.com</a>
             </div>
         </aside>
 
@@ -539,7 +539,7 @@
                         <label class="privacy-check">
                             <input type="checkbox" id="login-privacy" name="privacy" required>
                             <span data-i18n="login.privacy">J'accepte la politique de confidentialité</span>
-                            <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/mentions-legales/" class="privacy-link" target="_blank" rel="noopener noreferrer" data-i18n="login.privacyLink">En savoir plus</a>
+                            <a href="{{ config('app.front_url') }}{{ $currentLang === 'en' ? '/en' : '' }}/mentions-legales/" class="privacy-link" target="_blank" rel="noopener noreferrer" data-i18n="login.privacyLink">En savoir plus</a>
                         </label>
                     </div>
 
@@ -620,7 +620,7 @@
                         <label class="privacy-check">
                             <input type="checkbox" id="register-privacy" name="privacy" required>
                             <span data-i18n="register.privacy">J'accepte la politique de confidentialité</span>
-                            <a href="https://darkseagreen-mongoose-687346.hostingersite.com{{ $currentLang === 'en' ? '/en' : '' }}/mentions-legales/" class="privacy-link" target="_blank" rel="noopener noreferrer" data-i18n="register.privacyLink">En savoir plus</a>
+                            <a href="{{ config('app.front_url') }}{{ $currentLang === 'en' ? '/en' : '' }}/mentions-legales/" class="privacy-link" target="_blank" rel="noopener noreferrer" data-i18n="register.privacyLink">En savoir plus</a>
                         </label>
                     </div>
 
